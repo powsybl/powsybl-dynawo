@@ -25,7 +25,7 @@ public class EventInjectionDisconnection extends AbstractDynamicLibEventDisconne
     }
 
     private List<VarConnection> getVarConnectionsWith(InjectionModel connected) {
-        return List.of(new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getSwitchOffSignalEventVarName()));
+        return List.of(new VarConnection(equipmentModelType.getValue().getVarConnection(), connected.getSwitchOffSignalEventVarName()));
     }
 
     @Override

@@ -19,10 +19,10 @@
         <dyn:connect var1="event_state1" var2="generator_switchOffSignal2"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventInjectionDisconnection-DefaultLoad">
-        <dyn:connect var1="event_state1" var2="@NAME@_state_value"/>
+        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventInjectionDisconnection-DefaultStaticVarCompensator">
-        <dyn:connect var1="event_state1" var2="@NAME@_state_value"/>
+        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventInjectionDisconnection-ShuntB">
         <dyn:connect var1="event_state1" var2="shunt_switchOffSignal2"/>
