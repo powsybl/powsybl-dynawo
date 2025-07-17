@@ -77,6 +77,16 @@ public final class BuilderReports {
                 .add();
     }
 
+    public static void reportFieldReplacement(ReportNode reportNode, String fieldName, String replacementName, String replacement) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.fieldReplacement")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue("replacementName", replacementName)
+                .withUntypedValue("replacement", replacement)
+                .withSeverity(TypedValue.TRACE_SEVERITY)
+                .add();
+    }
+
     public static void reportStaticIdUnknown(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.staticIdUnknown")
