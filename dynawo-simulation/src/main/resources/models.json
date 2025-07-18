@@ -218,6 +218,80 @@
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstScrxTfo",
         "minVersion": "1.6.0"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsGovHydro4St4b",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsPmConstExAc1",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl1c",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsGovSteam1St4b",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel2c",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsPmConstExAc1Tfo",
+        "minVersion": "1.7.0",
+        "properties": [
+          "TRANSFORMER"
+        ]
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel5c",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt7bPss2aUel2c",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsTGov1SexsPss2a",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsGovSteam1St4bPss2b",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel4c",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsGovCt2St4b",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel3c",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsGovSteamEuSt4b",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt7bPss2aUel1",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl2c",
+        "minVersion": "1.7.0"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxTfo",
+        "minVersion": "1.7.0",
+        "properties": [
+          "TRANSFORMER"
+        ]
       }
     ]
   },
