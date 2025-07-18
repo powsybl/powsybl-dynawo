@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.stream.Stream;
@@ -40,13 +41,26 @@ class JobsXmlTest extends DynawoTestUtil {
     private static Stream<Arguments> provideParameters() {
         return Stream.of(
                 Arguments.of("jobs.xml", DynawoSimulationParameters.load()),
-                Arguments.of("jobsWithDump.xml", DynawoSimulationParameters.load()
-                        .setDumpFileParameters(DumpFileParameters.createImportExportDumpFileParameters(Path.of("/dumpFiles"), "dump.dmp"))),
-                Arguments.of("jobsWithSpecificLogs.xml", DynawoSimulationParameters.load()
-                        .setSpecificLogs(EnumSet.allOf(DynawoSimulationParameters.SpecificLog.class))),
-                Arguments.of("jobsWithCriteria.xml", DynawoSimulationParameters.load()
-                        .setCriteriaFilePath(Path.of("criteria.crt")))
+                Arguments.of("jobsWithSpecificLogs.xml",
+                        DynawoSimulationParameters.load().setSpecificLogs(EnumSet.allOf(DynawoSimulationParameters.SpecificLog.class))),
+                Arguments.of("jobsWithCriteria.xml",
+                        DynawoSimulationParameters.load().setCriteriaFilePath(Path.of("criteria.crt")))
         );
+    }
+
+    @Test
+    void testJobWithDump() throws IOException, SAXException {
+        Files.createFile(fileSystem.getPath("tmp", "dump.dmp"));
+        DynawoSimulationParameters parameters = DynawoSimulationParameters.load()
+                .setDumpFileParameters(DumpFileParameters.createImportExportDumpFileParameters(fileSystem.getPath("tmp"), "dump.dmp"));
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .dynawoParameters(parameters)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .build();
+        JobsXml.write(tmpDir, context);
+        validate("jobs.xsd", "jobsWithDump.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
     }
 
     @Test

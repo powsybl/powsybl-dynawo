@@ -14,11 +14,12 @@ import com.powsybl.computation.Command;
 import com.powsybl.computation.ExecutionEnvironment;
 import com.powsybl.computation.SimpleCommandBuilder;
 import com.powsybl.contingency.ContingenciesProvider;
-import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
+import com.powsybl.dynawo.builders.AdditionalModelConfigLoader;
+import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.dynawo.commons.DynawoUtil;
@@ -81,15 +82,18 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
 
         ReportNode dsaReportNode = DynamicSecurityAnalysisReports.createDynamicSecurityAnalysisReportNode(runParameters.getReportNode(), network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
+        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(), runParameters.getDynamicSecurityAnalysisParameters().getDebugDir());
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
-        List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         DynamicSecurityAnalysisParameters parameters = runParameters.getDynamicSecurityAnalysisParameters();
+        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(parameters.getDynamicSimulationParameters());
+        dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
+                ModelConfigsHandler.getInstance().addModels(new AdditionalModelConfigLoader(additionalModelPath)));
         SecurityAnalysisContext context = new SecurityAnalysisContext.Builder(network,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsaReportNode),
-                contingencies)
+                contingenciesProvider.getContingencies(network))
+                .eventModels(BlackBoxSupplierUtils.getBlackBoxModelList(runParameters.getEventModelsSupplier(), network, dsaReportNode))
                 .dynamicSecurityAnalysisParameters(parameters)
-                .dynawoParameters(DynawoSimulationParameters.load(parameters.getDynamicSimulationParameters()))
+                .dynawoParameters(dynawoParameters)
                 .currentVersion(currentVersion)
                 .reportNode(dsaReportNode)
                 .build();

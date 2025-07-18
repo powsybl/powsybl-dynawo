@@ -22,9 +22,7 @@ import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.dynawologs.CsvLogParser;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
-import com.powsybl.dynawo.commons.timeline.CsvTimeLineParser;
 import com.powsybl.dynawo.commons.timeline.TimeLineParser;
-import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.NetworkSerDe;
@@ -167,12 +165,8 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         ExportMode exportMode = context.getDynawoSimulationParameters().getTimelineExportMode();
         Path timelineFile = outputsFolder.resolve(TIMELINE_FOLDER).resolve(TIMELINE_FILENAME + exportMode.getFileExtension());
         if (Files.exists(timelineFile)) {
-            TimeLineParser parser = switch (exportMode) {
-                case CSV -> new CsvTimeLineParser(';');
-                case TXT -> new CsvTimeLineParser();
-                case XML -> new XmlTimeLineParser();
-            };
-            parser.parse(timelineFile).forEach(e -> timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message())));
+            TimeLineParser.parse(timelineFile, exportMode)
+                    .forEach(e -> timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message())));
         } else {
             LOGGER.warn("Timeline file not found");
         }

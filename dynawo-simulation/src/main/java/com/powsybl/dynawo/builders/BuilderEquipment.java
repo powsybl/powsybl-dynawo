@@ -9,10 +9,10 @@ package com.powsybl.dynawo.builders;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.iidm.network.IdentifiableType;
+import com.powsybl.iidm.network.Network;
 
+import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * Represents an equipment field identified by a static ID in a builder
@@ -26,65 +26,69 @@ public class BuilderEquipment<T extends Identifiable<?>> {
 
     private static final String EQUIPMENT_FIELD_NAME = "equipment";
 
-    protected boolean fromStaticId;
     protected String staticId;
     protected T equipment;
-    private final String equipmentType;
-    private final String fieldName;
+    protected final String equipmentType;
+    protected final String fieldName;
+    protected final ReportNode reportNode;
 
-    public BuilderEquipment(String equipmentType, String fieldName) {
+    public BuilderEquipment(String equipmentType, String fieldName, ReportNode reportNode) {
         this.equipmentType = equipmentType;
         this.fieldName = fieldName;
+        this.reportNode = reportNode;
     }
 
-    public BuilderEquipment(IdentifiableType identifiableType, String fieldName) {
-        this.equipmentType = identifiableType.toString();
-        this.fieldName = fieldName;
-    }
-
-    public BuilderEquipment(IdentifiableType identifiableType) {
-        this(identifiableType, DEFAULT_FIELD_NAME);
-    }
-
-    public BuilderEquipment(String equipmentType) {
-        this(equipmentType, DEFAULT_FIELD_NAME);
+    public BuilderEquipment(String equipmentType, ReportNode reportNode) {
+        this(equipmentType, DEFAULT_FIELD_NAME, reportNode);
     }
 
     public void addEquipment(String equipmentId, Function<String, T> equipmentSupplier) {
-        fromStaticId = true;
         staticId = equipmentId;
         equipment = equipmentSupplier.apply(staticId);
+        if (equipment == null) {
+            BuilderReports.reportStaticIdUnknown(reportNode, fieldName, staticId, equipmentType);
+        }
     }
 
-    public void addEquipment(T equipment, Predicate<T> equipmentChecker) {
-        fromStaticId = false;
+    public void addEquipment(String equipmentId, Function<String, T> equipmentSupplier,
+                             EquipmentChecker<T> equipmentChecker) {
+        staticId = equipmentId;
+        T eq = equipmentSupplier.apply(staticId);
+        if (eq == null) {
+            BuilderReports.reportStaticIdUnknown(reportNode, fieldName, staticId, equipmentType);
+        } else if (equipmentChecker.test(eq, fieldName, reportNode)) {
+            this.equipment = eq;
+        }
+    }
+
+    public void addEquipment(T equipment, Network network) {
         staticId = equipment.getId();
-        if (equipmentChecker.test(equipment)) {
+        if (!Objects.equals(network, equipment.getNetwork())) {
+            BuilderReports.reportDifferentNetwork(reportNode, EQUIPMENT_FIELD_NAME, staticId, equipmentType);
+        } else {
             this.equipment = equipment;
         }
     }
 
-    public boolean checkEquipmentData(ReportNode reportNode) {
-        if (!hasStaticId()) {
+    public void addEquipment(T equipment, Network network, EquipmentChecker<T> equipmentChecker) {
+        staticId = equipment.getId();
+        if (!Objects.equals(network, equipment.getNetwork())) {
+            BuilderReports.reportDifferentNetwork(reportNode, EQUIPMENT_FIELD_NAME, staticId, equipmentType);
+        } else if (equipmentChecker.test(equipment, fieldName, reportNode)) {
+            this.equipment = equipment;
+        }
+    }
+
+    public boolean checkEquipmentData() {
+        if (staticId == null) {
             BuilderReports.reportFieldNotSet(reportNode, fieldName);
             return false;
-        } else if (equipment == null) {
-            if (fromStaticId) {
-                BuilderReports.reportStaticIdUnknown(reportNode, fieldName, staticId, equipmentType);
-            } else {
-                BuilderReports.reportDifferentNetwork(reportNode, EQUIPMENT_FIELD_NAME, staticId, equipmentType);
-            }
-            return false;
         }
-        return true;
+        return equipment != null;
     }
 
     public String getStaticId() {
         return staticId;
-    }
-
-    public boolean hasStaticId() {
-        return staticId != null;
     }
 
     public T getEquipment() {
@@ -93,5 +97,9 @@ public class BuilderEquipment<T extends Identifiable<?>> {
 
     public boolean hasEquipment() {
         return equipment != null;
+    }
+
+    public String getFieldName() {
+        return fieldName;
     }
 }

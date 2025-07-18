@@ -61,8 +61,8 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected BaseStaticVarCompensatorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.STATIC_VAR_COMPENSATOR, reportNode);
+    protected BaseStaticVarCompensatorBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, IdentifiableType.STATIC_VAR_COMPENSATOR, parentReportNode);
     }
 
     @Override

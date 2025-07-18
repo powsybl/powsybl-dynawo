@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawo.models;
 
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.parameters.ParametersSet;
 
@@ -16,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import static com.powsybl.dynawo.DynawoSimulationConstants.MODELS_PARAMETERS_FILENAME;
 
 /**
  * @author Luma Zamarreño {@literal <zamarrenolm at aia.es>}
@@ -80,7 +81,7 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
     @Override
     public String getDefaultParFile() {
-        return DynawoSimulationParameters.MODELS_OUTPUT_PARAMETERS_FILE;
+        return MODELS_PARAMETERS_FILENAME;
     }
 
     @Override

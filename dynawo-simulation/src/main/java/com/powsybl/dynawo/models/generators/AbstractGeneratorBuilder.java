@@ -19,8 +19,8 @@ import com.powsybl.iidm.network.Network;
  */
 public abstract class AbstractGeneratorBuilder<R extends AbstractEquipmentModelBuilder<Generator, R>> extends AbstractEquipmentModelBuilder<Generator, R> {
 
-    protected AbstractGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.GENERATOR, reportNode);
+    protected AbstractGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, IdentifiableType.GENERATOR, parentReportNode);
     }
 
     @Override

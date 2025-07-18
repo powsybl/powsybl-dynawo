@@ -16,5 +16,5 @@ public interface ContextDependentEvent {
 
     Identifiable<?> getEquipment();
 
-    void setEquipmentHasDynamicModel(boolean hasDynamicModel);
+    void setEquipmentModelType(boolean hasDynamicModel);
 }

@@ -31,7 +31,7 @@ class ContingencyEventModelsTest {
 
     @Test
     void test() {
-        Network network = EurostagTutorialExample1Factory.create();
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
         BlackBoxModelSupplier bbmSupplier = BlackBoxModelSupplier.createFrom(List.of(
                 BaseGeneratorBuilder.of(network)
                         .staticId("GEN")
@@ -45,7 +45,7 @@ class ContingencyEventModelsTest {
                 Contingency.battery("BATTERY"));
 
         List<ContingencyEventModels> contingencyEvents = ContingencyEventModelsFactory.createFrom(contingencies,
-                2, network, bbmSupplier, ReportNode.NO_OP);
+                2, network, bbmSupplier, n -> false, ReportNode.NO_OP);
         assertThat(contingencyEvents).hasSize(3);
         assertThat(contingencyEvents.get(0).eventModels())
                 .hasSize(1)

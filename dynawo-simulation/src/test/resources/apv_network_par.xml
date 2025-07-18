@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<parametersSet xmlns="http://www.rte-france.com/dynawo">
-    <set id="1">
-        <par type="BOOL" name="LOAD_isControllable" value="true"/>
-        <par type="BOOL" name="LOAD2_isControllable" value="true"/>
-    </set>
-</parametersSet>

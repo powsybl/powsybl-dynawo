@@ -16,6 +16,7 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawo.models.utils.BusUtils;
+import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,10 +177,12 @@ public final class MacroConnectionsAdder {
     /**
      * Creates macro connection with a bus from an HVDC
      * Suffixes MacroConnector id with side name
+     * Invert connections if isInverted is set to <code>true</code>
      */
-    public void createTerminalMacroConnections(BlackBoxModel originModel, HvdcLine hvdc, BiFunction<EquipmentConnectionPoint, TwoSides, List<VarConnection>> varConnectionsSupplier, TwoSides side) {
-        HvdcConverterStation<?> station = hvdc.getConverterStation(side);
-        createTerminalMacroConnections(originModel, station.getTerminal(), varConnectionsSupplier, side);
+    public void createTerminalMacroConnections(BlackBoxModel originModel, HvdcLine hvdc, BiFunction<EquipmentConnectionPoint, TwoSides, List<VarConnection>> varConnectionsSupplier, TwoSides side, boolean isInverted) {
+        TwoSides connectionSide = isInverted ? SideUtils.getOppositeSide(side) : side;
+        Bus bus = BusUtils.getConnectableBus(hvdc.getConverterStation(connectionSide).getTerminal());
+        createMacroConnections(originModel, bus, EquipmentConnectionPoint.class, varConnectionsSupplier, side);
     }
 
     /**

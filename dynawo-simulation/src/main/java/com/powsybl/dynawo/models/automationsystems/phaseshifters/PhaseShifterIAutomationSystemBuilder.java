@@ -58,8 +58,8 @@ public class PhaseShifterIAutomationSystemBuilder extends AbstractPhaseShifterMo
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected PhaseShifterIAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected PhaseShifterIAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override

@@ -110,6 +110,16 @@ public final class DynawoSimulationReports {
                 .add();
     }
 
+    public static void reportFailedDefaultModelHandling(ReportNode reportNode, String modelName, String dynamicId, String equipmentType) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.failedDefaultModelHandling")
+                .withUntypedValue(MODEL_NAME_FIELD, modelName)
+                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
+                .withUntypedValue("equipmentType", equipmentType)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
     public static ReportNode createDynawoSpecificLogReportNode(ReportNode reportNode, DynawoSimulationParameters.SpecificLog logType) {
         String key = switch (logType) {
             case NETWORK -> "dynawo.dynasim.dynawoNetworkLog";

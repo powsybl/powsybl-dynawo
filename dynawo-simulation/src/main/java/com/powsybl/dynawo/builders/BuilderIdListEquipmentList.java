@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.builders;
 
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.Identifiable;
 
 import java.util.Collection;
@@ -18,22 +19,29 @@ import java.util.function.Function;
  */
 public class BuilderIdListEquipmentList<T extends Identifiable<?>> extends BuilderEquipmentsList<T> {
 
-    public BuilderIdListEquipmentList(String equipmentType, String fieldName) {
-        super(equipmentType, fieldName);
+    public BuilderIdListEquipmentList(String equipmentType, String fieldName, ReportNode reportNode) {
+        super(equipmentType, fieldName, reportNode);
     }
 
-    public void addEquipments(Collection<String>[] staticIdsArray, Function<String, T> equipmentSupplier) {
+    public void addEquipments(Collection<String>[] staticIdsArray, Function<String, T> equipmentSupplier,
+                              EquipmentChecker<T> equipmentChecker, StaticIdListUnknownReportNodeBuilder reportNodeBuilder) {
         for (Collection<String> staticIds : staticIdsArray) {
-            addEquipment(staticIds, equipmentSupplier);
+            addEquipment(staticIds, equipmentSupplier, equipmentChecker, reportNodeBuilder);
         }
+        reportIfEmptyList();
     }
 
-    private void addEquipment(Collection<String> staticIds, Function<String, T> equipmentSupplier) {
+    private void addEquipment(Collection<String> staticIds, Function<String, T> equipmentSupplier,
+                              EquipmentChecker<T> equipmentChecker, StaticIdListUnknownReportNodeBuilder reportNodeBuilder) {
         staticIds.stream()
                 .map(equipmentSupplier)
                 .filter(Objects::nonNull)
+                .filter(eq -> equipmentChecker.test(eq, fieldName, reportNode))
                 .findFirst()
-                .ifPresentOrElse(equipments::add,
-                    () -> missingEquipmentIds.add(staticIds.toString()));
+                .ifPresentOrElse(equipments::add, () -> {
+                    String ids = staticIds.toString();
+                    missingEquipmentIds.add(ids);
+                    reportNodeBuilder.buildReportNode(reportNode, fieldName, ids, equipmentType);
+                });
     }
 }

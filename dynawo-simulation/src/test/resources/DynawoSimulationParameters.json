@@ -1,5 +1,5 @@
 {
-  "version" : "1.0",
+  "version" : "1.1",
   "startTime" : 0.0,
   "stopTime" : 3600.0,
   "extensions" : {
@@ -50,6 +50,7 @@
       "logLevelFilter" : "INFO",
       "specificLogs" : [ "PARAMETERS", "VARIABLES" ],
       "criteriaFilePath" : null,
+      "additionalModelsPath" : null,
       "modelsParameters" : [ {
         "id" : "test",
         "parameters" : {

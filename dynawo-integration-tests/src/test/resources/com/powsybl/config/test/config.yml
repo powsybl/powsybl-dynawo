@@ -1,0 +1,22 @@
+dynamic-simulation-default-parameters:
+  startTime: 1
+  stopTime: 100
+
+dynawo:
+  homeDir: /dynaflow-launcher
+  debug: false
+
+dynawo-algorithms:
+  homeDir: /dynaflow-launcher
+  debug: false
+
+dynawo-simulation-default-parameters:
+  parametersFile: /work/unittests/models.par
+  network.parametersFile: /work/unittests/network.par
+  network.parametersId: "8"
+  solver.type: IDA
+  solver.parametersFile: /work/unittests/solvers.par
+  solver.parametersId: "2"
+
+table-formatter:
+  language: en-US

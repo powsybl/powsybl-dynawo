@@ -23,6 +23,7 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsReports.createContingencyVoltageIdNotFoundReportNode;
 import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsReports.createNotSupportedContingencyTypeReportNode;
@@ -32,13 +33,18 @@ import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsReports.createNotSup
  */
 public final class ContingencyEventModelsFactory {
 
+    /**
+     * Creates ContingencyEventModels from contingency list and context
+     * The hasMacroConnector predicate is needed in order to verify if a macro connector used by a contingency is already defined in the base simulation model
+     */
     public static List<ContingencyEventModels> createFrom(List<Contingency> contingencies,
                                                           double contingenciesStartTime,
                                                           Network network,
                                                           BlackBoxModelSupplier bbmSupplier,
+                                                          Predicate<String> hasMacroConnector,
                                                           ReportNode reportNode) {
         return contingencies.stream()
-                .map(c -> createFrom(c, contingenciesStartTime, network, bbmSupplier, reportNode))
+                .map(c -> createFrom(c, contingenciesStartTime, network, bbmSupplier, hasMacroConnector, reportNode))
                 .filter(Objects::nonNull)
                 .toList();
     }
@@ -46,6 +52,7 @@ public final class ContingencyEventModelsFactory {
     public static ContingencyEventModels createFrom(Contingency contingency, double contingenciesStartTime,
                                                     Network network,
                                                     BlackBoxModelSupplier bbmSupplier,
+                                                    Predicate<String> hasMacroConnector,
                                                     ReportNode reportNode) {
         List<BlackBoxModel> eventModels = createContingencyEventModelList(contingency, contingenciesStartTime, network, bbmSupplier, reportNode);
         if (eventModels.isEmpty()) {
@@ -56,7 +63,13 @@ public final class ContingencyEventModelsFactory {
         List<ParametersSet> eventParameters = new ArrayList<>(eventModels.size());
         // Set Contingencies connections and parameters
         MacroConnectionsAdder macroConnectionsAdder = new MacroConnectionsAdder(bbmSupplier::getEquipmentDynamicModel,
-                bbmSupplier::getPureDynamicModel, macroConnectList::add, macroConnectorsMap::computeIfAbsent, reportNode);
+                bbmSupplier::getPureDynamicModel, macroConnectList::add,
+                (n, f) -> {
+                    if (!hasMacroConnector.test(n)) {
+                        macroConnectorsMap.computeIfAbsent(n, f);
+                    }
+                },
+                reportNode);
         eventModels.forEach(em -> {
             em.createMacroConnections(macroConnectionsAdder);
             em.createDynamicModelParameters(eventParameters::add);
@@ -98,7 +111,7 @@ public final class ContingencyEventModelsFactory {
             createNotSupportedContingencyTypeReportNode(reportNode, element.getType().toString());
         }
         if (bbm instanceof ContextDependentEvent cde) {
-            cde.setEquipmentHasDynamicModel(bbmSupplier.hasDynamicModel(cde.getEquipment()));
+            cde.setEquipmentModelType(bbmSupplier.hasDynamicModel(cde.getEquipment()));
         }
         return bbm;
     }

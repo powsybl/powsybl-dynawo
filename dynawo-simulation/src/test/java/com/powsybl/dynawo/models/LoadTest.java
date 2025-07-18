@@ -34,5 +34,9 @@ class LoadTest {
                 .staticId("L")
                 .parameterSetId("LAB")
                 .build());
+        assertNull(BaseLoadBuilder.of(network)
+                .staticId("LOAD")
+                .parameterSetId("LAB")
+                .build());
     }
 }

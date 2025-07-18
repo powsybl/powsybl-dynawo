@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="Disconnect_NLOAD" lib="EventConnectedStatus" parFile="NLOAD.par" parId="Disconnect_NLOAD"/>
+    <dyn:macroConnect connector="MC_EventBusDisconnection-DefaultActionConnectionPoint" id1="Disconnect_NLOAD" id2="NETWORK" name2="NLOAD"/>
+</dyn:dynamicModelsArchitecture>
