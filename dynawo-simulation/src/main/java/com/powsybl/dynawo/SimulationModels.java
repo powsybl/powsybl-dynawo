@@ -31,7 +31,7 @@ public final class SimulationModels implements DynawoData {
     private final Map<String, MacroConnector> macroConnectorsMap;
 
     public static SimulationModels createFrom(BlackBoxModelSupplier bbmSupplier, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                                              Consumer<ParametersSet> parametersAdder, ParametersSet networkParameters,
+                                              Consumer<ParametersSet> parametersAdder, DynawoSimulationParameters dynawoParameters,
                                               ReportNode reportNode) {
 
         List<MacroConnect> macroConnectList = new ArrayList<>();
@@ -44,11 +44,13 @@ public final class SimulationModels implements DynawoData {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             bbm.createMacroConnections(adder);
             bbm.createDynamicModelParameters(parametersAdder);
+            bbm.updateDynamicModelParameters((id, n, t, v) ->
+                    dynawoParameters.getModelParameters(id).addParameter(n, t, v));
         }
         for (BlackBoxModel bbem : eventModels) {
             bbem.createMacroConnections(adder);
             bbem.createDynamicModelParameters(parametersAdder);
-            bbem.createNetworkParameter(networkParameters);
+            bbem.createNetworkParameter(dynawoParameters.getNetworkParameters());
         }
 
         return new SimulationModels(dynamicModels, eventModels, macroConnectList,
