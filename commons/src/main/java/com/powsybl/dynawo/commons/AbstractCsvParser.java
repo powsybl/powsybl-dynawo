@@ -28,16 +28,15 @@ public abstract class AbstractCsvParser<T> {
 
     protected static final char DEFAULT_SEPARATOR = '|';
 
-    private final CsvParser csvParser;
+    protected CsvParser csvParser;
 
-    protected AbstractCsvParser(char separator, boolean skipHeader) {
+    protected static CsvParserSettings setupSettings(char separator, boolean skipHeader) {
         CsvParserSettings settings = new CsvParserSettings();
         settings.getFormat().setDelimiter(separator);
         settings.getFormat().setQuoteEscape('"');
         settings.getFormat().setLineSeparator(System.lineSeparator());
-        settings.setMaxColumns(getNbColumns());
         settings.setHeaderExtractionEnabled(skipHeader);
-        csvParser = new CsvParser(settings);
+        return settings;
     }
 
     public List<T> parse(Path file) {
@@ -69,6 +68,4 @@ public abstract class AbstractCsvParser<T> {
     protected abstract Optional<T> createEntry(String[] tokens);
 
     protected abstract boolean hasCorrectNbColumns(int tokensSize);
-
-    protected abstract int getNbColumns();
 }
