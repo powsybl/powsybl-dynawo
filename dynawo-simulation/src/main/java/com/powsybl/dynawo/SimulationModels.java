@@ -53,7 +53,7 @@ public final class SimulationModels implements DynawoData {
         for (BlackBoxModel bbem : eventModels) {
             bbem.createMacroConnections(adder);
             bbem.createDynamicModelParameters(parametersAdder);
-            bbem.createNetworkParameter(networkParameters);
+            bbem.createNetworkParameter(dynawoParameters.getNetworkParameters());
         }
 
         return new SimulationModels(dynamicModels, eventModels, macroConnectList,
