@@ -107,7 +107,6 @@ public final class BuilderReports {
                 .add();
     }
 
-    //TODO traduction
     public static void reportCrossThreshold(ReportNode reportNode, String fieldName, double fieldValue, String threshold) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.crossThreshold")
