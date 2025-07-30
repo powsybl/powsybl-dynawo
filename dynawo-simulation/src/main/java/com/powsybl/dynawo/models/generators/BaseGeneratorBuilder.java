@@ -37,7 +37,7 @@ public class BaseGeneratorBuilder extends AbstractGeneratorBuilder<BaseGenerator
     public static BaseGeneratorBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, BaseGeneratorBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
             return null;
         }
         return new BaseGeneratorBuilder(network, modelConfig, reportNode);

@@ -37,7 +37,7 @@ public class LoadOneTransformerTapChangerBuilder extends AbstractLoadModelBuilde
     public static LoadOneTransformerTapChangerBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, LoadOneTransformerTapChangerBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
             return null;
         }
         return new LoadOneTransformerTapChangerBuilder(network, modelConfig, reportNode);

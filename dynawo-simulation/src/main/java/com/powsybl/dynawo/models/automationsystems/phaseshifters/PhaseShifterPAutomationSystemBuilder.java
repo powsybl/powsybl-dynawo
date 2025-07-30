@@ -37,7 +37,7 @@ public class PhaseShifterPAutomationSystemBuilder extends AbstractPhaseShifterMo
     public static PhaseShifterPAutomationSystemBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, PhaseShifterPAutomationSystemBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
             return null;
         }
         return new PhaseShifterPAutomationSystemBuilder(network, modelConfig, reportNode);
