@@ -48,8 +48,8 @@ public abstract class AbstractAutomationSystemModelBuilder<T extends AbstractAut
             isInstantiable = false;
         }
         if (parameterSetId == null) {
-            BuilderReports.reportFieldNotSet(reportNode, "parameterSetId");
-            isInstantiable = false;
+            BuilderReports.reportFieldReplacement(reportNode, "parameterSetId", "dynamicModelId", dynamicModelId);
+            parameterSetId = dynamicModelId;
         }
     }
 
