@@ -13,6 +13,7 @@ import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
@@ -47,6 +48,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     protected List<BlackBoxModel> dynamicModels = new ArrayList<>();
     protected List<BlackBoxModel> eventModels = new ArrayList<>();
     protected List<OutputVariable> outputVariables = new ArrayList<>();
+    protected DynawoSimulationParameters dynawoParameters;
     protected DynawoSimulationContext context;
     protected ReportNode reportNode = ReportNode.newRootReportNode()
             .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
@@ -58,6 +60,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     void setup() {
         setupNetwork();
         addDynamicModels();
+        setupDynawoSimulationParameters();
         setupDynawoContext();
     }
 
@@ -80,11 +83,16 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
         assertTxtEquals(expected, actual);
     }
 
+    protected void setupDynawoSimulationParameters() {
+        dynawoParameters = DynawoSimulationParameters.load();
+    }
+
     protected void setupDynawoContext() {
         context = new DynawoSimulationContext
                 .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
+                .dynawoParameters(dynawoParameters)
                 .reportNode(reportNode)
                 .build();
     }

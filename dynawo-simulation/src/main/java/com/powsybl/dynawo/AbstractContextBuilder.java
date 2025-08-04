@@ -92,7 +92,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
 
     protected void setupMacroConnections() {
         simulationModels = SimulationModels.createFrom(blackBoxModelSupplier, dynamicModels, eventModels, dynamicModelsParameters::add,
-                dynawoParameters.getNetworkParameters(), reportNode);
+                dynawoParameters, reportNode);
         if (!finalStepDynamicModels.isEmpty()) {
             finalStepModels = FinalStepModels.createFrom(blackBoxModelSupplier, simulationModels, finalStepDynamicModels,
                     dynamicModelsParameters::add, reportNode);
