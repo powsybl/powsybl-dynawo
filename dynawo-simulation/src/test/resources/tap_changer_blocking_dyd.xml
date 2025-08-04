@@ -44,7 +44,7 @@
         <dyn:connect var1="tapChangerBlocking_blockedT" var2="tapChangerT_locked"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TapChangerBlockingAutomatonMeasure1-DefaultActionConnectionPoint">
-        <dyn:connect var1="tapChangerBlocking_UMonitored" var2="@NAME@_U"/>
+        <dyn:connect var1="tapChangerBlocking_UMonitored1" var2="@NAME@_U"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TapChangerBlockingAutomatonMeasure2-DefaultActionConnectionPoint">
         <dyn:connect var1="tapChangerBlocking_UMonitored2" var2="@NAME@_U"/>
