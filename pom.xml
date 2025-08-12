@@ -66,6 +66,7 @@
             ../distribution/target/site/jacoco-aggregate/jacoco.xml,
             ../../distribution/target/site/jacoco-aggregate/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
+        <argLine/> <!--  This is required for later correct replacement of argline -->
     </properties>
 
     <profiles>
@@ -111,7 +112,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <!-- Argument added to set the default locale as en_US for unit tests run to be independent of the JVM locale -->
-                            <argLine>-Duser.language=en -Duser.region=US</argLine>
+                            <argLine>@{argLine} -Duser.language=en -Duser.region=US</argLine>
                         </configuration>
                     </plugin>
                 </plugins>

@@ -8,6 +8,8 @@
 package com.powsybl.dynawo.commons.dynawologs;
 
 import com.powsybl.dynawo.commons.AbstractCsvParser;
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
 
 import java.util.Optional;
 
@@ -16,29 +18,36 @@ import java.util.Optional;
  */
 public final class CsvLogParser extends AbstractCsvParser<LogEntry> {
 
-    private static final int NB_COLUMNS = 4;
+    private static final int NB_COLUMNS = 3;
+
+    private static final String SPACED_SEPARATOR = " " + DEFAULT_SEPARATOR + " ";
 
     public CsvLogParser() {
         this(DEFAULT_SEPARATOR);
     }
 
     public CsvLogParser(char separator) {
-        super(separator, false);
+        CsvParserSettings settings = setupSettings(separator, false);
+        this.csvParser = new CsvParser(settings);
     }
 
     @Override
     protected Optional<LogEntry> createEntry(String[] tokens) {
-        return tokens.length == NB_COLUMNS ? LogUtils.createLog(tokens[1], tokens[2] + " " + tokens[3])
-            : LogUtils.createLog(tokens[1], tokens[2]);
+        if (tokens.length > NB_COLUMNS) {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 2; i < tokens.length - 1; i++) {
+                builder.append(tokens[i]);
+                builder.append(SPACED_SEPARATOR);
+            }
+            builder.append(tokens[tokens.length - 1]);
+            return LogUtils.createLog(tokens[1], builder.toString());
+        }
+        return LogUtils.createLog(tokens[1], tokens[2]);
     }
 
     @Override
     protected boolean hasCorrectNbColumns(int tokensSize) {
-        return tokensSize == NB_COLUMNS - 1 || tokensSize == NB_COLUMNS;
-    }
-
-    @Override
-    protected int getNbColumns() {
-        return NB_COLUMNS;
+        // extra column will be handled by createEntry
+        return NB_COLUMNS <= tokensSize;
     }
 }
