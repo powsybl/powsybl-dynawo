@@ -20,7 +20,7 @@ In the following examples the array will be omitted.
 - All the models share three attributes:
 - `modelName`: refers to the dynamic model library used in Dynawo (used as a keyword in Groovy script).
 - `dynamicModelId`: identifies the model (set explicitly or implicitly depending on the model type).
-- `parameterSetId`: refers to a set of parameters for this model in the model parameters file.
+- `parameterSetId`: refers to a set of parameters for this model in the model parameters file (optional and set to `dynamicModelId` by default).
 
 **Note**: In Json configuration file `parameterSetId` is replaced by the `group` attribute and can be customized with the `groupType` attribute taking one of the following value:
 - `FIXED`: the `parameterSetId` equals the `group` (default value)
