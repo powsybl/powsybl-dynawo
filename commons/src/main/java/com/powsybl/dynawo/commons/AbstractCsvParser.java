@@ -7,11 +7,12 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.commons.PowsyblException;
 import com.univocity.parsers.common.ParsingContext;
 import com.univocity.parsers.common.ResultIterator;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +26,8 @@ import java.util.*;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractCsvParser<T> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCsvParser.class);
 
     protected static final char DEFAULT_SEPARATOR = '|';
 
@@ -57,10 +60,11 @@ public abstract class AbstractCsvParser<T> {
         while (iterator.hasNext()) {
             iLine++;
             String[] tokens = iterator.next();
-            if (!hasCorrectNbColumns(tokens.length)) {
-                throw new PowsyblException("Columns of line " + iLine + " are inconsistent");
+            if (hasCorrectNbColumns(tokens.length)) {
+                createEntry(tokens).ifPresent(logs::add);
+            } else {
+                LOGGER.warn("Columns of line {} are inconsistent, the line will be skipped", iLine);
             }
-            createEntry(tokens).ifPresent(logs::add);
         }
         return logs;
     }
