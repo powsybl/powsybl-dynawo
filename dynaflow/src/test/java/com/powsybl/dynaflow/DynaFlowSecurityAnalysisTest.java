@@ -174,7 +174,7 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
 
         // Adding strong current limits to have some post-contingencies current limit violations
         line.getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits().setPermanentLimit(40.0).add();
-        line.getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits()
+        line.getOrCreateSelectedOperationalLimitsGroup2().newCurrentLimits()
                 .beginTemporaryLimit().setName("10'").setAcceptableDuration(10 * 60).setValue(450.0).endTemporaryLimit()
                 .setPermanentLimit(1000)
                 .add();
