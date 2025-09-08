@@ -70,7 +70,7 @@ class DynaFlowTest extends AbstractDynawoTest {
     @Test
     void testLf() throws IOException {
         Network network = IeeeCdfNetworkFactory.create14Solved();
-        network.getLine("L6-13-1").newCurrentLimits1()
+        network.getLine("L6-13-1").getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits()
                 .beginTemporaryLimit().setName("1").setAcceptableDuration(60).setValue(100).endTemporaryLimit()
                 .beginTemporaryLimit().setName("2").setAcceptableDuration(120).setValue(110).endTemporaryLimit()
                 .setPermanentLimit(200)
@@ -104,8 +104,9 @@ class DynaFlowTest extends AbstractDynawoTest {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         // Changing limits to have some pre- and post-contingencies limit violations
-        network.getLine("_BUS____1-BUS____5-1_AC").newCurrentLimits1().setPermanentLimit(500.).add();
-        network.getLine("_BUS____1-BUS____2-1_AC").newCurrentLimits1()
+        network.getLine("_BUS____1-BUS____5-1_AC").getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits()
+                .setPermanentLimit(500.).add();
+        network.getLine("_BUS____1-BUS____2-1_AC").getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits()
                 .beginTemporaryLimit().setName("tl").setAcceptableDuration(120).setValue(1200).endTemporaryLimit()
                 .setPermanentLimit(1500.)
                 .add();
