@@ -8,6 +8,8 @@
 package com.powsybl.dynawo.outputvariables;
 
 import com.powsybl.dynawo.commons.AbstractCsvParser;
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +29,9 @@ public final class CsvFsvParser extends AbstractCsvParser<FsvEntry> {
     }
 
     public CsvFsvParser(char separator) {
-        super(separator, true);
+        CsvParserSettings settings = setupSettings(separator, true);
+        settings.setMaxColumns(NB_COLUMNS);
+        this.csvParser = new CsvParser(settings);
     }
 
     @Override
@@ -51,10 +55,5 @@ public final class CsvFsvParser extends AbstractCsvParser<FsvEntry> {
     @Override
     protected boolean hasCorrectNbColumns(int tokensSize) {
         return tokensSize == NB_COLUMNS;
-    }
-
-    @Override
-    protected int getNbColumns() {
-        return NB_COLUMNS;
     }
 }
