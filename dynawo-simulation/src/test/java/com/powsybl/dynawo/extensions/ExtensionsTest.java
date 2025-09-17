@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class ExtensionsTest {
+class ExtensionsTest {
 
     @Test
     void getExtensions() {
