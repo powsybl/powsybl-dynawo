@@ -48,6 +48,7 @@ public final class SimulationModels implements DynawoData {
             bbm.createMacroConnections(adder);
             bbm.createDynamicModelParameters(parametersAdder);
             bbm.updateDynamicModelParameters(parameterUpdater);
+            bbm.createDynamicModelInfoExtension();
         }
         for (BlackBoxModel bbem : eventModels) {
             bbem.createMacroConnections(adder);
