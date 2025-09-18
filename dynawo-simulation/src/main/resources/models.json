@@ -292,6 +292,27 @@
         "properties": [
           "TRANSFORMER"
         ]
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsGovCt2St4bAuxTfo",
+        "properties": [
+          "TRANSFORMER",
+          "AUXILIARY"
+        ]
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsGovSteam1St4bAuxTfo",
+        "properties": [
+          "TRANSFORMER",
+          "AUXILIARY"
+        ]
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsGovHydro4St4bAuxTfo",
+        "properties": [
+          "TRANSFORMER",
+          "AUXILIARY"
+        ]
       }
     ]
   },
