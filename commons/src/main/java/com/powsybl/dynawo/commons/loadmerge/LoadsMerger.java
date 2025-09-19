@@ -8,10 +8,7 @@
 package com.powsybl.dynawo.commons.loadmerge;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.Load;
-import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.VoltageLevel;
+import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.serde.NetworkSerDe;
 
 import java.util.EnumMap;
@@ -45,22 +42,37 @@ public final class LoadsMerger {
                 .filter(bus -> bus.getLoadStream().count() > 1)
                 .flatMap(LoadsMerger::getLoadsToMergeStream)
                 .toList();
-
         loadsToMergeList.forEach(LoadsToMerge::merge);
     }
 
     private static Stream<LoadsToMerge> getLoadsToMergeStream(Bus bus) {
-        return getLoadPowersSignsGrouping(bus).entrySet().stream()
+        return bus.getLoadStream()
+                .collect(Collectors.groupingBy(
+                        LoadsMerger::getLoadPowersSigns,
+                        () -> new EnumMap<>(LoadPowersSigns.class),
+                        Collectors.toList()))
+                .entrySet()
+                .stream()
                 .filter(e -> e.getValue().size() > 1)
                 .map(e -> new LoadsToMerge(e.getKey(), e.getValue(), bus));
     }
 
-    public static Map<LoadPowersSigns, List<Load>> getLoadPowersSignsGrouping(Bus bus) {
-        return bus.getLoadStream().collect(Collectors.groupingBy(
-                LoadsMerger::getLoadPowersSigns, () -> new EnumMap<>(LoadPowersSigns.class), Collectors.toList()));
+    public static Map<LoadPowersSigns, Terminal> getLoadTerminalByPowersSigns(Bus bus) {
+        return bus.getLoadStream().collect(Collectors.toMap(
+                LoadsMerger::getLoadPowersSigns,
+                Load::getTerminal,
+                (existing, replacement) -> existing,
+                () -> new EnumMap<>(LoadPowersSigns.class)));
     }
 
-    public static LoadPowersSigns getLoadPowersSigns(Load load) {
+    public static Map<LoadPowersSigns, List<Terminal>> getLoadTerminalsByPowersSigns(Bus bus) {
+        return bus.getLoadStream().collect(Collectors.groupingBy(
+                LoadsMerger::getLoadPowersSigns,
+                () -> new EnumMap<>(LoadPowersSigns.class),
+                Collectors.mapping(Load::getTerminal, Collectors.toList())));
+    }
+
+    private static LoadPowersSigns getLoadPowersSigns(Load load) {
         if (load.getP0() >= 0) {
             return load.getQ0() >= 0 ? P_POS_Q_POS : P_POS_Q_NEG;
         } else {
