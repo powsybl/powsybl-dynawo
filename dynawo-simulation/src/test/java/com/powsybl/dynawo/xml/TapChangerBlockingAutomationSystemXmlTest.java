@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.DynamicModelsConfigUtils;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerTapChangerBuilder;
 import com.powsybl.dynawo.models.loads.LoadTwoTransformersTapChangersBuilder;
@@ -54,6 +55,7 @@ class TapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlT
                 .transformers("NGEN_NHV1", "NHV2_NLOAD", "LOAD", "LOAD2")
                 .uMeasurements("NHV1", "NHV2")
                 .build());
+        DynamicModelsConfigUtils.mandatoryModelsAdder(network, dynamicModels);
     }
 
     @Test
