@@ -7,11 +7,12 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynamicModelsConfigUtils;
 import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
+import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,6 +53,7 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
                     .staticId("NGEN_NHV1")
                     .parameterSetId("tt")
                     .build());
+            DynamicModelsConfigUtils.mandatoryModelsAdder(network, dynamicModels);
         }
     }
 

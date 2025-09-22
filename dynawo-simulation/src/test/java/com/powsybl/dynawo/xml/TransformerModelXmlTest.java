@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynamicModelsConfigUtils;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -31,6 +32,7 @@ class TransformerModelXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("NGEN_NHV1")
                 .parameterSetId("TFR")
                 .build());
+        DynamicModelsConfigUtils.mandatoryModelsAdder(network, dynamicModels);
     }
 
     @Test

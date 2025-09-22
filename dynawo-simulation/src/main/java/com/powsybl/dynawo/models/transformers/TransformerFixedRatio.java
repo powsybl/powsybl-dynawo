@@ -105,4 +105,9 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     public String getUPuVarName(TwoSides sides) {
         return "@STATIC_ID@@NODE" + sides.getNum() + "@_Upu_value";
     }
+
+    @Override
+    public boolean needMandatoryDynamicModels() {
+        return true;
+    }
 }

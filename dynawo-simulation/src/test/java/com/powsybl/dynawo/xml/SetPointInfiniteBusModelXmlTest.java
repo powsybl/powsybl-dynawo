@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynamicModelsConfigUtils;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
@@ -25,6 +26,7 @@ class SetPointInfiniteBusModelXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void setupNetwork() {
         network = EurostagTutorialExample1Factory.create();
+
     }
 
     @Override
@@ -41,6 +43,7 @@ class SetPointInfiniteBusModelXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("NGEN")
                 .parameterSetId("ib")
                 .build());
+        DynamicModelsConfigUtils.mandatoryModelsAdder(network, dynamicModels);
     }
 
     @Test
