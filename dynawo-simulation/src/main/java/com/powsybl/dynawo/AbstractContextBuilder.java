@@ -19,6 +19,7 @@ import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.AbstractBus;
 import com.powsybl.dynawo.models.frequencysynchronizers.*;
 import com.powsybl.dynawo.parameters.ParametersSet;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 
 import java.util.*;
@@ -109,6 +110,11 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         }
     }
 
+    private void checkDefaultModels() {
+//        dynamicModels.stream().filter(bbm -> bbm instanceof AbstractBus)
+//                .
+    }
+
     private void setupDynamicModels() {
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId(reportNode).and(supportedVersion(dynawoVersion, reportNode)));
@@ -126,6 +132,23 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         }
         setupFrequencySynchronizer();
         blackBoxModelSupplier = BlackBoxModelSupplier.createFrom(dynamicModels);
+        checkForbiddenDefaultModels();
+    }
+
+    private void checkForbiddenDefaultModels() {
+        if (dynamicModels.stream().anyMatch(BlackBoxModel::needMandatoryDynamicModels)) {
+            checkEquipmentDynamicModels(network.getLines());
+            checkEquipmentDynamicModels(network.getTwoWindingsTransformers());
+            checkEquipmentDynamicModels(network.getBusBreakerView().getBuses());
+        }
+    }
+
+    private <E extends Identifiable<E>> void checkEquipmentDynamicModels(Iterable<E> equipments) {
+        for (E equipment : equipments) {
+            if (!blackBoxModelSupplier.hasDynamicModel(equipment)) {
+                throw new PowsyblException(String.format("At least one dynamic model forbid default models and the equipment %s does not possess a dynamic model", equipment.getId()));
+            }
+        }
     }
 
     private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm) {

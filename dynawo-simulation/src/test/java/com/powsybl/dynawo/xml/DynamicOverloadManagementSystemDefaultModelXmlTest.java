@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.xml;
 
-import com.powsybl.dynawo.DynamicModelsConfigUtils;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.iidm.network.TwoSides;
@@ -17,12 +16,10 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 
-import static com.powsybl.iidm.network.test.EurostagTutorialExample1Factory.*;
-
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class DynamicOverloadManagementSystemModelXmlTest extends AbstractDynamicModelXmlTest {
+class DynamicOverloadManagementSystemDefaultModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -34,23 +31,22 @@ class DynamicOverloadManagementSystemModelXmlTest extends AbstractDynamicModelXm
         dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                 .dynamicModelId("BBM_CLA_LINE")
                 .parameterSetId("cla")
-                .controlledBranch(NHV1_NHV2_1)
-                .iMeasurement(NHV2_NLOAD)
+                .controlledBranch("NHV1_NHV2_1")
+                .iMeasurement("NHV1_NHV2_1")
                 .iMeasurementSide(TwoSides.ONE)
                 .build());
         dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                 .dynamicModelId("BBM_CLA_TRANSFORMER")
                 .parameterSetId("cla")
-                .controlledBranch(NGEN_NHV1)
-                .iMeasurement(NGEN_NHV1)
+                .controlledBranch("NGEN_NHV1")
+                .iMeasurement("NGEN_NHV1")
                 .iMeasurementSide(TwoSides.TWO)
                 .build());
-        DynamicModelsConfigUtils.mandatoryModelsAdder(network, dynamicModels);
     }
 
     @Test
     void writeModel() throws SAXException, IOException {
         DydXml.write(tmpDir, context.getSimulationDydData());
-        validate("dyd.xsd", "cla_dyna_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        validate("dyd.xsd", "cla_default_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 }
