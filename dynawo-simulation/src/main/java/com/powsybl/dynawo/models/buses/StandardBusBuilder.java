@@ -10,6 +10,8 @@ package com.powsybl.dynawo.models.buses;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.iidm.network.Bus;
+import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Collection;
@@ -17,7 +19,7 @@ import java.util.Collection;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
+public class StandardBusBuilder extends AbstractEquipmentModelBuilder<Bus, StandardBusBuilder> {
 
     public static final String CATEGORY = "BASE_BUS";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
@@ -59,7 +61,12 @@ public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
     }
 
     protected StandardBusBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
-        super(network, modelConfig, parentReportNode);
+        super(network, modelConfig, IdentifiableType.BUS, parentReportNode);
+    }
+
+    @Override
+    protected Bus findEquipment(String staticId) {
+        return network.getBusBreakerView().getBus(staticId);
     }
 
     @Override
