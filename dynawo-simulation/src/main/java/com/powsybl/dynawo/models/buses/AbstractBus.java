@@ -38,11 +38,6 @@ public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> im
     }
 
     @Override
-    public String getName() {
-        return getLib();
-    }
-
-    @Override
     public Optional<String> getSwitchOffSignalVarName() {
         return Optional.empty();
     }
@@ -60,5 +55,10 @@ public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> im
     @Override
     public Optional<String> getStateValueVarName() {
         return Optional.empty();
+    }
+
+    @Override
+    public boolean needMandatoryDynamicModels() {
+        return true;
     }
 }
