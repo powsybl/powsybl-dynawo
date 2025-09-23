@@ -11,7 +11,6 @@ import com.powsybl.dynawo.DynamicModelsConfigUtils;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
-import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -34,10 +33,6 @@ class SetPointInfiniteBusModelXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
                 .staticId("GEN")
                 .parameterSetId("pq")
-                .build());
-        dynamicModels.add(TransformerFixedRatioBuilder.of(network)
-                .staticId("NGEN_NHV1")
-                .parameterSetId("t")
                 .build());
         dynamicModels.add(InfiniteBusBuilder.of(network, "InfiniteBus")
                 .staticId("NGEN")
