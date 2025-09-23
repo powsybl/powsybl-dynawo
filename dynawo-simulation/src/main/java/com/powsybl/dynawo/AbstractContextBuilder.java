@@ -110,11 +110,6 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         }
     }
 
-    private void checkDefaultModels() {
-//        dynamicModels.stream().filter(bbm -> bbm instanceof AbstractBus)
-//                .
-    }
-
     private void setupDynamicModels() {
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId(reportNode).and(supportedVersion(dynawoVersion, reportNode)));
