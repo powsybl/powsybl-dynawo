@@ -45,9 +45,4 @@ public class StandardBus extends AbstractBus {
     public String getTerminalVarName() {
         return "bus_terminal";
     }
-
-    @Override
-    public boolean needMandatoryDynamicModels() {
-        return true;
-    }
 }
