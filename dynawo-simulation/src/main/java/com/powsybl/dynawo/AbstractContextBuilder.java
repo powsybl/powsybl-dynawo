@@ -17,6 +17,7 @@ import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.AbstractBus;
+import com.powsybl.dynawo.models.buses.InfiniteBusGenerator;
 import com.powsybl.dynawo.models.frequencysynchronizers.*;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.simplifiers.ModelSimplifiers;
@@ -171,7 +172,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     private void setupFrequencySynchronizer() {
         List<SignalNModel> signalNModels = filterDynamicModels(SignalNModel.class);
         List<FrequencySynchronizedModel> frequencySynchronizedModels = filterDynamicModels(FrequencySynchronizedModel.class);
-        boolean hasSpecificBuses = dynamicModels.stream().anyMatch(AbstractBus.class::isInstance);
+        boolean hasSpecificBuses = dynamicModels.stream().anyMatch(bbm -> bbm instanceof AbstractBus || bbm instanceof InfiniteBusGenerator);
         boolean hasFrequencySynchronizedModels = !frequencySynchronizedModels.isEmpty();
         boolean hasSignalNModels = !signalNModels.isEmpty();
         String defaultParFile = DynawoSimulationConstants.getSimulationParFile(network);
