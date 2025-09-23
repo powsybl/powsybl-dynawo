@@ -36,9 +36,4 @@ public class InfiniteBus extends AbstractBus {
     public String getTerminalVarName() {
         return "infiniteBus_terminal";
     }
-
-    @Override
-    public boolean needMandatoryDynamicModels() {
-        return true;
-    }
 }
