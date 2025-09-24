@@ -12,6 +12,9 @@ import com.powsybl.iidm.network.Network;
 
 import java.util.Objects;
 
+import static com.powsybl.dynawo.builders.BuilderReports.createModelInstantiationReportNode;
+import static com.powsybl.dynawo.builders.BuilderReports.setupModelInstantiation;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -21,22 +24,20 @@ public abstract class AbstractDynamicModelBuilder {
     protected final ReportNode reportNode;
     protected boolean isInstantiable = true;
 
-    protected AbstractDynamicModelBuilder(Network network, ReportNode reportNode) {
+    protected AbstractDynamicModelBuilder(Network network, ReportNode parentReportNode) {
         this.network = Objects.requireNonNull(network);
-        this.reportNode = Objects.requireNonNull(reportNode);
+        this.reportNode = createModelInstantiationReportNode(Objects.requireNonNull(parentReportNode));
     }
 
     protected abstract void checkData();
 
     protected final boolean isInstantiable() {
         checkData();
-        if (isInstantiable) {
-            BuilderReports.reportModelInstantiation(reportNode, getModelId());
-        } else {
-            BuilderReports.reportModelInstantiationFailure(reportNode, getModelId());
-        }
+        setupModelInstantiation(reportNode, getModelName(), getModelId(), isInstantiable);
         return isInstantiable;
     }
+
+    protected abstract String getModelName();
 
     protected abstract String getModelId();
 }

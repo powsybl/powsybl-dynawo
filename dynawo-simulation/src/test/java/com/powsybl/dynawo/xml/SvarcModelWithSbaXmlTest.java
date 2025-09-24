@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.iidm.network.extensions.StandbyAutomatonAdder;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
@@ -36,7 +37,6 @@ class SvarcModelWithSbaXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(BaseStaticVarCompensatorBuilder.of(network)
-                .dynamicModelId("BBM_SVARC2")
                 .staticId("SVC2")
                 .parameterSetId("svc")
                 .build());
@@ -44,7 +44,7 @@ class SvarcModelWithSbaXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", "svarc_sba_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 }

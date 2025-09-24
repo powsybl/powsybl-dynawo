@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_HVDC" lib="HvdcVSCDanglingUdc" parFile="models.par" parId="hvdc" staticId="L">
-        <dyn:macroStaticRef id="MSR_HvdcVSCDanglingUdc"/>
+    <dyn:blackBoxModel id="L" lib="HvdcVscDanglingUdc" parFile="models.par" parId="hvdc" staticId="L">
+        <dyn:macroStaticRef id="MSR_HvdcVscDanglingUdc"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="Disconnect_L" lib="EventSetPointBoolean" parFile="hvdctest.par" parId="Disconnect_L"/>
-    <dyn:macroConnector id="MC_HvdcVSCDanglingUdcSide1-DefaultEquipmentConnectionPoint">
-        <dyn:connect var1="hvdc_terminal1" var2="@STATIC_ID@@NODE1@_ACPIN"/>
-    </dyn:macroConnector>
-    <dyn:macroConnector id="MC_HvdcVSCDanglingUdcSide2-DefaultEquipmentConnectionPoint">
+    <dyn:macroConnector id="MC_HvdcVscDanglingUdcSide2-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="hvdc_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
-        <dyn:connect var1="hvdc_switchOffSignal1Side2" var2="@STATIC_ID@@NODE2@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_EventHvdcDisconnectionSide2-HvdcVSCDanglingUdc">
-        <dyn:connect var1="event_state1" var2="hvdc_Conv2_switchOffSignal2"/>
+    <dyn:macroConnector id="MC_HvdcVscDanglingUdcSide1-DefaultEquipmentConnectionPoint">
+        <dyn:connect var1="hvdc_terminal1" var2="@STATIC_ID@@NODE1@_ACPIN"/>
+        <dyn:connect var1="hvdc_Conv1_switchOffSignal1" var2="@STATIC_ID@@NODE1@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_HvdcVSCDanglingUdc">
+    <dyn:macroConnector id="MC_EventHvdcDisconnectionSide1-HvdcVscDanglingUdc">
+        <dyn:connect var1="event_state1" var2="hvdc_Conv1_switchOffSignal2"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_HvdcVscDanglingUdc">
         <dyn:staticRef var="hvdc_PInj1Pu" staticVar="p1"/>
         <dyn:staticRef var="hvdc_QInj1Pu" staticVar="q1"/>
         <dyn:staticRef var="hvdc_state" staticVar="state1"/>
@@ -22,7 +22,7 @@
         <dyn:staticRef var="hvdc_QInj2Pu" staticVar="q2"/>
         <dyn:staticRef var="hvdc_state" staticVar="state2"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_HvdcVSCDanglingUdcSide1-DefaultEquipmentConnectionPoint" id1="BBM_HVDC" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_HvdcVSCDanglingUdcSide2-DefaultEquipmentConnectionPoint" id1="BBM_HVDC" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_EventHvdcDisconnectionSide2-HvdcVSCDanglingUdc" id1="Disconnect_L" id2="BBM_HVDC"/>
+    <dyn:macroConnect connector="MC_HvdcVscDanglingUdcSide2-DefaultEquipmentConnectionPoint" id1="L" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_HvdcVscDanglingUdcSide1-DefaultEquipmentConnectionPoint" id1="L" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_EventHvdcDisconnectionSide1-HvdcVscDanglingUdc" id1="Disconnect_L" id2="L"/>
 </dyn:dynamicModelsArchitecture>

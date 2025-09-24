@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
@@ -41,7 +40,7 @@ public class PhaseShifterBlockingIAutomationSystem extends AbstractPureDynamicBl
         if (isConnected) {
             adder.createMacroConnections(this, transformer.getValue(), TransformerModel.class, this::getVarConnectionsWith);
         } else {
-            DynawoSimulationReports.reportEmptyAutomaton(adder.getReportNode(), getName(), getDynamicModelId(), phaseShifterIDynamicId, PhaseShifterIModel.class.getSimpleName());
+            DynawoSimulationReports.reportEmptyAutomationSystem(adder.getReportNode(), getName(), getDynamicModelId(), phaseShifterIDynamicId, PhaseShifterIModel.class.getSimpleName());
         }
     }
 
@@ -55,9 +54,9 @@ public class PhaseShifterBlockingIAutomationSystem extends AbstractPureDynamicBl
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         if (isConnected) {
-            super.write(writer, context);
+            super.write(writer, parFileName);
         }
     }
 }

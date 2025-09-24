@@ -13,13 +13,11 @@ import com.powsybl.iidm.network.Identifiable;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface EquipmentModelBuilder<T extends Identifiable<?>, R extends EquipmentModelBuilder<T, R>> extends ModelBuilder<DynamicModel> {
+public interface EquipmentModelBuilder<T extends Identifiable<T>, R extends EquipmentModelBuilder<T, R>> extends ModelBuilder<DynamicModel> {
 
     R staticId(String staticId);
 
     R equipment(T equipment);
-
-    R dynamicModelId(String dynamicModelId);
 
     R parameterSetId(String parameterSetId);
 }

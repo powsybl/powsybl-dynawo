@@ -10,7 +10,7 @@ package warnings
 
 import com.powsybl.iidm.network.TwoSides
 
-TwoLevelsOverloadManagementSystem {
+TwoLevelOverloadManagementSystem {
     dynamicModelId "CLA_NGEN"
     parameterSetId "CLA"
     controlledBranch "NHV1_NHV2_2"

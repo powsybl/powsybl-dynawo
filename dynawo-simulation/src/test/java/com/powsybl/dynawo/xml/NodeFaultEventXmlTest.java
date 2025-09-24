@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ class NodeFaultEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "node_fault_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "node_fault_par.xml", tmpDir.resolve(context.getSimulationParFile()));

@@ -14,7 +14,7 @@ import com.powsybl.iidm.network.*;
 
 import java.util.*;
 
-import static com.powsybl.dynawo.builders.BuildersUtil.MEASUREMENT_POINT_TYPE;
+import static com.powsybl.dynawo.builders.BuildersUtil.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -27,7 +27,7 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     private static final String U_MEASUREMENTS_FIELD = "uMeasurements";
     private static final String TRANSFORMER_FIELD = "transformers";
 
-    private final BuilderEquipmentsList<Identifiable<?>> tapChangerEquipments;
+    private final BuilderModelEquipmentsList<Identifiable<?>> tapChangerEquipments;
     private final BuilderIdListEquipmentList<Identifiable<?>> uMeasurementPoints;
 
     public static TapChangerBlockingAutomationSystemBuilder of(Network network) {
@@ -51,6 +51,10 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
         return new TapChangerBlockingAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -62,10 +66,10 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
-        tapChangerEquipments = new BuilderEquipmentsList<>(TAP_CHANGER_TYPE, TRANSFORMER_FIELD, true);
-        uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD);
+    protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
+        tapChangerEquipments = new BuilderModelEquipmentsList<>(TAP_CHANGER_TYPE, TRANSFORMER_FIELD, reportNode);
+        uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD, reportNode);
     }
 
     public TapChangerBlockingAutomationSystemBuilder transformers(String staticId) {
@@ -89,35 +93,39 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     }
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(String staticId) {
-        uMeasurementPoints.addEquipment(staticId, id -> BuildersUtil.getActionConnectionPoint(network, id));
+        uMeasurementPoints.addEquipment(staticId, id -> BuildersUtil.getActionConnectionPoint(network, id),
+                IS_ACTION_CONNECTION_POINT_ENERGIZED);
         return self();
     }
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(String... staticIds) {
-        uMeasurementPoints.addEquipments(staticIds, id -> BuildersUtil.getActionConnectionPoint(network, id));
+        uMeasurementPoints.addEquipments(staticIds, id -> BuildersUtil.getActionConnectionPoint(network, id),
+                IS_ACTION_CONNECTION_POINT_ENERGIZED);
         return self();
     }
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(Collection<String> staticIds) {
-        uMeasurementPoints.addEquipments(staticIds, id -> BuildersUtil.getActionConnectionPoint(network, id));
+        uMeasurementPoints.addEquipments(staticIds, id -> BuildersUtil.getActionConnectionPoint(network, id),
+                IS_ACTION_CONNECTION_POINT_ENERGIZED);
         return self();
     }
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(Collection<String>[] staticIdsArray) {
-        uMeasurementPoints.addEquipments(staticIdsArray, id -> BuildersUtil.getActionConnectionPoint(network, id));
+        uMeasurementPoints.addEquipments(staticIdsArray, id -> BuildersUtil.getActionConnectionPoint(network, id),
+                IS_ACTION_CONNECTION_POINT_ENERGIZED, ENERGIZED_REPORT_NODE_BUILDER);
         return self();
     }
 
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= tapChangerEquipments.checkEquipmentData(reportNode);
-        isInstantiable &= uMeasurementPoints.checkEquipmentData(reportNode);
+        isInstantiable &= tapChangerEquipments.checkEquipmentData();
+        isInstantiable &= uMeasurementPoints.checkEquipmentData();
     }
 
     @Override
     public TapChangerBlockingAutomationSystem build() {
-        return isInstantiable() ? new TapChangerBlockingAutomationSystem(dynamicModelId, parameterSetId, tapChangerEquipments.getEquipments(), tapChangerEquipments.getMissingEquipmentIds(), uMeasurementPoints.getEquipments(), modelConfig) : null;
+        return isInstantiable() ? new TapChangerBlockingAutomationSystem(dynamicModelId, parameterSetId, tapChangerEquipments.getEquipments(), tapChangerEquipments.getDynamicModelIds(), uMeasurementPoints.getEquipments(), modelConfig) : null;
     }
 
     @Override

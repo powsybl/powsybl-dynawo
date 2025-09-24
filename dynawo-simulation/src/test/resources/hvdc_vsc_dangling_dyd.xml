@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_L" lib="HvdcVSCDanglingP" parFile="models.par" parId="hv" staticId="L">
-        <dyn:macroStaticRef id="MSR_HvdcVSCDanglingP"/>
+    <dyn:blackBoxModel id="L" lib="HvdcVscDanglingP" parFile="models.par" parId="hv" staticId="L">
+        <dyn:macroStaticRef id="MSR_HvdcVscDanglingP"/>
     </dyn:blackBoxModel>
-    <dyn:macroConnector id="MC_HvdcVSCDanglingPSide2-DefaultEquipmentConnectionPoint">
+    <dyn:macroConnector id="MC_HvdcVscDanglingPSide2-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="hvdc_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_HvdcVSCDanglingPSide1-DefaultEquipmentConnectionPoint">
+    <dyn:macroConnector id="MC_HvdcVscDanglingPSide1-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="hvdc_terminal1" var2="@STATIC_ID@@NODE1@_ACPIN"/>
-        <dyn:connect var1="hvdc_switchOffSignal1Side1" var2="@STATIC_ID@@NODE1@_switchOff"/>
+        <dyn:connect var1="hvdc_Conv1_switchOffSignal1" var2="@STATIC_ID@@NODE1@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_HvdcVSCDanglingP">
+    <dyn:macroStaticReference id="MSR_HvdcVscDanglingP">
         <dyn:staticRef var="hvdc_PInj1Pu" staticVar="p1"/>
         <dyn:staticRef var="hvdc_QInj1Pu" staticVar="q1"/>
         <dyn:staticRef var="hvdc_state" staticVar="state1"/>
@@ -18,6 +18,6 @@
         <dyn:staticRef var="hvdc_QInj2Pu" staticVar="q2"/>
         <dyn:staticRef var="hvdc_state" staticVar="state2"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_HvdcVSCDanglingPSide2-DefaultEquipmentConnectionPoint" id1="BBM_L" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_HvdcVSCDanglingPSide1-DefaultEquipmentConnectionPoint" id1="BBM_L" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_HvdcVscDanglingPSide2-DefaultEquipmentConnectionPoint" id1="L" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_HvdcVscDanglingPSide1-DefaultEquipmentConnectionPoint" id1="L" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>

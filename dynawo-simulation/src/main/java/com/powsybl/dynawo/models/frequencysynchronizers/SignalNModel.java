@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.frequencysynchronizers;
 
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.iidm.network.Bus;
+import com.powsybl.iidm.network.Identifiable;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -17,7 +18,7 @@ public interface SignalNModel extends Model {
 
     String getNVarName();
 
-    String getStaticId();
+    Identifiable<?> getEquipment();
 
     Bus getConnectableBus();
 }

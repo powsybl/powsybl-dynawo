@@ -7,8 +7,9 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawo.models.generators.GeneratorFictitiousBuilder;
+import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.shunts.BaseShuntBuilder;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.VoltageLevel;
@@ -28,6 +29,8 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
         network = SvcTestCaseFactory.create();
         VoltageLevel vl = network.getVoltageLevel("VL1");
         Bus b = vl.getBusBreakerView().getBus("B1");
+        b.setV(400).setAngle(0);
+        network.getBusBreakerView().getBus("B2").setV(400).setAngle(0);
         vl.newShuntCompensator()
                 .setId("SH1")
                 .setConnectableBus(b.getId())
@@ -42,13 +45,11 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(GeneratorFictitiousBuilder.of(network)
-                .dynamicModelId("BBM_GEN")
+        dynamicModels.add(BaseGeneratorBuilder.of(network)
                 .staticId("G1")
                 .parameterSetId("GF")
                 .build());
         dynamicModels.add(BaseShuntBuilder.of(network)
-                .dynamicModelId("BBM_SHUNT")
                 .staticId("SH1")
                 .parameterSetId("BS")
                 .build());
@@ -72,7 +73,7 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeDisconnectModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "disconnect_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "disconnect_par.xml", tmpDir.resolve(context.getSimulationParFile()));

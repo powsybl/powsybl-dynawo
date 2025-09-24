@@ -43,6 +43,10 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
         return new WeccBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -54,17 +58,17 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected WeccBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected WeccBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override
     public WeccGen build() {
         if (isInstantiable()) {
             if (modelConfig.isSynchronized()) {
-                return new SynchronizedWeccGen(dynamicModelId, getEquipment(), parameterSetId, modelConfig, modelConfig.internalModelPrefix());
+                return new SynchronizedWeccGen(getEquipment(), parameterSetId, modelConfig, modelConfig.internalModelPrefix());
             } else {
-                return new WeccGen(dynamicModelId, getEquipment(), parameterSetId, modelConfig, modelConfig.internalModelPrefix());
+                return new WeccGen(getEquipment(), parameterSetId, modelConfig, modelConfig.internalModelPrefix());
             }
         }
         return null;

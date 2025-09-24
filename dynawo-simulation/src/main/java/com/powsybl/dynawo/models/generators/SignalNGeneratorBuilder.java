@@ -43,6 +43,10 @@ public class SignalNGeneratorBuilder extends AbstractGeneratorBuilder<SignalNGen
         return new SignalNGeneratorBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -54,13 +58,13 @@ public class SignalNGeneratorBuilder extends AbstractGeneratorBuilder<SignalNGen
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected SignalNGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected SignalNGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override
     public SignalNGenerator build() {
-        return isInstantiable() ? new SignalNGenerator(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new SignalNGenerator(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

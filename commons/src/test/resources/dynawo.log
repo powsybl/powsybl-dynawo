@@ -9,4 +9,5 @@
 2023-11-09 11:36:58 |  | Algebraic mode change for model CONST.TG7 at t = 0
 2023-11-09 11:36:58 | DEBUG | call of SolverReInit i.e. a new symbolic and numerical factorization will be performed
 2023-11-09 11:36:59 | WARN | five consecutive steps have been taken that satisfy a scaled step length test
+2023-11-09 11:36:59 | WARN | IDA IDASolve :At t = 11.6076 and h = 1e-06, the corrector convergence failed repeatedly or with |h| = hmin.
 2023-11-09 11:36:59 | ERROR | KINSOL fails to solve the problem ( DYNSolverKINAlgRestoration.cpp:394 )

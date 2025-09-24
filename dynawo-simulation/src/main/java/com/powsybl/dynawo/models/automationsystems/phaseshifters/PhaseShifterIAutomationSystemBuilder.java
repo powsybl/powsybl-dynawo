@@ -43,6 +43,10 @@ public class PhaseShifterIAutomationSystemBuilder extends AbstractPhaseShifterMo
         return new PhaseShifterIAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -54,8 +58,8 @@ public class PhaseShifterIAutomationSystemBuilder extends AbstractPhaseShifterMo
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected PhaseShifterIAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected PhaseShifterIAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override

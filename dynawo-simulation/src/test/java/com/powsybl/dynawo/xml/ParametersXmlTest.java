@@ -7,7 +7,6 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import org.junit.jupiter.api.Test;
@@ -22,11 +21,13 @@ class ParametersXmlTest extends DynawoTestUtil {
 
     @Test
     void writeOmegaRef() throws SAXException, IOException {
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(PlatformConfig.defaultConfig(), fileSystem);
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
-
-        DydXml.write(tmpDir, context);
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .dynawoParameters(DynawoSimulationParameters.load(PlatformConfig.defaultConfig(), fileSystem))
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .build();
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("parameters.xsd", "omega_ref.xml", tmpDir.resolve(context.getSimulationParFile()));
     }

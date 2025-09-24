@@ -2,7 +2,9 @@
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_CLA_LINE" lib="CurrentLimitAutomaton" parFile="models.par" parId="cla"/>
     <dyn:blackBoxModel id="BBM_CLA_TRANSFORMER" lib="CurrentLimitAutomaton" parFile="models.par" parId="cla"/>
-    <dyn:blackBoxModel id="BBM_TRANSFORMER" lib="TransformerFixedRatio" parFile="models.par" parId="tf" staticId="NHV2_NLOAD"/>
+    <dyn:blackBoxModel id="NHV2_NLOAD" lib="TransformerFixedRatio" parFile="models.par" parId="tf" staticId="NHV2_NLOAD">
+        <dyn:macroStaticRef id="MSR_TransformerFixedRatio"/>
+    </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_CLA_TRANSFORMER2" lib="CurrentLimitAutomaton" parFile="models.par" parId="cla"/>
     <dyn:macroConnector id="MC_CurrentLimitAutomatonMeasureSide1-DefaultLine">
         <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide1"/>
@@ -19,21 +21,28 @@
         <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TransformerFixedRatioSide1-DefaultEquipmentConnectionPoint">
-        <dyn:connect var1="transformer_terminal1" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="transformer_terminal1" var2="@STATIC_ID@@NODE1@_ACPIN"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint">
-        <dyn:connect var1="transformer_terminal2" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="transformer_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_CurrentLimitAutomatonMeasureSide2-TransformerFixedRatio">
         <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="transformer_iSide2"/>
         <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="transformer_desactivate_currentLimits"/>
     </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_TransformerFixedRatio">
+        <dyn:staticRef var="transformer_P1Pu" staticVar="p1"/>
+        <dyn:staticRef var="transformer_Q1Pu" staticVar="q1"/>
+        <dyn:staticRef var="transformer_P2Pu" staticVar="p2"/>
+        <dyn:staticRef var="transformer_Q2Pu" staticVar="q2"/>
+        <dyn:staticRef var="transformer_state" staticVar="state"/>
+    </dyn:macroStaticReference>
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide1-DefaultLine" id1="BBM_CLA_LINE" id2="NETWORK" name2="NHV1_NHV2_1"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-DefaultLine" id1="BBM_CLA_LINE" id2="NETWORK" name2="NHV1_NHV2_1"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide2-DefaultTransformer" id1="BBM_CLA_TRANSFORMER" id2="NETWORK" name2="NGEN_NHV1"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-DefaultTransformer" id1="BBM_CLA_TRANSFORMER" id2="NETWORK" name2="NGEN_NHV1"/>
-    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-DefaultEquipmentConnectionPoint" id1="BBM_TRANSFORMER" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint" id1="BBM_TRANSFORMER" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide2-TransformerFixedRatio" id1="BBM_CLA_TRANSFORMER2" id2="BBM_TRANSFORMER"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-DefaultEquipmentConnectionPoint" id1="NHV2_NLOAD" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint" id1="NHV2_NLOAD" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide2-TransformerFixedRatio" id1="BBM_CLA_TRANSFORMER2" id2="NHV2_NLOAD"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-DefaultLine" id1="BBM_CLA_TRANSFORMER2" id2="NETWORK" name2="NHV1_NHV2_1"/>
 </dyn:dynamicModelsArchitecture>

@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
@@ -36,7 +37,6 @@ class EmptyTapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicMode
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
-                .dynamicModelId("BBM_LOAD")
                 .staticId("LOAD")
                 .parameterSetId("lot")
                 .build());
@@ -55,7 +55,7 @@ class EmptyTapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicMode
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "tap_changer_blocking_empty_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         checkReport("""

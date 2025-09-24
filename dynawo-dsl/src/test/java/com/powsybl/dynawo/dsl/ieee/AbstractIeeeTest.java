@@ -16,7 +16,6 @@ import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
-import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.AfterEach;
 
@@ -44,7 +43,7 @@ public abstract class AbstractIeeeTest {
 
     private DynamicModelsSupplier dynamicModelsSupplier;
     private EventModelsSupplier eventModelsSupplier;
-    private CurvesSupplier curvesSupplier;
+    private OutputVariablesSupplier outputVariablesSupplier;
 
     @AfterEach
     void tearDown() throws IOException {
@@ -54,7 +53,7 @@ public abstract class AbstractIeeeTest {
     public abstract String getWorkingDirName();
 
     protected void setup(String parametersFile, String networkParametersFile, String networkParametersId, String solverParametersFile, String solverParametersId, String networkFile,
-                         String dynamicModelsFile, String eventModelsFile, String curvesFile, int startTime, int stopTime) throws IOException {
+                         String dynamicModelsFile, String eventModelsFile, String outputVariablesFile, int startTime, int stopTime) throws IOException {
 
         // The parameter files are copied into the PlatformConfig filesystem,
         // that filesystem is the one that DynawoSimulationContext and ParametersXml will use to read the parameters
@@ -83,13 +82,13 @@ public abstract class AbstractIeeeTest {
             eventModelsSupplier = EventModelsSupplier.empty();
         }
 
-        // Curves
-        if (curvesFile != null) {
-            Files.copy(Objects.requireNonNull(getClass().getResourceAsStream(curvesFile)), workingDir.resolve("curves.groovy"));
-            List<CurveGroovyExtension> curveGroovyExtensions = GroovyExtension.find(CurveGroovyExtension.class, DynawoSimulationProvider.NAME);
-            curvesSupplier = new GroovyCurvesSupplier(workingDir.resolve("curves.groovy"), curveGroovyExtensions);
+        // Output Variables
+        if (outputVariablesFile != null) {
+            Files.copy(Objects.requireNonNull(getClass().getResourceAsStream(outputVariablesFile)), workingDir.resolve("outputVariables.groovy"));
+            List<OutputVariableGroovyExtension> variableGroovyExtensions = GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME);
+            outputVariablesSupplier = new GroovyOutputVariablesSupplier(workingDir.resolve("outputVariables.groovy"), variableGroovyExtensions);
         } else {
-            curvesSupplier = CurvesSupplier.empty();
+            outputVariablesSupplier = OutputVariablesSupplier.empty();
         }
 
         parameters = new DynamicSimulationParameters()
@@ -97,18 +96,10 @@ public abstract class AbstractIeeeTest {
                 .setStopTime(stopTime);
         DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters();
         parameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
-        dynawoSimulationParameters.setModelsParameters(ParametersXml.load(getClass().getResourceAsStream(parametersFile)))
-                .setNetworkParameters(ParametersXml.load(getClass().getResourceAsStream(networkParametersFile), networkParametersId))
-                .setSolverParameters(ParametersXml.load(getClass().getResourceAsStream(solverParametersFile), solverParametersId))
+        dynawoSimulationParameters.setModelsParameters(getClass().getResourceAsStream(parametersFile))
+                .setNetworkParameters(getClass().getResourceAsStream(networkParametersFile), networkParametersId)
+                .setSolverParameters(getClass().getResourceAsStream(solverParametersFile), solverParametersId)
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA);
-    }
-
-    protected DynawoSimulationParameters getDynamicSimulationParameters(DynamicSimulationParameters parameters) {
-        DynawoSimulationParameters dynawoSimulationParameters = parameters.getExtension(DynawoSimulationParameters.class);
-        if (dynawoSimulationParameters == null) {
-            dynawoSimulationParameters = DynawoSimulationParameters.load();
-        }
-        return dynawoSimulationParameters;
     }
 
     public DynamicSimulationResult runSimulation(LocalCommandExecutor commandExecutor) throws Exception {
@@ -116,7 +107,7 @@ public abstract class AbstractIeeeTest {
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynawoSimulationProvider.NAME, dynawoSimulation.getName());
         return dynawoSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier,
-            curvesSupplier, network.getVariantManager().getWorkingVariantId(),
+            outputVariablesSupplier, network.getVariantManager().getWorkingVariantId(),
             computationManager, parameters, NO_OP);
     }
 

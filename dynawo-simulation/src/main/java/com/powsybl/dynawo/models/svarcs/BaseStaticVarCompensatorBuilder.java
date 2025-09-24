@@ -13,6 +13,7 @@ import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.StaticVarCompensator;
+import com.powsybl.iidm.network.extensions.StandbyAutomaton;
 
 import java.util.Collection;
 
@@ -45,6 +46,10 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
         return new BaseStaticVarCompensatorBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -56,8 +61,8 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected BaseStaticVarCompensatorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.STATIC_VAR_COMPENSATOR, reportNode);
+    protected BaseStaticVarCompensatorBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, IdentifiableType.STATIC_VAR_COMPENSATOR, parentReportNode);
     }
 
     @Override
@@ -65,9 +70,14 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
         return network.getStaticVarCompensator(staticId);
     }
 
+    private SvarcVarMappingHandler getVarsMappingHandler() {
+        return getEquipment().getExtension(StandbyAutomaton.class) == null ? new BaseSvarcVarMappingHandler() :
+                new StandbyAutomatonVarMappingHandler();
+    }
+
     @Override
     public BaseStaticVarCompensator build() {
-        return isInstantiable() ? new BaseStaticVarCompensator(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new BaseStaticVarCompensator(getEquipment(), parameterSetId, modelConfig, getVarsMappingHandler()) : null;
     }
 
     @Override

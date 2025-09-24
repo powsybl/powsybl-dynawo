@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -28,7 +29,6 @@ class EmptyTapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                .dynamicModelId("BBM_LOAD")
                 .staticId("LOAD")
                 .parameterSetId("LAB")
                 .build());
@@ -41,7 +41,7 @@ class EmptyTapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "tap_changer_empty_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         checkReport("""

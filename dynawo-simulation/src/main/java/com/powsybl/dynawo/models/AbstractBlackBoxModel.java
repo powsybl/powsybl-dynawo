@@ -6,8 +6,6 @@
  */
 package com.powsybl.dynawo.models;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.parameters.ParametersSet;
 
@@ -17,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import static com.powsybl.dynawo.DynawoSimulationConstants.MODELS_PARAMETERS_FILENAME;
 
 /**
  * @author Luma Zamarreño {@literal <zamarrenolm at aia.es>}
@@ -55,7 +55,7 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
-    public void createDynamicModelParameters(DynawoSimulationContext context, Consumer<ParametersSet> parametersAdder) {
+    public void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder) {
         // method empty by default to be redefined by specific models
     }
 
@@ -75,8 +75,13 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
-    public String getParFile(DynawoSimulationContext context) {
-        return DynawoSimulationParameters.MODELS_OUTPUT_PARAMETERS_FILE;
+    public void write(XMLStreamWriter writer) throws XMLStreamException {
+        write(writer, getDefaultParFile());
+    }
+
+    @Override
+    public String getDefaultParFile() {
+        return MODELS_PARAMETERS_FILENAME;
     }
 
     @Override

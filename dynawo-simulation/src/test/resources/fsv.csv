@@ -1,0 +1,4 @@
+model;variable;value;
+NETWORK;_BUS____1_TN_Upu_value;1.060012;
+GEN____1_SM;generator_omegaPu;1.000000;
+_LOAD___2_EC;load_PPu;0.216995;

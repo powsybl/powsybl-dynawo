@@ -8,9 +8,9 @@
 package com.powsybl.dynawo.models.events;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawo.builders.BuilderEquipment;
 import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
+import com.powsybl.dynawo.builders.ModelInfo;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -31,23 +31,23 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
         return of(network, ReportNode.NO_OP);
     }
 
-    public static NodeFaultEventBuilder of(Network network, ReportNode reportNode) {
-        return new NodeFaultEventBuilder(network, reportNode);
+    public static NodeFaultEventBuilder of(Network network, ReportNode parentReportNode) {
+        return new NodeFaultEventBuilder(network, parentReportNode);
     }
 
-    public static EventModelInfo getEventModelInfo() {
+    public static ModelInfo getModelInfo() {
         return MODEL_INFO;
     }
 
     /**
      * Returns the model info if usable with the given {@link DynawoVersion}
      */
-    public static EventModelInfo getEventModelInfo(DynawoVersion dynawoVersion) {
-        return MODEL_INFO.version().isBetween(dynawoVersion) ? MODEL_INFO : null;
+    public static ModelInfo getModelInfo(DynawoVersion dynawoVersion) {
+        return MODEL_INFO.version().includes(dynawoVersion) ? MODEL_INFO : null;
     }
 
     NodeFaultEventBuilder(Network network, ReportNode reportNode) {
-        super(network, new BuilderEquipment<>(IdentifiableType.BUS), reportNode);
+        super(network, IdentifiableType.BUS.toString(), reportNode);
     }
 
     public NodeFaultEventBuilder faultTime(double faultTime) {

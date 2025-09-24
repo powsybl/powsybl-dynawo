@@ -7,12 +7,12 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.test.AbstractSerDeTest;
-import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynawo.curves.DynawoCurvesBuilder;
+import com.powsybl.dynamicsimulation.OutputVariable;
+import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawo.models.generators.GeneratorFictitiousBuilder;
+import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.models.lines.LineBuilder;
@@ -47,39 +47,46 @@ public class DynawoTestUtil extends AbstractSerDeTest {
     protected Network network;
     protected List<BlackBoxModel> dynamicModels;
     protected List<BlackBoxModel> eventModels;
-    protected List<Curve> curves;
+    protected List<OutputVariable> outputVariables;
 
     @BeforeEach
     void setup() {
 
         network = createEurostagTutorialExample1WithMoreLoads();
 
-        curves = new ArrayList<>();
-        network.getBusBreakerView().getBusStream().forEach(b -> new DynawoCurvesBuilder()
+        outputVariables = new ArrayList<>();
+
+        network.getLoadStream().forEach(b -> new DynawoOutputVariablesBuilder()
+                .staticId(b.getId())
+                .variables("load_PPu", "load_QPu")
+                .outputType(OutputVariable.OutputType.FINAL_STATE)
+                .add(outputVariables::add));
+
+        network.getBusBreakerView().getBusStream().forEach(b -> new DynawoOutputVariablesBuilder()
                 .staticId(b.getId())
                 .variables("Upu_value")
-                .add(curves::add));
+                .outputType(OutputVariable.OutputType.CURVE)
+                .add(outputVariables::add));
 
         // A curve is made up of the id of the dynamic model and the variable to plot.
         // The static id of the generator is used as the id of the dynamic model (dynamicModelId).
-        network.getGeneratorStream().forEach(g -> new DynawoCurvesBuilder()
+        network.getGeneratorStream().forEach(g -> new DynawoOutputVariablesBuilder()
                 .dynamicModelId(g.getId())
                 .variables("generator_omegaPu", "generator_PGen", "generator_UStatorPu", "voltageRegulator_UcEfdP", "voltageRegulator_EfdPu")
-                .add(curves::add));
+                .outputType(OutputVariable.OutputType.CURVE)
+                .add(outputVariables::add));
 
         // Dynamic Models
         dynamicModels = new ArrayList<>();
         network.getLoadStream().forEach(l -> {
             if (l.getId().equals("LOAD2")) {
                 dynamicModels.add(LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
-                        .dynamicModelId("BBM_" + l.getId())
-                        .staticId(l.getId())
+                        .equipment(l)
                         .parameterSetId("LOT")
                         .build());
             } else {
                 dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                        .dynamicModelId("BBM_" + l.getId())
-                        .staticId(l.getId())
+                        .equipment(l)
                         .parameterSetId("LAB")
                         .build());
             }
@@ -87,45 +94,38 @@ public class DynawoTestUtil extends AbstractSerDeTest {
         network.getGeneratorStream().forEach(g -> {
             if (g.getId().equals("GEN2")) {
                 dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsProportionalRegulations")
-                        .dynamicModelId("BBM_" + g.getId())
-                        .staticId(g.getId())
+                        .equipment(g)
                         .parameterSetId("GSFWPR")
                         .build());
             } else if (g.getId().equals("GEN3")) {
                 dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindings")
-                        .dynamicModelId("BBM_" + g.getId())
-                        .staticId(g.getId())
+                        .equipment(g)
                         .parameterSetId("GSFW")
                         .build());
             } else if (g.getId().equals("GEN4")) {
                 dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousThreeWindings")
-                        .dynamicModelId("BBM_" + g.getId())
-                        .staticId(g.getId())
+                        .equipment(g)
                         .parameterSetId("GSTW")
                         .build());
             } else if (g.getId().equals("GEN6")) {
-                dynamicModels.add(GeneratorFictitiousBuilder.of(network)
-                        .dynamicModelId("BBM_" + g.getId())
-                        .staticId(g.getId())
+                dynamicModels.add(BaseGeneratorBuilder.of(network)
+                        .equipment(g)
                         .parameterSetId("GF")
                         .build());
             } else if (g.getId().equals("GEN7")) {
                 dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
-                        .dynamicModelId("BBM_" + g.getId())
-                        .staticId(g.getId())
+                        .equipment(g)
                         .parameterSetId("GPQ")
                         .build());
             } else {
                 dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousThreeWindingsProportionalRegulations")
-                        .dynamicModelId("BBM_" + g.getId())
-                        .staticId(g.getId())
+                        .equipment(g)
                         .parameterSetId("GSTWPR")
                         .build());
             }
         });
 
         StandardLine standardLine = LineBuilder.of(network)
-                .dynamicModelId("Line_NHV1_NHV2_1")
                 .staticId("NHV1_NHV2_1")
                 .parameterSetId("SL")
                 .build();
@@ -144,9 +144,9 @@ public class DynawoTestUtil extends AbstractSerDeTest {
                 .build());
 
         // Automatons
-        network.getLineStream().filter(line -> !line.getId().equalsIgnoreCase(standardLine.getStaticId()))
+        network.getLineStream().filter(line -> !line.getId().equalsIgnoreCase(standardLine.getDynamicModelId()))
                 .forEach(l -> dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
-                        .dynamicModelId("BBM_" + l.getId())
+                        .dynamicModelId("CLA_" + l.getId())
                         .parameterSetId("CLA")
                         .controlledBranch(l.getId())
                         .iMeasurement(l.getId())
@@ -165,7 +165,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {
-        Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
 
         VoltageLevel vlload = network.getVoltageLevel("VLLOAD");
         Bus nload = vlload.getBusBreakerView().getBus("NLOAD");

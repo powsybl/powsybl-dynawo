@@ -13,7 +13,6 @@ import com.powsybl.iidm.network.Identifiable;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface EquipmentBlackBoxModel extends BlackBoxModel {
-    String getStaticId();
 
     Identifiable<?> getEquipment();
 }

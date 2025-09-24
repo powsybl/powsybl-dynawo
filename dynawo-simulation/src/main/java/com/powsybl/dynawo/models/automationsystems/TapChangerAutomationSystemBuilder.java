@@ -49,6 +49,10 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
         return new TapChangerAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -60,9 +64,9 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected TapChangerAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
-        load = new BuilderEquipment<>(IdentifiableType.LOAD);
+    protected TapChangerAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
+        load = new BuilderEquipment<>(IdentifiableType.LOAD.toString(), reportNode);
     }
 
     public TapChangerAutomationSystemBuilder staticId(String staticId) {
@@ -75,10 +79,15 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
         return self();
     }
 
+    public TapChangerAutomationSystemBuilder side(String side) {
+        this.side = TransformerSide.valueOf(side);
+        return self();
+    }
+
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= load.checkEquipmentData(reportNode);
+        isInstantiable &= load.checkEquipmentData();
     }
 
     @Override

@@ -9,10 +9,7 @@
 package com.powsybl.dynawo.models.buses;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
@@ -20,11 +17,9 @@ import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
@@ -37,16 +32,12 @@ class StandardBusTest {
         Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
         dynamicModels.add(StandardBusBuilder.of(network)
-                .dynamicModelId("BBM_NHV1")
                 .staticId("NHV1")
                 .parameterSetId("SB")
                 .build());
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        List<BlackBoxModel> events = Collections.emptyList();
-        List<Curve> curves = Collections.emptyList();
-        PowsyblException e = assertThrows(PowsyblException.class, () -> new DynawoSimulationContext(network, workingVariantId, dynamicModels, events, curves, parameters, dynawoParameters));
-        assertEquals("The equipment NHV1_NHV2_1 linked to the StandardBus NHV1 does not possess a dynamic model", e.getMessage());
+        DynawoSimulationContext.Builder contextBuilder = new DynawoSimulationContext.Builder(network, dynamicModels);
+        assertThatThrownBy(contextBuilder::build)
+                .isInstanceOf(PowsyblException.class)
+                .hasMessage("The equipment NHV1_NHV2_1 linked to the StandardBus NHV1 does not possess a dynamic model");
     }
 }

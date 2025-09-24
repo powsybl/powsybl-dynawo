@@ -10,6 +10,5 @@ package dynamicModels
 
 HvdcPV {
     staticId "L"
-    dynamicModelId "BBM_HVDC_L"
     parameterSetId "HVDC"
 }

@@ -43,6 +43,10 @@ public class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder<Synch
         return new SynchronizedGeneratorBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -54,17 +58,17 @@ public class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder<Synch
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected SynchronizedGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected SynchronizedGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override
     public SynchronizedGenerator build() {
         if (isInstantiable()) {
             if (modelConfig.isControllable()) {
-                return new SynchronizedGeneratorControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig);
+                return new SynchronizedGeneratorControllable(getEquipment(), parameterSetId, modelConfig);
             } else {
-                return new SynchronizedGenerator(dynamicModelId, getEquipment(), parameterSetId, modelConfig);
+                return new SynchronizedGenerator(getEquipment(), parameterSetId, modelConfig);
             }
         }
         return null;

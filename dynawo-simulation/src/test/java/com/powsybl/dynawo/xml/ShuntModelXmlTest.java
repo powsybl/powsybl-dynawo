@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.shunts.BaseShuntBuilder;
 import com.powsybl.iidm.network.test.ShuntTestCaseFactory;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,6 @@ class ShuntModelXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(BaseShuntBuilder.of(network, "ShuntB")
-                .dynamicModelId("BBM_SHUNT")
                 .staticId("SHUNT")
                 .parameterSetId("sh")
                 .build());
@@ -35,7 +35,7 @@ class ShuntModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", "shunt_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 }

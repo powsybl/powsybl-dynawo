@@ -10,6 +10,5 @@ package dynamicModels
 
 InfiniteBusWithVariations {
     staticId "B1"
-    dynamicModelId "BBM_BUS"
     parameterSetId "b"
 }

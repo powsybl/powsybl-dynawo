@@ -40,7 +40,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
     private static ModelConfigs parseModelConfigs(JsonParser parser) {
         var parsingContext = new Object() {
             String defaultLib = null;
-            final Map<String, ModelConfig> libs = new HashMap<>();
+            final SortedMap<String, ModelConfig> libs = new TreeMap<>();
         };
         JsonUtil.parseObject(parser, name ->
             switch (name) {
@@ -65,9 +65,9 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
             String internalModelPrefix = null;
             String doc = null;
             List<String> properties = Collections.emptyList();
-            DynawoVersion minVersion = VersionBound.MODEL_DEFAULT_MIN_VERSION;
+            DynawoVersion minVersion = VersionInterval.MODEL_DEFAULT_MIN_VERSION;
             DynawoVersion maxVersion = null;
-            String terminationCause = null;
+            String endCause = null;
         };
         JsonUtil.parseObject(parser, name ->
             switch (parser.currentName()) {
@@ -99,8 +99,8 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
                     parsingContext.maxVersion = DynawoVersion.createFromString(parser.nextTextValue());
                     yield true;
                 }
-                case "terminationCause" -> {
-                    parsingContext.terminationCause = parser.nextTextValue();
+                case "endCause" -> {
+                    parsingContext.endCause = parser.nextTextValue();
                     yield true;
                 }
                 default -> false;
@@ -108,6 +108,6 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
         );
         return new ModelConfig(parsingContext.lib, parsingContext.alias, parsingContext.internalModelPrefix,
                 parsingContext.properties, parsingContext.doc,
-                new VersionBound(parsingContext.minVersion, parsingContext.maxVersion, parsingContext.terminationCause));
+                new VersionInterval(parsingContext.minVersion, parsingContext.maxVersion, parsingContext.endCause));
     }
 }

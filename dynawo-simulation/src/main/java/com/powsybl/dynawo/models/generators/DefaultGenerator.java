@@ -8,12 +8,12 @@
 package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.models.defaultmodels.AbstractInjectionDefaultModel;
-import com.powsybl.dynawo.models.events.ControllableEquipment;
+import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultGenerator extends AbstractInjectionDefaultModel implements GeneratorModel, ControllableEquipment {
+public class DefaultGenerator extends AbstractInjectionDefaultModel implements ControllableEquipmentModel {
 
     public DefaultGenerator(String staticId) {
         super(staticId);
@@ -22,41 +22,6 @@ public class DefaultGenerator extends AbstractInjectionDefaultModel implements G
     @Override
     public String getName() {
         return "DefaultGenerator";
-    }
-
-    @Override
-    public String getTerminalVarName() {
-        return "@NAME@_terminal";
-    }
-
-    @Override
-    public String getSwitchOffSignalNodeVarName() {
-        return "@NAME@_switchOffSignal1";
-    }
-
-    @Override
-    public String getSwitchOffSignalEventVarName() {
-        return "@NAME@_switchOffSignal2";
-    }
-
-    @Override
-    public String getSwitchOffSignalAutomatonVarName() {
-        return "@NAME@_switchOffSignal3";
-    }
-
-    @Override
-    public String getRunningVarName() {
-        return "@NAME@_running";
-    }
-
-    @Override
-    public String getQStatorPuVarName() {
-        return "@NAME@_QStatorPu";
-    }
-
-    @Override
-    public String getUPuVarName() {
-        return "@NAME@_UPu";
     }
 
     @Override

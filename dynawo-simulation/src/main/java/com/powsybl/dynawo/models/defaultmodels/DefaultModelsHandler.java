@@ -27,7 +27,7 @@ public final class DefaultModelsHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultModelsHandler.class);
 
-    private final Map<IdentifiableType, List<DefaultModelConfiguration>> configurations = EnumSet.allOf(DefaultModelConfiguration.class)
+    private static final Map<IdentifiableType, List<DefaultModelConfiguration>> CONFIGURATIONS = EnumSet.allOf(DefaultModelConfiguration.class)
             .stream()
             .collect(groupingBy(DefaultModelConfiguration::getIdentifiableType));
 
@@ -46,7 +46,7 @@ public final class DefaultModelsHandler {
     }
 
     private <T extends Model> DefaultModelConfiguration findConfiguration(IdentifiableType type, Class<T> connectableClass) {
-        List<DefaultModelConfiguration> configurationList = configurations.get(type);
+        List<DefaultModelConfiguration> configurationList = CONFIGURATIONS.get(type);
         if (configurationList == null) {
             throw new PowsyblException("No default model configuration for " + type);
         }

@@ -8,15 +8,28 @@
 package com.powsybl.dynawo.models.buses;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.iidm.network.Bus;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class InfiniteBus extends AbstractBus {
 
-    protected InfiniteBus(String dynamicModelId, Bus bus, String parameterSetId, ModelConfig modelConfig) {
-        super(dynamicModelId, bus, parameterSetId, modelConfig);
+    private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+            new VarMapping("infiniteBus_UPuVar", "v"),
+            new VarMapping("infiniteBus_UPhaseVar", "angle"));
+
+    protected InfiniteBus(Bus bus, String parameterSetId, ModelConfig modelConfig) {
+        super(bus, parameterSetId, modelConfig);
+    }
+
+    @Override
+    public List<VarMapping> getVarsMapping() {
+        return VAR_MAPPING;
     }
 
     @Override

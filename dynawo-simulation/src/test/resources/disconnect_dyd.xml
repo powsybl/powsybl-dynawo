@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorFictitious" parFile="models.par" parId="GF" staticId="G1">
+    <dyn:blackBoxModel id="G1" lib="GeneratorFictitious" parFile="models.par" parId="GF" staticId="G1">
         <dyn:macroStaticRef id="MSR_GeneratorFictitious"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="BBM_SHUNT" lib="ShuntB" parFile="models.par" parId="BS" staticId="SH1"/>
+    <dyn:blackBoxModel id="SH1" lib="ShuntB" parFile="models.par" parId="BS" staticId="SH1"/>
     <dyn:blackBoxModel id="Disconnect_G1" lib="EventSetPointBoolean" parFile="svcTestCase.par" parId="Disconnect_G1"/>
     <dyn:blackBoxModel id="Disconnect_L2" lib="EventConnectedStatus" parFile="svcTestCase.par" parId="Disconnect_L2"/>
     <dyn:blackBoxModel id="Disconnect_SVC2" lib="EventConnectedStatus" parFile="svcTestCase.par" parId="Disconnect_SVC2"/>
@@ -19,10 +19,10 @@
         <dyn:connect var1="event_state1" var2="generator_switchOffSignal2"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventInjectionDisconnection-DefaultLoad">
-        <dyn:connect var1="event_state1" var2="@NAME@_state_value"/>
+        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventInjectionDisconnection-DefaultStaticVarCompensator">
-        <dyn:connect var1="event_state1" var2="@NAME@_state_value"/>
+        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventInjectionDisconnection-ShuntB">
         <dyn:connect var1="event_state1" var2="shunt_switchOffSignal2"/>
@@ -32,10 +32,10 @@
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_GeneratorFictitious-DefaultEquipmentConnectionPoint" id1="BBM_GEN" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_ShuntB-DefaultEquipmentConnectionPoint" id1="BBM_SHUNT" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_EventInjectionDisconnection-GeneratorFictitious" id1="Disconnect_G1" id2="BBM_GEN"/>
+    <dyn:macroConnect connector="MC_GeneratorFictitious-DefaultEquipmentConnectionPoint" id1="G1" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_ShuntB-DefaultEquipmentConnectionPoint" id1="SH1" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_EventInjectionDisconnection-GeneratorFictitious" id1="Disconnect_G1" id2="G1"/>
     <dyn:macroConnect connector="MC_EventInjectionDisconnection-DefaultLoad" id1="Disconnect_L2" id2="NETWORK" name2="L2"/>
     <dyn:macroConnect connector="MC_EventInjectionDisconnection-DefaultStaticVarCompensator" id1="Disconnect_SVC2" id2="NETWORK" name2="SVC2"/>
-    <dyn:macroConnect connector="MC_EventInjectionDisconnection-ShuntB" id1="Disconnect_SH1" id2="BBM_SHUNT"/>
+    <dyn:macroConnect connector="MC_EventInjectionDisconnection-ShuntB" id1="Disconnect_SH1" id2="SH1"/>
 </dyn:dynamicModelsArchitecture>

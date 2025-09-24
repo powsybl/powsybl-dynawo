@@ -7,13 +7,15 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.LfResultsUtils;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
-import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,17 +34,18 @@ import java.util.stream.Stream;
 class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static final String HVDC_NAME = "L";
-    private static final String DYN_HVDC_NAME = "BBM_HVDC";
 
     @BeforeEach
-    void setup(String dydName, Function< Network, BlackBoxModel> hvdcConstructor, Function< Network, BlackBoxModel> disconnectConstructor) {
+    void setup(String dydName, String parName, Function< Network, BlackBoxModel> hvdcConstructor,
+               Function< Network, BlackBoxModel> disconnectConstructor) {
         setupNetwork();
         addDynamicModels(hvdcConstructor, disconnectConstructor);
         setupDynawoContext();
     }
 
     protected void setupNetwork() {
-        network = HvdcTestNetwork.createVsc();
+        network = LfResultsUtils.createHvdcTestNetworkVscWithLFResults();
+        network.getHvdcLine(HVDC_NAME).setConvertersMode(HvdcLine.ConvertersMode.SIDE_1_RECTIFIER_SIDE_2_INVERTER);
     }
 
     protected void addDynamicModels(Function< Network, BlackBoxModel> hvdcConstructor, Function< Network, BlackBoxModel> disconnectConstructor) {
@@ -54,25 +57,27 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideModels")
-    void writeModel(String dydName, Function< Network, BlackBoxModel> hvdcConstructor, Function< Network, BlackBoxModel> disconnectConstructor) throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+    void writeModel(String dydName, String parName, Function< Network, BlackBoxModel> hvdcConstructor,
+                    Function< Network, BlackBoxModel> disconnectConstructor) throws SAXException, IOException {
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
-        validate("parameters.xsd", "disconnect_hvdc_par.xml", tmpDir.resolve(context.getSimulationParFile()));
+        validate("parameters.xsd", parName, tmpDir.resolve(context.getSimulationParFile()));
 
     }
 
     private static Stream<Arguments> provideModels() {
         return Stream.of(
                 Arguments.of("disconnect_default_hvdc_dyd.xml",
+                        "disconnect_hvdc_default_par.xml",
                         null,
                         (Function<Network, BlackBoxModel>) n -> EventDisconnectionBuilder.of(n)
                                 .staticId(HVDC_NAME)
                                 .startTime(1)
                                 .build()),
                 Arguments.of("disconnect_hvdc_pv_dyd.xml",
+                        "disconnect_hvdc_par.xml",
                         (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPV")
-                                .dynamicModelId(DYN_HVDC_NAME)
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
                                 .build(),
@@ -82,8 +87,8 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .disconnectOnly(TwoSides.ONE)
                                 .build()),
                 Arguments.of("disconnect_hvdc_vsc_dyd.xml",
-                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVSC")
-                                .dynamicModelId(DYN_HVDC_NAME)
+                        "disconnect_hvdc_par.xml",
+                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVsc")
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
                                 .build(),
@@ -93,8 +98,8 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .disconnectOnly(TwoSides.TWO)
                                 .build()),
                 Arguments.of("disconnect_hvdc_pv_dangling_dyd.xml",
+                        "disconnect_hvdc_par.xml",
                         (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPVDangling")
-                                .dynamicModelId(DYN_HVDC_NAME)
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
                                 .dangling(TwoSides.TWO)
@@ -105,16 +110,16 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .disconnectOnly(TwoSides.ONE)
                                 .build()),
                 Arguments.of("disconnect_hvdc_vsc_dangling_dyd.xml",
-                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVSCDanglingUdc")
-                                .dynamicModelId(DYN_HVDC_NAME)
+                        "disconnect_hvdc_par.xml",
+                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVscDanglingUdc")
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
-                                .dangling(TwoSides.ONE)
+                                .dangling(TwoSides.TWO)
                                 .build(),
                         (Function<Network, BlackBoxModel>) n -> EventDisconnectionBuilder.of(n)
                                 .staticId(HVDC_NAME)
                                 .startTime(1)
-                                .disconnectOnly(TwoSides.TWO)
+                                .disconnectOnly(TwoSides.ONE)
                                 .build())
         );
     }

@@ -18,7 +18,6 @@ import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -27,16 +26,16 @@ public class HvdcDangling extends BaseHvdc {
 
     private final TwoSides danglingSide;
 
-    protected HvdcDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, ModelConfig modelConfig,
-                           Function<TwoSides, String> eventVarNameSupplier, TwoSides danglingSide) {
-        super(dynamicModelId, hvdc, parameterSetId, modelConfig, eventVarNameSupplier);
+    protected HvdcDangling(HvdcLine hvdc, String parameterSetId, ModelConfig modelConfig,
+                           HvdcVarNameHandler varNameHandler, TwoSides danglingSide) {
+        super(hvdc, parameterSetId, modelConfig, varNameHandler);
         this.danglingSide = danglingSide;
     }
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createTerminalMacroConnections(this, equipment, this::getVarConnectionsWithDangling, danglingSide);
-        adder.createTerminalMacroConnections(this, equipment, this::getVarConnectionsWith, SideUtils.getOppositeSide(danglingSide));
+        adder.createTerminalMacroConnections(this, equipment, this::getVarConnectionsWithDangling, danglingSide, isInverted);
+        adder.createTerminalMacroConnections(this, equipment, this::getVarConnectionsWith, SideUtils.getOppositeSide(danglingSide), isInverted);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class HvdcDangling extends BaseHvdc {
         return List.of(danglingSide == TwoSides.ONE ? equipment.getConverterStation2() : equipment.getConverterStation1());
     }
 
-    private List<VarConnection> getVarConnectionsWithDangling(EquipmentConnectionPoint connected, TwoSides side) {
-        return List.of(new VarConnection(TERMINAL_PREFIX + side.getNum(), connected.getTerminalVarName(side)));
+    private List<VarConnection> getVarConnectionsWithDangling(EquipmentConnectionPoint connected, TwoSides hvdcSide) {
+        return List.of(new VarConnection(TERMINAL_PREFIX + hvdcSide.getNum(), connected.getTerminalVarName(getConnectionPointSide(hvdcSide))));
     }
 }

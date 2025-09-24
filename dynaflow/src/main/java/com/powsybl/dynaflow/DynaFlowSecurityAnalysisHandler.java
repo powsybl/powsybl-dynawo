@@ -16,34 +16,38 @@ import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.contingency.Contingency;
+import com.powsybl.contingency.SidedContingencyElement;
 import com.powsybl.contingency.contingency.list.ContingencyList;
+import com.powsybl.contingency.contingency.list.DefaultContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.ExportMode;
+import com.powsybl.dynawo.contingency.ContingencyResultsUtils;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisReport;
 import com.powsybl.security.SecurityAnalysisResult;
-import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
-import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
+import static com.powsybl.dynaflow.DynaflowReports.createSidedContingencyReportNode;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
-import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
-import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.TIMELINE_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
+import static com.powsybl.dynawo.contingency.ContingencyResultsUtils.createSecurityAnalysisResult;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHandler<SecurityAnalysisReport> {
 
@@ -53,20 +57,17 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     private final SecurityAnalysisParameters securityAnalysisParameters;
     private final List<Contingency> contingencies;
     private final LimitViolationFilter violationFilter;
-    private final List<SecurityAnalysisInterceptor> interceptors;
     private final ReportNode reportNode;
 
     public DynaFlowSecurityAnalysisHandler(Network network, String workingVariantId, Command command,
                                            SecurityAnalysisParameters securityAnalysisParameters, List<Contingency> contingencies,
-                                           LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors,
-                                           ReportNode reportNode) {
+                                           LimitViolationFilter violationFilter, ReportNode reportNode) {
         this.network = network;
         this.workingVariantId = workingVariantId;
         this.command = command;
         this.securityAnalysisParameters = securityAnalysisParameters;
         this.contingencies = contingencies;
         this.violationFilter = violationFilter;
-        this.interceptors = interceptors;
         this.reportNode = reportNode;
     }
 
@@ -74,7 +75,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(workingVariantId);
 
-        DynawoUtil.writeIidm(network, workingDir.resolve(IIDM_FILENAME));
+        DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
         writeParameters(securityAnalysisParameters, workingDir);
         writeContingencies(contingencies, workingDir);
         return getCommandExecutions(command);
@@ -84,37 +85,42 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
         super.after(workingDir, report);
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ContingencyResultsUtils.reportContingenciesTimelines(contingencies, workingDir.resolve(DYNAWO_TIMELINE_FOLDER), reportNode);
-        return new SecurityAnalysisReport(
-                new SecurityAnalysisResult(
-                        ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
-                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER), contingencies),
-                        Collections.emptyList())
-        );
+        SecurityAnalysisResult result = createSecurityAnalysisResult(network, violationFilter, workingDir, contingencies);
+        ContingencyResultsUtils.reportContingencyResults(result.getPostContingencyResults(),
+                workingDir.resolve(TIMELINE_FOLDER), ExportMode.XML, reportNode);
+        return new SecurityAnalysisReport(result);
     }
 
-    private static void writeContingencies(List<Contingency> contingencies, Path workingDir) throws IOException {
+    private void writeContingencies(List<Contingency> contingencies, Path workingDir) throws IOException {
         try (OutputStream os = Files.newOutputStream(workingDir.resolve(CONTINGENCIES_FILENAME))) {
             ObjectMapper mapper = JsonUtil.createObjectMapper();
             ContingencyJsonModule module = new ContingencyJsonModule();
             mapper.registerModule(module);
             ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-            writer.writeValue(os, ContingencyList.of(contingencies.toArray(Contingency[]::new)));
+            writer.writeValue(os, buildContingencyList(contingencies));
         }
+    }
+
+    private ContingencyList buildContingencyList(List<Contingency> contingencies) {
+        return new DefaultContingencyList("", contingencies.stream().filter(nonSidedContingency()).toList());
+    }
+
+    private Predicate<Contingency> nonSidedContingency() {
+        return c -> {
+            if (c instanceof SidedContingencyElement sidedC && sidedC.getVoltageLevelId() != null) {
+                createSidedContingencyReportNode(reportNode, c.getId());
+                return false;
+            }
+            return true;
+        };
     }
 
     private static void writeParameters(SecurityAnalysisParameters securityAnalysisParameters, Path workingDir) throws IOException {
         // TODO(Luma) Take into account also Security Analysis parameters
         LoadFlowParameters loadFlowParameters = securityAnalysisParameters.getLoadFlowParameters();
-        DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
-        DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
-    }
-
-    private static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {
-        DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
-        if (parametersExt == null) {
-            parametersExt = new DynaFlowParameters();
-        }
-        return parametersExt;
+        DynaFlowParameters dynaFlowParameters = DynaFlowProvider.getParametersExt(loadFlowParameters);
+        DynaFlowSecurityAnalysisParameters dynaFlowSecurityAnalysisParameters = DynaFlowSecurityAnalysisProvider.getParametersExt(securityAnalysisParameters);
+        DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, dynaFlowSecurityAnalysisParameters,
+                Path.of("."), workingDir.resolve(CONFIG_FILENAME));
     }
 }

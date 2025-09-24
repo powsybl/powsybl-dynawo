@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -22,7 +23,7 @@ class DisconnectBranchEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
-        network = EurostagTutorialExample1Factory.create();
+        network = EurostagTutorialExample1Factory.createWithLFResults();
     }
 
     @Override
@@ -40,7 +41,7 @@ class DisconnectBranchEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeDisconnectModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "disconnect_branch_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "disconnect_branch_par.xml", tmpDir.resolve(context.getSimulationParFile()));

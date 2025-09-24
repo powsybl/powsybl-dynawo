@@ -5,6 +5,9 @@
       {
         "lib": "GeneratorFictitious",
         "doc": "Fictitious generator (behaves in a similar way as an alpha-beta load)"
+      },
+      {
+        "lib": "GeneratorPVFixed"
       }
     ]
   },
@@ -52,7 +55,8 @@
         "lib": "GeneratorSynchronousFourWindingsVRKundur"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsVRKundurPssKundur"
+        "lib": "GeneratorSynchronousFourWindingsVRKundurPssKundur",
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousProportionalRegulationsInternalParameters"
@@ -92,14 +96,16 @@
         ]
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsIEEEG1Ac1a"
+        "lib": "GeneratorSynchronousFourWindingsIEEEG1Ac1a",
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsIEEEG1Dc1a",
         "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsIEEEG1IEEX2A"
+        "lib": "GeneratorSynchronousFourWindingsIEEEG1IEEX2A",
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstAc6aPss3b",
@@ -126,7 +132,8 @@
         "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstIEEX2A"
+        "lib": "GeneratorSynchronousFourWindingsPmConstIEEX2A",
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt5bPss2b",
@@ -173,7 +180,8 @@
         "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxRvsTfo"
+        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxRvsTfo",
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIeeeG1IeeeT1",
@@ -226,9 +234,6 @@
           "CONTROLLABLE"
         ],
         "doc": "Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation"
-      },
-      {
-        "lib": "GeneratorPVFixed"
       },
       {
         "lib": "GeneratorPVDiagramPQ"
@@ -357,29 +362,59 @@
     ]
   },
   "HVDC_VSC": {
-    "defaultLib": "HvdcVSC",
+    "defaultLib": "HvdcVsc",
     "libs": [
       {
+        "lib": "HvdcVsc",
+        "doc": "Standard dynamic model for Hvdc-Vsc link"
+      },
+      {
+        "lib": "HvdcVscEmulation",
+        "doc": "Standard dynamic model for Hvdc-Vsc link with AC emulation"
+      },
+      {
+        "lib": "HvdcVscDanglingP",
+        "properties": [
+          "DANGLING"
+        ],
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)"
+      },
+      {
+        "lib": "HvdcVscDanglingUdc",
+        "properties": [
+          "DANGLING"
+        ],
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)"
+      },
+      {
         "lib": "HvdcVSC",
-        "doc": "Standard dynamic model for Hvdc-VSC link"
+        "doc": "Standard dynamic model for Hvdc-VSC link",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVsc"
       },
       {
         "lib": "HvdcVSCEmulation",
-        "doc": "Standard dynamic model for Hvdc-VSC link with AC emulation"
+        "doc": "Standard dynamic model for Hvdc-VSC link with AC emulation",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVscEmulation"
       },
       {
         "lib": "HvdcVSCDanglingP",
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)"
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVscDanglingP"
       },
       {
         "lib": "HvdcVSCDanglingUdc",
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)"
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVSCDanglingUdc"
       }
     ]
   },
@@ -424,7 +459,10 @@
         "lib": "LoadAlphaBetaRestorativeLimitsRecalc"
       },
       {
-        "lib": "LoadAlphaBetaMotor"
+        "lib": "LoadAlphaBetaMotor",
+        "properties": [
+          "SYNCHRONIZED"
+        ]
       },
       {
         "lib": "LoadPQ",
@@ -440,22 +478,37 @@
       },
       {
         "lib": "LoadAlphaBetaMotorFifthOrder",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaMotorSimplified",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaThreeMotorFifthOrder",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaTwoMotorFifthOrder",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaTwoMotorSimplified",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
@@ -634,17 +687,17 @@
       {
         "lib": "CurrentLimitAutomaton",
         "alias": "OverloadManagementSystem",
-        "doc": "Automation system which emits a specific order when the current on the monitored line goes above a given threshold during some time"
+        "doc": "Automation system which emits a specific order when the current on the monitored line exceeds a given threshold for a given duration"
       }
     ]
   },
   "TWO_LEVEL_OVERLOAD_MANAGEMENT": {
-    "defaultLib": "TwoLevelsOverloadManagementSystem",
+    "defaultLib": "TwoLevelOverloadManagementSystem",
     "libs": [
       {
         "lib": "CurrentLimitAutomatonTwoLevels",
-        "alias": "TwoLevelsOverloadManagementSystem",
-        "doc": "Automation system which emits a specific order when the current on two monitored lines goes above a given threshold during some time"
+        "alias": "TwoLevelOverloadManagementSystem",
+        "doc": "Automation system which emits a specific order when the current on two monitored lines exceeds a given threshold for a given duration"
       }
     ]
   },
@@ -653,7 +706,7 @@
     "libs": [
       {
         "lib": "PhaseShifterI",
-        "doc": "Phase-shifter which monitors a given current. When the current goes above a given threshold max, taps will be changed in order to decrease it. When the active power goes below another threshold stop, the phase-shifter is automatically deactivated"
+        "doc": "Phase-shifter which monitors a given current. When the current goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated"
       }
     ]
   },
@@ -662,7 +715,7 @@
     "libs": [
       {
         "lib": "PhaseShifterP",
-        "doc": "Phase-shifter which monitors a given active power. When the active power goes above a given threshold max, taps will be changed in order to decrease it. When the active power goes below another threshold stop, the phase-shifter is automatically deactivated"
+        "doc": "Phase-shifter which monitors a given active power. When the active power goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated"
       }
     ]
   },
@@ -670,7 +723,8 @@
     "defaultLib": "PhaseShifterBlockingI",
     "libs": [
       {
-        "lib": "PhaseShifterBlockingI"
+        "lib": "PhaseShifterBlockingI",
+        "doc": "Blocks phase shifter I when the monitored intensity goes below a threshold"
       }
     ]
   },
@@ -688,7 +742,7 @@
     "libs": [
       {
         "lib": "TapChangerBlockingAutomaton",
-        "doc": "Block tap-changers when one of the monitored voltages goes below a threshold"
+        "doc": "Blocks tap changers when one of the monitored voltages goes below a threshold"
       }
     ]
   },
@@ -698,7 +752,7 @@
       {
         "lib": "UnderVoltageAutomaton",
         "alias": "UnderVoltage",
-        "doc": "Send switch-off signal to the monitored generator when the voltage goes below a threshold"
+        "doc": "Sends switch-off signal to the monitored generator when the voltage goes below a threshold"
       }
     ]
   }

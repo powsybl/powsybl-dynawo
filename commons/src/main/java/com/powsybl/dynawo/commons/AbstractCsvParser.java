@@ -28,34 +28,27 @@ public abstract class AbstractCsvParser<T> {
 
     protected static final char DEFAULT_SEPARATOR = '|';
 
-    private final char separator;
+    protected CsvParser csvParser;
 
-    protected AbstractCsvParser(char separator) {
-        this.separator = separator;
+    protected static CsvParserSettings setupSettings(char separator, boolean skipHeader) {
+        CsvParserSettings settings = new CsvParserSettings();
+        settings.getFormat().setDelimiter(separator);
+        settings.getFormat().setQuoteEscape('"');
+        settings.getFormat().setLineSeparator(System.lineSeparator());
+        settings.setHeaderExtractionEnabled(skipHeader);
+        return settings;
     }
 
     public List<T> parse(Path file) {
         if (!Files.exists(file)) {
             return Collections.emptyList();
         }
-
         try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
-            return parse(reader);
+            Objects.requireNonNull(reader);
+            return read(csvParser.iterate(reader).iterator());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    private List<T> parse(BufferedReader reader) {
-        Objects.requireNonNull(reader);
-        CsvParserSettings settings = new CsvParserSettings();
-        settings.getFormat().setDelimiter(separator);
-        settings.getFormat().setQuoteEscape('"');
-        settings.getFormat().setLineSeparator(System.lineSeparator());
-        settings.setMaxColumns(getNbColumns());
-        CsvParser csvParser = new CsvParser(settings);
-        ResultIterator<String[], ParsingContext> iterator = csvParser.iterate(reader).iterator();
-        return read(iterator);
     }
 
     protected List<T> read(ResultIterator<String[], ParsingContext> iterator) {
@@ -75,6 +68,4 @@ public abstract class AbstractCsvParser<T> {
     protected abstract Optional<T> createEntry(String[] tokens);
 
     protected abstract boolean hasCorrectNbColumns(int tokensSize);
-
-    protected abstract int getNbColumns();
 }

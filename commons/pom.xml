@@ -13,7 +13,7 @@
     <parent>
         <artifactId>powsybl-dynawo</artifactId>
         <groupId>com.powsybl</groupId>
-        <version>2.6.0-SNAPSHOT</version>
+        <version>2.10.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>powsybl-dynawo-commons</artifactId>
@@ -21,12 +21,6 @@
     <description>Common tools for Dynawo integration in Powsybl</description>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

@@ -10,12 +10,11 @@ import com.google.common.io.ByteStreams;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynaflow.DynaFlowConfig;
-import com.powsybl.dynaflow.DynaFlowParameters;
-import com.powsybl.dynaflow.DynaFlowProvider;
-import com.powsybl.dynaflow.DynaFlowSecurityAnalysisProvider;
+import com.powsybl.dynaflow.*;
+import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.ieeecdf.converter.IeeeCdfNetworkFactory;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
@@ -58,12 +57,14 @@ class DynaFlowTest extends AbstractDynawoTest {
     @BeforeEach
     void setUp() throws Exception {
         super.setUp();
-        DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), false);
+        DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), true);
         loadFlowProvider = new DynaFlowProvider(() -> config);
         loadFlowParameters = new LoadFlowParameters();
         securityAnalysisProvider = new DynaFlowSecurityAnalysisProvider(() -> config);
         securityAnalysisParameters = new SecurityAnalysisParameters();
         loadFlowParameters.addExtension(DynaFlowParameters.class, new DynaFlowParameters());
+        securityAnalysisParameters.addExtension(DynaFlowSecurityAnalysisParameters.class,
+                new DynaFlowSecurityAnalysisParameters().setContingenciesStartTime(15.));
     }
 
     @Test
@@ -75,7 +76,11 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .setPermanentLimit(200)
                 .add();
 
-        ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("root", "testLf root report").build();
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testIEEE14")
+                .build();
         LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNode)
                 .join();
 
@@ -108,7 +113,11 @@ class DynaFlowTest extends AbstractDynawoTest {
         network.getVoltageLevelStream().forEach(vl -> vl.setLowVoltageLimit(vl.getNominalV() * 0.97));
 
         // Launching a load flow before the security analysis is required
-        ReportNode reportNodeLf = ReportNode.newRootReportNode().withMessageTemplate("root", "Root message").build();
+        ReportNode reportNodeLf = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testIEEE14")
+                .build();
         loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNodeLf).join();
 
         StringWriter swReportNodeLf = new StringWriter();
@@ -122,7 +131,11 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .map(l -> Contingency.line(l.getId()))
                 .toList();
 
-        ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("root", "Root message").build();
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testIEEE14")
+                .build();
         SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
                 .setComputationManager(computationManager)
                 .setSecurityAnalysisParameters(securityAnalysisParameters)

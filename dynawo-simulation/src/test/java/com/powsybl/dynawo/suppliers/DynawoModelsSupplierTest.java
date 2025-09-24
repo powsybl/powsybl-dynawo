@@ -10,6 +10,8 @@ package com.powsybl.dynawo.suppliers;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.models.TransformerSide;
+import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynamicModelConfig;
@@ -46,6 +48,12 @@ class DynawoModelsSupplierTest {
                 .staticId("GEN")
                 .parameterSetId("DM_GEN")
                 .build();
+        DynamicModel tc = TapChangerAutomationSystemBuilder.of(network)
+                .dynamicModelId("TC")
+                .parameterSetId("tc_par")
+                .staticId("LOAD")
+                .side(TransformerSide.LOW_VOLTAGE)
+                .build();
         DynamicModel tcb = TapChangerBlockingAutomationSystemBuilder.of(network)
                 .dynamicModelId("TCB1")
                 .parameterSetId("tcb_par")
@@ -59,10 +67,11 @@ class DynawoModelsSupplierTest {
                 .uMeasurements("NHV2")
                 .build();
 
-        assertEquals(3, models.size());
+        assertEquals(4, models.size());
         assertThat(models.get(0)).usingRecursiveComparison().isEqualTo(gen);
-        assertThat(models.get(1)).usingRecursiveComparison().isEqualTo(tcb);
-        assertThat(models.get(2)).usingRecursiveComparison().isEqualTo(tcb2);
+        assertThat(models.get(1)).usingRecursiveComparison().isEqualTo(tc);
+        assertThat(models.get(2)).usingRecursiveComparison().isEqualTo(tcb);
+        assertThat(models.get(3)).usingRecursiveComparison().isEqualTo(tcb2);
     }
 
     @Test
@@ -78,7 +87,7 @@ class DynawoModelsSupplierTest {
     @Test
     void testSupplierFromPath() throws URISyntaxException {
         Network network = EurostagTutorialExample1Factory.createWithLFResults();
-        Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/mappingDynamicModel.json")).toURI());
+        Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/dynamicModels.json")).toURI());
         List<DynamicModel> models = DynawoModelsSupplier.load(path).get(network);
         assertEquals(2, models.size());
     }
@@ -86,7 +95,7 @@ class DynawoModelsSupplierTest {
     @Test
     void testModelConfigDeserializer() throws IOException {
         SupplierJsonDeserializer<DynamicModelConfig> deserializer = new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer());
-        try (InputStream is = getClass().getResourceAsStream("/suppliers/mappingDynamicModel.json")) {
+        try (InputStream is = getClass().getResourceAsStream("/suppliers/dynamicModels.json")) {
             List<DynamicModelConfig> configs = deserializer.deserialize(is);
             assertEquals(2, configs.size());
             assertThat(configs.get(0)).usingRecursiveComparison().isEqualTo(getLoadConfig());
@@ -130,6 +139,22 @@ class DynawoModelsSupplierTest {
                         new PropertyBuilder()
                                 .name("staticId")
                                 .value("GEN")
+                                .type(PropertyType.STRING)
+                                .build())),
+                new DynamicModelConfig("TapChangerAutomaton", "tc_par", SetGroupType.FIXED, List.of(
+                        new PropertyBuilder()
+                                .name("dynamicModelId")
+                                .value("TC")
+                                .type(PropertyType.STRING)
+                                .build(),
+                        new PropertyBuilder()
+                                .name("staticId")
+                                .value("LOAD")
+                                .type(PropertyType.STRING)
+                                .build(),
+                        new PropertyBuilder()
+                                .name("side")
+                                .value("LOW_VOLTAGE")
                                 .type(PropertyType.STRING)
                                 .build())),
                 getTcbConfig(),

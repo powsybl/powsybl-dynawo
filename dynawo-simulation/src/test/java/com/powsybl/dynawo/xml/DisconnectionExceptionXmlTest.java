@@ -8,13 +8,13 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.LfResultsUtils;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
-import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -40,7 +40,7 @@ class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlT
     }
 
     protected void setupNetwork() {
-        network = HvdcTestNetwork.createVsc();
+        network = LfResultsUtils.createHvdcTestNetworkVscWithLFResults();
     }
 
     protected void addDynamicModels(TwoSides side, BiFunction<Network, TwoSides, BlackBoxModel> constructor) {
@@ -61,18 +61,16 @@ class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlT
 
     private static Stream<Arguments> provideModels() {
         return Stream.of(
-                Arguments.of("Equipment HvdcPVDangling side 1 is dangling and can't be disconnected with an event",
-                        TwoSides.ONE,
+                Arguments.of("Equipment HvdcPVDangling side 2 is dangling and can't be disconnected with an event",
+                        TwoSides.TWO,
                         (BiFunction<Network, TwoSides, BlackBoxModel>) (network, side) -> HvdcPBuilder.of(network, "HvdcPVDangling")
-                                .dynamicModelId("BBM_L")
                                 .staticId("L")
                                 .parameterSetId("hvdc")
                                 .dangling(side)
                                 .build()),
-                Arguments.of("Equipment HvdcVSCDanglingUdc side 2 is dangling and can't be disconnected with an event",
+                Arguments.of("Equipment HvdcVscDanglingUdc side 2 is dangling and can't be disconnected with an event",
                         TwoSides.TWO,
-                        (BiFunction<Network, TwoSides, BlackBoxModel>) (network, side) -> HvdcVscBuilder.of(network, "HvdcVSCDanglingUdc")
-                                .dynamicModelId("BBM_L")
+                        (BiFunction<Network, TwoSides, BlackBoxModel>) (network, side) -> HvdcVscBuilder.of(network, "HvdcVscDanglingUdc")
                                 .staticId("L")
                                 .parameterSetId("hvdc")
                                 .dangling(side)

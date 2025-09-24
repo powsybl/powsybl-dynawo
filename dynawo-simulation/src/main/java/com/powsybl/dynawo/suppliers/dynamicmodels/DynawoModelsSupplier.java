@@ -24,6 +24,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
+import static com.powsybl.dynawo.DynawoSimulationReports.createDynawoModelSupplierReportNode;
+
 /**
  * Instantiates an {@link DynamicModelConfig} list from {@link DynamicModelConfig} or JSON input
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -53,8 +55,9 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
 
     @Override
     public List<DynamicModel> get(Network network, ReportNode reportNode) {
+        ReportNode supplierReportNode = createDynawoModelSupplierReportNode(reportNode);
         return dynamicModelConfigs.stream()
-                .map(dynamicModelConfig -> buildDynamicModel(dynamicModelConfig, network, reportNode))
+                .map(dynamicModelConfig -> buildDynamicModel(dynamicModelConfig, network, supplierReportNode))
                 .filter(Objects::nonNull)
                 .toList();
     }

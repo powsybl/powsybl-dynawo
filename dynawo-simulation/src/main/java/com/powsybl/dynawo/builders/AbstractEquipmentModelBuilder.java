@@ -13,29 +13,26 @@ import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Objects;
-import java.util.function.Predicate;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R extends AbstractEquipmentModelBuilder<T, R>> extends AbstractDynamicModelBuilder implements EquipmentModelBuilder<T, R> {
+public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R extends AbstractEquipmentModelBuilder<T, R>> extends AbstractDynamicModelBuilder implements EquipmentModelBuilder<T, R> {
 
-    protected String dynamicModelId;
     protected String parameterSetId;
     protected final ModelConfig modelConfig;
     protected final BuilderEquipment<T> builderEquipment;
-    private Predicate<T> equipmentPredicates = eq -> Objects.equals(network, eq.getNetwork());
 
-    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, ReportNode reportNode) {
-        super(network, reportNode);
+    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, ReportNode parentReportNode) {
+        super(network, parentReportNode);
         this.modelConfig = Objects.requireNonNull(modelConfig);
-        this.builderEquipment = new BuilderEquipment<>(equipmentType);
+        this.builderEquipment = new BuilderEquipment<>(equipmentType.toString(), reportNode);
     }
 
-    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode reportNode) {
-        super(network, reportNode);
+    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode parentReportNode) {
+        super(network, parentReportNode);
         this.modelConfig = modelConfig;
-        this.builderEquipment = new BuilderEquipment<>(equipmentType);
+        this.builderEquipment = new BuilderEquipment<>(equipmentType, reportNode);
     }
 
     @Override
@@ -46,13 +43,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
 
     @Override
     public R equipment(T equipment) {
-        builderEquipment.addEquipment(equipment, this::checkEquipment);
-        return self();
-    }
-
-    @Override
-    public R dynamicModelId(String dynamicModelId) {
-        this.dynamicModelId = dynamicModelId;
+        builderEquipment.addEquipment(equipment, network);
         return self();
     }
 
@@ -64,34 +55,27 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
 
     @Override
     protected void checkData() {
-        isInstantiable = builderEquipment.checkEquipmentData(reportNode);
+        isInstantiable = builderEquipment.checkEquipmentData();
         if (parameterSetId == null) {
             BuilderReports.reportFieldNotSet(reportNode, "parameterSetId");
             isInstantiable = false;
         }
-        if (dynamicModelId == null) {
-            BuilderReports.reportFieldReplacement(reportNode, "dynamicModelId", "staticId", builderEquipment.hasStaticId() ? builderEquipment.getStaticId() : "(unknown staticId)");
-            dynamicModelId = builderEquipment.getStaticId();
-        }
     }
 
     protected abstract T findEquipment(String staticId);
-
-    protected boolean checkEquipment(T equipment) {
-        return equipmentPredicates.test(equipment);
-    }
-
-    protected void addEquipmentPredicate(Predicate<T> predicate) {
-        equipmentPredicates = equipmentPredicates.and(predicate);
-    }
 
     public T getEquipment() {
         return builderEquipment.getEquipment();
     }
 
     @Override
+    public String getModelName() {
+        return modelConfig.name();
+    }
+
+    @Override
     public String getModelId() {
-        return dynamicModelId != null ? dynamicModelId : "unknownDynamicId";
+        return builderEquipment.getStaticId();
     }
 
     protected abstract R self();

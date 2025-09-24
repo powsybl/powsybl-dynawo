@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
@@ -29,17 +30,14 @@ class SetPointInfiniteBusModelXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
-                .dynamicModelId("BBM_GEN")
                 .staticId("GEN")
                 .parameterSetId("pq")
                 .build());
         dynamicModels.add(TransformerFixedRatioBuilder.of(network)
-                .dynamicModelId("BBM_TR")
                 .staticId("NGEN_NHV1")
                 .parameterSetId("t")
                 .build());
         dynamicModels.add(InfiniteBusBuilder.of(network, "InfiniteBus")
-                .dynamicModelId("BBM_BUS")
                 .staticId("NGEN")
                 .parameterSetId("ib")
                 .build());
@@ -47,7 +45,7 @@ class SetPointInfiniteBusModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "set_point_inf_bus_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "set_point_inf_bus_par.xml", tmpDir.resolve(context.getSimulationParFile()));

@@ -38,7 +38,7 @@ class DynawoEventModelsSupplierTest {
 
     @Test
     void testEventSupplier() {
-        Network network = EurostagTutorialExample1Factory.create();
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
         List<EventModelConfig> eventModelConfigList = getEventConfigs();
         List<EventModel> events = new DynawoEventModelsSupplier(eventModelConfigList).get(network, ReportNode.NO_OP);
 
@@ -71,7 +71,7 @@ class DynawoEventModelsSupplierTest {
     @Test
     void testSupplierFromPath() throws URISyntaxException {
         Network network = EurostagTutorialExample1Factory.create();
-        Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/mappingEvent.json")).toURI());
+        Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/events.json")).toURI());
         List<EventModel> models = DynawoEventModelsSupplier.load(path).get(network);
         assertEquals(1, models.size());
     }
@@ -79,7 +79,7 @@ class DynawoEventModelsSupplierTest {
     @Test
     void testEventModelConfigDeserializer() throws IOException {
         SupplierJsonDeserializer<EventModelConfig> deserializer = new SupplierJsonDeserializer<>(new EventModelConfigsJsonDeserializer());
-        try (InputStream is = getClass().getResourceAsStream("/suppliers/mappingEvent.json")) {
+        try (InputStream is = getClass().getResourceAsStream("/suppliers/events.json")) {
             List<EventModelConfig> configs = deserializer.deserialize(is);
             assertEquals(1, configs.size());
             assertThat(configs.get(0)).usingRecursiveComparison().isEqualTo(getActivePowerVariationConfig());

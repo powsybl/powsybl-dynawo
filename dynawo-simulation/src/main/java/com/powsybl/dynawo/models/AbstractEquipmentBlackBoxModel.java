@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.models;
 
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.builders.VersionBound;
+import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 
@@ -22,13 +22,13 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
  * @author Luma Zamarreño {@literal <zamarrenolm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> extends AbstractBlackBoxModel implements EquipmentBlackBoxModel {
+public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<T>> extends AbstractBlackBoxModel implements EquipmentBlackBoxModel {
 
     protected final T equipment;
     private final ModelConfig modelConfig;
 
-    protected AbstractEquipmentBlackBoxModel(String dynamicModelId, String parameterSetId, T equipment, ModelConfig modelConfig) {
-        super(dynamicModelId, parameterSetId);
+    protected AbstractEquipmentBlackBoxModel(T equipment, String parameterSetId, ModelConfig modelConfig) {
+        super(equipment.getId(), parameterSetId);
         this.equipment = Objects.requireNonNull(equipment);
         this.modelConfig = Objects.requireNonNull(modelConfig);
     }
@@ -39,13 +39,8 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
     }
 
     @Override
-    public VersionBound getVersionBound() {
+    public VersionInterval getVersionInterval() {
         return modelConfig.version();
-    }
-
-    @Override
-    public String getStaticId() {
-        return equipment.getId();
     }
 
     @Override
@@ -62,9 +57,9 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
             writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         }
         writeDynamicAttributes(writer, parFileName);
-        writer.writeAttribute("staticId", getStaticId());
+        writer.writeAttribute("staticId", getDynamicModelId());
         if (hasVarMapping) {
-            MacroStaticReference.writeMacroStaticRef(writer, getLib());
+            MacroStaticReference.writeMacroStaticRef(writer, getName());
             writer.writeEndElement();
         }
     }

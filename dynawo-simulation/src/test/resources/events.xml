@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_GEN2" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR" staticId="GEN2">
+    <dyn:blackBoxModel id="GEN2" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR" staticId="GEN2">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
@@ -30,10 +30,10 @@
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations-DefaultEquipmentConnectionPoint" id1="BBM_GEN2" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="FREQ_SYNC" index1="0" id2="BBM_GEN2"/>
+    <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations-DefaultEquipmentConnectionPoint" id1="GEN2" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="FREQ_SYNC" index1="0" id2="GEN2"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="GEN2"/>
     <dyn:macroConnect connector="MC_EventBranchDisconnection-DefaultLine" id1="Disconnect_NHV1_NHV2_1" id2="NETWORK" name2="NHV1_NHV2_1"/>
     <dyn:macroConnect connector="MC_EventBranchDisconnection-DefaultLine" id1="Disconnect_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
-    <dyn:macroConnect connector="MC_EventInjectionDisconnection-GeneratorSynchronousFourWindingsProportionalRegulations" id1="Disconnect_GEN2" id2="BBM_GEN2"/>
+    <dyn:macroConnect connector="MC_EventInjectionDisconnection-GeneratorSynchronousFourWindingsProportionalRegulations" id1="Disconnect_GEN2" id2="GEN2"/>
 </dyn:dynamicModelsArchitecture>

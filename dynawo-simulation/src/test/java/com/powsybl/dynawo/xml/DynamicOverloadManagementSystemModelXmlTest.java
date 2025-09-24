@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.iidm.network.TwoSides;
@@ -43,7 +44,6 @@ class DynamicOverloadManagementSystemModelXmlTest extends AbstractDynamicModelXm
                 .iMeasurementSide(TwoSides.TWO)
                 .build());
         dynamicModels.add(TransformerFixedRatioBuilder.of(network)
-                .dynamicModelId("BBM_TRANSFORMER")
                 .staticId("NHV2_NLOAD")
                 .parameterSetId("tf")
                 .build());
@@ -58,7 +58,7 @@ class DynamicOverloadManagementSystemModelXmlTest extends AbstractDynamicModelXm
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", "cla_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 }

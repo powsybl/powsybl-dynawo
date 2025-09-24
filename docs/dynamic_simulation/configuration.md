@@ -87,7 +87,7 @@ The default value is `FALSE`.
 
 **timeline.exportMode**  
 `timeline.exportMode` defines the file extension of the timeline export.  
-The available `com.powsybl.dynawo.DynawoSimulationParameters.ExportMode` values are:
+The available `com.powsybl.dynawo.commons.ExportMode` values are:
 - `CSV`
 - `TXT`: same format as `CSV` but with `|` separator
 - `XML`
@@ -100,22 +100,34 @@ The default value is `1e-6`.
 
 **log.levelFilter**  
 `log.levelFilter` defines the log level for Dynawo log.  
-The default value is `INFO`.
 The available `com.powsybl.dynawo.DynawoSimulationParameters.LogLevel` values are:
 - `DEBUG`
 - `INFO`
 - `WARN`
 - `ERROR`
 
+The default value is `INFO`.
+
 **log.specificLogs**  
 `log.specificLogs` defines as a list the specifics logs to return besides the regular Dynawo log.  
-The default value is an empty list.
 The available `com.powsybl.dynawo.DynawoSimulationParameters.SpecificLog` values are:
 - `NETWORK`
 - `MODELER`
 - `PARAMETERS`
 - `VARIABLES`
 - `EQUATIONS`
+
+The default value is an empty list.
+
+**criteria.file**  
+`criteria.file` defines the simulation criteria file.  
+The default value is `null`.
+
+**additionalModelsFile**  
+`additionalModelsFile` defines the JSON file listing additional models used in the simulation.  
+The file must follow the `models.json` pattern defined [here](dynamic-models-configuration.md#supported-models).
+The models added in the file cannot overload an existing model and must belong to an existing category otherwise they will be skipped.  
+The default value is `null`.
 
 ### Examples
 
@@ -140,6 +152,7 @@ dynawo-simulation-default-parameters:
   log.specificLogs:
     - NETWORK
     - PARAMETERS
+  criteria.file: /home/user/criteria.crt
 ```
 
 **XML configuration:**
@@ -161,5 +174,6 @@ dynawo-simulation-default-parameters:
   <precision>10e-6</precision>
   <log.levelFilter>INFO</log.levelFilter>
   <log.specificLogs>NETWORK, PARAMETERS</log.specificLogs>
+  <criteria.file>/home/user/criteria.crt</criteria.file>
 </dynawo-simulation-default-parameters>
 ```

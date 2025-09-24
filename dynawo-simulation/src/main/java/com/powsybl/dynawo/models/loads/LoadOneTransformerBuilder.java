@@ -43,6 +43,10 @@ public class LoadOneTransformerBuilder extends AbstractLoadModelBuilder<LoadOneT
         return new LoadOneTransformerBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -54,13 +58,13 @@ public class LoadOneTransformerBuilder extends AbstractLoadModelBuilder<LoadOneT
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected LoadOneTransformerBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected LoadOneTransformerBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override
     public LoadOneTransformer build() {
-        return isInstantiable() ? new LoadOneTransformer(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new LoadOneTransformer(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

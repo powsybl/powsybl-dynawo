@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aggregatedResults xmlns="http://www.rte-france.com/dynawo">
+    <loadIncreaseResults loadLevel="100" status="CRITERIA_NON_RESPECTED"/>
+    <loadIncreaseResults loadLevel="70" status="CRITERIA_NON_RESPECTED">
+        <scenarioResults id="DisconnectLine" status="CONVERGENCE"/>
+    </loadIncreaseResults>
+    <loadIncreaseResults loadLevel="70" status="CONVERGENCE">
+        <criterionNonRespected id="total load power = 295.381MW" time="70.000000"/>
+    </loadIncreaseResults>
+    <loadIncreaseResults loadLevel="70" status="CONVERGENCE"/>
+    <loadIncreaseResults loadLevel="70" status="DIVERGENCE">
+        <criterionNonRespected id="total load power = 295.381MW" time="70.000000"/>
+    </loadIncreaseResults>
+    <loadIncreaseResults loadLevel="70" status="DIVERGENCE">
+        <scenarioResults id="DisconnectLine" status="CONVERGENCE"/>
+    </loadIncreaseResults>
+    <loadIncreaseResults loadLevel="70" status="EXECUTION_PROBLEM">
+        <criterionNonRespected id="total load power = 295.381MW" time="70.000000"/>
+    </loadIncreaseResults>
+    <loadIncreaseResults loadLevel="70" status="EXECUTION_PROBLEM">
+        <scenarioResults id="DisconnectLine" status="CONVERGENCE"/>
+    </loadIncreaseResults>
+    <loadIncreaseResults loadLevel="50" status="CONVERGENCE">
+        <scenarioResults id="DisconnectLine" status="CRITERIA_NON_RESPECTED"/>
+        <scenarioResults id="DisconnectGroup" status="CONVERGENCE">
+            <criterionNonRespected id="total load power = 276.374MW" time="185.000000"/>
+        </scenarioResults>
+    </loadIncreaseResults>
+</aggregatedResults>

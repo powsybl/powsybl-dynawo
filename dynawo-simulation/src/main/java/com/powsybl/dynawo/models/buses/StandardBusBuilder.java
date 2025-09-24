@@ -43,6 +43,10 @@ public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
         return new StandardBusBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -54,13 +58,13 @@ public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected StandardBusBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected StandardBusBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override
     public StandardBus build() {
-        return isInstantiable() ? new StandardBus(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new StandardBus(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

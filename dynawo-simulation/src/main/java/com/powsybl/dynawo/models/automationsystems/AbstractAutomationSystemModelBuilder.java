@@ -26,8 +26,8 @@ public abstract class AbstractAutomationSystemModelBuilder<T extends AbstractAut
     protected String parameterSetId;
     protected final ModelConfig modelConfig;
 
-    protected AbstractAutomationSystemModelBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, reportNode);
+    protected AbstractAutomationSystemModelBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, parentReportNode);
         this.modelConfig = Objects.requireNonNull(modelConfig);
     }
 
@@ -54,8 +54,13 @@ public abstract class AbstractAutomationSystemModelBuilder<T extends AbstractAut
     }
 
     @Override
+    public String getModelName() {
+        return modelConfig.name();
+    }
+
+    @Override
     public String getModelId() {
-        return dynamicModelId != null ? dynamicModelId : "unknownDynamicId";
+        return dynamicModelId;
     }
 
     protected String getLib() {

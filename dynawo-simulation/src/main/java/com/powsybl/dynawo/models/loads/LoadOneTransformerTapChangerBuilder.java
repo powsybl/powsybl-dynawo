@@ -43,6 +43,10 @@ public class LoadOneTransformerTapChangerBuilder extends AbstractLoadModelBuilde
         return new LoadOneTransformerTapChangerBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -54,13 +58,13 @@ public class LoadOneTransformerTapChangerBuilder extends AbstractLoadModelBuilde
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected LoadOneTransformerTapChangerBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected LoadOneTransformerTapChangerBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override
     public LoadOneTransformerTapChanger build() {
-        return isInstantiable() ? new LoadOneTransformerTapChanger(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new LoadOneTransformerTapChanger(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

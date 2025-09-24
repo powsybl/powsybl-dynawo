@@ -7,13 +7,14 @@
  */
 package com.powsybl.dynawo.models;
 
-import com.powsybl.dynawo.builders.BuildersUtil;
+import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -22,12 +23,21 @@ class ActionConnectionPointTest {
     @Test
     void voltageOffBus() {
         Network network = EurostagTutorialExample1Factory.create();
-        assertNull(BuildersUtil.getActionConnectionPoint(network, "NGEN"));
+        assertNull(TapChangerBlockingAutomationSystemBuilder.of(network)
+                .dynamicModelId("TC")
+                .parameterSetId("tc")
+                .transformers("NGEN_NHV1")
+                .uMeasurements("NGEN")
+                .build());
     }
 
     @Test
     void voltageOffBusBarSection() {
         Network network = HvdcTestNetwork.createBase();
-        assertNull(BuildersUtil.getActionConnectionPoint(network, "BBS1"));
+        assertNull(TapChangerBlockingAutomationSystemBuilder.of(network)
+                .dynamicModelId("TC")
+                .parameterSetId("tc")
+                .uMeasurements("BBS1")
+                .build());
     }
 }

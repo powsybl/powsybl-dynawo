@@ -43,6 +43,10 @@ public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
         return new BaseLoadBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -54,17 +58,19 @@ public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected BaseLoadBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected BaseLoadBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override
     public BaseLoad build() {
         if (isInstantiable()) {
             if (modelConfig.isControllable()) {
-                return new BaseLoadControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig);
+                return new BaseLoadControllable(getEquipment(), parameterSetId, modelConfig);
+            } else if (modelConfig.isSynchronized()) {
+                return new SynchronizedLoad(getEquipment(), parameterSetId, modelConfig);
             } else {
-                return new BaseLoad(dynamicModelId, getEquipment(), parameterSetId, modelConfig);
+                return new BaseLoad(getEquipment(), parameterSetId, modelConfig);
             }
         } else {
             return null;

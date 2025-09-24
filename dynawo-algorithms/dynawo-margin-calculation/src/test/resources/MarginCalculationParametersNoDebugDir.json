@@ -1,0 +1,65 @@
+{
+  "startTime" : 0.0,
+  "stopTime" : 200.0,
+  "marginCalculationStartTime" : 100.0,
+  "loadIncreaseStartTime" : 10.0,
+  "loadIncreaseStopTime" : 50.0,
+  "contingenciesStartTime" : 120.0,
+  "calculationType" : "GLOBAL_MARGIN",
+  "accuracy" : 2,
+  "loadModelsRule" : "ALL_LOADS",
+  "dynawoParameters" : {
+    "networkParameters" : {
+      "id" : "1",
+      "parameters" : { },
+      "references" : [ ]
+    },
+    "solverParameters" : {
+      "id" : "1",
+      "parameters" : {
+        "order" : {
+          "name" : "order",
+          "type" : "INT",
+          "value" : "1"
+        },
+        "absAccuracy" : {
+          "name" : "absAccuracy",
+          "type" : "DOUBLE",
+          "value" : "1e-4"
+        }
+      },
+      "references" : [ ]
+    },
+    "solverType" : "SIM",
+    "mergeLoads" : false,
+    "useModelSimplifiers" : false,
+    "dumpFileParameters" : {
+      "exportDumpFile" : false,
+      "useDumpFile" : false,
+      "dumpFileFolder" : null,
+      "dumpFile" : null
+    },
+    "precision" : 1.0E-6,
+    "timelineExportMode" : "TXT",
+    "logLevelFilter" : "INFO",
+    "specificLogs" : [ ],
+    "criteriaFilePath" : null,
+    "additionalModelsPath" : null,
+    "modelsParameters" : [ {
+      "id" : "test",
+      "parameters" : {
+        "boolean" : {
+          "name" : "boolean",
+          "type" : "BOOL",
+          "value" : "true"
+        },
+        "string" : {
+          "name" : "string",
+          "type" : "STRING",
+          "value" : "aString"
+        }
+      },
+      "references" : [ ]
+    } ]
+  }
+}

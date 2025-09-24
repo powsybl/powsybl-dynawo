@@ -8,6 +8,7 @@
 package com.powsybl.dynaflow;
 
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.commons.report.TypedValue;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
@@ -19,21 +20,21 @@ public final class DynaflowReports {
 
     public static ReportNode createDynaFlowReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dynaflow", "Dynaflow loadflow on network '${networkId}'")
-                .withUntypedValue("networkId", networkId)
+                .withMessageTemplate("dynawo.dynaflow.loadflow")
+                .withTypedValue("networkId", networkId, TypedValue.ID)
                 .add();
     }
 
     public static ReportNode createDynaFlowSecurityAnalysisReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dynaflowSa", "Dynaflow security analysis on network '${networkId}'")
-                .withUntypedValue("networkId", networkId)
+                .withMessageTemplate("dynawo.dynaflow.sa")
+                .withTypedValue("networkId", networkId, TypedValue.ID)
                 .add();
     }
 
-    public static ReportNode createContingenciesTimelineReportNode(ReportNode reportNode, String contingencyId) {
-        return reportNode.newReportNode()
-                .withMessageTemplate("saContingency", "Contingency '${contingencyId}'")
+    public static void createSidedContingencyReportNode(ReportNode reportNode, String contingencyId) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynaflow.sidedContingency")
                 .withUntypedValue("contingencyId", contingencyId)
                 .add();
     }

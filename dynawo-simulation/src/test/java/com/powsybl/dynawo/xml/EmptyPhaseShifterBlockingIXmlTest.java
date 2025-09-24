@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterBlockingIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -46,15 +47,15 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "empty_phase_shifter_blocking_i_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         checkReport("""
                 + Test DYD
-                   Model BBM_PS instantiation successful
-                   Model BBM_PSB instantiation successful
-                   'phaseShifterId' field is not set
-                   Model BBM_PSB2 cannot be instantiated
+                   Model PhaseShifterI BBM_PS instantiation OK
+                   Model PhaseShifterBlockingI BBM_PSB instantiation OK
+                   + Model PhaseShifterBlockingI BBM_PSB2 instantiation KO
+                      'phaseShifterId' field is not set
                    + Dynawo models processing
                       PhaseShifterBlockingI BBM_PSB equipment WRONG_ID is not a PhaseShifterIModel, the automation system will be skipped
                 """);

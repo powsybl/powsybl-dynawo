@@ -31,8 +31,11 @@ class LoadTest {
                 .setQ0(200.0)
                 .add();
         assertNull(BaseLoadBuilder.of(network)
-                .dynamicModelId("load")
                 .staticId("L")
+                .parameterSetId("LAB")
+                .build());
+        assertNull(BaseLoadBuilder.of(network)
+                .staticId("LOAD")
                 .parameterSetId("LAB")
                 .build());
     }

@@ -45,6 +45,10 @@ public class BaseShuntBuilder extends AbstractEquipmentModelBuilder<ShuntCompens
         return new BaseShuntBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -56,8 +60,8 @@ public class BaseShuntBuilder extends AbstractEquipmentModelBuilder<ShuntCompens
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected BaseShuntBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.SHUNT_COMPENSATOR, reportNode);
+    protected BaseShuntBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, IdentifiableType.SHUNT_COMPENSATOR, parentReportNode);
     }
 
     @Override
@@ -67,7 +71,7 @@ public class BaseShuntBuilder extends AbstractEquipmentModelBuilder<ShuntCompens
 
     @Override
     public BaseShunt build() {
-        return isInstantiable() ? new BaseShunt(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new BaseShunt(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

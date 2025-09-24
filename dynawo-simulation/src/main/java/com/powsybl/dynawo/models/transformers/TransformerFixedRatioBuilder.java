@@ -45,6 +45,10 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
         return new TransformerFixedRatioBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -56,8 +60,8 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected TransformerFixedRatioBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER, reportNode);
+    protected TransformerFixedRatioBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER, parentReportNode);
     }
 
     @Override
@@ -67,7 +71,7 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
 
     @Override
     public TransformerFixedRatio build() {
-        return isInstantiable() ? new TransformerFixedRatio(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new TransformerFixedRatio(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

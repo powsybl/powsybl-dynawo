@@ -43,6 +43,10 @@ public class InfiniteBusBuilder extends AbstractBusBuilder<InfiniteBusBuilder> {
         return new InfiniteBusBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -54,13 +58,13 @@ public class InfiniteBusBuilder extends AbstractBusBuilder<InfiniteBusBuilder> {
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected InfiniteBusBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected InfiniteBusBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override
     public InfiniteBus build() {
-        return isInstantiable() ? new InfiniteBus(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new InfiniteBus(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

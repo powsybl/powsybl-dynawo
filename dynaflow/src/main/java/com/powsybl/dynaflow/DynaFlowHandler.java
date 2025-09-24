@@ -15,6 +15,7 @@ import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynawo.commons.CommonReports;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.timeline.TimelineEntry;
@@ -25,6 +26,8 @@ import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.loadflow.LoadFlowResultImpl;
 import com.powsybl.loadflow.json.LoadFlowResultDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,13 +38,16 @@ import java.util.List;
 import java.util.Map;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynaFlowHandler.class);
+
     private final Network network;
     private final Network dynawoInput;
     private final String workingStateId;
@@ -63,7 +69,7 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
     @Override
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(workingStateId);
-        DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(IIDM_FILENAME));
+        DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
         DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
         return getCommandExecutions(command);
     }
@@ -75,7 +81,8 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
         report.log();
         network.getVariantManager().setWorkingVariant(workingStateId);
         boolean status = true;
-        Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(DynaFlowConstants.OUTPUT_IIDM_FILENAME);
+        Path outputNetworkFile = workingDir.resolve(OUTPUT_IIDM_FILENAME_PATH);
+
         if (Files.exists(outputNetworkFile)) {
             NetworkResultsUpdater.update(network, NetworkSerDe.read(outputNetworkFile), dynaFlowParameters.isMergeLoads());
         } else {
@@ -99,10 +106,19 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
 
     private void reportTimeLine(Path workingDir) {
         ReportNode dfReporter = DynaflowReports.createDynaFlowReportNode(reportNode, network.getId());
-        Path timelineFile = workingDir.resolve(DYNAFLOW_OUTPUTS_FOLDER)
-                .resolve(DYNAWO_TIMELINE_FOLDER)
-                .resolve(DYNAFLOW_TIMELINE_FILE);
-        List<TimelineEntry> tl = new XmlTimeLineParser().parse(timelineFile);
-        tl.forEach(e -> CommonReports.reportTimelineEntry(dfReporter, e));
+        Path timelineFile = workingDir.resolve(OUTPUTS_FOLDER)
+                .resolve(TIMELINE_FOLDER)
+                .resolve(TIMELINE_FILENAME + ExportMode.XML.getFileExtension());
+        if (Files.exists(timelineFile)) {
+            List<TimelineEntry> entries = new XmlTimeLineParser().parse(timelineFile);
+            if (!entries.isEmpty()) {
+                ReportNode timelineReporter = CommonReports.createDynawoTimelineReportNode(dfReporter);
+                entries.forEach(e -> CommonReports.reportTimelineEntry(timelineReporter, e));
+            } else {
+                CommonReports.reportEmptyTimeline(dfReporter);
+            }
+        } else {
+            LOGGER.warn("Timeline file not found");
+        }
     }
 }

@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
@@ -30,17 +31,14 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPV")
-                .dynamicModelId("BBM_GENC")
                 .staticId("GEN2")
                 .parameterSetId("GPV")
                 .build());
         dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsGoverPropVRPropInt")
-                .dynamicModelId("BBM_GENC2")
                 .staticId("GEN3")
                 .parameterSetId("GSTWPR")
                 .build());
         dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                .dynamicModelId("BBM_LOADC")
                 .staticId("LOAD2")
                 .parameterSetId("load")
                 .build());
@@ -59,6 +57,7 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
                 .startTime(1)
                 .deltaP(1.3)
                 .build());
+        // will be skipped
         eventModels.add(EventActivePowerVariationBuilder.of(network)
                 .staticId("LOAD")
                 .startTime(10)
@@ -73,10 +72,14 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeDisconnectModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "apv_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "apv_par.xml", tmpDir.resolve(context.getSimulationParFile()));
-        validate("parameters.xsd", "apv_network_par.xml", tmpDir.resolve("network.par"));
+        checkReport("""
+                + Test DYD
+                   + Dynawo models processing
+                      EventActivePowerVariation Step_LOAD cannot handle connection with LOAD default model, the model will be skipped
+                """);
     }
 }

@@ -7,12 +7,15 @@
  */
 package com.powsybl.dynawo.builders;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auto.service.AutoService;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.UnderVoltageAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
-import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelsOverloadManagementSystemBuilder;
+import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterBlockingIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
@@ -30,6 +33,9 @@ import com.powsybl.dynawo.models.shunts.BaseShuntBuilder;
 import com.powsybl.dynawo.models.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -42,7 +48,7 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
 
     private static final Stream<BuilderConfig> BUILDER_CONFIGS = Stream.of(
             new BuilderConfig(DynamicOverloadManagementSystemBuilder.CATEGORY, DynamicOverloadManagementSystemBuilder::of, DynamicOverloadManagementSystemBuilder::getSupportedModelInfos),
-            new BuilderConfig(DynamicTwoLevelsOverloadManagementSystemBuilder.CATEGORY, DynamicTwoLevelsOverloadManagementSystemBuilder::of, DynamicTwoLevelsOverloadManagementSystemBuilder::getSupportedModelInfos),
+            new BuilderConfig(DynamicTwoLevelOverloadManagementSystemBuilder.CATEGORY, DynamicTwoLevelOverloadManagementSystemBuilder::of, DynamicTwoLevelOverloadManagementSystemBuilder::getSupportedModelInfos),
             new BuilderConfig(TapChangerAutomationSystemBuilder.CATEGORY, TapChangerAutomationSystemBuilder::of, TapChangerAutomationSystemBuilder::getSupportedModelInfos),
             new BuilderConfig(TapChangerBlockingAutomationSystemBuilder.CATEGORY, TapChangerBlockingAutomationSystemBuilder::of, TapChangerBlockingAutomationSystemBuilder::getSupportedModelInfos),
             new BuilderConfig(UnderVoltageAutomationSystemBuilder.CATEGORY, UnderVoltageAutomationSystemBuilder::of, UnderVoltageAutomationSystemBuilder::getSupportedModelInfos),
@@ -62,7 +68,7 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(LoadTwoTransformersTapChangersBuilder.CATEGORY, LoadTwoTransformersTapChangersBuilder::of, LoadTwoTransformersTapChangersBuilder::getSupportedModelInfos),
             new BuilderConfig(BaseShuntBuilder.CATEGORY, BaseShuntBuilder::of, BaseShuntBuilder::getSupportedModelInfos),
             new BuilderConfig(BaseStaticVarCompensatorBuilder.CATEGORY, BaseStaticVarCompensatorBuilder::of, BaseStaticVarCompensatorBuilder::getSupportedModelInfos),
-            new BuilderConfig(GeneratorFictitiousBuilder.CATEGORY, GeneratorFictitiousBuilder::of, GeneratorFictitiousBuilder::getSupportedModelInfos),
+            new BuilderConfig(BaseGeneratorBuilder.CATEGORY, BaseGeneratorBuilder::of, BaseGeneratorBuilder::getSupportedModelInfos),
             new BuilderConfig(SynchronizedGeneratorBuilder.CATEGORY, SynchronizedGeneratorBuilder::of, SynchronizedGeneratorBuilder::getSupportedModelInfos),
             new BuilderConfig(SynchronousGeneratorBuilder.CATEGORY, SynchronousGeneratorBuilder::of, SynchronousGeneratorBuilder::getSupportedModelInfos),
             new BuilderConfig(WeccBuilder.CATEGORY, WeccBuilder::of, WeccBuilder::getSupportedModelInfos),
@@ -70,13 +76,21 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(SignalNGeneratorBuilder.CATEGORY, SignalNGeneratorBuilder::of, SignalNGeneratorBuilder::getSupportedModelInfos));
 
     private static final Stream<EventBuilderConfig> EVENT_BUILDER_CONFIGS = Stream.of(
-            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.getEventModelInfo()),
-            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.getEventModelInfo()),
-            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.getEventModelInfo()));
+            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.getModelInfo()),
+            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.getModelInfo()),
+            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.getModelInfo()));
 
     @Override
-    public String getModelConfigFileName() {
-        return MODEL_CONFIG_FILENAME;
+    public Map<String, ModelConfigs> loadModelConfigs() {
+        try {
+            ObjectMapper objectMapper = ModelConfigLoader.getModelConfigObjectMapper();
+            return objectMapper.readValue(Objects.requireNonNull(
+                            ModelConfigLoader.class.getClassLoader().getResource(MODEL_CONFIG_FILENAME)).openStream(),
+                    new TypeReference<>() {
+                    });
+        } catch (IOException e) {
+            throw new PowsyblException("Dynamic models configuration file not found");
+        }
     }
 
     @Override

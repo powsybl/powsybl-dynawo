@@ -1,13 +1,13 @@
 # powsybl-dynawo
 
-[![Actions Status](https://github.com/powsybl/powsybl-dynawo/workflows/CI/badge.svg)](https://github.com/powsybl/powsybl-dynawo/actions)
+[![Actions Status](https://github.com/powsybl/powsybl-dynawo/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/powsybl/powsybl-dynawo/actions)
 [![Coverage Status](https://sonarcloud.io/api/project_badges/measure?project=com.powsybl%3Apowsybl-dynawo&metric=coverage)](https://sonarcloud.io/component_measures?id=com.powsybl%3Apowsybl-dynawo&metric=coverage)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.powsybl%3Apowsybl-dynawo&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.powsybl%3Apowsybl-dynawo)
 [![MPL-2.0 License](https://img.shields.io/badge/license-MPL_2.0-blue.svg)](https://www.mozilla.org/en-US/MPL/2.0/)
 [![Javadocs](https://www.javadoc.io/badge/com.powsybl/powsybl-dynawo.svg?color=blue)](https://www.javadoc.io/doc/com.powsybl/powsybl-dynawo)
 [![Slack](https://img.shields.io/badge/slack-powsybl-blueviolet.svg?logo=slack)](https://join.slack.com/t/powsybl/shared_invite/zt-rzvbuzjk-nxi0boim1RKPS5PjieI0rA)
 
-[Dynawo](https://dynawo.github.io) is an hybrid C++/Modelica open source suite of simulation tools for power systems. This integration module allows to use [DynaFlow](https://dynawo.github.io/about/dynaflow) for [power flow simulations](https://www.powsybl.org/pages/documentation/simulation/powerflow) and [Dynawo](https://dynawo.github.io) for [time domain simulations](https://www.powsybl.org/pages/documentation/simulation/timedomain).
+[Dynawo](https://dynawo.github.io) is an hybrid C++/Modelica open source suite of simulation tools for power systems. This integration module allows to use [DynaFlow](https://dynawo.github.io/about/dynaflow) for [power flow simulations](https://powsybl.readthedocs.io/projects/powsybl-core/en/stable/simulation/loadflow/index.html) and [Dynawo](https://dynawo.github.io) for [time domain simulations](https://powsybl.readthedocs.io/projects/powsybl-core/en/stable/simulation/dynamic/index.html).
 
 ## DynaFlow
 
@@ -19,7 +19,7 @@ LoadFlowParameters parameters = LoadFlowParameters.load();
 LoadFlow.find("DynaFlow").run(network, parameters);
 ```
 
-To learn more about the usage of DynaFlow, read the [dedicated page](https://www.powsybl.org/pages/documentation/simulation/powerflow/dynaflow.html) on our website.
+To learn more about the usage of DynaFlow, read the [dedicated page](https://powsybl.readthedocs.io/projects/powsybl-dynawo/en/latest/load_flow/index.html) on our website.
 
 ## Dynawo
 
@@ -28,7 +28,7 @@ To run a dynamic simulation, you need:
 - a case file
 - a `DynamicModelsSupplier` to associate dynamic models to the equipment of the network
 - an `EventModelsSuppler` to configure events simulated during the simulation (optional)
-- a `CurvesSupplier` to follow the evolution of dynamic variables during the simulation (optional)
+- an `OutputVariablesSupplier` to follow the evolution of dynamic variables during the simulation (optional)
 - a set of parameters to configure the simulation (optional)
 
 Thanks to `powsybl-dynawo-dsl`, the inputs can be easily configured using Groovy scripts.
@@ -37,36 +37,36 @@ The simulation parameters can be configured either in the `config.yml` file or u
 ```java
 Network network = Network.read("/path/to/the/casefile.xiidm");
 
-// Load the dynamic models mapping
-GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-    Paths.get("/path/to/dynamicModelsMapping.groovy"),
+// Load the dynamic models configuration
+DynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+    Paths.get("/path/to/dynamicModelsConfiguration.groovy"),
     GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
 // Load the events
-GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
+EventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
     Paths.get("/path/to/event.groovy"),
     GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
-// Configure the curves
-GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
-    Paths.get("/path/to/curves.groovy"),
-    GroovyExtension.find(CurveGroovyExtension.class, DynawoSimulationProvider.NAME));
+// Configure the output variables
+OutputVariablesSupplier outputVariablesSupplier = new GroovyOutputVariablesSupplier(
+    Paths.get("/path/to/outputVariables.groovy"),
+    GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
 
 // Load the parameters
 DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
 
 // Run the simulation and display the results
-DynamicSimulationResult result = DynamicSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, parameters);
+DynamicSimulationResult result = DynamicSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier, parameters);
 System.out.println(result.getStatus());
 System.out.println("Timeline:");
 result.getTimeLine().forEach(tl -> System.out.printf("[%.8f] %s (on %s)%n", tl.time(), tl.message(), tl.modelName()));
 ```
 
-To learn more about the usage of Dynawo, read the [dedicated page](https://www.powsybl.org/pages/documentation/simulation/timedomain/dynawo) on our website.
+To learn more about the usage of Dynawo, read the [dedicated page](https://powsybl.readthedocs.io/projects/powsybl-dynawo/en/latest/dynamic_simulation/index.html) on our website.
 
 ### Examples
 
-This is an example of a dynamic models mapping file:
+This is an example of a dynamic models configuration file:
 ```groovy
 import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Load
@@ -98,7 +98,7 @@ for (Line line : network.lines) {
 }
 ```
 
-Note that this mapping file refers to parameter set ids which should be found in the Dynawo parameters file.
+Note that this configuration file refers to parameter set ids which should be found in the Dynawo parameters file.
 For the above example, the corresponding parameter file could be:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

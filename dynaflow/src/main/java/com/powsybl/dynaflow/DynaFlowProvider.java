@@ -9,6 +9,7 @@ package com.powsybl.dynaflow;
 import com.google.auto.service.AutoService;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.extensions.ExtensionJsonSerializer;
@@ -27,16 +28,17 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynaflow.DynaFlowParameters.MODULE_SPECIFIC_PARAMETERS;
+import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME_PATH;
 
 /**
  *
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(LoadFlowProvider.class)
 public class DynaFlowProvider implements LoadFlowProvider {
-
-    public static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
 
     private static final String WORKING_DIR_PREFIX = "dynaflow_";
 
@@ -51,16 +53,14 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     public static Command getCommand(DynaFlowConfig config) {
-        List<String> args = Arrays.asList("--network", IIDM_FILENAME, "--config", CONFIG_FILENAME);
-
         return new SimpleCommandBuilder()
                 .id("dynaflow_lf")
                 .program(config.getProgram())
-                .args(args)
-                .inputFiles(new InputFile(IIDM_FILENAME),
+                .args("--network", NETWORK_FILENAME, "--config", CONFIG_FILENAME)
+                .inputFiles(new InputFile(NETWORK_FILENAME),
                             new InputFile(CONFIG_FILENAME))
                 .outputFiles(new OutputFile(OUTPUT_RESULTS_FILENAME),
-                             new OutputFile("outputs/finalState/" + OUTPUT_IIDM_FILENAME))
+                             new OutputFile(OUTPUT_IIDM_FILENAME_PATH))
                 .build();
     }
 
@@ -73,10 +73,10 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 .build();
     }
 
-    private static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {
+    static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         if (parametersExt == null) {
-            parametersExt = new DynaFlowParameters();
+            return new DynaFlowParameters();
         }
         return parametersExt;
     }
@@ -120,8 +120,18 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
+    public void updateSpecificParameters(Extension<LoadFlowParameters> extension, PlatformConfig platformConfig) {
+        ((DynaFlowParameters) extension).update(platformConfig);
+    }
+
+    @Override
     public Optional<Extension<LoadFlowParameters>> loadSpecificParameters(Map<String, String> properties) {
         return Optional.of(DynaFlowParameters.load(properties));
+    }
+
+    @Override
+    public void updateSpecificParameters(Extension<LoadFlowParameters> extension, Map<String, String> properties) {
+        getParametersExt(extension.getExtendable()).update(properties);
     }
 
     @Override
@@ -138,12 +148,12 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
-    public Optional<ExtensionJsonSerializer> getSpecificParametersSerializer() {
-        return Optional.of(new JsonDynaFlowParametersSerializer());
+    public Optional<ModuleConfig> getModuleConfig(PlatformConfig platformConfig) {
+        return platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS);
     }
 
     @Override
-    public void updateSpecificParameters(Extension<LoadFlowParameters> extension, Map<String, String> properties) {
-        getParametersExt(extension.getExtendable()).update(properties);
+    public Optional<ExtensionJsonSerializer> getSpecificParametersSerializer() {
+        return Optional.of(new JsonDynaFlowParametersSerializer());
     }
 }

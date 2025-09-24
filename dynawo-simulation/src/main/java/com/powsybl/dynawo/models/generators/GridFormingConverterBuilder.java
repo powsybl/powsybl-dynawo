@@ -43,6 +43,10 @@ public class GridFormingConverterBuilder extends AbstractGeneratorBuilder<GridFo
         return new GridFormingConverterBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -54,13 +58,13 @@ public class GridFormingConverterBuilder extends AbstractGeneratorBuilder<GridFo
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected GridFormingConverterBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected GridFormingConverterBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override
     public GridFormingConverter build() {
-        return isInstantiable() ? new GridFormingConverter(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new GridFormingConverter(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

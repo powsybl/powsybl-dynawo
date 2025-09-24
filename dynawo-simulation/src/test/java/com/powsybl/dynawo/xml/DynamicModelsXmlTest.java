@@ -8,21 +8,23 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.commons.DynawoVersion;
-import com.powsybl.dynawo.models.generators.GeneratorFictitiousBuilder;
+import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
+import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.lines.LineModel;
 import com.powsybl.dynawo.models.loads.BaseLoad;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Identifiable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,28 +37,28 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
 
     @Test
     void writeDynamicModel() throws SAXException, IOException {
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
-
-        DydXml.write(tmpDir, context);
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .outputVariables(outputVariables)
+                .build();
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", "dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 
     @Test
     void writeDynamicModelWithLoadsAndOnlyOneFictitiousGenerator() throws SAXException, IOException {
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
         dynamicModels.clear();
-        dynamicModels.add(GeneratorFictitiousBuilder.of(network)
-                .dynamicModelId("BBM_GEN6")
+        dynamicModels.add(BaseGeneratorBuilder.of(network)
                 .staticId("GEN6")
                 .parameterSetId("GF")
                 .build());
 
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .outputVariables(outputVariables)
+                .build();
 
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", "dyd_fictitious.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 
@@ -64,62 +66,77 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
     void duplicateStaticId() {
         dynamicModels.clear();
         BaseLoad load1 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                .dynamicModelId("BBM_LOAD")
                 .staticId("LOAD")
                 .parameterSetId("lab")
                 .build();
         BaseLoad load2 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                .dynamicModelId("BBM_LOAD2")
                 .staticId("LOAD")
                 .parameterSetId("LAB")
                 .build();
         dynamicModels.add(load1);
         dynamicModels.add(load2);
-        String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, workingVariantId, dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .build();
         Assertions.assertThat(context.getBlackBoxDynamicModels()).containsExactly(load1);
     }
 
     @Test
     void duplicateDynamicId() {
+        String duplicatedId = "LOAD";
         dynamicModels.clear();
-        BaseLoad load1 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                .dynamicModelId("BBM_LOAD")
-                .staticId("LOAD")
+        BaseLoad load = BaseLoadBuilder.of(network, "LoadAlphaBeta")
+                .staticId(duplicatedId)
                 .parameterSetId("lab")
                 .build();
-        BaseLoad load2 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                .dynamicModelId("BBM_LOAD")
-                .staticId("LOAD2")
-                .parameterSetId("LAB")
+        BlackBoxModel phaseShifter = PhaseShifterPAutomationSystemBuilder.of(network)
+                .dynamicModelId(duplicatedId)
+                .transformer("NGEN_NHV1")
+                .parameterSetId("PS")
                 .build();
-        dynamicModels.add(load1);
-        dynamicModels.add(load2);
-        String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, workingVariantId, dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
-        Assertions.assertThat(context.getBlackBoxDynamicModels()).containsExactly(load1);
+        dynamicModels.add(load);
+        dynamicModels.add(phaseShifter);
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .build();
+        Assertions.assertThat(context.getBlackBoxDynamicModels()).containsExactly(load);
     }
 
     @Test
     void wrongDynawoVersionModel() {
         dynamicModels.clear();
         dynamicModels.add(BaseLoadBuilder.of(network, "ElectronicLoad")
-                .dynamicModelId("BBM_L")
                 .staticId("LOAD")
                 .parameterSetId("lab")
                 .build());
-        String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, workingVariantId, dynamicModels,
-                eventModels, curves, DynamicSimulationParameters.load(), DynawoSimulationParameters.load(),
-                new DynawoVersion(1, 2, 0), ReportNode.NO_OP);
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .currentVersion(new DynawoVersion(1, 2, 0))
+                .build();
         Assertions.assertThat(context.getBlackBoxDynamicModels()).isEmpty();
     }
 
     @Test
     void testIncorrectModelException() {
-        DynawoSimulationContext dc = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
         Identifiable<?> gen = network.getIdentifiable("GEN5");
-        Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(gen, LineModel.class, true));
-        assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());
+        MacroConnectionsAdder adder = new MacroConnectionsAdder(
+                id -> dynamicModels.stream()
+                        .filter(dm -> dm.getDynamicModelId().equals(id))
+                        .findFirst().orElse(null),
+                id -> null,
+                mc -> { },
+                (mc, f) -> { },
+                ReportNode.NO_OP
+        );
+        BlackBoxModel bbm = dynamicModels.get(0);
+
+        Exception e = assertThrows(PowsyblException.class, () -> adder.createMacroConnections(bbm, gen, LineModel.class, l -> List.of()));
+        assertEquals("The model identified by the id GEN5 does not match the expected model (LineModel)", e.getMessage());
     }
 }

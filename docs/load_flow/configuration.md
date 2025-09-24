@@ -38,21 +38,12 @@ The default value is `TRUE`.
 The default value is `45.0`.
 
 **activePowerCompensation**  
-`activePowerCompensation` defines which type of power compensation applies.
-Available values **(TODO: describe them)**:
+`activePowerCompensation` determines whether the generators participate in the active power balancing proportionally to:
 - `P`
 - `TARGET_P`
 - `PMAX`
 
 The default value is `PMAX`.
-
-**settingPath**  
-`settingPath` is used to indicates the file which defines the model settings values.  
-The default value is `null`.
-
-**assemblingPath**  
-`assemblingPath` is used to indicates the file which defines the models' association.  
-The default value is `null`.
 
 **startTime**  
 `startTime` defines the simulation start time (in s).  
@@ -62,39 +53,45 @@ The default value is `0`.
 `stopTime` defines the simulation stop time (in s).  
 The default value is `100`.
 
-**precision**  
-**(TODO: description)**  
-The default value is `Nan`.
+(timeStepDef)= 
 
-**timeOfEvent**  
-**(TODO: description)**  
+**timeStep**  
+`timeStep` defines the maximum time solver step value (in s).
 The default value is `10`.
 
 **chosenOutputs**  
-**(TODO: description)**   
-Available values **(TODO: describe them)**:
-- `STEADYSTATE`
-- `LOSTEQ`
-- `TIMELINE`
+`chosenOutputs` defines which outputs DynaFlow will produce  
+Available values:
+- `STEADYSTATE`: steady-state of the network
+- `LOSTEQ`: lost equipments
+- `TIMELINE`: simulation event timeline
 - `CONSTRAINTS`
 
-The default value is a list of all of them.
-
-**timeStep**  
-**(TODO: description)**  
-The default value is `10`.
-
-**mergeLoads**  
-`mergeLoads` is used to indicates if loads connected to the same bus are merged.  
-The default value is `TRUE`.
+The default value is a list of all values.
 
 **startingPointMode**  
-**(TODO: description)**
-Available values  **(TODO: describe them)**:
-- `WARM`
-- `FLAT`
+`startingPointMode` indicates the starting point values considered in the simulation
+Available values:
+- `WARM`: starting point values for voltage, phase and injections are the ones in the network.
+- `FLAT`: starting point values are the nominal value for bus voltages and the set points values for injections.
 
 The default value is `WARM`.
+
+**precision**  
+`precision` defines the real number precision  
+The default value is `NaN`.
+
+**assemblingPath**  
+`assemblingPath` indicates the file which defines the models' association.  
+The default value is `null`.
+
+**settingPath**  
+`settingPath` indicates the file which defines the model settings values.  
+The default value is `null`.
+
+**mergeLoads**  
+`mergeLoads` indicates if loads connected to the same bus are merged.  
+The default value is `TRUE`.
 
 ## Generic parameters
 Furthermore, DynaFlow only supports `useReactiveLimits` generic parameter, the other parameters are ignored.
@@ -115,7 +112,6 @@ dynaflow-default-parameters:
     startTime: 0.0
     stopTime: 100.0
     precision: 1.0
-    timeOfEvent: 10.0
     chosenOutputs: [ "STEADYSTATE", "LOSTEQ", "TIMELINE", "CONSTRAINTS" ]
     timeStep: 2.6
     mergeLoads: true
@@ -141,9 +137,6 @@ Alternatively, you can provide parameters as a JSON file where supported
       "startTime" : 0.0,
       "stopTime" : 100.0,
       "precision" : 1.0,
-      "sa" : {
-        "timeOfEvent" : 10.0
-      },
       "chosenOutputs" : [ "STEADYSTATE", "LOSTEQ", "TIMELINE", "CONSTRAINTS" ],
       "timeStep" : 2.6,
       "mergeLoads" : true,

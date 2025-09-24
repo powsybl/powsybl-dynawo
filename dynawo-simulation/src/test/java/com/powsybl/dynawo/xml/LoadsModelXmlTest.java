@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.loads.*;
 import com.powsybl.iidm.network.Network;
@@ -29,7 +30,6 @@ import java.util.stream.Stream;
 class LoadsModelXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static final String LOAD_NAME = "LOAD";
-    private static final String DYN_LOAD_NAME = "BBM_" + LOAD_NAME;
 
     @BeforeEach
     void setup(String dydName, Function< Network, BlackBoxModel> loadConstructor) {
@@ -49,36 +49,35 @@ class LoadsModelXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideLoads")
     void writeLoadModel(String dydName, Function< Network, BlackBoxModel> loadConstructor) throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
-        validate("dyd.xsd", dydName + ".xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        DydXml.write(tmpDir, context.getSimulationDydData());
+        validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 
     private static Stream<Arguments> provideLoads() {
         return Stream.of(
-                Arguments.of("load_alpha_beta_dyd", (Function<Network, BlackBoxModel>) n -> BaseLoadBuilder.of(n, "LoadAlphaBeta")
-                        .dynamicModelId(DYN_LOAD_NAME)
+                Arguments.of("load_alpha_beta_dyd.xml", (Function<Network, BlackBoxModel>) n -> BaseLoadBuilder.of(n, "LoadAlphaBeta")
                         .staticId(LOAD_NAME)
                         .parameterSetId("LAB")
                         .build()),
-                Arguments.of("load_one_transformer_dyd", (Function<Network, BlackBoxModel>) n -> LoadOneTransformerBuilder.of(n, "LoadOneTransformer")
-                        .dynamicModelId(DYN_LOAD_NAME)
+                Arguments.of("load_one_transformer_dyd.xml", (Function<Network, BlackBoxModel>) n -> LoadOneTransformerBuilder.of(n, "LoadOneTransformer")
                         .staticId(LOAD_NAME)
                         .parameterSetId("LOT")
                         .build()),
-                Arguments.of("load_one_transformer_tap_changer_dyd", (Function<Network, BlackBoxModel>) n -> LoadOneTransformerTapChangerBuilder.of(n, "LoadOneTransformerTapChanger")
-                        .dynamicModelId(DYN_LOAD_NAME)
+                Arguments.of("load_one_transformer_tap_changer_dyd.xml", (Function<Network, BlackBoxModel>) n -> LoadOneTransformerTapChangerBuilder.of(n, "LoadOneTransformerTapChanger")
                         .staticId(LOAD_NAME)
                         .parameterSetId("LOTTC")
                         .build()),
-                Arguments.of("load_two_transformers_dyd", (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersBuilder.of(n, "LoadTwoTransformers")
-                        .dynamicModelId(DYN_LOAD_NAME)
+                Arguments.of("load_two_transformers_dyd.xml", (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersBuilder.of(n, "LoadTwoTransformers")
                         .staticId(LOAD_NAME)
                         .parameterSetId("LTT")
                         .build()),
-                Arguments.of("load_two_transformers_tap_changers_dyd", (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersTapChangersBuilder.of(n, "LoadTwoTransformersTapChangers")
-                        .dynamicModelId(DYN_LOAD_NAME)
+                Arguments.of("load_two_transformers_tap_changers_dyd.xml", (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersTapChangersBuilder.of(n, "LoadTwoTransformersTapChangers")
                         .staticId(LOAD_NAME)
                         .parameterSetId("LTTTC")
+                        .build()),
+                Arguments.of("load_synchronized.xml", (Function<Network, BlackBoxModel>) n -> BaseLoadBuilder.of(n, "LoadAlphaBetaMotor")
+                        .staticId(LOAD_NAME)
+                        .parameterSetId("LAB")
                         .build())
         );
     }

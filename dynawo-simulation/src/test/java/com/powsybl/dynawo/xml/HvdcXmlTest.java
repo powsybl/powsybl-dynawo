@@ -7,11 +7,12 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,17 +32,17 @@ import java.util.stream.Stream;
 class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static final String HVDC_NAME = "L";
-    private static final String DYN_NAME = "BBM_" + HVDC_NAME;
 
     @BeforeEach
-    void setup(String dydName, Function< Network, BlackBoxModel> constructor) {
-        setupNetwork();
+    void setup(String dydName, HvdcLine.ConvertersMode convertersMode, Function< Network, BlackBoxModel> constructor) {
+        setupNetwork(convertersMode);
         addDynamicModels(constructor);
         setupDynawoContext();
     }
 
-    protected void setupNetwork() {
+    protected void setupNetwork(HvdcLine.ConvertersMode convertersMode) {
         network = HvdcTestNetwork.createVsc();
+        network.getHvdcLine(HVDC_NAME).setConvertersMode(convertersMode);
     }
 
     protected void addDynamicModels(Function< Network, BlackBoxModel> constructor) {
@@ -50,35 +51,54 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideHvdc")
-    void writeHvdcModel(String dydName, Function< Network, BlackBoxModel> constructor) throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+    void writeHvdcModel(String dydName, HvdcLine.ConvertersMode convertersMode,
+                        Function< Network, BlackBoxModel> constructor) throws SAXException, IOException {
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 
     private static Stream<Arguments> provideHvdc() {
         return Stream.of(
-                Arguments.of("hvdc_p_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPV")
-                        .dynamicModelId(DYN_NAME)
-                        .staticId(HVDC_NAME)
-                        .parameterSetId("hv")
-                        .build()),
-                Arguments.of("hvdc_vsc_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVSC")
-                        .dynamicModelId(DYN_NAME)
-                        .staticId(HVDC_NAME)
-                        .parameterSetId("hv")
-                        .build()),
-                Arguments.of("hvdc_p_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPVDangling")
-                        .dynamicModelId(DYN_NAME)
-                        .staticId(HVDC_NAME)
-                        .parameterSetId("hv")
-                        .dangling(TwoSides.ONE)
-                        .build()),
-                Arguments.of("hvdc_vsc_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVSCDanglingP")
-                        .dynamicModelId(DYN_NAME)
-                        .staticId(HVDC_NAME)
-                        .parameterSetId("hv")
-                        .dangling(TwoSides.TWO)
-                        .build())
+                Arguments.of("hvdc_p_dyd.xml", HvdcLine.ConvertersMode.SIDE_1_RECTIFIER_SIDE_2_INVERTER,
+                        (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPV")
+                            .staticId(HVDC_NAME)
+                            .parameterSetId("hv")
+                            .build()),
+                Arguments.of("hvdc_vsc_dyd.xml", HvdcLine.ConvertersMode.SIDE_1_RECTIFIER_SIDE_2_INVERTER,
+                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVsc")
+                            .staticId(HVDC_NAME)
+                            .parameterSetId("hv")
+                            .build()),
+                Arguments.of("hvdc_p_dangling_dyd.xml", HvdcLine.ConvertersMode.SIDE_1_RECTIFIER_SIDE_2_INVERTER,
+                        (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPVDangling")
+                            .staticId(HVDC_NAME)
+                            .parameterSetId("hv")
+                            .build()),
+                Arguments.of("hvdc_vsc_dangling_dyd.xml", HvdcLine.ConvertersMode.SIDE_1_RECTIFIER_SIDE_2_INVERTER,
+                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVscDanglingP")
+                            .staticId(HVDC_NAME)
+                            .parameterSetId("hv")
+                            .build()),
+                Arguments.of("hvdc_p_inverted_dyd.xml", HvdcLine.ConvertersMode.SIDE_1_INVERTER_SIDE_2_RECTIFIER,
+                        (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPV")
+                                .staticId(HVDC_NAME)
+                                .parameterSetId("hv")
+                                .build()),
+                Arguments.of("hvdc_vsc_inverted_dyd.xml", HvdcLine.ConvertersMode.SIDE_1_INVERTER_SIDE_2_RECTIFIER,
+                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVsc")
+                                .staticId(HVDC_NAME)
+                                .parameterSetId("hv")
+                                .build()),
+                Arguments.of("hvdc_p_dangling_inverted_dyd.xml", HvdcLine.ConvertersMode.SIDE_1_INVERTER_SIDE_2_RECTIFIER,
+                        (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPVDangling")
+                                .staticId(HVDC_NAME)
+                                .parameterSetId("hv")
+                                .build()),
+                Arguments.of("hvdc_vsc_dangling_inverted_dyd.xml", HvdcLine.ConvertersMode.SIDE_1_INVERTER_SIDE_2_RECTIFIER,
+                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVscDanglingP")
+                                .staticId(HVDC_NAME)
+                                .parameterSetId("hv")
+                                .build())
         );
     }
 }

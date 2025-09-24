@@ -45,6 +45,10 @@ public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder
         return new LineBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
@@ -56,8 +60,8 @@ public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected LineBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.LINE, reportNode);
+    protected LineBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, IdentifiableType.LINE, parentReportNode);
     }
 
     @Override
@@ -67,7 +71,7 @@ public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder
 
     @Override
     public StandardLine build() {
-        return isInstantiable() ? new StandardLine(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new StandardLine(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override
