@@ -25,10 +25,14 @@
         ]
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4B"
+        "lib": "GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4B",
+        "maxVersion": "1.6.0",
+        "endCause": "Renamed GeneratorSynchronousFourWindingsGovSteam1St4b"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4BPssIEEE2B"
+        "lib": "GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4BPssIEEE2B",
+        "maxVersion": "1.6.0",
+        "endCause": "Renamed GeneratorSynchronousFourWindingsGovSteam1St4bPss2b"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstVRNordic"
@@ -49,7 +53,9 @@
         "lib": "GeneratorSynchronousFourWindingsTGov1Sexs"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsTGov1SexsPss2A"
+        "lib": "GeneratorSynchronousFourWindingsTGov1SexsPss2A",
+        "maxVersion": "1.6.0",
+        "endCause": "Renamed GeneratorSynchronousFourWindingsTGov1SexsPss2a"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsVRKundur"
@@ -101,7 +107,7 @@
       },
       {
         "lib": "GeneratorSynchronousFourWindingsIEEEG1Dc1a",
-        "minVersion": "1.6.0"
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsIEEEG1IEEX2A",
@@ -129,7 +135,7 @@
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstDc1a",
-        "minVersion": "1.6.0"
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstIEEX2A",
@@ -153,35 +159,23 @@
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt9cPss2c",
-        "minVersion": "1.6.0"
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsTGov1Dc1a",
-        "minVersion": "1.6.0"
-      },
-      {
-        "lib": "GeneratorSynchronousFourWindingsTGov1Scrx",
-        "minVersion": "1.6.0"
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsTGov3IEEX2A",
-        "minVersion": "1.6.0"
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsHyGovBbSex1",
-        "minVersion": "1.6.0"
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsHyGovScrx",
         "minVersion": "1.6.0"
-      },
-      {
-        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxRvs",
-        "minVersion": "1.6.0"
-      },
-      {
-        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxRvsTfo",
-        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIeeeG1IeeeT1",
@@ -201,15 +195,19 @@
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIEEEG2BbSex1",
-        "minVersion": "1.6.0"
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a",
-        "minVersion": "1.6.0"
+        "minVersion": "1.6.0",
+        "maxVersion": "1.6.0",
+        "endCause": "Renamed GeneratorSynchronousThreeWindingsPmConstExAc1"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1aTfo",
-        "minVersion": "1.6.0"
+        "minVersion": "1.6.0",
+        "maxVersion": "1.6.0",
+        "endCause": "Renamed GeneratorSynchronousThreeWindingsPmConstExAc1Tfo"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstScrx",
@@ -478,7 +476,7 @@
         "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)"
       },
       {
-        "lib": "HvdcVscDanglingUdc",
+        "lib": "HvdcVscDanglingUDc",
         "properties": [
           "DANGLING"
         ],
@@ -512,7 +510,7 @@
         ],
         "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)",
         "maxVersion": "1.5.0",
-        "endCause": "Renamed HvdcVSCDanglingUdc"
+        "endCause": "Renamed HvdcVscDanglingUDc"
       }
     ]
   },
@@ -558,6 +556,8 @@
       },
       {
         "lib": "LoadAlphaBetaMotor",
+        "maxVersion": "1.6.0",
+        "endCause": "Replaced LoadAlphaBetaMotorSimplified and LoadAlphaBetaMotorFifthOrder",
         "properties": [
           "SYNCHRONIZED"
         ]
@@ -568,7 +568,7 @@
       },
       {
         "lib": "LoadAlphaBetaRestorativeNetwork",
-        "minVersion": "1.6.0"
+        "minVersion": "1.7.0"
       },
       {
         "lib": "ElectronicLoad",
@@ -743,6 +743,16 @@
       {
         "lib": "PhotovoltaicsWeccCurrentSource",
         "internalModelPrefix": "photovoltaics",
+        "maxVersion": "1.6.0",
+        "endCause": "Renamed PhotovoltaicsWeccCurrentSourceB",
+        "properties": [
+          "SYNCHRONIZED"
+        ]
+      },
+      {
+        "lib": "PhotovoltaicsWeccCurrentSourceB",
+        "internalModelPrefix": "photovoltaics",
+        "minVersion": "1.7.0",
         "properties": [
           "SYNCHRONIZED"
         ]
@@ -750,6 +760,24 @@
       {
         "lib": "PhotovoltaicsWeccVoltageSource",
         "internalModelPrefix": "photovoltaics",
+        "maxVersion": "1.6.0",
+        "endCause": "Renamed PhotovoltaicsWeccVoltageSourceB",
+        "properties": [
+          "SYNCHRONIZED"
+        ]
+      },
+      {
+        "lib": "PhotovoltaicsWeccVoltageSourceA",
+        "internalModelPrefix": "photovoltaics",
+        "minVersion": "1.7.0",
+        "properties": [
+          "SYNCHRONIZED"
+        ]
+      },
+      {
+        "lib": "PhotovoltaicsWeccVoltageSourceB",
+        "internalModelPrefix": "photovoltaics",
+        "minVersion": "1.7.0",
         "properties": [
           "SYNCHRONIZED"
         ]
