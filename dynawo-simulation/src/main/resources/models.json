@@ -295,6 +295,7 @@
       },
       {
         "lib": "GeneratorSynchronousFourWindingsGovCt2St4bAuxTfo",
+        "minVersion": "1.7.0",
         "properties": [
           "TRANSFORMER",
           "AUXILIARY"
@@ -302,6 +303,7 @@
       },
       {
         "lib": "GeneratorSynchronousFourWindingsGovSteam1St4bAuxTfo",
+        "minVersion": "1.7.0",
         "properties": [
           "TRANSFORMER",
           "AUXILIARY"
@@ -309,6 +311,7 @@
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsGovHydro4St4bAuxTfo",
+        "minVersion": "1.7.0",
         "properties": [
           "TRANSFORMER",
           "AUXILIARY"
