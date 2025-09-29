@@ -311,7 +311,7 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         EUROSTAG,
                         TransformerFixedRatioBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                        (BiFunction<Network, String, List<DynamicModel>>) (n,m) -> List.of(
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(
                                 TransformerFixedRatioBuilder.of(n, m)
                                         .staticId("NGEN_NHV1")
                                         .parameterSetId("Transformer")
@@ -336,7 +336,7 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         HVDC,
                         HvdcPBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                        (BiFunction<Network, String, List<DynamicModel>>) (n,m) -> List.of(HvdcPBuilder.of(n, m)
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(HvdcPBuilder.of(n, m)
                                     .staticId("HVDC1")
                                     .parameterSetId("Hvdc")
                                     .build())
