@@ -228,7 +228,7 @@
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsGovHydro4St4b",
-        "minVersion": "1.7.0"
+        "minVersion": "1.8.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstExAc1",
@@ -236,7 +236,7 @@
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl1c",
-        "minVersion": "1.7.0"
+        "minVersion": "1.8.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsGovSteam1St4b",
@@ -291,37 +291,13 @@
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl2c",
-        "minVersion": "1.7.0"
+        "minVersion": "1.8.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsHyGovScrxTfo",
         "minVersion": "1.7.0",
         "properties": [
           "TRANSFORMER"
-        ]
-      },
-      {
-        "lib": "GeneratorSynchronousFourWindingsGovCt2St4bAuxTfo",
-        "minVersion": "1.7.0",
-        "properties": [
-          "TRANSFORMER",
-          "AUXILIARY"
-        ]
-      },
-      {
-        "lib": "GeneratorSynchronousFourWindingsGovSteam1St4bAuxTfo",
-        "minVersion": "1.7.0",
-        "properties": [
-          "TRANSFORMER",
-          "AUXILIARY"
-        ]
-      },
-      {
-        "lib": "GeneratorSynchronousThreeWindingsGovHydro4St4bAuxTfo",
-        "minVersion": "1.7.0",
-        "properties": [
-          "TRANSFORMER",
-          "AUXILIARY"
         ]
       }
     ]
