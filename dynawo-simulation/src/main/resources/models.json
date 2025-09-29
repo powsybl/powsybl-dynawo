@@ -183,7 +183,10 @@
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIeeeG1IeeeT1Tfo",
-        "minVersion": "1.6.0"
+        "minVersion": "1.6.0",
+        "properties": [
+          "TRANSFORMER"
+        ]
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIeeeG1Scrx",
@@ -191,7 +194,10 @@
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIeeeG1ScrxTfo",
-        "minVersion": "1.6.0"
+        "minVersion": "1.6.0",
+        "properties": [
+          "TRANSFORMER"
+        ]
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIEEEG2BbSex1",
@@ -215,7 +221,10 @@
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstScrxTfo",
-        "minVersion": "1.6.0"
+        "minVersion": "1.6.0",
+        "properties": [
+          "TRANSFORMER"
+        ]
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsGovHydro4St4b",
