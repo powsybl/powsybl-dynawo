@@ -24,8 +24,8 @@ import java.util.List;
 public class InfiniteBusGenerator extends AbstractEquipmentBlackBoxModel<Generator> {
 
     private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
-            new VarMapping("infiniteBus_OutputZero", "p"),
-            new VarMapping("infiniteBus_OutputZero", "q"),
+            new VarMapping("infiniteBus_PPu", "p"),
+            new VarMapping("infiniteBus_QPu", "q"),
             new VarMapping("infiniteBus_state", "state"));
 
     protected InfiniteBusGenerator(Generator equipment, String parameterSetId, ModelConfig modelConfig) {
