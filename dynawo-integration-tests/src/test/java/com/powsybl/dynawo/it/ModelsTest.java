@@ -105,7 +105,7 @@ public class ModelsTest extends AbstractDynawoTest {
     void testDynamicModel(Network network, Collection<ModelInfo> models, BiFunction<Network, String, List<DynamicModel>> dynamicModelSupplier) {
         SoftAssertions assertions = new SoftAssertions();
         StringBuilder sb = new StringBuilder();
-        for(ModelInfo modelInfo : models.stream().filter(m -> !SKIPPED_MODELS.contains(m.name())).toList()) {
+        for (ModelInfo modelInfo : models.stream().filter(m -> !SKIPPED_MODELS.contains(m.name())).toList()) {
             ReportNode reportNode = ReportNode.newRootReportNode()
                     .withAllResourceBundlesFromClasspath()
                     .withLocale(Locale.US)
@@ -148,7 +148,7 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         SMIB,
                         BaseGeneratorBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(BaseGeneratorBuilder.of(n, m)
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(BaseGeneratorBuilder.of(n, m)
                                 .staticId("SM")
                                 .parameterSetId("BaseGenerator")
                                 .build())
@@ -156,7 +156,7 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         SMIB,
                         SynchronizedGeneratorBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(SynchronizedGeneratorBuilder.of(n, m)
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(SynchronizedGeneratorBuilder.of(n, m)
                                 .staticId("SM")
                                 .parameterSetId("SynchronizedGenerator")
                                 .build())
@@ -164,7 +164,7 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         SMIB,
                         SynchronousGeneratorBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(SynchronousGeneratorBuilder.of(n, m)
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(SynchronousGeneratorBuilder.of(n, m)
                                 .staticId("SM")
                                 .parameterSetId("SynchronousGenerator")
                                 .build())
@@ -172,7 +172,7 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         SMIB,
                         WeccBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(WeccBuilder.of(n, m)
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(WeccBuilder.of(n, m)
                                 .staticId("SM")
                                 .parameterSetId("GridForming")
                                 .build())
@@ -180,7 +180,7 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         SMIB,
                         GridFormingConverterBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(GridFormingConverterBuilder.of(n, m)
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(GridFormingConverterBuilder.of(n, m)
                                 .staticId("SM")
                                 .parameterSetId("GridForming")
                                 .build())
@@ -188,7 +188,7 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         SMIB,
                          SignalNGeneratorBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                         (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(SignalNGeneratorBuilder.of(n, m)
+                         (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(SignalNGeneratorBuilder.of(n, m)
                                   .staticId("SM")
                                   .parameterSetId("GeneratorPVSignalN")
                                   .build())
@@ -196,7 +196,7 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         SMIB,
                         StandardBusBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(
                                 StandardBusBuilder.of(n, m)
                                     .staticId("VL1_BUS1")
                                     .parameterSetId("Bus")
@@ -229,7 +229,7 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         SMIB,
                         InfiniteBusBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(
                                 InfiniteBusBuilder.of(n, m)
                                         .staticId("VL1_BUS1")
                                         .parameterSetId("Bus")
@@ -302,8 +302,8 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         SMIB,
                         LineBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(
-                                LineBuilder.of(n,m)
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(
+                                LineBuilder.of(n, m)
                                         .staticId("line1")
                                         .parameterSetId("Line")
                                         .build())
@@ -311,8 +311,8 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         EUROSTAG,
                         TransformerFixedRatioBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(
-                                TransformerFixedRatioBuilder.of(n,m)
+                        (BiFunction<Network, String, List<DynamicModel>>) (n,m) -> List.of(
+                                TransformerFixedRatioBuilder.of(n, m)
                                         .staticId("NGEN_NHV1")
                                         .parameterSetId("Transformer")
                                         .build())
@@ -336,7 +336,7 @@ public class ModelsTest extends AbstractDynawoTest {
                 Arguments.of(
                         HVDC,
                         HvdcPBuilder.getSupportedModelInfos(DYNAWO_VERSION),
-                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(HvdcPBuilder.of(n, m)
+                        (BiFunction<Network, String, List<DynamicModel>>) (n,m) -> List.of(HvdcPBuilder.of(n, m)
                                     .staticId("HVDC1")
                                     .parameterSetId("Hvdc")
                                     .build())
