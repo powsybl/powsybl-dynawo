@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 class SetPointInfiniteBusModelXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     @BeforeEach
-    void setup(String dydName, Function<Network, BlackBoxModel> busConstructor) {
+    void setup(String dydName, String parName, Function<Network, BlackBoxModel> busConstructor) {
         setupNetwork();
         addDynamicModels(busConstructor);
         setupDynawoContext();
@@ -57,26 +57,26 @@ class SetPointInfiniteBusModelXmlTest extends AbstractParametrizedDynamicModelXm
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideBus")
-    void writeModel(String dydName, Function<Network, BlackBoxModel> busConstructor) throws SAXException, IOException {
+    void writeModel(String dydName, String parName, Function<Network, BlackBoxModel> busConstructor) throws SAXException, IOException {
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
-        validate("parameters.xsd", "set_point_inf_bus_par.xml", tmpDir.resolve(context.getSimulationParFile()));
+        validate("parameters.xsd", parName, tmpDir.resolve(context.getSimulationParFile()));
     }
 
     private static Stream<Arguments> provideBus() {
         return Stream.of(
-                Arguments.of("set_point_std_bus_dyd.xml",
+                Arguments.of("set_point_std_bus_dyd.xml", "set_point_inf_bus_par.xml",
                         (Function<Network, BlackBoxModel>) n -> StandardBusBuilder.of(n, "Bus")
                                 .staticId("NGEN")
                                 .parameterSetId("ib")
                                 .build()),
-                Arguments.of("set_point_inf_bus_dyd.xml",
+                Arguments.of("set_point_inf_bus_dyd.xml", "set_point_inf_bus_par.xml",
                         (Function<Network, BlackBoxModel>) n -> InfiniteBusBuilder.of(n, "InfiniteBus")
                                 .staticId("NGEN")
                                 .parameterSetId("ib")
                                 .build()),
-                Arguments.of("set_point_inf_bus_gen_dyd.xml",
+                Arguments.of("omega_ref_inf_bus_gen_dyd.xml", "omega_ref_inf_bus_gen_par.xml",
                         (Function<Network, BlackBoxModel>) n -> InfiniteBusBuilder.of(n, "InfiniteBus")
                                 .staticId("GEN2")
                                 .parameterSetId("ib")
