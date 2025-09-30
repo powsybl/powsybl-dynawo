@@ -447,25 +447,29 @@
     "libs": [
       {
         "lib": "HvdcVsc",
-        "doc": "Standard dynamic model for Hvdc-Vsc link"
+        "doc": "Standard dynamic model for Hvdc-Vsc link",
+        "minVersion": "1.6.0"
       },
       {
         "lib": "HvdcVscEmulation",
-        "doc": "Standard dynamic model for Hvdc-Vsc link with AC emulation"
+        "doc": "Standard dynamic model for Hvdc-Vsc link with AC emulation",
+        "minVersion": "1.6.0"
       },
       {
         "lib": "HvdcVscDanglingP",
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)"
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)",
+        "minVersion": "1.6.0"
       },
       {
         "lib": "HvdcVscDanglingUDc",
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)"
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)",
+        "minVersion": "1.6.0"
       },
       {
         "lib": "HvdcVSC",
