@@ -70,15 +70,19 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
     }
 
     protected void setupDynawoContext(FinalStepConfig finalStepConfig) {
-        DynawoSimulationContext.Builder builder = new DynawoSimulationContext
-                .Builder(network, dynamicModels)
-                .eventModels(eventModels)
-                .outputVariables(outputVariables)
-                .reportNode(reportNode);
+        DynawoSimulationContext.Builder builder = setupDynawoContextBuilder();
         if (finalStepConfig != null) {
             builder.finalStepConfig(finalStepConfig);
         }
         context = builder.build();
+    }
+
+    protected DynawoSimulationContext.Builder setupDynawoContextBuilder() {
+        return new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .reportNode(reportNode);
     }
 
     protected void checkReport(String report) throws IOException {
