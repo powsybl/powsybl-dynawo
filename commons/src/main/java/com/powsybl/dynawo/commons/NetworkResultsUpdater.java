@@ -159,14 +159,18 @@ public final class NetworkResultsUpdater {
     }
 
     private static void updateLoads(Network targetNetwork, Network sourceNetwork, boolean mergeLoads) {
-        if (!mergeLoads) {
-            for (Load sourceLoad : sourceNetwork.getLoads()) {
-                update(targetNetwork.getLoad(sourceLoad.getId()), sourceLoad);
-            }
-        } else {
+        if (mergeLoads) {
             Network.BusBreakerView sourceBusBreakerView = sourceNetwork.getBusBreakerView();
             for (Bus busTarget : targetNetwork.getBusBreakerView().getBuses()) {
                 updateLoadsWithMergedLoads(busTarget, sourceBusBreakerView.getBus(busTarget.getId()));
+            }
+            //handle fictitious load
+            sourceNetwork.getLoadStream()
+                    .filter(Identifiable::isFictitious)
+                    .forEach(l -> update(targetNetwork.getLoad(l.getId()), l));
+        } else {
+            for (Load sourceLoad : sourceNetwork.getLoads()) {
+                update(targetNetwork.getLoad(sourceLoad.getId()), sourceLoad);
             }
         }
     }

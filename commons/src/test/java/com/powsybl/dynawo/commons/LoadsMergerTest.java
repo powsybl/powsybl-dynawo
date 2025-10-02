@@ -9,7 +9,6 @@ package com.powsybl.dynawo.commons;
 
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.serde.NetworkSerDe;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -105,7 +104,6 @@ class LoadsMergerTest extends AbstractDynawoCommonsTest {
                 new LoadState(20.0, 10.0, 20.0, 7.0));
         Set<Integer> fictitiousLoadPosition = Set.of(2);
         Network network = LoadsMerger.mergeLoads(TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates, fictitiousLoadPosition));
-        NetworkSerDe.write(network, System.out);
         compare("/partialMergedLoadsPpQp.xiidm", network);
     }
 }

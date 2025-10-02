@@ -59,18 +59,22 @@ public final class LoadsMerger {
     }
 
     public static Map<LoadPowersSigns, Terminal> getLoadTerminalByPowersSigns(Bus bus) {
-        return bus.getLoadStream().collect(Collectors.toMap(
-                LoadsMerger::getLoadPowersSigns,
-                Load::getTerminal,
-                (existing, replacement) -> existing,
-                () -> new EnumMap<>(LoadPowersSigns.class)));
+        return bus.getLoadStream()
+                .filter(l -> !l.isFictitious())
+                .collect(Collectors.toMap(
+                    LoadsMerger::getLoadPowersSigns,
+                    Load::getTerminal,
+                    (existing, replacement) -> existing,
+                    () -> new EnumMap<>(LoadPowersSigns.class)));
     }
 
     public static Map<LoadPowersSigns, List<Terminal>> getLoadTerminalsByPowersSigns(Bus bus) {
-        return bus.getLoadStream().collect(Collectors.groupingBy(
-                LoadsMerger::getLoadPowersSigns,
-                () -> new EnumMap<>(LoadPowersSigns.class),
-                Collectors.mapping(Load::getTerminal, Collectors.toList())));
+        return bus.getLoadStream()
+                .filter(l -> !l.isFictitious())
+                .collect(Collectors.groupingBy(
+                    LoadsMerger::getLoadPowersSigns,
+                    () -> new EnumMap<>(LoadPowersSigns.class),
+                    Collectors.mapping(Load::getTerminal, Collectors.toList())));
     }
 
     private static LoadPowersSigns getLoadPowersSigns(Load load) {

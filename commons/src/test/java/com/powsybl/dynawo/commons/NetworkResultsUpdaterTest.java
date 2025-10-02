@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Guillem Jané Guasch {@literal <janeg at aia.es>}
@@ -34,6 +36,19 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
     @Test
     void testUpdateWithMergeLoads() throws IOException {
         Network expected = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
+        Network actual = NetworkSerDe.copy(expected);
+        NetworkResultsUpdater.update(actual, LoadsMerger.mergeLoads(expected), true);
+        compare(expected, actual);
+    }
+
+    @Test
+    void testUpdateWithMergeLoadsAndFictitiousLoad() throws IOException {
+        List<LoadState> loadStates = List.of(
+                new LoadState(36.1, 4.0, 36.0, 4.0),
+                new LoadState(10.1, 7.2, 10.3, 7.5),
+                new LoadState(20.0, 10.0, 20.0, 7.0));
+        Set<Integer> fictitiousLoadPosition = Set.of(2);
+        Network expected = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates, fictitiousLoadPosition);
         Network actual = NetworkSerDe.copy(expected);
         NetworkResultsUpdater.update(actual, LoadsMerger.mergeLoads(expected), true);
         compare(expected, actual);
