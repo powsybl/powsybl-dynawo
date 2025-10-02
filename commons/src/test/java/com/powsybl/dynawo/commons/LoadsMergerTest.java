@@ -9,10 +9,12 @@ package com.powsybl.dynawo.commons;
 
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.serde.NetworkSerDe;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
@@ -83,5 +85,27 @@ class LoadsMergerTest extends AbstractDynawoCommonsTest {
                 new LoadState(-5.5, -2.0, -46.0, -5.0));
         Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
         compare("/nonMergeableLoads.xiidm", LoadsMerger.mergeLoads(network));
+    }
+
+    @Test
+    void nonMergeableFictitiousLoads() throws IOException {
+        List<LoadState> loadStates = List.of(
+                new LoadState(36.1, 4.0, 36.0, 4.0),
+                new LoadState(10.1, 7.2, 10.3, 7.5));
+        Set<Integer> fictitiousLoadPosition = Set.of(1);
+        Network network = LoadsMerger.mergeLoads(TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates, fictitiousLoadPosition));
+        compare("/notMergeableFictitiousLoads.xiidm", network);
+    }
+
+    @Test
+    void partialMergeLoadsPpQp() throws IOException {
+        List<LoadState> loadStates = List.of(
+                new LoadState(36.1, 4.0, 36.0, 4.0),
+                new LoadState(10.1, 7.2, 10.3, 7.5),
+                new LoadState(20.0, 10.0, 20.0, 7.0));
+        Set<Integer> fictitiousLoadPosition = Set.of(2);
+        Network network = LoadsMerger.mergeLoads(TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates, fictitiousLoadPosition));
+        NetworkSerDe.write(network, System.out);
+        compare("/partialMergedLoadsPpQp.xiidm", network);
     }
 }

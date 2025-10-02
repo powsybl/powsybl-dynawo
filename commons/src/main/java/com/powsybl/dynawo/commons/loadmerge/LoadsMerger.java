@@ -47,6 +47,7 @@ public final class LoadsMerger {
 
     private static Stream<LoadsToMerge> getLoadsToMergeStream(Bus bus) {
         return bus.getLoadStream()
+                .filter(l -> !l.isFictitious())
                 .collect(Collectors.groupingBy(
                         LoadsMerger::getLoadPowersSigns,
                         () -> new EnumMap<>(LoadPowersSigns.class),
