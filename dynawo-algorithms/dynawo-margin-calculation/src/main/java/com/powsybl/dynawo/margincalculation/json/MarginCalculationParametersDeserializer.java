@@ -27,8 +27,15 @@ public class MarginCalculationParametersDeserializer extends StdDeserializer<Mar
 
     @Override
     public MarginCalculationParameters deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+        return deserialize(parser, context, null);
+    }
 
-        MarginCalculationParameters.Builder builder = MarginCalculationParameters.builder();
+    @Override
+    public MarginCalculationParameters deserialize(JsonParser parser, DeserializationContext context, MarginCalculationParameters parameters) throws IOException {
+
+        MarginCalculationParameters.Builder builder = parameters == null
+                ? MarginCalculationParameters.builder()
+                : MarginCalculationParameters.builder(parameters);
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             switch (parser.currentName()) {
                 case "version" -> parser.nextToken();
@@ -50,7 +57,8 @@ public class MarginCalculationParametersDeserializer extends StdDeserializer<Mar
                 }
                 case "dynawoParameters" -> {
                     parser.nextToken();
-                    builder.setDynawoParameters(new DynawoSimulationParametersSerializer().deserialize(parser, context));
+                    builder.setDynawoParameters(new DynawoSimulationParametersSerializer()
+                            .deserializeAndUpdate(parser, context, builder.build().getDynawoParameters()));
                 }
                 default -> throw new IllegalStateException("Unexpected field: " + parser.currentName());
             }
