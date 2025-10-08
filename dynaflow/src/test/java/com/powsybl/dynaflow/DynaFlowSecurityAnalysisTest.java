@@ -175,8 +175,8 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         // Adding strong current limits to have some post-contingencies current limit violations
         line.getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits().setPermanentLimit(40.0).add();
         line.getOrCreateSelectedOperationalLimitsGroup2().newCurrentLimits()
-                .beginTemporaryLimit().setName("10'").setAcceptableDuration(10 * 60).setValue(450.0).endTemporaryLimit()
                 .setPermanentLimit(1000)
+                .beginTemporaryLimit().setName("10'").setAcceptableDuration(10 * 60).setValue(1200.0).endTemporaryLimit()
                 .add();
 
         // Adding a node breaker voltage level to the network
@@ -189,7 +189,7 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         vlNb.newGenerator().setId("NB_GEN").setNode(1).setTargetP(8).setTargetV(390).setMinP(0).setMaxP(11).setVoltageRegulatorOn(true).add();
         Line lineNbBb = network.newLine().setId("NB_NGEN").setVoltageLevel1(vlNb.getId()).setNode1(2).setVoltageLevel2("VLGEN").setBus2("NGEN")
                 .setR(3.0).setX(33.0).setB1(193E-6).setB2(193E-6).add();
-        lineNbBb.getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits().setPermanentLimit(41).add();
+        lineNbBb.newCurrentLimits1().setPermanentLimit(41).add();
 
         return network;
     }
