@@ -262,7 +262,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
                 Map.entry("mergeLoads", "true"));
 
         LoadFlowParameters params = LoadFlowParameters.load();
-        DynaFlowParameters dynaParams = params.getExtension(DynaFlowParameters.class);
+        DynaFlowParameters dynaParams = new DynaFlowParameters();
         Map<String, String> properties = provider.createMapFromSpecificParameters(dynaParams);
         assertThat(properties).containsExactlyInAnyOrderEntriesOf(expectedProperties);
     }
