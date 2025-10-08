@@ -363,6 +363,21 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertTrue(parameters.isUseModelSimplifiers());
     }
 
+    @Test
+    void partialUpdate() throws IOException {
+        initPlatformConfig("networkParametersId", SolverType.SIM, "solverParametersId", DEFAULT_MERGE_LOADS, DEFAULT_USE_MODEL_SIMPLIFIERS,
+                1e-7, DEFAULT_TIMELINE_EXPORT_MODE, DEFAULT_LOG_LEVEL_FILTER, EnumSet.noneOf(SpecificLog.class),
+                null, null);
+        DynamicSimulationParameters dynamicSimulationParameters = DynamicSimulationParameters.load(platformConfig);
+        JsonDynamicSimulationParameters.update(dynamicSimulationParameters, getClass().getResourceAsStream("/partial_dynawo_parameters_update.json"));
+        assertEquals(1, dynamicSimulationParameters.getStartTime());
+        DynawoSimulationParameters parameters = dynamicSimulationParameters.getExtension(DynawoSimulationParameters.class);
+        //set to 1e-7 in platform config
+        assertEquals(1e-7, parameters.getPrecision(), 0.1d);
+        assertEquals(SolverType.IDA, parameters.getSolverType());
+        assertEquals("ida", parameters.getSolverParameters().getId());
+    }
+
     private void createFiles(String parametersFile, String networkParametersFile, String solverParametersFile, String criteriaFile, String additionalModelsFile) throws IOException {
         Files.createDirectories(fileSystem.getPath(USER_HOME));
         copyFile("/parametersSet/models.par", parametersFile);
