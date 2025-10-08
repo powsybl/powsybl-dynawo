@@ -368,12 +368,15 @@ class DynawoParametersTest extends AbstractSerDeTest {
         initPlatformConfig("networkParametersId", SolverType.SIM, "solverParametersId", DEFAULT_MERGE_LOADS, DEFAULT_USE_MODEL_SIMPLIFIERS,
                 1e-7, DEFAULT_TIMELINE_EXPORT_MODE, DEFAULT_LOG_LEVEL_FILTER, EnumSet.noneOf(SpecificLog.class),
                 null, null);
-        DynamicSimulationParameters dynamicSimulationParameters = DynamicSimulationParameters.load(platformConfig);
+        DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters();
+        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(platformConfig);
+        dynamicSimulationParameters.addExtension(DynawoSimulationParameters.class, dynawoParameters);
         JsonDynamicSimulationParameters.update(dynamicSimulationParameters, getClass().getResourceAsStream("/partial_dynawo_parameters_update.json"));
         assertEquals(1, dynamicSimulationParameters.getStartTime());
         DynawoSimulationParameters parameters = dynamicSimulationParameters.getExtension(DynawoSimulationParameters.class);
+        assertFalse(parameters.isMergeLoads());
         //set to 1e-7 in platform config
-        assertEquals(1e-7, parameters.getPrecision(), 0.1d);
+        assertEquals(1e-7, parameters.getPrecision());
         assertEquals(SolverType.IDA, parameters.getSolverType());
         assertEquals("ida", parameters.getSolverParameters().getId());
     }
