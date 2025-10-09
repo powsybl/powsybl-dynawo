@@ -188,7 +188,14 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     private void setFinalStateValues(Path workingDir) {
         Path fsvPath = workingDir.resolve(FSV_OUTPUT_PATH).resolve(FSV_OUTPUT_FILENAME);
         if (Files.exists(fsvPath)) {
-            new CsvFsvParser(';').parse(fsvPath).forEach(e -> fsv.put(e.model() + "_" + e.variable(), e.value()));
+            var fsvPathLines = new CsvFsvParser(';').parse(fsvPath);
+            if (!fsvPathLines.isEmpty()) {
+                fsvPathLines.forEach(e -> fsv.put(e.model() + "_" + e.variable(), e.value()));
+            } else {
+                LOGGER.warn("FSV file is empty");
+                status = DynamicSimulationResult.Status.FAILURE;
+                statusText = "FSV file is empty";
+            }
         } else {
             LOGGER.warn("Final state values folder not found");
             status = DynamicSimulationResult.Status.FAILURE;

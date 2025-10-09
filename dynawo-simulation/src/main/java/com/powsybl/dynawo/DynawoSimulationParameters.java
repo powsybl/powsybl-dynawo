@@ -1,8 +1,11 @@
 /**
- * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * Copyright (c) 2020-2025,
+ * RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ *
  */
 package com.powsybl.dynawo;
 
@@ -45,12 +48,12 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     public static final String DEFAULT_INPUT_NETWORK_PARAMETERS_FILE = "network.par";
     public static final String DEFAULT_INPUT_SOLVER_PARAMETERS_FILE = "solvers.par";
     public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
-    public static final String DEFAULT_NETWORK_PAR_ID = "1";
-    public static final String DEFAULT_SOLVER_PAR_ID = "1";
+    public static final String DEFAULT_NETWORK_PAR_ID = "Network";
+    public static final String DEFAULT_SOLVER_PAR_ID = "SIM";
     public static final boolean DEFAULT_MERGE_LOADS = false;
     public static final boolean DEFAULT_USE_MODEL_SIMPLIFIERS = false;
     public static final double DEFAULT_PRECISION = 1e-6;
-    public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.TXT;
+    public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.XML;
     public static final LogLevel DEFAULT_LOG_LEVEL_FILTER = LogLevel.INFO;
 
     private static final String PARAMETERS_FILE = "parametersFile";
