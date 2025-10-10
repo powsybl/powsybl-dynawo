@@ -57,8 +57,9 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R
     protected void checkData() {
         isInstantiable = builderEquipment.checkEquipmentData();
         if (parameterSetId == null) {
-            BuilderReports.reportFieldNotSet(reportNode, "parameterSetId");
-            isInstantiable = false;
+            String id = getModelId();
+            BuilderReports.reportFieldReplacement(reportNode, "parameterSetId", "dynamicModelId", id);
+            parameterSetId = id;
         }
     }
 

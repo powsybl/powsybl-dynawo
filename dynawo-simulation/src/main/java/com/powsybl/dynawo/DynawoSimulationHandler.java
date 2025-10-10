@@ -176,8 +176,8 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).resolve(CURVES_FILENAME);
         if (Files.exists(curvesPath)) {
             TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false,
-                            TimeSeries.TimeFormat.FRACTIONS_OF_SECOND, true, true))
-                    .values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
+                            TimeSeries.TimeFormat.FRACTIONS_OF_SECOND, true)).values()
+                    .forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
         } else {
             LOGGER.warn("Curves folder not found");
             status = DynamicSimulationResult.Status.FAILURE;
