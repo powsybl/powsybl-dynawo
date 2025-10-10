@@ -28,18 +28,20 @@ class CsvLogParserTest {
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/dynawo.log")).toURI());
         List<LogEntry> logs = new CsvLogParser().parse(path);
 
-        assertEquals(6, logs.size());
+        assertEquals(7, logs.size());
         assertEquals("DYNAWO VERSION  :     1.4.1", logs.get(0).message());
         assertEquals(TypedValue.INFO_SEVERITY, logs.get(0).severity());
-        assertEquals("time iter num   order (k)      time step (h)", logs.get(1).message());
+        assertEquals("time | iter num   order (k)      time step (h)", logs.get(1).message());
         assertEquals(TypedValue.INFO_SEVERITY, logs.get(1).severity());
-        assertEquals("0.000 0           0              0.010", logs.get(2).message());
+        assertEquals("0.000 | 0           0              0.010", logs.get(2).message());
         assertEquals(TypedValue.INFO_SEVERITY, logs.get(2).severity());
         assertEquals("call of SolverReInit i.e. a new symbolic and numerical factorization will be performed", logs.get(3).message());
         assertEquals(TypedValue.DEBUG_SEVERITY, logs.get(3).severity());
         assertEquals("five consecutive steps have been taken that satisfy a scaled step length test", logs.get(4).message());
         assertEquals(TypedValue.WARN_SEVERITY, logs.get(4).severity());
-        assertEquals("KINSOL fails to solve the problem ( DYNSolverKINAlgRestoration.cpp:394 )", logs.get(5).message());
-        assertEquals(TypedValue.ERROR_SEVERITY, logs.get(5).severity());
+        assertEquals("IDA IDASolve :At t = 11.6076 and h = 1e-06, the corrector convergence failed repeatedly or with | h | = hmin.", logs.get(5).message());
+        assertEquals(TypedValue.WARN_SEVERITY, logs.get(5).severity());
+        assertEquals("KINSOL fails to solve the problem ( DYNSolverKINAlgRestoration.cpp:394 )", logs.get(6).message());
+        assertEquals(TypedValue.ERROR_SEVERITY, logs.get(6).severity());
     }
 }
