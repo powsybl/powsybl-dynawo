@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.commons.timeline;
 
-import com.powsybl.commons.PowsyblException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -29,10 +27,8 @@ class CsvTimeLineParserTest {
     @ParameterizedTest
     @ValueSource(strings = {"/timeline.log", "/timelineWithQuotes.log"})
     void testTimeline(String fileName) throws URISyntaxException {
-
         Path path = Path.of(Objects.requireNonNull(getClass().getResource(fileName)).toURI());
         List<TimelineEntry> timeline = new CsvTimeLineParser().parse(path);
-
         assertEquals(5, timeline.size());
         assertEquals("PMIN : activation", timeline.get(0).message());
         assertEquals("GEN____8_SM", timeline.get(0).modelName());
@@ -51,10 +47,17 @@ class CsvTimeLineParserTest {
     }
 
     @Test
-    void testInconsistentFile() throws URISyntaxException {
-        CsvTimeLineParser parser = new CsvTimeLineParser('|');
+    void testInconsistentLine() throws URISyntaxException {
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/wrongTimeline.log")).toURI());
-        Exception e = assertThrows(PowsyblException.class, () -> parser.parse(path));
-        assertEquals("Columns of line 2 are inconsistent", e.getMessage());
+        List<TimelineEntry> timeline = new CsvTimeLineParser('|').parse(path);
+        assertEquals(2, timeline.size());
+        assertTimeLineEntry(timeline.get(0), "PMIN : activation", "GEN____8_SM", 0.);
+        assertTimeLineEntry(timeline.get(1), "PMIN : deactivation", "GEN____8_SM", 0.348405);
+    }
+
+    private static void assertTimeLineEntry(TimelineEntry entry, String message, String modelName, double time) {
+        assertEquals(message, entry.message());
+        assertEquals(modelName, entry.modelName());
+        assertEquals(time, entry.time(), 1e-9);
     }
 }
