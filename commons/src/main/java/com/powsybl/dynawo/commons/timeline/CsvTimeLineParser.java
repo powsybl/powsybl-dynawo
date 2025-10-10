@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 public final class CsvTimeLineParser extends AbstractCsvParser<TimelineEntry> implements TimeLineParser {
 
-    private static final int NB_COLUMNS = 3;
+    private static final int NB_COLUMNS = 4;
 
     public CsvTimeLineParser() {
         this(DEFAULT_SEPARATOR);
@@ -32,7 +32,7 @@ public final class CsvTimeLineParser extends AbstractCsvParser<TimelineEntry> im
 
     @Override
     protected Optional<TimelineEntry> createEntry(String[] tokens) {
-        return TimeLineUtil.createEvent(tokens[0], tokens[1], tokens[2]);
+        return TimeLineUtil.createEvent(tokens[0], tokens[1], tokens[2],tokens[3]);
     }
 
     @Override

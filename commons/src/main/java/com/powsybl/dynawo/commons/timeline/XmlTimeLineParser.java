@@ -25,6 +25,7 @@ public final class XmlTimeLineParser extends AbstractXmlParser<TimelineEntry> im
     private static final String TIME = "time";
     private static final String MODEL_NAME = "modelName";
     private static final String MESSAGE = "message";
+    private static final String PRIORITY = "priority";
 
     @Override
     protected void read(XMLStreamReader xmlReader, Consumer<TimelineEntry> consumer) throws XMLStreamException {
@@ -38,8 +39,9 @@ public final class XmlTimeLineParser extends AbstractXmlParser<TimelineEntry> im
                     String time = xmlReader.getAttributeValue(null, TIME);
                     String modelName = xmlReader.getAttributeValue(null, MODEL_NAME);
                     String message = xmlReader.getAttributeValue(null, MESSAGE);
+                    String priority = xmlReader.getAttributeValue(null, PRIORITY);
                     XmlUtil.readEndElementOrThrow(xmlReader);
-                    TimeLineUtil.createEvent(time, modelName, message)
+                    TimeLineUtil.createEvent(time, modelName, message,priority)
                             .ifPresent(consumer);
                 }
             } catch (XMLStreamException e) {

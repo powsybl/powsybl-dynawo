@@ -344,7 +344,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
                 .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2")
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
-                .setTimelineExportMode(ExportMode.XML);
+                .setTimelineExportMode(ExportMode.XML)
+                .setLocalInitParameters(getResourceAsStream("/ieee14/init.par"),"1");
+
 
         return () -> provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
