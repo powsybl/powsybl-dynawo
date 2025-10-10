@@ -144,6 +144,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         assertEquals(FULLY_CONVERGED, result.getStatus());
 
         InputStream pReferenceOutput = getClass().getResourceAsStream("/output.xiidm");
+        assertNotNull(pReferenceOutput);
         Network expectedNetwork = NetworkSerDe.read(pReferenceOutput);
 
         compare(expectedNetwork, network);
@@ -165,6 +166,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         assertEquals(FULLY_CONVERGED, result.getStatus());
 
         InputStream pReferenceOutput = getClass().getResourceAsStream("/output.xiidm");
+        assertNotNull(pReferenceOutput);
         Network expectedNetwork = NetworkSerDe.read(pReferenceOutput);
 
         compare(expectedNetwork, network);
@@ -261,7 +263,6 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
                 Map.entry("chosenOutputs", "TIMELINE"),
                 Map.entry("mergeLoads", "true"));
 
-        LoadFlowParameters params = LoadFlowParameters.load();
         DynaFlowParameters dynaParams = new DynaFlowParameters();
         Map<String, String> properties = provider.createMapFromSpecificParameters(dynaParams);
         assertThat(properties).containsExactlyInAnyOrderEntriesOf(expectedProperties);
