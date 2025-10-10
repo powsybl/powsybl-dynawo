@@ -18,6 +18,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -102,10 +103,18 @@ public class DynaFlowProvider implements LoadFlowProvider {
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
         DynaFlowParameters.log(loadFlowParameters, dynaFlowParameters);
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
-        ExecutionEnvironment execEnv = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
-        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, versionCmd, DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
-        return computationManager.execute(execEnv, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, getCommand(config), reportNode));
+
+        ExecutionEnvironment tmp = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX,false);
+        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(tmp, computationManager, versionCmd, DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
+
+
+        ExecutionEnvironment execEnvVersionFolder = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX,config.isDebug());
+        execEnvVersionFolder.setWorkingDirPrefix(WORKING_DIR_PREFIX.concat("version_"+currentVersion.toString())+"_");
+        DynawoUtil.requireDynaMinVersion(execEnvVersionFolder, computationManager, versionCmd, DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
+
+        ExecutionEnvironment execEnvSimulationFolder = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
+        return computationManager.execute(execEnvSimulationFolder, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, getCommand(config), reportNode));
     }
 
     @Override

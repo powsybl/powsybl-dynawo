@@ -62,8 +62,19 @@ public class MarginCalculationProvider implements Versionable {
 
         ReportNode mcReportNode = MarginCalculationReports.createMarginCalculationReportNode(runParameters.getReportNode(), network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(), runParameters.getMarginCalculationParameters().getDebugDir());
-        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+
+        ExecutionEnvironment tmp = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, false);
+        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(tmp, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+
+        ExecutionEnvironment execEnvVersionFolder = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
+        execEnvVersionFolder.setWorkingDirPrefix(WORKING_DIR_PREFIX.concat("version_"+currentVersion+"_"));
+        DynawoUtil.requireDynaMinVersion(execEnvVersionFolder, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+
+        ExecutionEnvironment execEnvSimulationFolder = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(), runParameters.getMarginCalculationParameters().getDebugDir());
+
+
+
+
         MarginCalculationParameters parameters = runParameters.getMarginCalculationParameters();
         DynawoSimulationParameters dynawoParameters = parameters.getDynawoParameters();
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
@@ -79,7 +90,7 @@ public class MarginCalculationProvider implements Versionable {
                 .workingVariantId(workingVariantId)
                 .build();
 
-        return runParameters.getComputationManager().execute(execEnv,
+        return runParameters.getComputationManager().execute(execEnvSimulationFolder,
                 new MarginCalculationHandler(context, getCommand(config, "MC", "dynawo_dynamic_mc"), mcReportNode));
     }
 

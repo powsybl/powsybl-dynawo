@@ -82,8 +82,17 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
 
         ReportNode dsaReportNode = DynamicSecurityAnalysisReports.createDynamicSecurityAnalysisReportNode(runParameters.getReportNode(), network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(), runParameters.getDynamicSecurityAnalysisParameters().getDebugDir());
-        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+
+        ExecutionEnvironment tmp = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, false);
+        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(tmp, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+
+
+        ExecutionEnvironment execEnvVersionFolder = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
+        execEnvVersionFolder.setWorkingDirPrefix(WORKING_DIR_PREFIX.concat("version_"+currentVersion+"_"));
+        DynawoUtil.requireDynaMinVersion(execEnvVersionFolder, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+
+        ExecutionEnvironment execEnvSimulationFolder = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(),runParameters.getDynamicSecurityAnalysisParameters().getDebugDir());
+
         DynamicSecurityAnalysisParameters parameters = runParameters.getDynamicSecurityAnalysisParameters();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(parameters.getDynamicSimulationParameters());
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
@@ -98,7 +107,7 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
                 .reportNode(dsaReportNode)
                 .build();
 
-        return runParameters.getComputationManager().execute(execEnv, new DynawoSecurityAnalysisHandler(context, getCommand(config), runParameters.getFilter(), runParameters.getInterceptors(), dsaReportNode));
+        return runParameters.getComputationManager().execute(execEnvSimulationFolder, new DynawoSecurityAnalysisHandler(context, getCommand(config), runParameters.getFilter(), runParameters.getInterceptors(), dsaReportNode));
     }
 
     @Override

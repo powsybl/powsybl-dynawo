@@ -48,6 +48,7 @@ public final class CommonReports {
                 .withTypedValue("time", timelineEntry.time(), TIME_MS)
                 .withTypedValue("identifiableId", timelineEntry.modelName(), ID)
                 .withUntypedValue("message", timelineEntry.message())
+                .withUntypedValue("priority", timelineEntry.priority()!=null?timelineEntry.priority():"")
                 .withSeverity(TypedValue.TRACE_SEVERITY)
                 .add();
     }
