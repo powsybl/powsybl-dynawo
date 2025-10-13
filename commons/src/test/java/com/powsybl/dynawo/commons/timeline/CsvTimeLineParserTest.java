@@ -45,6 +45,7 @@ class CsvTimeLineParserTest {
         assertEquals("2", timeline.get(1).priority());
         assertEquals("4", timeline.get(4).priority());
 
+
     }
 
     @Test
