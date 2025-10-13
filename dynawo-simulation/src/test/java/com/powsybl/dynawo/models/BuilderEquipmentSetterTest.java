@@ -61,7 +61,7 @@ class BuilderEquipmentSetterTest {
         assertEquals("""
                         + Builder tests
                            + Model Line L1 instantiation KO
-                              'equipment' field value LINE L1 does not belong to the builder network
+                              'equipment' field value LINE L1 does not belong to the same network
                         """,
                 TestUtil.normalizeLineSeparator(sw.toString()));
     }

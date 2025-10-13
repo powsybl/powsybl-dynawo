@@ -37,7 +37,7 @@ public class LoadTwoTransformersBuilder extends AbstractLoadModelBuilder<LoadTwo
     public static LoadTwoTransformersBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, LoadTwoTransformersBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
             return null;
         }
         return new LoadTwoTransformersBuilder(network, modelConfig, reportNode);
