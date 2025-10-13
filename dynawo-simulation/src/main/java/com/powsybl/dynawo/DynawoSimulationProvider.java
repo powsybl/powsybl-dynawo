@@ -82,8 +82,6 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                 .build();
     }
 
-
-
     @Override
     public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventModelsSupplier, OutputVariablesSupplier outputVariablesSupplier, String workingVariantId,
                                                           ComputationManager computationManager, DynamicSimulationParameters parameters, ReportNode reportNode) {
@@ -96,17 +94,11 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
         ReportNode dsReportNode = DynawoSimulationReports.createDynawoSimulationReportNode(reportNode, network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
-
-
         ExecutionEnvironment tmp = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX,false);
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(tmp, computationManager, getVersionCommand(config), DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME, false);
-
-
         ExecutionEnvironment execEnvVersionFolder = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(), parameters.getDebugDir());
         execEnvVersionFolder.setWorkingDirPrefix(WORKING_DIR_PREFIX.concat(currentVersion.toString()));
         DynawoUtil.requireDynaMinVersion(execEnvVersionFolder, computationManager, getVersionCommand(config), DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME, false);
-
-
         ExecutionEnvironment execEnvSimulationFolder = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(), parameters.getDebugDir());
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(parameters);
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
