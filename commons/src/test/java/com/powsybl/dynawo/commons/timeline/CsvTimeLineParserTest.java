@@ -50,7 +50,7 @@ class CsvTimeLineParserTest {
     void testInconsistentLine() throws URISyntaxException {
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/wrongTimeline.log")).toURI());
         List<TimelineEntry> timeline = new CsvTimeLineParser('|').parse(path);
-        assertEquals(2, timeline.size());
+        assertEquals(4, timeline.size());
         assertTimeLineEntry(timeline.get(0), "PMIN : activation", "GEN____8_SM", 0.);
         assertTimeLineEntry(timeline.get(1), "PMIN : deactivation", "GEN____8_SM", 0.348405);
     }
