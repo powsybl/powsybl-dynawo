@@ -22,7 +22,7 @@ public final class TimeLineUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TimeLineUtil.class);
 
-    static Optional<TimelineEntry> createEvent(String time, String modelName, String message,String priority) {
+    static Optional<TimelineEntry> createEvent(String time, String modelName, String message, String priority) {
         if (time == null || modelName == null || message == null) {
             LOGGER.warn("Inconsistent event entry (time: '{}', modelName: '{}', message: '{}')", time, modelName, message);
         } else {

@@ -42,8 +42,8 @@ class CsvTimeLineParserTest {
         assertEquals("GEN____3_SM", timeline.get(3).modelName());
         assertEquals("PMIN : activation", timeline.get(4).message());
         assertEquals("GEN____8_SM", timeline.get(4).modelName());
-        assertEquals("2",timeline.get(1).priority());
-        assertEquals("4",timeline.get(4).priority());
+        assertEquals("2", timeline.get(1).priority());
+        assertEquals("4", timeline.get(4).priority());
 
     }
 
