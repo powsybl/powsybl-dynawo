@@ -41,6 +41,7 @@ public final class SimulationModels implements DynawoData {
         MacroConnectionsAdder adder = new MacroConnectionsAdder(bbmSupplier::getEquipmentDynamicModel,
                 bbmSupplier::getPureDynamicModel, macroConnectList::add, macroConnectorsMap::computeIfAbsent, reportNode);
         ParameterUpdater parameterUpdater = (id, n, t, v) -> dynawoParameters.getModelParameters(id).addParameter(n, t, v);
+        ParametersSet networkParameters = dynawoParameters.getNetworkParameters();
         // Write macro connection
         for (BlackBoxModel bbm : dynamicModels) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
@@ -51,7 +52,7 @@ public final class SimulationModels implements DynawoData {
         for (BlackBoxModel bbem : eventModels) {
             bbem.createMacroConnections(adder);
             bbem.createDynamicModelParameters(parametersAdder);
-            bbem.createNetworkParameter(dynawoParameters.getNetworkParameters());
+            bbem.createNetworkParameter(networkParameters);
         }
 
         return new SimulationModels(dynamicModels, eventModels, macroConnectList,
