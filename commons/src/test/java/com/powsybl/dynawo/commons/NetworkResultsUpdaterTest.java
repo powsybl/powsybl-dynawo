@@ -55,7 +55,7 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
         Network expected = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates, fictitiousLoadPosition);
         Network actual = NetworkSerDe.copy(expected);
         NetworkResultsUpdater.update(actual, LoadsMerger.mergeLoads(expected), true);
-        compare(expected, actual);
+        assertXmlEquals(getExpectedNetworkInputStream(expected), getActualNetworkInputStream(actual));
     }
 
     @Test

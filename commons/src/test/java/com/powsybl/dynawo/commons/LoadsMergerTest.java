@@ -102,7 +102,8 @@ class LoadsMergerTest extends AbstractDynawoCommonsTest {
                 new LoadState(10.1, 7.2, 10.3, 7.5));
         Set<Integer> fictitiousLoadPosition = Set.of(1);
         Network network = LoadsMerger.mergeLoads(TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates, fictitiousLoadPosition));
-        compare("/notMergeableFictitiousLoads.xiidm", network);
+        assertXmlEquals(getInputStream("/notMergeableFictitiousLoads.xiidm"),
+                getActualNetworkInputStream(network));
     }
 
     @Test
@@ -113,6 +114,7 @@ class LoadsMergerTest extends AbstractDynawoCommonsTest {
                 new LoadState(20.0, 10.0, 20.0, 7.0));
         Set<Integer> fictitiousLoadPosition = Set.of(2);
         Network network = LoadsMerger.mergeLoads(TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates, fictitiousLoadPosition));
-        compare("/partialMergedLoadsPpQp.xiidm", network);
+        assertXmlEquals(getInputStream("/partialMergedLoadsPpQp.xiidm"),
+                getActualNetworkInputStream(network));
     }
 }
