@@ -162,13 +162,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                               + Model LoadAlphaBeta null instantiation KO
                                  'staticId' field is not set
                         """),
-                Arguments.of("/warnings/missingParameterId.groovy", EurostagTutorialExample1Factory.create(),
-                        """
-                        + DSL tests
-                           + Groovy Dynamic Models Supplier
-                              + Model LoadAlphaBeta LOAD instantiation KO
-                                 'parameterSetId' field is not set
-                        """),
                 Arguments.of("/warnings/missingEquipment.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests

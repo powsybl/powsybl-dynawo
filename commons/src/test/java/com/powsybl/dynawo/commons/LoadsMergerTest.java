@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
+
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
@@ -22,8 +24,9 @@ class LoadsMergerTest extends AbstractDynawoCommonsTest {
 
     @Test
     void multiBusesInVoltageLevel() throws IOException {
-        Network network = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
-        compare("/mergedLoadsMultiBusesVl.xiidm", LoadsMerger.mergeLoads(network));
+        Network network = LoadsMerger.mergeLoads(TestNetworkFactory.createMultiBusesVoltageLevelNetwork());
+        assertXmlEquals(getInputStream("/mergedLoadsMultiBusesVl.xiidm"),
+                getActualNetworkInputStream(network));
     }
 
     @Test
@@ -31,8 +34,9 @@ class LoadsMergerTest extends AbstractDynawoCommonsTest {
         List<LoadState> loadStates = List.of(
                 new LoadState(36.1, 4.0, 36.0, 4.0),
                 new LoadState(10.1, 7.2, 10.3, 7.5));
-        Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
-        compare("/mergedLoadsPpQp.xiidm", LoadsMerger.mergeLoads(network));
+        Network network = LoadsMerger.mergeLoads(TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates));
+        assertXmlEquals(getInputStream("/mergedLoadsPpQp.xiidm"),
+                getActualNetworkInputStream(network));
     }
 
     @Test
@@ -40,8 +44,9 @@ class LoadsMergerTest extends AbstractDynawoCommonsTest {
         List<LoadState> loadStates = List.of(
                 new LoadState(36.1, -4.0, 36.0, -4.0),
                 new LoadState(10.1, -7.2, 10.3, -7.5));
-        Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
-        compare("/mergedLoadsPpQn.xiidm", LoadsMerger.mergeLoads(network));
+        Network network = LoadsMerger.mergeLoads(TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates));
+        assertXmlEquals(getInputStream("/mergedLoadsPpQn.xiidm"),
+                getActualNetworkInputStream(network));
     }
 
     @Test
@@ -49,8 +54,9 @@ class LoadsMergerTest extends AbstractDynawoCommonsTest {
         List<LoadState> loadStates = List.of(
                 new LoadState(-36.1, -4.0, -36.0, -4.0),
                 new LoadState(-10.1, -7.2, -10.3, -7.5));
-        Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
-        compare("/mergedLoadsPnQn.xiidm", LoadsMerger.mergeLoads(network));
+        Network network = LoadsMerger.mergeLoads(TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates));
+        assertXmlEquals(getInputStream("/mergedLoadsPnQn.xiidm"),
+                getActualNetworkInputStream(network));
     }
 
     @Test
@@ -58,8 +64,9 @@ class LoadsMergerTest extends AbstractDynawoCommonsTest {
         List<LoadState> loadStates = List.of(
                 new LoadState(-36.1, 4.0, -36.0, 4.0),
                 new LoadState(-10.1, 7.2, -10.3, 7.5));
-        Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
-        compare("/mergedLoadsPnQp.xiidm", LoadsMerger.mergeLoads(network));
+        Network network = LoadsMerger.mergeLoads(TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates));
+        assertXmlEquals(getInputStream("/mergedLoadsPnQp.xiidm"),
+                getActualNetworkInputStream(network));
     }
 
     @Test
@@ -71,8 +78,9 @@ class LoadsMergerTest extends AbstractDynawoCommonsTest {
                 new LoadState(-10.1, 7.2, -10.3, 7.5),
                 new LoadState(10.1, -7.2, 10.3, -7.5),
                 new LoadState(-10.1, -7.2, -10.3, -7.5));
-        Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
-        compare("/mergedThreeLoadsGroups.xiidm", LoadsMerger.mergeLoads(network));
+        Network network = LoadsMerger.mergeLoads(TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates));
+        assertXmlEquals(getInputStream("/mergedThreeLoadsGroups.xiidm"),
+                getActualNetworkInputStream(network));
     }
 
     @Test
@@ -82,8 +90,9 @@ class LoadsMergerTest extends AbstractDynawoCommonsTest {
                 new LoadState(-3.3, 3.0, -26.0, 3.0),
                 new LoadState(36.1, -1.0, 16.0, -4.0),
                 new LoadState(-5.5, -2.0, -46.0, -5.0));
-        Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
-        compare("/nonMergeableLoads.xiidm", LoadsMerger.mergeLoads(network));
+        Network network = LoadsMerger.mergeLoads(TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates));
+        assertXmlEquals(getInputStream("/nonMergeableLoads.xiidm"),
+                getActualNetworkInputStream(network));
     }
 
     @Test
