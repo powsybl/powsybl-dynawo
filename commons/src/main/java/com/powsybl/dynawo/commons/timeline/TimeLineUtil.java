@@ -28,7 +28,7 @@ public final class TimeLineUtil {
         } else {
             try {
                 double timeD = Double.parseDouble(time);
-                return Optional.of(new TimelineEntry(timeD, modelName, message,priority));
+                return Optional.of(new TimelineEntry(timeD, modelName, message, priority));
             } catch (NumberFormatException e) {
                 LOGGER.warn("Inconsistent time entry '{}'", time);
             }
