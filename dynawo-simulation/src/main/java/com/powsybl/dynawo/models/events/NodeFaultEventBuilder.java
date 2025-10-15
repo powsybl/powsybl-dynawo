@@ -78,15 +78,15 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
     protected void checkData() {
         super.checkData();
         if (faultTime <= 0) {
-            BuilderReports.reportCrossThreshold(reportNode, "faultTime", faultTime, "strictly positive");
+            BuilderReports.reportCrossThreshold(reportNode, "faultTime", faultTime, "t > 0");
             isInstantiable = false;
         }
         if (rPu < 0) {
-            BuilderReports.reportCrossThreshold(reportNode, "rPu", rPu, "positive");
+            BuilderReports.reportCrossThreshold(reportNode, "rPu", rPu, "rPu >= 0");
             isInstantiable = false;
         }
         if (xPu < 0) {
-            BuilderReports.reportCrossThreshold(reportNode, "xPu", xPu, "positive");
+            BuilderReports.reportCrossThreshold(reportNode, "xPu", xPu, "xPu >= 0");
             isInstantiable = false;
         }
     }
