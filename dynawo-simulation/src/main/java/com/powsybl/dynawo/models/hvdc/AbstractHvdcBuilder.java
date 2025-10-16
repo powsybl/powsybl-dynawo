@@ -18,7 +18,7 @@ import com.powsybl.iidm.network.*;
  */
 public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilder<HvdcLine, R>> extends AbstractEquipmentModelBuilder<HvdcLine, R> {
 
-    protected static final TwoSides DEFAULT_DANGLING_SIDE = TwoSides.TWO;
+    protected static final TwoSides DEFAULT_DANGLING_SIDE = TwoSides.ONE;
 
     protected TwoSides danglingSide;
     protected final HvdcVarNameHandler varNameHandler;
