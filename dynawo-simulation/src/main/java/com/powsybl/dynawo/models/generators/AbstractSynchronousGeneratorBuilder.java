@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawo.models.generators;
 
-import com.powsybl.commons.PowsyblException;
+// import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
 import com.powsybl.iidm.network.Network;
@@ -29,7 +29,8 @@ public abstract class AbstractSynchronousGeneratorBuilder<R extends AbstractSync
         } else if (transformer) {
             return EnumGeneratorComponent.TRANSFORMER;
         } else if (aux) {
-            throw new PowsyblException("Generator component auxiliary without transformer is not supported");
+            return EnumGeneratorComponent.AUXILIARY;
+            // throw new PowsyblException("Generator component auxiliary without transformer is not supported");
         }
         return EnumGeneratorComponent.NONE;
     }

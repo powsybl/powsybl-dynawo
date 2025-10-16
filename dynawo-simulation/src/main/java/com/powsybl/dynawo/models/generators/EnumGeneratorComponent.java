@@ -14,7 +14,8 @@ public enum EnumGeneratorComponent {
 
     NONE("generator_terminal"),
     TRANSFORMER("transformer_terminal1"),
-    AUXILIARY_TRANSFORMER("coupling_terminal1");
+    AUXILIARY_TRANSFORMER("coupling_terminal1"),
+    AUXILIARY("coupling_terminal1");
 
     EnumGeneratorComponent(String terminalVarName) {
         this.terminalVarName = terminalVarName;
