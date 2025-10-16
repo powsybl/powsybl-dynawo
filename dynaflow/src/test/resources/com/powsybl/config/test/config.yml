@@ -6,7 +6,7 @@ dynaflow:
   debug: false
 
 dynaflow-default-parameters:
-  svcRegulationOn: true
+  svcRegulationOn: false
 
 load-flow-default-parameters:
   voltageInitMode: DC_VALUES
