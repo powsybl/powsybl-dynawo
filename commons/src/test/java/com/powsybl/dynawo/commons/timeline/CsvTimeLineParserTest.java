@@ -49,8 +49,8 @@ class CsvTimeLineParserTest {
     void testWithPriority() throws URISyntaxException {
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/timelineWithPriority.log")).toURI());
         List<TimelineEntry> timeline = new CsvTimeLineParser().parse(path);
-        assertEquals("2", timeline.get(1).priority());
-        assertEquals("4", timeline.get(4).priority());
+        assertTimeLineEntry(timeline.get(0), "PMIN : activation", "GEN____8_SM", 0, "2");
+        assertTimeLineEntry(timeline.get(1), "PMIN : activation", "GEN____3_SM", 0.0306911, "2");
     }
 
     @Test
@@ -58,13 +58,18 @@ class CsvTimeLineParserTest {
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/wrongTimeline.log")).toURI());
         List<TimelineEntry> timeline = new CsvTimeLineParser('|').parse(path);
         assertEquals(2, timeline.size());
-        assertTimeLineEntry(timeline.get(0), "PMIN : activation", "GEN____8_SM", 0.);
-        assertTimeLineEntry(timeline.get(1), "PMIN : deactivation", "GEN____8_SM", 0.348405);
+        assertEquals(timeline.get(0).message(), "PMIN : activation");
+        assertEquals(timeline.get(0).modelName(), "GEN____8_SM");
+        assertEquals(timeline.get(0).time(), 0.);
+        assertEquals(timeline.get(1).message(), "PMIN : deactivation");
+        assertEquals(timeline.get(1).modelName(), "GEN____8_SM");
+        assertEquals(timeline.get(1).time(), 0.348405);
     }
 
-    private static void assertTimeLineEntry(TimelineEntry entry, String message, String modelName, double time) {
+    private static void assertTimeLineEntry(TimelineEntry entry, String message, String modelName, double time, String priority) {
         assertEquals(message, entry.message());
         assertEquals(modelName, entry.modelName());
         assertEquals(time, entry.time(), 1e-9);
+        assertEquals(priority, entry.priority());
     }
 }

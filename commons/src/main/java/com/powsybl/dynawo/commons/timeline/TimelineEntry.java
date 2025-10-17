@@ -13,7 +13,7 @@ package com.powsybl.dynawo.commons.timeline;
  */
 public record TimelineEntry(double time, String modelName, String message, String priority) {
     public TimelineEntry(double time, String modelName, String message) {
-        this(time, modelName, message, "none");
+        this(time, modelName, message, null);
     }
 
 }
