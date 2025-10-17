@@ -10,6 +10,8 @@ package com.powsybl.dynawo.parameters;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.powsybl.commons.PowsyblException;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -19,20 +21,24 @@ import java.util.*;
  */
 public class ParametersSet {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParametersSet.class);
     private final Map<String, Parameter> parameters;
     private final List<Reference> references;
+    private final Map<String, Map<String, PrefixParameter>> prefixParameters;
     private final String id;
 
     public ParametersSet(@JsonProperty("id") String id) {
         this.id = id;
         this.parameters = new LinkedHashMap<>();
         this.references = new ArrayList<>();
+        this.prefixParameters = new HashMap<>();
     }
 
     public ParametersSet(String id, ParametersSet parametersSet) {
         this.id = id;
         this.parameters = new LinkedHashMap<>(parametersSet.parameters);
         this.references = new ArrayList<>(parametersSet.references);
+        this.prefixParameters = new HashMap<>(parametersSet.prefixParameters);
     }
 
     public void addParameter(String name, ParameterType type, String value) {
@@ -53,6 +59,11 @@ public class ParametersSet {
 
     public void addReference(String name, ParameterType type, String origData, String origName) {
         references.add(new Reference(name, type, origData, origName, null));
+    }
+
+    public void addPrefixParameter(String name, String componentId, ParameterType type, String value) {
+        prefixParameters.computeIfAbsent(name, k -> new HashMap<>())
+                .put(componentId, new PrefixParameter(name, componentId, type, value));
     }
 
     public String getId() {
@@ -102,8 +113,30 @@ public class ParametersSet {
         return parameter;
     }
 
+    /**
+     * Create one parameter by componentId from prefix parameters in the form of name_N
+     * @param name name of the parameter that will be used as prefix
+     * @param componentIds componentIds of the PrefixParameter
+     */
+    public void generateParametersFromPrefix(String name, List<String> componentIds) {
+        Map<String, PrefixParameter> prefixParametersMap = prefixParameters.get(name);
+        if (prefixParametersMap != null) {
+            for (int i = 0; i < componentIds.size(); i++) {
+                PrefixParameter prefixParameter = prefixParametersMap.get(componentIds.get(i));
+                if (prefixParameter != null) {
+                    addParameter(name + "_" + i, prefixParameter.type(), prefixParameter.value());
+                } else {
+                    LOGGER.warn("Prefix parameter {} for equipment {} not found, the associated parameter cannot be created", name, componentIds.get(i));
+                }
+            }
+        } else {
+            LOGGER.warn("Prefix parameters {} not found, all the associated parameters for equipments {} cannot be created", name, componentIds.toString());
+        }
+    }
+
     @Override
     public String toString() {
-        return StringUtils.joinWith(",", id, StringUtils.join(parameters), StringUtils.join(references));
+        return StringUtils.joinWith(",", id, StringUtils.join(parameters), StringUtils.join(references),
+                StringUtils.join(prefixParameters));
     }
 }
