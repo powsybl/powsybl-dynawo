@@ -22,6 +22,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,8 +36,12 @@ class DynawoParametersDatabaseTest {
     @BeforeEach
     void setUp() throws IOException {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
-        Files.copy(getClass().getResourceAsStream("/models.par"), fileSystem.getPath("/models.par"));
-        Files.copy(getClass().getResourceAsStream("/models_misspelled.par"), fileSystem.getPath("/models_misspelled.par"));
+        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/models.par")),
+                fileSystem.getPath("/models.par"));
+        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/models_misspelled.par")),
+                fileSystem.getPath("/models_misspelled.par"));
+        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/modelsPrefixParameters.par")),
+                fileSystem.getPath("/modelsPrefixParameters.par"));
     }
 
     @AfterEach
@@ -103,5 +108,26 @@ class DynawoParametersDatabaseTest {
         set0.addParameter("param", ParameterType.INT, "2");
         ParametersSet set1 = new ParametersSet("copy", set0);
         assertEquals(2, set1.getInt("param"));
+    }
+
+    @Test
+    void checkPrefixParameters() {
+        List<ParametersSet> setsMap = ParametersXml.load(fileSystem.getPath("/modelsPrefixParameters.par"));
+        DynawoSimulationParameters dParameters = new DynawoSimulationParameters().setModelsParameters(setsMap);
+        assertEquals(1, dParameters.getModelParameters().size());
+
+        ParametersSet parametersSet = dParameters.getModelParameters("test");
+        parametersSet.generateParametersFromPrefix("Par1", List.of("GEN", "GEN3"));
+        assertEquals(10, parametersSet.getDouble("Par1_0"), 1e-6);
+        assertEquals(13, parametersSet.getDouble("Par1_1"), 1e-6);
+        assertFalse(parametersSet.hasParameter("Par1_2"));
+
+        // prefix parameter category not found
+        parametersSet.generateParametersFromPrefix("Par3", List.of("GEN", "GEN2"));
+        assertFalse(parametersSet.hasParameter("Par3_0"));
+
+        // prefix parameter componentId not found
+        parametersSet.generateParametersFromPrefix("Par2", List.of("GEN"));
+        assertFalse(parametersSet.hasParameter("Par2_0"));
     }
 }
