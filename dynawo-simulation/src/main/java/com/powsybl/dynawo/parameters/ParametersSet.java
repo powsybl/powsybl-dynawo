@@ -122,12 +122,12 @@ public class ParametersSet {
         Map<String, PrefixParameter> prefixParametersMap = prefixParameters.get(name);
         if (prefixParametersMap != null) {
             for (int i = 0; i < componentIds.size(); i++) {
-                String id = componentIds.get(i);
-                PrefixParameter prefixParameter = prefixParametersMap.get(id);
+                String componentId = componentIds.get(i);
+                PrefixParameter prefixParameter = prefixParametersMap.get(componentId);
                 if (prefixParameter != null) {
                     addParameter(name + "_" + i, prefixParameter.type(), prefixParameter.value());
                 } else {
-                    LOGGER.warn("Prefix parameter {} for equipment {} not found, the associated parameter cannot be created", name, id);
+                    LOGGER.warn("Prefix parameter {} for equipment {} not found, the associated parameter cannot be created", name, componentId);
                 }
             }
         } else {
