@@ -255,11 +255,11 @@ class DynawoParametersTest extends AbstractSerDeTest {
         initDumpFilePlatformConfig(dumpFolder, dumpFile);
         Map<String, String> expectedProperties = Map.ofEntries(
                 Map.entry("modelParameters",
-                        "{test=test,{boolean=Parameter[name=boolean, type=BOOL, value=true], string=Parameter[name=string, type=STRING, value=aString]},[]}"),
+                        "{test=test,{boolean=Parameter[name=boolean, type=BOOL, value=true], string=Parameter[name=string, type=STRING, value=aString]},[],{}}"),
                 Map.entry("networkParameters",
-                        "networkParametersId,{load_Tp=Parameter[name=load_Tp, type=DOUBLE, value=90], load_isControllable=Parameter[name=load_isControllable, type=BOOL, value=false]},[]"),
+                        "networkParametersId,{load_Tp=Parameter[name=load_Tp, type=DOUBLE, value=90], load_isControllable=Parameter[name=load_isControllable, type=BOOL, value=false]},[],{}"),
                 Map.entry("solverParameters",
-                        "solverParametersId,{order=Parameter[name=order, type=INT, value=1], absAccuracy=Parameter[name=absAccuracy, type=DOUBLE, value=1e-4]},[]"),
+                        "solverParametersId,{order=Parameter[name=order, type=INT, value=1], absAccuracy=Parameter[name=absAccuracy, type=DOUBLE, value=1e-4]},[],{}"),
                 Map.entry("solver.type", "IDA"),
                 Map.entry("mergeLoads", "true"),
                 Map.entry("modelSimplifiers", "Substitution,Filter"),
