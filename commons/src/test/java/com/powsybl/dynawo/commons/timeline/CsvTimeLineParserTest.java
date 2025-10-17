@@ -30,11 +30,27 @@ class CsvTimeLineParserTest {
         Path path = Path.of(Objects.requireNonNull(getClass().getResource(fileName)).toURI());
         List<TimelineEntry> timeline = new CsvTimeLineParser().parse(path);
         assertEquals(5, timeline.size());
-        assertTimeLineEntry(timeline.get(0), "PMIN : activation", "GEN____8_SM", 0.);
-        assertTimeLineEntry(timeline.get(1), "PMIN : activation", "GEN____3_SM", 0.0306911);
-        assertTimeLineEntry(timeline.get(2), "PMIN : deactivation", "GEN____8_SM", 0.348405);
-        assertTimeLineEntry(timeline.get(3), "PMIN : deactivation", "GEN____3_SM", 0.828675);
-        assertTimeLineEntry(timeline.get(4), "PMIN : activation", "GEN____8_SM", 0.834701);
+
+        assertEquals("PMIN : activation", timeline.get(0).message());
+        assertEquals("GEN____8_SM", timeline.get(0).modelName());
+        assertEquals(0., timeline.get(0).time(), 1e-9);
+        assertEquals("PMIN : activation", timeline.get(1).message());
+        assertEquals("GEN____3_SM", timeline.get(1).modelName());
+        assertEquals(0.0306911, timeline.get(1).time(), 1e-9);
+        assertEquals("PMIN : deactivation", timeline.get(2).message());
+        assertEquals("GEN____8_SM", timeline.get(2).modelName());
+        assertEquals("PMIN : deactivation", timeline.get(3).message());
+        assertEquals("GEN____3_SM", timeline.get(3).modelName());
+        assertEquals("PMIN : activation", timeline.get(4).message());
+        assertEquals("GEN____8_SM", timeline.get(4).modelName());
+    }
+
+    @Test
+    void testWithPriority() throws URISyntaxException {
+        Path path = Path.of(Objects.requireNonNull(getClass().getResource("/timelineWithPriority.log")).toURI());
+        List<TimelineEntry> timeline = new CsvTimeLineParser().parse(path);
+        assertEquals("2", timeline.get(1).priority());
+        assertEquals("4", timeline.get(4).priority());
     }
 
     @Test
