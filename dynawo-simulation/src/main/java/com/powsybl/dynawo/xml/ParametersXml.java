@@ -146,6 +146,12 @@ public final class ParametersXml {
                         XmlUtil.readEndElementOrThrow(xmlReader);
                         parametersSet.addReference(name, type, origData, origName, componentId);
                     }
+                    case "prefixPar" -> {
+                        String componentId = xmlReader.getAttributeValue(null, "componentId");
+                        String value = xmlReader.getAttributeValue(null, "value");
+                        XmlUtil.readEndElementOrThrow(xmlReader);
+                        parametersSet.addPrefixParameter(name, componentId, type, value);
+                    }
                     default -> closeAndThrowException(xmlReader, xmlReader.getLocalName());
                 }
             } catch (XMLStreamException e) {
