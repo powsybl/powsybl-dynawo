@@ -32,6 +32,8 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimulationContext> {
 
     private static final String EXPORT_MODE = "exportMode";
+    private static final String PAR_FILE = "parFile";
+    private static final String PAR_ID = "parId";
     private final Supplier<SimulationTime> simulationTimeSupplier;
     private final String additionalDydFile;
 
@@ -67,14 +69,15 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writeModeler(writer, parameters, additionalDydFile);
         writeSimulation(writer, parameters, simulationTimeSupplier.get());
         writeOutput(writer, context);
+        writeLocalInitialization(writer, parameters);
         writer.writeEndElement();
     }
 
     private static void writeSolver(XMLStreamWriter writer, DynawoSimulationParameters parameters) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "solver");
         writer.writeAttribute("lib", parameters.getSolverType().equals(SolverType.IDA) ? "dynawo_SolverIDA" : "dynawo_SolverSIM");
-        writer.writeAttribute("parFile", SOLVER_PARAMETERS_FILENAME);
-        writer.writeAttribute("parId", parameters.getSolverParameters().getId());
+        writer.writeAttribute(PAR_FILE, SOLVER_PARAMETERS_FILENAME);
+        writer.writeAttribute(PAR_ID, parameters.getSolverParameters().getId());
     }
 
     private static void writeModeler(XMLStreamWriter writer, DynawoSimulationParameters parameters, String additionalDydFile) throws XMLStreamException {
@@ -83,8 +86,8 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
 
         writer.writeEmptyElement(DYN_URI, "network");
         writer.writeAttribute("iidmFile", NETWORK_FILENAME);
-        writer.writeAttribute("parFile", NETWORK_PARAMETERS_FILENAME);
-        writer.writeAttribute("parId", parameters.getNetworkParameters().getId());
+        writer.writeAttribute(PAR_FILE, NETWORK_PARAMETERS_FILENAME);
+        writer.writeAttribute(PAR_ID, parameters.getNetworkParameters().getId());
 
         writer.writeEmptyElement(DYN_URI, "dynModels");
         writer.writeAttribute("dydFile", DYD_FILENAME);
@@ -106,6 +109,13 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("useStandardModels", Boolean.toString(false));
 
         writer.writeEndElement();
+    }
+
+    private static void writeLocalInitialization(XMLStreamWriter writer, DynawoSimulationParameters parameters) throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "localInit");
+        writer.writeAttribute(PAR_FILE, LOCAL_INIT_PARAMETERS_FILENAME);
+        writer.writeAttribute(PAR_ID, parameters.getLocalInitParameters().getId());
+
     }
 
     private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationParameters parameters, SimulationTime simulationTime) throws XMLStreamException {

@@ -85,4 +85,16 @@ class JobsXmlTest extends DynawoTestUtil {
         JobsXml.writeFinalStep(tmpDir, context);
         validate("jobs.xsd", "jobsWithFinalStep.xml", tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME));
     }
+
+    @Test
+    void writeJobWithLocalInitialization() throws SAXException, IOException {
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .build();
+        JobsXml.write(tmpDir, context);
+        validate("jobs.xsd", "jobsWIthLocalInitialization.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
+    }
+
 }
