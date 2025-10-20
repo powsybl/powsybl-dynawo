@@ -115,7 +115,6 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeEmptyElement(DYN_URI, "localInit");
         writer.writeAttribute(PAR_FILE, LOCAL_INIT_PARAMETERS_FILENAME);
         writer.writeAttribute(PAR_ID, parameters.getLocalInitParameters().getId());
-
     }
 
     private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationParameters parameters, SimulationTime simulationTime) throws XMLStreamException {
