@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 public class DynawoOutputVariablesBuilder {
 
     private static final String DEFAULT_DYNAMIC_MODEL_ID = "NETWORK";
+    private static final String VARIABLES_FIELD = "variables";
 
     private final ReportNode reportNode;
     private boolean isInstantiable = true;
@@ -78,10 +79,13 @@ public class DynawoOutputVariablesBuilder {
             BuilderReports.reportFieldConflict(reportNode, "dynamicModelId", "staticId");
         }
         if (variables == null) {
-            BuilderReports.reportFieldNotSet(reportNode, "variables");
+            BuilderReports.reportFieldNotSet(reportNode, VARIABLES_FIELD);
             isInstantiable = false;
         } else if (variables.isEmpty()) {
-            BuilderReports.reportEmptyList(reportNode, "variables");
+            BuilderReports.reportEmptyList(reportNode, VARIABLES_FIELD);
+            isInstantiable = false;
+        } else if (variables.contains("")) {
+            BuilderReports.reportVariableWithNoContent(reportNode, VARIABLES_FIELD);
             isInstantiable = false;
         }
     }
