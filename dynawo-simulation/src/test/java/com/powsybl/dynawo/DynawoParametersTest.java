@@ -178,7 +178,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         copyFile("/parametersSet/models.par", DEFAULT_INPUT_PARAMETERS_FILE);
         copyFile("/parametersSet/network.par", DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
         copyFile("/parametersSet/solvers.par", DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
-        copyFile("/parametersSet/init.par", DEFAULT_INPUT_LOCAL_INIT_PARAMETERS_FILE);
+        copyFile("/parametersSet/init.par", "init.par");
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
         moduleConfig.setStringProperty("parametersFile", "/work/inmemory/models.par");
         moduleConfig.setStringProperty("network.parametersFile", "/work/inmemory/network.par");
@@ -195,8 +195,6 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(DEFAULT_SOLVER_TYPE, parameters.getSolverType());
         assertEquals(DEFAULT_SOLVER_PAR_ID, parameters.getSolverParameters().getId());
         assertEquals("1", parameters.getSolverParameters().getId());
-
-        assertEquals(DEFAULT_LOCAL_INIT_PAR_ID, parameters.getLocalInitParameters().getId());
         assertEquals("1", parameters.getLocalInitParameters().getId());
 
         assertEquals(DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
