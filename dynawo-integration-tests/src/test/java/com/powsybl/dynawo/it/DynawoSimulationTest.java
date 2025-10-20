@@ -295,9 +295,23 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .withMessageTemplate("testIeee14WithWrongGroovyVariablesForFSV")
                 .build();
 
-        DynamicSimulationResult result = setupIEEE14SimulationWithWrongGroovyVariablesForFSV(reportNode).get();
+        DynamicSimulationResult result = setupIEEE14SimulationWithWrongGroovyVariables(reportNode).get();
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
-        assertEquals("FSV file is empty", result.getStatusText());
+        assertTrue(result.getStatusText().contains("FSV file is empty"));
+    }
+
+    @Test
+    void testIeee14WithWrongGroovyVariablesForCRV() {
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
+                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testIeee14WithWrongGroovyVariablesForCRV")
+                .build();
+
+        DynamicSimulationResult result = setupIEEE14SimulationWithWrongGroovyVariables(reportNode).get();
+        assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
+        assertTrue(result.getStatusText().contains("CRV file couldn't be parsed"));
     }
 
     @Test
@@ -384,7 +398,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .join();
     }
 
-    private Supplier<DynamicSimulationResult> setupIEEE14SimulationWithWrongGroovyVariablesForFSV(ReportNode reportNode) {
+    private Supplier<DynamicSimulationResult> setupIEEE14SimulationWithWrongGroovyVariables(ReportNode reportNode) {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(

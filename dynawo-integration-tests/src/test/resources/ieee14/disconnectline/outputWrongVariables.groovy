@@ -24,6 +24,12 @@ for (Bus bus : network.busBreakerView.buses) {
     }
 }
 
+for (Generator gen : network.generators) {
+    curve {
+        dynamicModelId gen.id
+        variables "wrong value", "wrong value 2", "wrong value 3"
+    }
+}
 
 
 
