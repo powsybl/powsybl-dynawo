@@ -23,8 +23,8 @@ Loading network 'IEEE14.iidm'
          Model Disconnect Disconnect__BUS____2-BUS____3-1_AC instantiation OK
    Dynawo models processing
    + Dynawo Log
-      DYNAWO VERSION  :     1.6.0
-      DYNAWO REVISION :      HEAD-cc53d0b
+      DYNAWO VERSION  :     1.7.0
+      DYNAWO REVISION :      HEAD-6211f2e
       building model from input files
       model was built successfully
       simulation's start time (1) should be equal to 0 (last time in dumpFile or 0 if there is no dump): start time ajusted
@@ -37,7 +37,7 @@ Loading network 'IEEE14.iidm'
       starting simulation with solver IDASolver
       number of continuous variables : 439
       number of discrete variables : 249
-      number of root functions : 228
+      number of root functions : 256
       time | iter num   order (k)      time step (h)
       0.000 | 0           0              0.100
       0.000 | 1           1              0.000
@@ -495,7 +495,7 @@ Loading network 'IEEE14.iidm'
       number of nonlinear iterations             = 459
       number of error test failures              = 1
       number of nonlinear convergence failures   = 0
-      number of root functions evaluations       = 2160
+      number of root functions evaluations       = 2161
       number of discrete variables evaluations   = 79
       number of mode evaluations                 = 66
       end of job 'Job'

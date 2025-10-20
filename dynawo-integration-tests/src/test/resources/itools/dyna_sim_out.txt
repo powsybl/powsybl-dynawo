@@ -20,8 +20,8 @@ Loading network 'IEEE14.iidm'
          Model GeneratorSynchronousThreeWindingsProportionalRegulations _GEN____8_SM instantiation OK
    Dynawo models processing
    + Dynawo Log
-      DYNAWO VERSION  :     1.6.0
-      DYNAWO REVISION :      HEAD-cc53d0b
+      DYNAWO VERSION  :     1.7.0
+      DYNAWO REVISION :      HEAD-6211f2e
       building model from input files
       model was built successfully
       simulation's start time (1) should be equal to 0 (last time in dumpFile or 0 if there is no dump): start time ajusted
@@ -34,7 +34,7 @@ Loading network 'IEEE14.iidm'
       starting simulation with solver IDASolver
       number of continuous variables : 439
       number of discrete variables : 247
-      number of root functions : 226
+      number of root functions : 254
       time | iter num   order (k)      time step (h)
       0.000 | 0           0              0.100
       0.000 | 1           1              0.000
@@ -221,7 +221,7 @@ Loading network 'IEEE14.iidm'
       number of nonlinear iterations             = 174
       number of error test failures              = 0
       number of nonlinear convergence failures   = 0
-      number of root functions evaluations       = 869
+      number of root functions evaluations       = 868
       number of discrete variables evaluations   = 36
       number of mode evaluations                 = 28
       end of job 'Job'
