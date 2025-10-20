@@ -9,6 +9,7 @@ package com.powsybl.dynawo;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.ParameterUpdater;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
@@ -31,7 +32,7 @@ public final class SimulationModels implements DynawoData {
     private final Map<String, MacroConnector> macroConnectorsMap;
 
     public static SimulationModels createFrom(BlackBoxModelSupplier bbmSupplier, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                                              Consumer<ParametersSet> parametersAdder, ParametersSet networkParameters,
+                                              Consumer<ParametersSet> parametersAdder, DynawoSimulationParameters dynawoParameters,
                                               ReportNode reportNode) {
 
         List<MacroConnect> macroConnectList = new ArrayList<>();
@@ -39,11 +40,14 @@ public final class SimulationModels implements DynawoData {
         Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
         MacroConnectionsAdder adder = new MacroConnectionsAdder(bbmSupplier::getEquipmentDynamicModel,
                 bbmSupplier::getPureDynamicModel, macroConnectList::add, macroConnectorsMap::computeIfAbsent, reportNode);
+        ParameterUpdater parameterUpdater = (id, n, t, v) -> dynawoParameters.getModelParameters(id).addParameter(n, t, v);
+        ParametersSet networkParameters = dynawoParameters.getNetworkParameters();
         // Write macro connection
         for (BlackBoxModel bbm : dynamicModels) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             bbm.createMacroConnections(adder);
             bbm.createDynamicModelParameters(parametersAdder);
+            bbm.updateDynamicModelParameters(parameterUpdater);
         }
         for (BlackBoxModel bbem : eventModels) {
             bbem.createMacroConnections(adder);
