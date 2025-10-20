@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
+
 /**
  * @author Guillem Jané Guasch {@literal <janeg at aia.es>}
  */
@@ -28,7 +30,8 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
         Network actual = NetworkSerDe.copy(expected);
         reset(actual);
         NetworkResultsUpdater.update(actual, expected, false);
-        compare(expected, actual);
+        assertXmlEquals(getExpectedNetworkInputStream(expected),
+                getActualNetworkInputStream(actual));
     }
 
     @Test
@@ -36,7 +39,8 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
         Network expected = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
         Network actual = NetworkSerDe.copy(expected);
         NetworkResultsUpdater.update(actual, LoadsMerger.mergeLoads(expected), true);
-        compare(expected, actual);
+        assertXmlEquals(getExpectedNetworkInputStream(expected),
+                getActualNetworkInputStream(actual));
     }
 
     @Test
@@ -55,7 +59,8 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
         Network expectedBusBreaker = NetworkSerDe.read(pexpectedAsBusBreaker);
         NetworkResultsUpdater.update(actual, expectedBusBreaker, false);
 
-        compare(expected, actual);
+        assertXmlEquals(getExpectedNetworkInputStream(expected),
+                getActualNetworkInputStream(actual));
     }
 
     @Test
@@ -79,7 +84,8 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
         expected.getTwoWindingsTransformer("TWT").getRatioTapChanger().setSolvedTapPosition(1);
 
         NetworkResultsUpdater.update(actual, updated, false);
-        compare(expected, actual);
+        assertXmlEquals(getExpectedNetworkInputStream(expected),
+                getActualNetworkInputStream(actual));
     }
 
     @Test
@@ -97,7 +103,8 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
         expected.getTwoWindingsTransformer("TWT").getRatioTapChanger().setSolvedTapPosition(2);
 
         NetworkResultsUpdater.update(actual, updated, false);
-        compare(expected, actual);
+        assertXmlEquals(getExpectedNetworkInputStream(expected),
+                getActualNetworkInputStream(actual));
     }
 
     @Test
@@ -123,7 +130,8 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
         expected.getThreeWindingsTransformer("3WT").getLeg3().getRatioTapChanger().setSolvedTapPosition(0);
 
         NetworkResultsUpdater.update(actual, updated, false);
-        compare(expected, actual);
+        assertXmlEquals(getExpectedNetworkInputStream(expected),
+                getActualNetworkInputStream(actual));
     }
 
     private static void reset(Network targetNetwork) {

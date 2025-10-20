@@ -13,12 +13,12 @@
     <parent>
         <groupId>com.powsybl</groupId>
         <artifactId>powsybl-parent</artifactId>
-        <version>20.2</version>
+        <version>24</version>
         <relativePath />
     </parent>
 
     <artifactId>powsybl-dynawo</artifactId>
-    <version>2.10.0-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>powsybl dynawo</name>
@@ -57,7 +57,7 @@
     </modules>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <powsybl-core.version>6.8.0</powsybl-core.version>
         <groovy.version>4.0.26</groovy.version> <!-- used for groovy-json but also for groovydoc (dynawo-dsl) -->
         <asciitable.version>0.3.2</asciitable.version>
@@ -67,9 +67,21 @@
             ../../distribution/target/site/jacoco-aggregate/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <argLine/> <!--  This is required for later correct replacement of argline -->
+        <!-- Other variables -->
+        <enable-dynamic-agent-loading.argLine/>
     </properties>
 
     <profiles>
+        <profile>
+            <id>java21+</id>
+            <activation>
+                <jdk>[21,)</jdk>
+            </activation>
+            <properties>
+                <!-- In Java 21+, we have to add a parameter to allow dynamic agent loading (cf. powsybl-parent) -->
+                <enable-dynamic-agent-loading.argLine>-XX:+EnableDynamicAgentLoading</enable-dynamic-agent-loading.argLine>
+            </properties>
+        </profile>
         <profile>
             <id>release</id>
             <activation>
@@ -112,7 +124,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <!-- Argument added to set the default locale as en_US for unit tests run to be independent of the JVM locale -->
-                            <argLine>@{argLine} -Duser.language=en -Duser.region=US</argLine>
+                            <argLine>@{argLine} -Duser.language=en -Duser.region=US ${enable-dynamic-agent-loading.argLine}</argLine>
                         </configuration>
                     </plugin>
                 </plugins>

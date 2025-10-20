@@ -37,7 +37,7 @@ public class LoadTwoTransformersTapChangersBuilder extends AbstractLoadModelBuil
     public static LoadTwoTransformersTapChangersBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, LoadTwoTransformersTapChangersBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
             return null;
         }
         return new LoadTwoTransformersTapChangersBuilder(network, modelConfig, reportNode);
