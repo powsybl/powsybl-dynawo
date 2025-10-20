@@ -13,6 +13,7 @@ import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.FinalStepConfig;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.BlackBoxModel;
@@ -46,6 +47,7 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
     protected List<BlackBoxModel> dynamicModels = new ArrayList<>();
     protected List<BlackBoxModel> eventModels = new ArrayList<>();
     protected List<OutputVariable> outputVariables = new ArrayList<>();
+    protected DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
     protected DynawoSimulationContext context;
     protected ReportNode reportNode = ReportNode.newRootReportNode()
             .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
@@ -65,7 +67,7 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
         assertTxtEquals(expected, actual);
     }
 
-    void setupDynawoContext() {
+    protected void setupDynawoContext() {
         setupDynawoContext(null);
     }
 
@@ -74,6 +76,7 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
                 .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
+                .dynawoParameters(dynawoParameters)
                 .reportNode(reportNode);
         if (finalStepConfig != null) {
             builder.finalStepConfig(finalStepConfig);
