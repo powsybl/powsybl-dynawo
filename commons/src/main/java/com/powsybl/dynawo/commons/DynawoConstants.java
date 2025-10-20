@@ -50,4 +50,6 @@ public final class DynawoConstants {
     public static final String FINAL_STATE_FOLDER_PATH = String.join(File.separator, OUTPUTS_FOLDER, FINAL_STATE_FOLDER);
 
     public static final String OUTPUT_IIDM_FILENAME_PATH = String.join(File.separator, OUTPUTS_FOLDER, FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
+
+    public static final String VERSION_FILENAME = "version_";
 }

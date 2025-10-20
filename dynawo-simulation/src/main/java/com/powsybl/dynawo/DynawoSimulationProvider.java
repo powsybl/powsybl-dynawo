@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.VERSION_FILENAME;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -94,8 +95,8 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
         ReportNode dsReportNode = DynawoSimulationReports.createDynawoSimulationReportNode(reportNode, network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(), parameters.getDebugDir());
-        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+        ExecutionEnvironment execEnvVersionFolder = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX + VERSION_FILENAME, false, parameters.getDebugDir());
+        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnvVersionFolder, computationManager, getVersionCommand(config), DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME, false);
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(parameters);
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
                 ModelConfigsHandler.getInstance().addModels(new AdditionalModelConfigLoader(additionalModelPath)));
@@ -110,7 +111,8 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                 .reportNode(reportNode)
                 .build();
 
-        return computationManager.execute(execEnv, new DynawoSimulationHandler(context, getCommand(config), reportNode));
+        ExecutionEnvironment execEnvSimulationFolder = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(), parameters.getDebugDir());
+        return computationManager.execute(execEnvSimulationFolder, new DynawoSimulationHandler(context, getCommand(config), reportNode));
     }
 
     @Override
