@@ -37,7 +37,7 @@ public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
     public static StandardBusBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, StandardBusBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
             return null;
         }
         return new StandardBusBuilder(network, modelConfig, reportNode);

@@ -118,7 +118,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/hvdcP.groovy", BaseHvdc.class, HvdcTestNetwork.createVsc(), "L", "HVDC", "HvdcPV"),
                 Arguments.of("/dynamicModels/hvdcVsc.groovy", BaseHvdc.class, HvdcTestNetwork.createVsc(), "L", "HVDC", "HvdcVsc"),
                 Arguments.of("/dynamicModels/hvdcPDangling.groovy", HvdcDangling.class, HvdcTestNetwork.createVsc(), "L", "HVDC", "HvdcPVDanglingDiagramPQ"),
-                Arguments.of("/dynamicModels/hvdcVscDangling.groovy", HvdcDangling.class, HvdcTestNetwork.createVsc(), "L", "HVDC", "HvdcVscDanglingUdc"),
+                Arguments.of("/dynamicModels/hvdcVscDangling.groovy", HvdcDangling.class, HvdcTestNetwork.createVsc(), "L", "HVDC", "HvdcVscDanglingUDc"),
                 Arguments.of("/dynamicModels/loadAB.groovy", BaseLoad.class, EurostagTutorialExample1Factory.create(), "LOAD", "LAB", "LoadAlphaBetaRestorative"),
                 Arguments.of("/dynamicModels/loadABControllable.groovy", BaseLoadControllable.class, EurostagTutorialExample1Factory.create(), "LOAD", "LAB", "LoadAlphaBeta"),
                 Arguments.of("/dynamicModels/loadTransformer.groovy", LoadOneTransformer.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOT", "LoadOneTransformer"),
@@ -240,7 +240,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                            + Groovy Dynamic Models Supplier
                               + Model TapChangerBlockingAutomaton ZAB instantiation KO
                                  None of '[LOAD, Wrong_ID]' values from 'uMeasurements' field where found for energized and in main component equipment type(s) BUS/BUSBAR_SECTION
-                                 'uMeasurements' field value 'NGEN' should be energized
+                                 'uMeasurements' field value 'NGEN' should be energized and in main component
                                  None of '[NGEN_NHV1, NGEN]' values from 'uMeasurements' field where found for energized and in main component equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' list is empty
                         """),

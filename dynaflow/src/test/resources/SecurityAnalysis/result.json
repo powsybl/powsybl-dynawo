@@ -13,8 +13,10 @@
         "side" : "ONE"
       }, {
         "subjectId" : "NHV1_NHV2_1",
+        "subjectName" : "null",
         "limitType" : "CURRENT",
         "limitName" : "permanent",
+        "acceptableDuration" : 600,
         "limit" : 1000.0,
         "limitReduction" : 1.0,
         "value" : 1192.5631358010583,
