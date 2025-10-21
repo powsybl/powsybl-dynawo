@@ -101,6 +101,11 @@ class DynawoEventModelsSupplierTest {
         assertEquals("Method wrongName not found for parameter NHV1_NHV2_2 on builder EventDisconnectionBuilder", e.getMessage());
     }
 
+    @Test
+    void emptyPropertyException() {
+        assertThrowsExactly(IllegalArgumentException.class, () -> new PropertyBuilder().build(), "collectionType is undefined");
+    }
+
     private static List<EventModelConfig> getEventConfigs() {
         return List.of(
                 new EventModelConfig("Disconnect", List.of(

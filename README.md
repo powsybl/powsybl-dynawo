@@ -5,7 +5,7 @@
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.powsybl%3Apowsybl-dynawo&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.powsybl%3Apowsybl-dynawo)
 [![MPL-2.0 License](https://img.shields.io/badge/license-MPL_2.0-blue.svg)](https://www.mozilla.org/en-US/MPL/2.0/)
 [![Javadocs](https://www.javadoc.io/badge/com.powsybl/powsybl-dynawo.svg?color=blue)](https://www.javadoc.io/doc/com.powsybl/powsybl-dynawo)
-[![Slack](https://img.shields.io/badge/slack-powsybl-blueviolet.svg?logo=slack)](https://join.slack.com/t/powsybl/shared_invite/zt-rzvbuzjk-nxi0boim1RKPS5PjieI0rA)
+[![Slack](https://img.shields.io/badge/slack-powsybl-blueviolet.svg?logo=slack)](https://join.slack.com/t/powsybl/shared_invite/zt-36jvd725u-cnquPgZb6kpjH8SKh~FWHQ)
 
 [Dynawo](https://dynawo.github.io) is an hybrid C++/Modelica open source suite of simulation tools for power systems. This integration module allows to use [DynaFlow](https://dynawo.github.io/about/dynaflow) for [power flow simulations](https://powsybl.readthedocs.io/projects/powsybl-core/en/stable/simulation/loadflow/index.html) and [Dynawo](https://dynawo.github.io) for [time domain simulations](https://powsybl.readthedocs.io/projects/powsybl-core/en/stable/simulation/dynamic/index.html).
 

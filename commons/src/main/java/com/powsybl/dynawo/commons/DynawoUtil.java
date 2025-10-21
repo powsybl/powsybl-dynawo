@@ -40,7 +40,7 @@ public final class DynawoUtil {
         Objects.requireNonNull(file);
         Properties params = new Properties();
         params.setProperty(AbstractTreeDataExporter.VERSION, IIDM_VERSION);
-        params.setProperty(AbstractTreeDataExporter.EXTENSIONS_LIST, String.join(",", IIDM_EXTENSIONS));
+        params.setProperty(AbstractTreeDataExporter.EXTENSIONS_INCLUDED_LIST, String.join(",", IIDM_EXTENSIONS));
         network.write("XIIDM", params, file);
     }
 

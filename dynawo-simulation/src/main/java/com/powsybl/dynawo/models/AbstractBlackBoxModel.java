@@ -60,6 +60,11 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
+    public void updateDynamicModelParameters(ParameterUpdater parameterUpdater) {
+        // method empty by default to be redefined by specific models
+    }
+
+    @Override
     public void createNetworkParameter(ParametersSet networkParameters) {
         // method empty by default to be redefined by specific models
     }

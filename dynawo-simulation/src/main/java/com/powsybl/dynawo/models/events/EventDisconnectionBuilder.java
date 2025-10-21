@@ -138,11 +138,11 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
             return switch (disconnectionType) {
                 case INJECTION -> new EventInjectionDisconnection(eventId, (Injection<?>) builderEquipment.getEquipment(), MODEL_INFO, startTime, true);
                 case BRANCH ->
-                        new EventBranchDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), MODEL_INFO, startTime, disconnectSide);
+                    new EventBranchDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), MODEL_INFO, startTime, disconnectSide);
                 case HVDC ->
-                        new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), MODEL_INFO, startTime, disconnectSide);
+                    new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), MODEL_INFO, startTime, disconnectSide);
                 case BUS ->
-                        new EventBusDisconnection(eventId, (Bus) builderEquipment.getEquipment(), MODEL_INFO, startTime, true);
+                    new EventBusDisconnection(eventId, (Bus) builderEquipment.getEquipment(), MODEL_INFO, startTime, true);
                 default -> null;
             };
         }

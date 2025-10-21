@@ -8,7 +8,9 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.LfResultsUtils;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
@@ -33,6 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(CustomParameterResolver.class)
 class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
+    private static final DynawoVersion DYNAWO_VERSION = new DynawoVersion(1, 6, 0);
+
     @BeforeEach
     void setup(String exception, TwoSides side, BiFunction<Network, TwoSides, BlackBoxModel> constructor) {
         setupNetwork();
@@ -55,7 +59,8 @@ class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlT
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideModels")
     void disconnectionOnDanglingSide(String exception, TwoSides side, BiFunction<Network, TwoSides, BlackBoxModel> constructor) {
-        Exception e = assertThrows(PowsyblException.class, this::setupDynawoContext);
+        DynawoSimulationContext.Builder builder = setupDynawoContextBuilder().currentVersion(DYNAWO_VERSION);
+        Exception e = assertThrows(PowsyblException.class, builder::build);
         assertEquals(exception, e.getMessage());
     }
 
@@ -68,9 +73,9 @@ class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlT
                                 .parameterSetId("hvdc")
                                 .dangling(side)
                                 .build()),
-                Arguments.of("Equipment HvdcVscDanglingUdc side 2 is dangling and can't be disconnected with an event",
+                Arguments.of("Equipment HvdcVscDanglingUDc side 2 is dangling and can't be disconnected with an event",
                         TwoSides.TWO,
-                        (BiFunction<Network, TwoSides, BlackBoxModel>) (network, side) -> HvdcVscBuilder.of(network, "HvdcVscDanglingUdc")
+                        (BiFunction<Network, TwoSides, BlackBoxModel>) (network, side) -> HvdcVscBuilder.of(network, "HvdcVscDanglingUDc")
                                 .staticId("L")
                                 .parameterSetId("hvdc")
                                 .dangling(side)

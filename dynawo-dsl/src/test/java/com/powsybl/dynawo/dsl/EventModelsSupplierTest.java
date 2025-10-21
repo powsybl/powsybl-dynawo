@@ -105,7 +105,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                            + Groovy Event Models Supplier
                               + Model NodeFault NodeFault_NGEN instantiation KO
-                                 faultTime should be strictly positive (0.0)
+                                 'faultTime' field threshold t > 0 has been crossed (current value 0.0)
                         """),
                 Arguments.of("/eventWarnings/missingAPVParameters.groovy",
                         LfResultsUtils.createSvcTestCaseWithLFResults(),
