@@ -32,6 +32,10 @@
         </dependency>
         <dependency>
             <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-dynamic-simulation-tool</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
             <artifactId>powsybl-dynaflow</artifactId>
         </dependency>
         <dependency>

@@ -1,0 +1,507 @@
+Loading network 'IEEE14.iidm'
++ Dynamic Simulation Tool
+   + Dynawo dynamic simulation on network 'ieee14bus'
+      + Groovy Dynamic Models Supplier
+         Model LoadAlphaBeta _LOAD__10_EC instantiation OK
+         Model LoadAlphaBeta _LOAD__11_EC instantiation OK
+         Model LoadAlphaBeta _LOAD__12_EC instantiation OK
+         Model LoadAlphaBeta _LOAD__13_EC instantiation OK
+         Model LoadAlphaBeta _LOAD__14_EC instantiation OK
+         Model LoadAlphaBeta _LOAD___2_EC instantiation OK
+         Model LoadAlphaBeta _LOAD___3_EC instantiation OK
+         Model LoadAlphaBeta _LOAD___9_EC instantiation OK
+         Model LoadAlphaBeta _LOAD___4_EC instantiation OK
+         Model LoadAlphaBeta _LOAD___6_EC instantiation OK
+         Model LoadAlphaBeta _LOAD___5_EC instantiation OK
+         Model GeneratorSynchronousFourWindingsProportionalRegulations _GEN____1_SM instantiation OK
+         Model GeneratorSynchronousFourWindingsProportionalRegulations _GEN____2_SM instantiation OK
+         Model GeneratorSynchronousFourWindingsProportionalRegulations _GEN____3_SM instantiation OK
+         Model GeneratorSynchronousThreeWindingsProportionalRegulations _GEN____6_SM instantiation OK
+         Model GeneratorSynchronousThreeWindingsProportionalRegulations _GEN____8_SM instantiation OK
+      + Groovy Event Models Supplier
+         Model Disconnect Disconnect__BUS____1-BUS____5-1_AC instantiation OK
+         Model Disconnect Disconnect__BUS____2-BUS____3-1_AC instantiation OK
+   Dynawo models processing
+   + Dynawo Log
+      DYNAWO VERSION  :     1.7.0
+      DYNAWO REVISION :      HEAD-6211f2e
+      building model from input files
+      model was built successfully
+      simulation's start time (1) should be equal to 0 (last time in dumpFile or 0 if there is no dump): start time ajusted
+      starting local initialization
+      end of local initialization
+      starting global initialization
+      end of global initialization
+      starting curve initialization
+      end of curve initialization, added 4 curves
+      starting simulation with solver IDASolver
+      number of continuous variables : 439
+      number of discrete variables : 249
+      number of root functions : 256
+      time | iter num   order (k)      time step (h)
+      0.000 | 0           0              0.100
+      0.000 | 1           1              0.000
+      0.000 | 2           1              0.000
+      0.000 | 3           2              0.000
+      0.000 | 4           2              0.000
+      0.000 | 5           2              0.000
+      0.000 | 6           2              0.000
+      0.000 | 7           2              0.000
+      0.000 | 8           2              0.000
+      0.000 | 9           2              0.000
+      0.001 | 10           2              0.000
+      0.001 | 11           2              0.001
+      0.002 | 12           2              0.001
+      0.004 | 13           2              0.002
+      0.008 | 14           2              0.004
+      0.016 | 15           2              0.008
+      Algebraic mode change at t = 0.0278192
+      0.028 | 16           2              0.016
+      calculation of the new starting point of the simulation.
+      0.028 | 0           0              0.000
+      0.028 | 1           1              0.000
+      0.028 | 2           1              0.000
+      0.028 | 3           2              0.000
+      0.028 | 4           2              0.000
+      0.028 | 5           2              0.000
+      0.028 | 6           2              0.000
+      0.028 | 7           2              0.000
+      0.028 | 8           2              0.000
+      0.028 | 9           2              0.000
+      0.028 | 10           2              0.000
+      0.029 | 11           2              0.001
+      0.030 | 12           2              0.001
+      0.031 | 13           2              0.002
+      0.031 | 13           2              0.002
+      0.032 | 13           2              0.002
+      0.036 | 14           2              0.004
+      0.044 | 15           2              0.008
+      Algebraic mode change at t = 0.0539364
+      0.054 | 16           2              0.016
+      calculation of the new starting point of the simulation.
+      0.054 | 0           0              0.000
+      0.054 | 1           1              0.000
+      0.054 | 2           1              0.000
+      0.054 | 3           2              0.000
+      0.054 | 4           2              0.000
+      0.054 | 5           2              0.000
+      0.054 | 6           2              0.000
+      0.054 | 7           2              0.000
+      0.054 | 8           2              0.000
+      0.054 | 9           2              0.000
+      0.054 | 10           2              0.000
+      0.055 | 11           2              0.001
+      0.056 | 12           2              0.001
+      0.058 | 13           2              0.002
+      0.062 | 14           2              0.004
+      0.070 | 15           2              0.008
+      0.087 | 16           2              0.016
+      0.119 | 17           2              0.033
+      0.185 | 18           2              0.066
+      Algebraic mode change at t = 0.277957
+      0.278 | 19           2              0.131
+      calculation of the new starting point of the simulation.
+      0.278 | 0           0              0.000
+      0.278 | 1           1              0.000
+      0.278 | 2           1              0.000
+      0.278 | 3           2              0.000
+      0.278 | 4           2              0.000
+      0.278 | 5           2              0.000
+      0.278 | 6           2              0.000
+      0.278 | 7           2              0.000
+      0.278 | 8           2              0.000
+      0.278 | 9           2              0.000
+      0.278 | 10           2              0.000
+      0.279 | 11           2              0.001
+      0.280 | 12           2              0.001
+      0.282 | 13           2              0.002
+      0.286 | 14           2              0.004
+      0.294 | 15           2              0.008
+      0.311 | 16           2              0.016
+      0.337 | 17           2              0.033
+      0.337 | 17           2              0.033
+      0.343 | 17           2              0.033
+      0.409 | 18           2              0.066
+      0.540 | 19           2              0.131
+      0.802 | 20           2              0.262
+      Algebraic mode change at t = 0.810213
+      0.810 | 21           2              0.524
+      calculation of the new starting point of the simulation.
+      0.810 | 0           0              0.000
+      0.810 | 1           1              0.000
+      0.810 | 2           1              0.000
+      0.810 | 3           2              0.000
+      0.810 | 4           2              0.000
+      0.810 | 5           2              0.000
+      0.810 | 6           2              0.000
+      0.810 | 7           2              0.000
+      0.810 | 8           2              0.000
+      0.810 | 9           2              0.000
+      0.811 | 10           2              0.000
+      0.811 | 11           2              0.001
+      0.812 | 12           2              0.001
+      0.814 | 13           2              0.002
+      0.818 | 14           2              0.004
+      0.826 | 15           2              0.008
+      0.826 | 15           2              0.008
+      0.827 | 15           2              0.008
+      0.843 | 16           2              0.016
+      0.849 | 17           2              0.033
+      0.849 | 17           2              0.033
+      0.876 | 17           2              0.033
+      Algebraic mode change at t = 0.877693
+      0.878 | 18           2              0.066
+      calculation of the new starting point of the simulation.
+      0.878 | 0           0              0.000
+      0.878 | 1           1              0.000
+      0.878 | 2           1              0.000
+      0.878 | 3           2              0.000
+      0.878 | 4           2              0.000
+      0.878 | 5           2              0.000
+      0.878 | 6           2              0.000
+      0.878 | 7           2              0.000
+      0.878 | 8           2              0.000
+      0.878 | 9           2              0.000
+      0.878 | 10           2              0.000
+      0.879 | 11           2              0.001
+      0.880 | 12           2              0.001
+      0.882 | 13           2              0.002
+      0.886 | 14           2              0.004
+      0.894 | 15           2              0.008
+      0.910 | 16           2              0.016
+      0.943 | 17           2              0.033
+      state of Line _BUS____1-BUS____5-1_AC change from 2 to 3
+      state of Line _BUS____2-BUS____3-1_AC change from 2 to 3
+      Algebraic mode (with J recalculation) change at t = 1
+      1.000 | 18           2              0.066
+      calculation of the new starting point of the simulation.
+      1.000 | 0           0              0.000
+      1.000 | 1           1              0.000
+      1.000 | 2           1              0.000
+      1.000 | 3           2              0.000
+      1.000 | 4           2              0.000
+      1.000 | 5           2              0.000
+      1.000 | 6           2              0.000
+      Algebraic mode change at t = 1.00005
+      1.000 | 7           2              0.000
+      calculation of the new starting point of the simulation.
+      1.000 | 0           0              0.000
+      1.000 | 1           1              0.000
+      1.000 | 2           1              0.000
+      1.000 | 3           2              0.000
+      1.000 | 4           2              0.000
+      1.000 | 5           2              0.000
+      1.000 | 6           2              0.000
+      1.000 | 6           2              0.000
+      1.000 | 6           2              0.000
+      1.000 | 7           2              0.000
+      1.000 | 8           2              0.000
+      1.000 | 9           2              0.000
+      1.001 | 10           2              0.000
+      1.001 | 11           2              0.001
+      1.002 | 12           2              0.001
+      1.004 | 13           2              0.002
+      1.008 | 14           2              0.004
+      1.016 | 15           2              0.008
+      1.025 | 16           2              0.008
+      1.033 | 17           2              0.008
+      1.049 | 18           2              0.016
+      1.066 | 19           2              0.016
+      1.082 | 20           2              0.016
+      1.098 | 21           2              0.016
+      1.115 | 22           2              0.016
+      1.148 | 23           2              0.033
+      1.180 | 24           2              0.033
+      1.213 | 25           2              0.033
+      1.246 | 26           2              0.033
+      1.279 | 27           2              0.033
+      1.293 | 28           2              0.033
+      1.311 | 28           2              0.033
+      1.344 | 29           2              0.033
+      1.377 | 30           2              0.033
+      1.383 | 31           2              0.066
+      1.384 | 31           2              0.066
+      1.384 | 31           2              0.066
+      Algebraic mode change at t = 1.38434
+      1.384 | 31           2              0.066
+      calculation of the new starting point of the simulation.
+      1.384 | 0           0              0.000
+      Algebraic mode change at t = 1.38434
+      1.384 | 1           1              0.000
+      calculation of the new starting point of the simulation.
+      1.384 | 0           0              0.000
+      1.384 | 1           1              0.000
+      1.384 | 2           1              0.000
+      1.384 | 3           2              0.000
+      1.384 | 4           2              0.000
+      1.384 | 5           2              0.000
+      1.384 | 6           2              0.000
+      1.384 | 7           2              0.000
+      1.384 | 8           2              0.000
+      1.385 | 9           2              0.000
+      1.385 | 10           2              0.000
+      1.385 | 11           2              0.001
+      1.386 | 12           2              0.001
+      1.388 | 13           2              0.002
+      1.393 | 14           2              0.004
+      1.401 | 15           2              0.008
+      1.417 | 16           2              0.016
+      1.450 | 17           2              0.033
+      1.483 | 18           2              0.033
+      1.546 | 19           2              0.066
+      1.546 | 19           2              0.066
+      Algebraic mode change at t = 1.54585
+      1.546 | 19           2              0.066
+      calculation of the new starting point of the simulation.
+      1.546 | 0           0              0.000
+      Algebraic mode change at t = 1.54585
+      1.546 | 1           1              0.000
+      calculation of the new starting point of the simulation.
+      1.546 | 0           0              0.000
+      Algebraic mode change at t = 1.54585
+      1.546 | 1           1              0.000
+      calculation of the new starting point of the simulation.
+      1.546 | 0           0              0.000
+      1.546 | 1           1              0.000
+      1.546 | 2           1              0.000
+      1.546 | 3           2              0.000
+      1.546 | 4           2              0.000
+      1.546 | 5           2              0.000
+      1.546 | 6           2              0.000
+      1.546 | 7           2              0.000
+      1.546 | 8           2              0.000
+      1.546 | 9           2              0.000
+      1.546 | 10           2              0.000
+      1.547 | 11           2              0.001
+      1.548 | 12           2              0.001
+      1.550 | 13           2              0.002
+      1.554 | 14           2              0.004
+      1.562 | 15           2              0.008
+      1.579 | 16           2              0.016
+      1.602 | 17           2              0.033
+      1.611 | 17           2              0.033
+      1.644 | 18           2              0.033
+      1.677 | 19           2              0.033
+      1.710 | 20           2              0.033
+      Algebraic mode change at t = 1.76787
+      1.768 | 21           2              0.066
+      calculation of the new starting point of the simulation.
+      1.768 | 0           0              0.000
+      1.768 | 1           1              0.000
+      1.768 | 2           1              0.000
+      1.768 | 3           2              0.000
+      1.768 | 4           2              0.000
+      1.768 | 5           2              0.000
+      1.768 | 5           2              0.000
+      1.768 | 5           2              0.000
+      1.768 | 6           2              0.000
+      1.768 | 7           2              0.000
+      1.768 | 8           2              0.000
+      1.768 | 9           2              0.000
+      1.768 | 10           2              0.000
+      1.769 | 11           2              0.001
+      1.770 | 12           2              0.001
+      1.772 | 13           2              0.002
+      1.776 | 14           2              0.004
+      1.784 | 15           2              0.008
+      1.801 | 16           2              0.016
+      1.833 | 17           2              0.033
+      1.866 | 18           2              0.033
+      1.932 | 19           2              0.066
+      1.989 | 20           2              0.058
+      Algebraic mode change at t = 2.01044
+      2.010 | 21           2              0.058
+      calculation of the new starting point of the simulation.
+      2.010 | 0           0              0.000
+      2.010 | 1           1              0.000
+      2.010 | 2           1              0.000
+      2.010 | 3           2              0.000
+      2.010 | 4           2              0.000
+      2.010 | 5           2              0.000
+      2.010 | 5           2              0.000
+      2.010 | 5           2              0.000
+      2.010 | 6           2              0.000
+      2.011 | 7           2              0.000
+      2.011 | 8           2              0.000
+      2.011 | 9           2              0.000
+      2.011 | 10           2              0.000
+      2.011 | 11           2              0.001
+      2.012 | 12           2              0.001
+      2.015 | 13           2              0.002
+      2.019 | 14           2              0.004
+      2.027 | 15           2              0.008
+      2.043 | 16           2              0.016
+      2.076 | 17           2              0.033
+      2.142 | 18           2              0.066
+      2.207 | 19           2              0.066
+      2.273 | 20           2              0.066
+      2.338 | 21           2              0.066
+      2.355 | 22           2              0.066
+      2.355 | 22           2              0.066
+      Algebraic mode change at t = 2.35508
+      2.355 | 22           2              0.066
+      calculation of the new starting point of the simulation.
+      2.355 | 0           0              0.000
+      Algebraic mode change at t = 2.35508
+      2.355 | 1           1              0.000
+      calculation of the new starting point of the simulation.
+      2.355 | 0           0              0.000
+      Algebraic mode change at t = 2.35508
+      2.355 | 1           1              0.000
+      calculation of the new starting point of the simulation.
+      2.355 | 0           0              0.000
+      2.355 | 1           1              0.000
+      2.355 | 2           1              0.000
+      2.355 | 3           2              0.000
+      2.355 | 4           2              0.000
+      2.355 | 5           2              0.000
+      2.355 | 6           2              0.000
+      2.355 | 7           2              0.000
+      2.355 | 8           2              0.000
+      2.355 | 9           2              0.000
+      2.356 | 10           2              0.000
+      2.356 | 11           2              0.001
+      2.357 | 12           2              0.001
+      2.359 | 13           2              0.002
+      2.363 | 14           2              0.004
+      2.371 | 15           2              0.008
+      2.388 | 16           2              0.016
+      2.421 | 17           2              0.033
+      2.486 | 18           2              0.066
+      2.552 | 19           2              0.066
+      2.617 | 20           2              0.066
+      2.683 | 21           2              0.066
+      2.748 | 22           2              0.066
+      2.759 | 23           2              0.066
+      2.814 | 23           2              0.066
+      2.879 | 24           2              0.066
+      2.945 | 25           2              0.066
+      3.010 | 26           2              0.066
+      Algebraic mode change at t = 3.04344
+      3.043 | 27           2              0.066
+      calculation of the new starting point of the simulation.
+      3.043 | 0           0              0.000
+      3.043 | 1           1              0.000
+      3.043 | 2           1              0.000
+      3.043 | 3           2              0.000
+      3.043 | 4           2              0.000
+      3.043 | 5           2              0.000
+      3.043 | 6           2              0.000
+      3.043 | 7           2              0.000
+      3.043 | 7           2              0.000
+      3.044 | 7           2              0.000
+      3.044 | 8           2              0.000
+      3.044 | 9           2              0.000
+      3.044 | 10           2              0.000
+      3.044 | 11           2              0.001
+      3.045 | 12           2              0.001
+      3.048 | 13           2              0.002
+      3.052 | 14           2              0.004
+      3.060 | 15           2              0.008
+      3.071 | 16           2              0.016
+      3.076 | 16           2              0.016
+      3.109 | 17           2              0.033
+      3.175 | 18           2              0.066
+      3.240 | 19           2              0.066
+      3.306 | 20           2              0.066
+      3.371 | 21           2              0.066
+      3.437 | 22           2              0.066
+      3.502 | 23           2              0.066
+      3.506 | 24           2              0.066
+      3.568 | 24           2              0.066
+      3.633 | 25           2              0.066
+      3.699 | 26           2              0.066
+      3.786 | 27           2              0.087
+      3.873 | 28           2              0.087
+      3.961 | 29           2              0.087
+      3.981 | 30           2              0.087
+      4.048 | 30           2              0.087
+      4.135 | 31           2              0.087
+      4.223 | 32           2              0.087
+      4.310 | 33           2              0.087
+      4.397 | 34           2              0.087
+      4.485 | 35           2              0.087
+      4.572 | 36           2              0.087
+      4.659 | 37           2              0.087
+      4.747 | 38           2              0.087
+      4.834 | 39           2              0.087
+      4.921 | 40           2              0.087
+      5.009 | 41           2              0.087
+      5.096 | 42           2              0.087
+      5.157 | 43           2              0.087
+      5.183 | 43           2              0.087
+      5.271 | 44           2              0.087
+      5.358 | 45           2              0.087
+      5.445 | 46           2              0.087
+      5.533 | 47           2              0.087
+      5.620 | 48           2              0.087
+      5.707 | 49           2              0.087
+      5.795 | 50           2              0.087
+      5.969 | 51           2              0.175
+      6.144 | 52           2              0.175
+      6.319 | 53           2              0.175
+      6.462 | 54           2              0.175
+      6.493 | 54           2              0.175
+      6.668 | 55           2              0.175
+      6.843 | 56           2              0.175
+      7.017 | 57           2              0.175
+      7.192 | 58           2              0.175
+      7.367 | 59           2              0.175
+      7.541 | 60           2              0.175
+      7.577 | 61           2              0.175
+      7.716 | 61           2              0.175
+      7.891 | 62           2              0.175
+      8.065 | 63           2              0.175
+      8.240 | 64           2              0.175
+      8.414 | 65           2              0.175
+      8.589 | 66           2              0.175
+      8.764 | 67           2              0.175
+      8.938 | 68           2              0.175
+      8.997 | 69           2              0.175
+      9.113 | 69           2              0.175
+      9.288 | 70           2              0.175
+      9.462 | 71           2              0.175
+      9.637 | 72           2              0.175
+      9.959 | 73           2              0.349
+      9.986 | 73           2              0.349
+      10.282 | 74           2              0.296
+      10.578 | 75           2              0.296
+      10.874 | 76           2              0.296
+      11.170 | 77           2              0.296
+      11.466 | 78           2              0.296
+      11.761 | 79           2              0.296
+      12.057 | 80           1              0.296
+      12.353 | 81           1              0.296
+      12.649 | 82           1              0.296
+      12.945 | 83           1              0.296
+      13.536 | 84           1              0.592
+      14.128 | 85           1              0.592
+      14.720 | 86           1              0.592
+      15.903 | 87           1              1.183
+      18.270 | 88           1              2.367
+      23.003 | 89           1              4.733
+      32.470 | 90           1              9.467
+      42.470 | 91           1             10.000
+      52.470 | 92           1             10.000
+      62.470 | 93           1             10.000
+      72.470 | 94           1             10.000
+      82.470 | 95           1             10.000
+      92.470 | 96           1             10.000
+      100.000 | 97           1              7.530
+      execution statistics :
+      number of time iterations                  = 358
+      number of residual evaluations             = 497
+      number of Jacobian evaluations             = 241
+      number of nonlinear iterations             = 459
+      number of error test failures              = 1
+      number of nonlinear convergence failures   = 0
+      number of root functions evaluations       = 2161
+      number of discrete variables evaluations   = 79
+      number of mode evaluations                 = 66
+      end of job 'Job'
+dynamic simulation results:
++---------+
+| Result  |
++---------+
+| SUCCESS |
++---------+
