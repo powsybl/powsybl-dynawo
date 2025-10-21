@@ -31,11 +31,7 @@
       },
       "references" : [ ]
     },
-    "localInitParameters" : {
-      "id" : "1",
-      "parameters" : { },
-      "references" : [ ]
-    },
+    "localInitParameters" : null,
     "solverType" : "SIM",
     "mergeLoads" : false,
     "useModelSimplifiers" : false,

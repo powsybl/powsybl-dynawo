@@ -18,6 +18,5 @@
                 <dyn:appender tag="" file="dynawo.log" lvlFilter="INFO"/>
             </dyn:logs>
         </dyn:outputs>
-        <dyn:localInit parFile="init.par" parId="1"/>
     </dyn:job>
 </dyn:jobs>

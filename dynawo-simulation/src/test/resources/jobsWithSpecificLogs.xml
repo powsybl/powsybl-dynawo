@@ -24,6 +24,5 @@
                 <dyn:appender tag="EQUATIONS" file="equations.log" lvlFilter="DEBUG"/>
             </dyn:logs>
         </dyn:outputs>
-        <dyn:localInit parFile="init.par" parId="1"/>
     </dyn:job>
 </dyn:jobs>

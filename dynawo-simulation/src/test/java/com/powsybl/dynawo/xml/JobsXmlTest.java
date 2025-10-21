@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.*;
+import com.powsybl.dynawo.parameters.ParametersSet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -88,11 +89,16 @@ class JobsXmlTest extends DynawoTestUtil {
 
     @Test
     void writeJobWithLocalInitialization() throws SAXException, IOException {
+        ParametersSet localInitParameters = new ParametersSet("1");
+        DynawoSimulationParameters parameters = DynawoSimulationParameters.load();
+        parameters.setLocalInitParameters(localInitParameters);
         DynawoSimulationContext context = new DynawoSimulationContext
                 .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
+                .dynawoParameters(parameters)
                 .build();
+
         JobsXml.write(tmpDir, context);
         validate("jobs.xsd", "jobsWIthLocalInitialization.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
     }

@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.*;
-import static com.powsybl.dynawo.DynawoSimulationConstants.DYD_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUTS_FOLDER;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
@@ -69,7 +68,9 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writeModeler(writer, parameters, additionalDydFile);
         writeSimulation(writer, parameters, simulationTimeSupplier.get());
         writeOutput(writer, context);
-        writeLocalInitialization(writer, parameters);
+        if (parameters.getLocalInitParameters() != null) {
+            writeLocalInitialization(writer, parameters);
+        }
         writer.writeEndElement();
     }
 

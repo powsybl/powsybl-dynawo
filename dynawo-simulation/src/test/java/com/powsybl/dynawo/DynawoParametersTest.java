@@ -75,12 +75,11 @@ class DynawoParametersTest extends AbstractSerDeTest {
         initPlatformConfig(networkParametersId, solverType, solverParametersId, localInitParametersId, mergeLoads, useModelSimplifiers,
                 precision, timelinExportMode, logLevel, specificLogs, criteriaFileName, additionalModelsFileName);
 
-        DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig, fileSystem);
+        DynawoSimulationParameters parameters = load(platformConfig, fileSystem);
 
         checkModelParameters(parameters);
         checkNetworkParameters(parameters, networkParametersId);
         checkSolverParameters(parameters, solverParametersId, solverType);
-        checkLocalInitParameters(parameters, localInitParametersId);
 
         assertEquals(mergeLoads, parameters.isMergeLoads());
         assertEquals(useModelSimplifiers, parameters.isUseModelSimplifiers());
@@ -112,9 +111,8 @@ class DynawoParametersTest extends AbstractSerDeTest {
         String networkParametersId = "networkParametersId";
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
-        String localInitParametersId = "localInitParametersId";
         boolean mergeLoads = false;
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, localInitParametersId, mergeLoads, false,
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, null, mergeLoads, false,
                 1e-7, ExportMode.TXT, LogLevel.INFO, Set.of(SpecificLog.PARAMETERS, SpecificLog.VARIABLES),
                 null, null);
 
@@ -134,7 +132,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         String parametersFile = USER_HOME + "parametersFile";
         String networkParametersFile = USER_HOME + "networkParametersFile";
         String solverParametersFile = USER_HOME + "solverParametersFile";
-        String localInitParametersFile = USER_HOME + "localInitParametersFile";
+        String localInitParametersFile = localInitParametersId != null ? USER_HOME + "localInitParametersFile" : null;
         String criteriaFile = criteriaFileName != null ? USER_HOME + criteriaFileName : null;
         String additionalModelsFile = additionalModelsFileName != null ? USER_HOME + additionalModelsFileName : null;
 
@@ -147,7 +145,6 @@ class DynawoParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("network.parametersId", networkParametersId);
         moduleConfig.setStringProperty("solver.type", solverType.toString());
         moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
-        moduleConfig.setStringProperty("localInit.parametersId", localInitParametersId);
         moduleConfig.setStringProperty("useModelSimplifiers", String.valueOf(useModelSimplifiers));
         moduleConfig.setStringProperty("precision", Double.toString(precision));
         moduleConfig.setStringProperty("timeline.exportMode", String.valueOf(timelineExportMode));
@@ -178,12 +175,11 @@ class DynawoParametersTest extends AbstractSerDeTest {
         copyFile("/parametersSet/models.par", DEFAULT_INPUT_PARAMETERS_FILE);
         copyFile("/parametersSet/network.par", DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
         copyFile("/parametersSet/solvers.par", DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
-        copyFile("/parametersSet/init.par", "init.par");
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
+
         moduleConfig.setStringProperty("parametersFile", "/work/inmemory/models.par");
         moduleConfig.setStringProperty("network.parametersFile", "/work/inmemory/network.par");
         moduleConfig.setStringProperty("solver.parametersFile", "/work/inmemory/solvers.par");
-        moduleConfig.setStringProperty("localInit.parametersFile", "/work/inmemory/init.par");
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig, fileSystem);
         checkModelParameters(parameters);
@@ -195,7 +191,6 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(DEFAULT_SOLVER_TYPE, parameters.getSolverType());
         assertEquals(DEFAULT_SOLVER_PAR_ID, parameters.getSolverParameters().getId());
         assertEquals("1", parameters.getSolverParameters().getId());
-        assertEquals("1", parameters.getLocalInitParameters().getId());
 
         assertEquals(DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
         assertEquals(DEFAULT_USE_MODEL_SIMPLIFIERS, parameters.isUseModelSimplifiers());
@@ -253,7 +248,6 @@ class DynawoParametersTest extends AbstractSerDeTest {
         String networkParametersId = "networkParametersId";
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
-        String localInitParametersId = "localInitParametersId";
         boolean mergeLoads = true;
         boolean useModelSimplifiers = true;
         double precision = 1e-8;
@@ -265,7 +259,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         String dumpFile = "dumpFile.dmp";
         String additionalModelsFileName = "additionalModels.json";
 
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, localInitParametersId, mergeLoads, useModelSimplifiers, precision, timelinExportMode, logLevel, specificLogs, criteriaFileName, additionalModelsFileName);
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, null, mergeLoads, useModelSimplifiers, precision, timelinExportMode, logLevel, specificLogs, criteriaFileName, additionalModelsFileName);
         initDumpFilePlatformConfig(dumpFolder, dumpFile);
         Map<String, String> expectedProperties = Map.ofEntries(
                 Map.entry("modelParameters",
@@ -274,8 +268,6 @@ class DynawoParametersTest extends AbstractSerDeTest {
                         "networkParametersId,{load_Tp=Parameter[name=load_Tp, type=DOUBLE, value=90], load_isControllable=Parameter[name=load_isControllable, type=BOOL, value=false]},[]"),
                 Map.entry("solverParameters",
                         "solverParametersId,{order=Parameter[name=order, type=INT, value=1], absAccuracy=Parameter[name=absAccuracy, type=DOUBLE, value=1e-4]},[]"),
-                Map.entry("localInitParameters",
-                        "localInitParametersId,{},[]"),
                 Map.entry("solver.type", "IDA"),
                 Map.entry("mergeLoads", "true"),
                 Map.entry("useModelSimplifiers", "true"),
@@ -364,6 +356,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(useDumpFile, dumpParameters.useDumpFile());
         assertEquals(dumpFolder, dumpParameters.dumpFileFolder().toString());
         assertEquals(dumpFile, dumpParameters.dumpFile());
+        assertEquals(localInitParametersId, parameters.getLocalInitParameters().getId());
     }
 
     @Test
@@ -379,12 +372,14 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertTrue(parameters.isUseModelSimplifiers());
     }
 
-    private void createFiles(String parametersFile, String networkParametersFile, String solverParametersFile, String localInitParameterFile, String criteriaFile, String additionalModelsFile) throws IOException {
+    private void createFiles(String parametersFile, String networkParametersFile, String solverParametersFile, String localInitParametersFile, String criteriaFile, String additionalModelsFile) throws IOException {
         Files.createDirectories(fileSystem.getPath(USER_HOME));
         copyFile("/parametersSet/models.par", parametersFile);
         copyFile("/parametersSet/network.par", networkParametersFile);
         copyFile("/parametersSet/solvers.par", solverParametersFile);
-        copyFile("/parametersSet/init.par", localInitParameterFile);
+        if (localInitParametersFile != null) {
+            copyFile("/parametersSet/init.par", localInitParametersFile);
+        }
         if (criteriaFile != null) {
             copyFile("/criteria.crt", criteriaFile);
         }
@@ -436,7 +431,4 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(ParameterType.DOUBLE, absAccuracy.type());
     }
 
-    private static void checkLocalInitParameters(DynawoSimulationParameters parameters, String localInitParametersId) {
-        assertEquals(localInitParametersId, parameters.getLocalInitParameters().getId());
-    }
 }

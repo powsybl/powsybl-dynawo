@@ -36,11 +36,7 @@
         },
         "references" : [ ]
       },
-      "localInitParameters" : {
-        "id" : "localInitParametersId",
-        "parameters" : { },
-        "references" : [ ]
-      },
+      "localInitParameters" : null,
       "solverType" : "IDA",
       "mergeLoads" : false,
       "useModelSimplifiers" : false,

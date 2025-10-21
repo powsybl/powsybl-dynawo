@@ -184,9 +184,8 @@ public final class ParametersXml {
         write(parameters.getModelParameters(), MODELS_PARAMETERS_FILENAME, workingDir, "");
         write(List.of(parameters.getNetworkParameters()), NETWORK_PARAMETERS_FILENAME, workingDir, "");
         write(List.of(parameters.getSolverParameters()), SOLVER_PARAMETERS_FILENAME, workingDir, "");
-        ParametersSet localInitParams = parameters.getLocalInitParameters();
-        if (localInitParams != null) {
-            write(List.of(localInitParams), LOCAL_INIT_PARAMETERS_FILENAME, workingDir, "");
+        if (parameters.getLocalInitParameters() != null) {
+            write(List.of(parameters.getLocalInitParameters()), LOCAL_INIT_PARAMETERS_FILENAME, workingDir, "");
         }
     }
 
