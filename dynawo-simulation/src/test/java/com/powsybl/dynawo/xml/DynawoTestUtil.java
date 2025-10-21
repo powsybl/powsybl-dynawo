@@ -15,8 +15,6 @@ import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
-import com.powsybl.dynawo.models.lines.LineBuilder;
-import com.powsybl.dynawo.models.lines.StandardLine;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
 import com.powsybl.iidm.network.*;
@@ -125,12 +123,6 @@ public class DynawoTestUtil extends AbstractSerDeTest {
             }
         });
 
-        StandardLine standardLine = LineBuilder.of(network)
-                .staticId("NHV1_NHV2_1")
-                .parameterSetId("SL")
-                .build();
-        dynamicModels.add(standardLine);
-
         // Events
         eventModels = new ArrayList<>();
         network.getLineStream().forEach(l -> eventModels.add(EventDisconnectionBuilder.of(network)
@@ -144,7 +136,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
                 .build());
 
         // Automatons
-        network.getLineStream().filter(line -> !line.getId().equalsIgnoreCase(standardLine.getDynamicModelId()))
+        network.getLineStream().filter(line -> !line.getId().equalsIgnoreCase("NHV1_NHV2_1"))
                 .forEach(l -> dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                         .dynamicModelId("CLA_" + l.getId())
                         .parameterSetId("CLA")
