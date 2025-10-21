@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 public final class DynamicModelsConfigUtils {
 
     private static final String BUS_PARAM_SET_ID = "bus";
+    private static final String LINE_PARAM_SET_ID = "line";
+    private static final String TRANSFORMER_PARAM_SET_ID = "tf";
 
     private DynamicModelsConfigUtils() {
     }
@@ -52,7 +54,7 @@ public final class DynamicModelsConfigUtils {
         if (!existingModels.contains(staticId)) {
             models.add(LineBuilder.of(network)
                     .staticId(staticId)
-                    .parameterSetId("line")
+                    .parameterSetId(LINE_PARAM_SET_ID)
                     .build());
         }
     }
@@ -61,7 +63,7 @@ public final class DynamicModelsConfigUtils {
         if (!existingModels.contains(staticId)) {
             models.add(TransformerFixedRatioBuilder.of(network)
                     .staticId(staticId)
-                    .parameterSetId("tf")
+                    .parameterSetId(TRANSFORMER_PARAM_SET_ID)
                     .build());
         }
     }
