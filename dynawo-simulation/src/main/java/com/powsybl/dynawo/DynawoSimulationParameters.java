@@ -50,7 +50,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     public static final boolean DEFAULT_MERGE_LOADS = false;
     public static final boolean DEFAULT_USE_MODEL_SIMPLIFIERS = false;
     public static final double DEFAULT_PRECISION = 1e-6;
-    public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.TXT;
+    public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.XML;
     public static final LogLevel DEFAULT_LOG_LEVEL_FILTER = LogLevel.INFO;
 
     private static final String PARAMETERS_FILE = "parametersFile";

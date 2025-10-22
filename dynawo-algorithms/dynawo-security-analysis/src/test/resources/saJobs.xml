@@ -12,7 +12,7 @@
         <dyn:outputs directory="outputs">
             <dyn:dumpInitValues local="false" global="false"/>
             <dyn:constraints exportMode="XML"/>
-            <dyn:timeline exportMode="TXT"/>
+            <dyn:timeline exportMode="XML"/>
             <dyn:finalState exportIIDMFile="true" exportDumpFile="false"/>
             <dyn:logs>
                 <dyn:appender tag="" file="dynawo.log" lvlFilter="INFO"/>
