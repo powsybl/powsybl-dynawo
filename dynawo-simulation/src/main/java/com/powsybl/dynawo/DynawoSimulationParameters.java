@@ -133,6 +133,8 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             new Parameter(NETWORK_PARAMETERS_ID, ParameterType.STRING, "Network parameters set id", DEFAULT_NETWORK_PAR_ID),
             new Parameter(SOLVER_PARAMETERS_FILE, ParameterType.STRING, "Solver parameters file path", DEFAULT_INPUT_SOLVER_PARAMETERS_FILE),
             new Parameter(SOLVER_PARAMETERS_ID, ParameterType.STRING, "Solver parameters set id", DEFAULT_SOLVER_PAR_ID),
+            new Parameter(LOCAL_INIT_PARAMETERS_FILE, ParameterType.STRING, "localInit parameters file", null),
+            new Parameter(LOCAL_INIT_PARAMETERS_ID, ParameterType.STRING, "localInit parameters id", null),
             new Parameter(SOLVER_TYPE, ParameterType.STRING, "Solver used in the simulation", DEFAULT_SOLVER_TYPE.toString(), getEnumPossibleValues(SolverType.class)),
             new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", DEFAULT_MERGE_LOADS),
             new Parameter(USE_MODEL_SIMPLIFIERS, ParameterType.BOOLEAN, "Simplifiers used before macro connection computation", DEFAULT_USE_MODEL_SIMPLIFIERS),
@@ -180,6 +182,14 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
                 if (Files.exists(path)) {
                     parameters.setSolverParameters(ParametersXml.load(path,
                             c.getOptionalStringProperty(SOLVER_PARAMETERS_ID).orElse(DEFAULT_SOLVER_PAR_ID)));
+                }
+            });
+
+            c.getOptionalStringProperty(LOCAL_INIT_PARAMETERS_FILE).ifPresent(f -> {
+                Path path = resolveFilePath(f, platformConfig, fileSystem);
+                if (Files.exists(path)) {
+                    parameters.setLocalInitParameters(ParametersXml.load(path,
+                            c.getStringProperty(LOCAL_INIT_PARAMETERS_ID)));
                 }
             });
 
@@ -276,6 +286,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         addNotNullEntry("modelParameters", modelsParameters, properties::put);
         addNotNullEntry("networkParameters", networkParameters, properties::put);
         addNotNullEntry("solverParameters", solverParameters, properties::put);
+        addNotNullEntry("localInitParameters", localInitParameters, properties::put);
         addNotNullEntry(SOLVER_TYPE, solverType, properties::put);
         addNotNullEntry(MERGE_LOADS, mergeLoads, properties::put);
         addNotNullEntry(USE_MODEL_SIMPLIFIERS, useModelSimplifiers, properties::put);
@@ -350,6 +361,11 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
 
     public DynawoSimulationParameters setLocalInitParameters(ParametersSet localInitParameters) {
         this.localInitParameters = localInitParameters;
+        return this;
+    }
+
+    public DynawoSimulationParameters setLocalInitParameters(InputStream inputStream, String parameterSetId) {
+        this.localInitParameters = ParametersXml.load(inputStream, parameterSetId);
         return this;
     }
 
