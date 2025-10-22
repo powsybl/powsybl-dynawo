@@ -60,14 +60,18 @@ class MarginCalculationTest extends AbstractDynawoTest {
     private static final List<String> LOADS = List.of("_LOAD___3_EC", "_LOAD___6_EC", "_LOAD___9_EC");
 
     private static final List<LoadIncreaseResult> EXPECTED_RESULTS = List.of(
+                new LoadIncreaseResult(100, CRITERIA_NON_RESPECTED, List.of(),
+                        List.of(new FailedCriterion("total load power = 207.704MW > 200MW (criteria id: Risque protection)", 56.929320))),
                 new LoadIncreaseResult(0, CONVERGENCE,
                         List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
                                 new ScenarioResult(GEN_ID, CONVERGENCE))),
                 new LoadIncreaseResult(50, CONVERGENCE,
                         List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
                                 new ScenarioResult(GEN_ID, CONVERGENCE))),
-                new LoadIncreaseResult(75, CRITERIA_NON_RESPECTED),
-                new LoadIncreaseResult(63, CRITERIA_NON_RESPECTED),
+                new LoadIncreaseResult(75, CRITERIA_NON_RESPECTED, List.of(),
+                        List.of(new FailedCriterion("total load power = 200.133MW > 200MW (criteria id: Risque protection)", 55.0))),
+                new LoadIncreaseResult(63, CRITERIA_NON_RESPECTED, List.of(),
+                        List.of(new FailedCriterion("total load power = 232.439MW > 200MW (criteria id: Risque QdE)", 79.689024))),
                 new LoadIncreaseResult(57, CONVERGENCE,
                         List.of(new ScenarioResult(LINE_ID, CRITERIA_NON_RESPECTED,
                                         List.of(new FailedCriterion("total load power = 221.465MW > 200MW (criteria id: Risque QdE)", 174.2))),

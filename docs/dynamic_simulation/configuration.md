@@ -82,7 +82,7 @@ The default value is `null`.
 The default value is `FALSE`.
 
 **mergeLoads**  
-`mergeLoads` defines if loads connected to the same bus are merged or not.  
+`mergeLoads` indicates if loads connected to the same bus are merged (except fictitious load).  
 The default value is `FALSE`.
 
 **timeline.exportMode**  

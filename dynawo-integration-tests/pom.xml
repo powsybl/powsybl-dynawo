@@ -13,7 +13,7 @@
     <parent>
         <groupId>com.powsybl</groupId>
         <artifactId>powsybl-dynawo</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>powsybl-dynawo-integration-tests</artifactId>
@@ -29,6 +29,10 @@
         <dependency>
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-computation-local-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-dynamic-simulation-tool</artifactId>
         </dependency>
         <dependency>
             <groupId>com.powsybl</groupId>
