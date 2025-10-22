@@ -45,8 +45,8 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     public static final String DEFAULT_INPUT_NETWORK_PARAMETERS_FILE = "network.par";
     public static final String DEFAULT_INPUT_SOLVER_PARAMETERS_FILE = "solvers.par";
     public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
-    public static final String DEFAULT_NETWORK_PAR_ID = "1";
-    public static final String DEFAULT_SOLVER_PAR_ID = "1";
+    public static final String DEFAULT_NETWORK_PAR_ID = "Network";
+    public static final String DEFAULT_SOLVER_PAR_ID = "SIM";
     public static final boolean DEFAULT_MERGE_LOADS = false;
     public static final boolean DEFAULT_USE_MODEL_SIMPLIFIERS = false;
     public static final double DEFAULT_PRECISION = 1e-6;

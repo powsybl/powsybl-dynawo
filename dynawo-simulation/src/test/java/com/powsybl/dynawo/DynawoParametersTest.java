@@ -186,8 +186,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
 
         assertEquals(DEFAULT_SOLVER_TYPE, parameters.getSolverType());
         assertEquals(DEFAULT_SOLVER_PAR_ID, parameters.getSolverParameters().getId());
-        assertEquals("1", parameters.getSolverParameters().getId());
-
+        assertEquals("SIM", parameters.getSolverParameters().getId());
         assertEquals(DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
         assertEquals(DEFAULT_USE_MODEL_SIMPLIFIERS, parameters.isUseModelSimplifiers());
         assertEquals(DEFAULT_TIMELINE_EXPORT_MODE, parameters.getTimelineExportMode());
@@ -213,7 +212,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("solver.parametersFile", "/work/inmemory/solvers.par");
 
         PowsyblException e1 = assertThrows(PowsyblException.class, () -> load(platformConfig, fileSystem));
-        assertEquals("Could not find parameters set with id='1' in file '/work/inmemory/solvers.par'", e1.getMessage());
+        assertEquals("Could not find parameters set with id='SIM' in file '/work/inmemory/solvers.par'", e1.getMessage());
 
         try (InputStream is = getClass().getResourceAsStream("/parametersSet/solvers.par")) {
             PowsyblException e2 = assertThrows(PowsyblException.class, () -> ParametersXml.load(is, "2"));

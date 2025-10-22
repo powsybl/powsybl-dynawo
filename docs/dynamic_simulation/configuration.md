@@ -47,11 +47,11 @@ The default value is `solvers.par`.
 
 **network.parametersId**  
 `network.parametersId` defines the network parameters set id stored in `network.parametersFile`.  
-The default value is `1`.
+The default value is `Network`.
 
 **solver.parametersId**  
 `solver.parametersId` defines the solver parameters set id stored in `solver.parametersFile`.  
-The default value is `1`.
+The default value is `SIM`.
 
 **solver.type**  
 `solver.type` defines the solver used in the simulation.  
@@ -136,10 +136,10 @@ The default value is `null`.
 dynawo-simulation-default-parameters:
   parametersFile: /home/user/parametersFile
   network.parametersFile: /home/user/networkParametersFile
-  network.parametersId: 1
+  network.parametersId: Network
   solver.type: SIM
   solver.parametersFile: /home/user/solverParametersFile
-  solver.parametersId: 1
+  solver.parametersId: SIM
   dump.export: false
   dump.useAsInput: false
   dump.exportFolder: /home/user/dumps

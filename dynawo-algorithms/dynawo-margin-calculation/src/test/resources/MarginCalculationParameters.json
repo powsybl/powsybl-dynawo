@@ -11,12 +11,12 @@
   "loadModelsRule" : "ALL_LOADS",
   "dynawoParameters" : {
     "networkParameters" : {
-      "id" : "1",
+      "id" : "Network",
       "parameters" : { },
       "references" : [ ]
     },
     "solverParameters" : {
-      "id" : "1",
+      "id" : "SIM",
       "parameters" : {
         "order" : {
           "name" : "order",
