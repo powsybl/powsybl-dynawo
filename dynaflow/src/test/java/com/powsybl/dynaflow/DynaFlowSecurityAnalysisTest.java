@@ -76,7 +76,7 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         @Override
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
-                if (args.get(0).equals("--version")) {
+                if (args.getFirst().equals("--version")) {
                     copyFile(stdOutFileRef, errFile);
                 } else {
                     assertEquals("--network %s --config %s --contingencies %s".formatted(NETWORK_FILENAME, CONFIG_FILENAME, CONTINGENCIES_FILENAME),
@@ -175,8 +175,8 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         // Adding strong current limits to have some post-contingencies current limit violations
         line.getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits().setPermanentLimit(40.0).add();
         line.getOrCreateSelectedOperationalLimitsGroup2().newCurrentLimits()
-                .beginTemporaryLimit().setName("10'").setAcceptableDuration(10 * 60).setValue(450.0).endTemporaryLimit()
                 .setPermanentLimit(1000)
+                .beginTemporaryLimit().setName("10'").setAcceptableDuration(10 * 60).setValue(1200.0).endTemporaryLimit()
                 .add();
 
         // Adding a node breaker voltage level to the network

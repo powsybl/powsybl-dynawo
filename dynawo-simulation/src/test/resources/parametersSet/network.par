@@ -4,6 +4,6 @@
         <par type="DOUBLE" name="load_Tp" value="90"/>
         <par type="BOOL" name="load_isControllable" value="false"/>
     </set>
-    <set id="1">
+    <set id="Network">
     </set>
 </parametersSet>

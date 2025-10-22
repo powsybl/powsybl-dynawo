@@ -107,8 +107,8 @@ class DynaFlowTest extends AbstractDynawoTest {
         network.getLine("_BUS____1-BUS____5-1_AC").getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits()
                 .setPermanentLimit(500.).add();
         network.getLine("_BUS____1-BUS____2-1_AC").getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits()
-                .beginTemporaryLimit().setName("tl").setAcceptableDuration(120).setValue(1200).endTemporaryLimit()
                 .setPermanentLimit(1500.)
+                .beginTemporaryLimit().setName("tl").setAcceptableDuration(120).setValue(1900).endTemporaryLimit()
                 .add();
         network.getVoltageLevelStream().forEach(vl -> vl.setHighVoltageLimit(vl.getNominalV() * 1.09));
         network.getVoltageLevelStream().forEach(vl -> vl.setLowVoltageLimit(vl.getNominalV() * 0.97));
