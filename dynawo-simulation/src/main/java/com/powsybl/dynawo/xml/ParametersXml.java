@@ -23,10 +23,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.*;
@@ -187,6 +184,9 @@ public final class ParametersXml {
         write(parameters.getModelParameters(), MODELS_PARAMETERS_FILENAME, workingDir, "");
         write(List.of(parameters.getNetworkParameters()), NETWORK_PARAMETERS_FILENAME, workingDir, "");
         write(List.of(parameters.getSolverParameters()), SOLVER_PARAMETERS_FILENAME, workingDir, "");
+        if (parameters.getLocalInitParameters() != null) {
+            write(List.of(parameters.getLocalInitParameters()), LOCAL_INIT_PARAMETERS_FILENAME, workingDir, "");
+        }
     }
 
     public static void write(Collection<ParametersSet> parametersSets, String filename, Path workingDir, String dynPrefix) {
