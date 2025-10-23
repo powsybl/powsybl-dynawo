@@ -40,7 +40,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynawo.DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME;
 import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
-import static com.powsybl.dynawo.commons.DynawoConstants.VERSION_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.INFIX_VERSION;
 import static com.powsybl.dynawo.contingency.ContingencyConstants.AGGREGATED_RESULTS;
 
 /**
@@ -83,8 +83,8 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
 
         ReportNode dsaReportNode = DynamicSecurityAnalysisReports.createDynamicSecurityAnalysisReportNode(runParameters.getReportNode(), network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ExecutionEnvironment execEnvVersionFolder = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX + VERSION_FILENAME, false, runParameters.getDynamicSecurityAnalysisParameters().getDebugDir());
-        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnvVersionFolder, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+        ExecutionEnvironment execEnvVersionCheck = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX + INFIX_VERSION, false, runParameters.getDynamicSecurityAnalysisParameters().getDebugDir());
+        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
         DynamicSecurityAnalysisParameters parameters = runParameters.getDynamicSecurityAnalysisParameters();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(parameters.getDynamicSimulationParameters());
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
