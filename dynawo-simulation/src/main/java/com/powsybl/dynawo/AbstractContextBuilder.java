@@ -113,8 +113,10 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     private void setupDynamicModels() {
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId(reportNode).and(supportedVersion(dynawoVersion, reportNode)));
-        if (dynawoParameters.isUseModelSimplifiers()) {
-            uniqueIdsDynamicModels = simplifyModels(uniqueIdsDynamicModels);
+
+        Set<String> modelSimplifierNames = dynawoParameters.getModelSimplifiers();
+        if (!modelSimplifierNames.isEmpty()) {
+            uniqueIdsDynamicModels = simplifyModels(uniqueIdsDynamicModels, modelSimplifierNames);
         }
 
         if (finalStepConfig != null) {
@@ -146,14 +148,18 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         }
     }
 
-    private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm) {
+    private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, Set<String> modelSimplifierNames) {
         Stream<BlackBoxModel> outputBbm = inputBbm;
         for (ModelsRemovalSimplifier modelsSimplifier : ServiceLoader.load(ModelsRemovalSimplifier.class)) {
-            outputBbm = outputBbm.filter(modelsSimplifier.getModelRemovalPredicate(reportNode));
+            if (modelSimplifierNames.contains(modelsSimplifier.getName())) {
+                outputBbm = outputBbm.filter(modelsSimplifier.getModelRemovalPredicate(reportNode));
+            }
         }
         for (ModelsSubstitutionSimplifier modelsSimplifier : ServiceLoader.load(ModelsSubstitutionSimplifier.class)) {
-            outputBbm = outputBbm.map(modelsSimplifier.getModelSubstitutionFunction(network, dynawoParameters, reportNode))
-                    .filter(Objects::nonNull);
+            if (modelSimplifierNames.contains(modelsSimplifier.getName())) {
+                outputBbm = outputBbm.map(modelsSimplifier.getModelSubstitutionFunction(network, dynawoParameters, reportNode))
+                        .filter(Objects::nonNull);
+            }
         }
         return outputBbm;
     }

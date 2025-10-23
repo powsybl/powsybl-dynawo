@@ -18,5 +18,9 @@ import java.util.function.Function;
  */
 public interface ModelsSubstitutionSimplifier {
 
+    String getName();
+
+    String getDescription();
+
     Function<BlackBoxModel, BlackBoxModel> getModelSubstitutionFunction(Network network, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode);
 }

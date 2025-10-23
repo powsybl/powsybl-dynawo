@@ -38,7 +38,7 @@
       },
       "solverType" : "IDA",
       "mergeLoads" : false,
-      "useModelSimplifiers" : false,
+      "modelSimplifiers" : [ "Filter" ],
       "dumpFileParameters" : {
         "exportDumpFile" : false,
         "useDumpFile" : false,

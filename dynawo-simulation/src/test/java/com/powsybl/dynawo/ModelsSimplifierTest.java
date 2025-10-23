@@ -34,13 +34,19 @@ class ModelsSimplifierTest {
     @Test
     void loadRemovalSimplifiers() {
         List<ModelsRemovalSimplifier> simplifiers = Lists.newArrayList(ServiceLoader.load(ModelsRemovalSimplifier.class));
-        assertEquals(1, simplifiers.size());
+        assertEquals(2, simplifiers.size());
+        ModelsRemovalSimplifier simplifier = simplifiers.getFirst();
+        assertEquals("Filter", simplifier.getName());
+        assertEquals("Filter Test", simplifier.getDescription());
     }
 
     @Test
     void loadSubstitutionSimplifiers() {
         List<ModelsSubstitutionSimplifier> simplifiers = Lists.newArrayList(ServiceLoader.load(ModelsSubstitutionSimplifier.class));
-        assertEquals(1, simplifiers.size());
+        assertEquals(2, simplifiers.size());
+        ModelsSubstitutionSimplifier simplifier = simplifiers.getFirst();
+        assertEquals("Substitution", simplifier.getName());
+        assertEquals("Substitution Test", simplifier.getDescription());
     }
 
     @Test
@@ -61,7 +67,9 @@ class ModelsSimplifierTest {
                         .build());
         DynawoSimulationContext context = new DynawoSimulationContext
                 .Builder(network, dynamicModels)
-                .dynawoParameters(DynawoSimulationParameters.load().setUseModelSimplifiers(true))
+                .dynawoParameters(DynawoSimulationParameters.load()
+                        .addModelSimplifier("Filter")
+                        .addModelSimplifier("Substitution"))
                 .build();
         assertEquals(2, context.getBlackBoxDynamicModels().size());
         assertFalse(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("L2")));
@@ -70,6 +78,17 @@ class ModelsSimplifierTest {
 
     @AutoService(ModelsRemovalSimplifier.class)
     public static class ModelsSimplifierFilter implements ModelsRemovalSimplifier {
+
+        @Override
+        public String getName() {
+            return "Filter";
+        }
+
+        @Override
+        public String getDescription() {
+            return "Filter Test";
+        }
+
         @Override
         public Predicate<BlackBoxModel> getModelRemovalPredicate(ReportNode reportNode) {
             return m -> !m.getDynamicModelId().equalsIgnoreCase("L2");
@@ -78,6 +97,17 @@ class ModelsSimplifierTest {
 
     @AutoService(ModelsSubstitutionSimplifier.class)
     public static class ModelsSimplifierSubstitution implements ModelsSubstitutionSimplifier {
+
+        @Override
+        public String getName() {
+            return "Substitution";
+        }
+
+        @Override
+        public String getDescription() {
+            return "Substitution Test";
+        }
+
         @Override
         public Function<BlackBoxModel, BlackBoxModel> getModelSubstitutionFunction(Network network, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode) {
             return m -> {
@@ -89,6 +119,44 @@ class ModelsSimplifierTest {
                 }
                 return m;
             };
+        }
+    }
+
+    @AutoService(ModelsRemovalSimplifier.class)
+    public static class ModelsSimplifierFilter2 implements ModelsRemovalSimplifier {
+
+        @Override
+        public String getName() {
+            return "Filter 2";
+        }
+
+        @Override
+        public String getDescription() {
+            return "Filter 2 Test";
+        }
+
+        @Override
+        public Predicate<BlackBoxModel> getModelRemovalPredicate(ReportNode reportNode) {
+            return m -> true;
+        }
+    }
+
+    @AutoService(ModelsSubstitutionSimplifier.class)
+    public static class ModelsSimplifierSubstitution2 implements ModelsSubstitutionSimplifier {
+
+        @Override
+        public String getName() {
+            return "Substitution 2";
+        }
+
+        @Override
+        public String getDescription() {
+            return "Substitution Test 2";
+        }
+
+        @Override
+        public Function<BlackBoxModel, BlackBoxModel> getModelSubstitutionFunction(Network network, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode) {
+            return Function.identity();
         }
     }
 }

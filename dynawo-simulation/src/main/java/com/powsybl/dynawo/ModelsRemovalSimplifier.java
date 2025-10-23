@@ -17,5 +17,9 @@ import java.util.function.Predicate;
  */
 public interface ModelsRemovalSimplifier {
 
+    String getName();
+
+    String getDescription();
+
     Predicate<BlackBoxModel> getModelRemovalPredicate(ReportNode reportNode);
 }
