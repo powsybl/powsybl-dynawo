@@ -32,7 +32,7 @@
     },
     "solverType" : "SIM",
     "mergeLoads" : false,
-    "useModelSimplifiers" : false,
+    "modelSimplifiers" : [ ],
     "dumpFileParameters" : {
       "exportDumpFile" : false,
       "useDumpFile" : false,
