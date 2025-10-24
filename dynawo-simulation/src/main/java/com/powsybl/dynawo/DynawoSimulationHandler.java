@@ -80,6 +80,11 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         deleteExistingFile(basePath, CURVES_OUTPUT_PATH, CURVES_FILENAME);
         deleteExistingFile(basePath, FSV_OUTPUT_PATH, FSV_OUTPUT_FILENAME);
         writeInputFiles(workingDir);
+
+        Path tmpExecFile = Path.of(System.getProperty("java.io.tmpdir"), ".execTmp.txt");
+        Files.writeString(tmpExecFile, workingDir.toAbsolutePath().toString());
+        LOGGER.info("Execution folder path written to temporary file: {}", tmpExecFile);
+
         return getCommandExecutions(command);
     }
 
