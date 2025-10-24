@@ -13,6 +13,7 @@ import com.powsybl.dynawo.builders.BuilderReports;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * An output variable for <pre>Dynawo</pre> can be defined using {@code staticId} and {@code variable} or {@code dynamicModelId} and {@code variable}.
@@ -51,17 +52,19 @@ public class DynawoOutputVariablesBuilder {
     }
 
     public DynawoOutputVariablesBuilder variables(String... variables) {
-        this.variables = List.of(variables);
+        this.variables = Stream.of(variables).filter(v -> !v.isEmpty()).toList();
         return this;
     }
 
     public DynawoOutputVariablesBuilder variables(List<String> variables) {
-        this.variables = variables;
+        this.variables = variables.stream().filter(v -> !v.isEmpty()).toList();
         return this;
     }
 
     public DynawoOutputVariablesBuilder variable(String variable) {
-        this.variables = List.of(variable);
+        if (!variable.isEmpty()) {
+            this.variables = List.of(variable);
+        }
         return this;
     }
 
@@ -83,9 +86,6 @@ public class DynawoOutputVariablesBuilder {
             isInstantiable = false;
         } else if (variables.isEmpty()) {
             BuilderReports.reportEmptyList(reportNode, VARIABLES_FIELD);
-            isInstantiable = false;
-        } else if (variables.contains("")) {
-            BuilderReports.reportVariableWithNoContent(reportNode, VARIABLES_FIELD);
             isInstantiable = false;
         }
     }

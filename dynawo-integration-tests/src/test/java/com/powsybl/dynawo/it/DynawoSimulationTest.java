@@ -25,7 +25,6 @@ import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAu
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
-import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
 import com.powsybl.dynawo.suppliers.events.DynawoEventModelsSupplier;
@@ -312,24 +311,6 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         DynamicSimulationResult result = setupIEEE14SimulationWithWrongGroovyVariables(reportNode).get();
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
         assertTrue(result.getStatusText().contains("CRV file couldn't be parsed"));
-    }
-
-    @Test
-    void testIeee14WithGroovyVariablesNoContent() {
-        ReportNode reportNode = ReportNode.newRootReportNode()
-                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
-                        PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
-                .withMessageTemplate("testIeee14WithGroovyVariablesNoContent")
-                .build();
-
-        List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder(reportNode)
-                .staticId("GEN")
-                .variables("", "")
-                .build();
-
-        assertEquals(0, outputVariables.size());
-        assertTrue(reportNode.getChildren().stream().anyMatch(child -> "dynawo.dynasim.VariableWithNoContent".equals(child.getMessageKey())));
     }
 
     private void checkTimeLineEvent(TimelineEvent event, double time, String modelName, String message) {

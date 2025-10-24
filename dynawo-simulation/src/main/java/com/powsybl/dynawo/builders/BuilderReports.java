@@ -145,14 +145,6 @@ public final class BuilderReports {
                 .add();
     }
 
-    public static void reportVariableWithNoContent(ReportNode reportNode, String fieldName) {
-        reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynasim.VariableWithNoContent")
-                .withUntypedValue(FIELD_NAME, fieldName)
-                .withSeverity(TypedValue.WARN_SEVERITY)
-                .add();
-    }
-
     public static void reportFieldSetWithWrongEquipment(ReportNode reportNode, String fieldName, IdentifiableType equipmentType, String staticId) {
         reportFieldSetWithWrongEquipment(reportNode, fieldName, equipmentType.toString() + " " + staticId);
     }
