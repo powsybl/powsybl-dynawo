@@ -172,12 +172,18 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         }
     }
 
-    private void setCurves(Path workingDir) {
+    private void setCurves(Path workingDir) throws IOException {
         Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).resolve(CURVES_FILENAME);
         if (Files.exists(curvesPath)) {
-            TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false,
-                            TimeSeries.TimeFormat.FRACTIONS_OF_SECOND, true)).values()
-                    .forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
+            if (Files.size(curvesPath) != 0) {
+                TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false,
+                                TimeSeries.TimeFormat.FRACTIONS_OF_SECOND, true)).values()
+                        .forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
+            } else {
+                LOGGER.warn("CRV file couldn't be parsed");
+                status = DynamicSimulationResult.Status.FAILURE;
+                statusText = "CRV file couldn't be parsed";
+            }
         } else {
             LOGGER.warn("Curves folder not found");
             status = DynamicSimulationResult.Status.FAILURE;
@@ -185,7 +191,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         }
     }
 
-    private void setFinalStateValues(Path workingDir) {
+    private void setFinalStateValues(Path workingDir) throws IOException {
         Path fsvPath = workingDir.resolve(FSV_OUTPUT_PATH).resolve(FSV_OUTPUT_FILENAME);
         if (Files.exists(fsvPath)) {
             new CsvFsvParser(';').parse(fsvPath).forEach(e -> fsv.put(e.model() + "_" + e.variable(), e.value()));
