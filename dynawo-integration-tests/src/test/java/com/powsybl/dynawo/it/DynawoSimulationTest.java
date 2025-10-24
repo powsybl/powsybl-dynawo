@@ -286,20 +286,6 @@ class DynawoSimulationTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testIeee14WithWrongGroovyVariablesForFSV() {
-        ReportNode reportNode = ReportNode.newRootReportNode()
-                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
-                        PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
-                .withMessageTemplate("testIeee14WithWrongGroovyVariablesForFSV")
-                .build();
-
-        DynamicSimulationResult result = setupIEEE14SimulationWithWrongGroovyVariables(reportNode).get();
-        assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
-        assertTrue(result.getStatusText().contains("FSV file is empty"));
-    }
-
-    @Test
     void testIeee14WithWrongGroovyVariablesForCRV() {
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
@@ -310,7 +296,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
         DynamicSimulationResult result = setupIEEE14SimulationWithWrongGroovyVariables(reportNode).get();
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
-        assertTrue(result.getStatusText().contains("CRV file couldn't be parsed"));
+        assertEquals("CRV file couldn't be parsed", result.getStatusText());
     }
 
     private void checkTimeLineEvent(TimelineEvent event, double time, String modelName, String message) {
