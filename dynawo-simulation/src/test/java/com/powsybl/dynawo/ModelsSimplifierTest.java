@@ -8,19 +8,21 @@
 package com.powsybl.dynawo;
 
 import com.google.auto.service.AutoService;
-import com.google.common.collect.Lists;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.models.generators.BaseGenerator;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.svarcs.BaseStaticVarCompensatorBuilder;
+import com.powsybl.dynawo.simplifiers.ModelSimplifiers;
+import com.powsybl.dynawo.simplifiers.ModelsRemovalSimplifier;
+import com.powsybl.dynawo.simplifiers.ModelsSubstitutionSimplifier;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.ServiceLoader;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -31,9 +33,16 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ModelsSimplifierTest {
 
+    private static ModelSimplifiers MODELS_SIMPLIFIERS;
+
+    @BeforeAll
+    static void beforeAll() {
+        MODELS_SIMPLIFIERS = new ModelSimplifiers();
+    }
+
     @Test
     void loadRemovalSimplifiers() {
-        List<ModelsRemovalSimplifier> simplifiers = Lists.newArrayList(ServiceLoader.load(ModelsRemovalSimplifier.class));
+        List<ModelsRemovalSimplifier> simplifiers = MODELS_SIMPLIFIERS.getModelsRemovalSimplifiers();
         assertEquals(2, simplifiers.size());
         ModelsRemovalSimplifier simplifier = simplifiers.getFirst();
         assertEquals("Filter", simplifier.getName());
@@ -42,7 +51,7 @@ class ModelsSimplifierTest {
 
     @Test
     void loadSubstitutionSimplifiers() {
-        List<ModelsSubstitutionSimplifier> simplifiers = Lists.newArrayList(ServiceLoader.load(ModelsSubstitutionSimplifier.class));
+        List<ModelsSubstitutionSimplifier> simplifiers = MODELS_SIMPLIFIERS.getModelsSubstitutionSimplifiers();
         assertEquals(2, simplifiers.size());
         ModelsSubstitutionSimplifier simplifier = simplifiers.getFirst();
         assertEquals("Substitution", simplifier.getName());

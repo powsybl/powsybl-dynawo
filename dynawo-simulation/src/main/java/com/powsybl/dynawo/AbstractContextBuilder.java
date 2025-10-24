@@ -19,6 +19,9 @@ import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.AbstractBus;
 import com.powsybl.dynawo.models.frequencysynchronizers.*;
 import com.powsybl.dynawo.parameters.ParametersSet;
+import com.powsybl.dynawo.simplifiers.ModelSimplifiers;
+import com.powsybl.dynawo.simplifiers.ModelsRemovalSimplifier;
+import com.powsybl.dynawo.simplifiers.ModelsSubstitutionSimplifier;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 
@@ -149,13 +152,14 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     }
 
     private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, Set<String> modelSimplifierNames) {
+        ModelSimplifiers modelSimplifiers = new ModelSimplifiers();
         Stream<BlackBoxModel> outputBbm = inputBbm;
-        for (ModelsRemovalSimplifier modelsSimplifier : ServiceLoader.load(ModelsRemovalSimplifier.class)) {
+        for (ModelsRemovalSimplifier modelsSimplifier : modelSimplifiers.getModelsRemovalSimplifiers()) {
             if (modelSimplifierNames.contains(modelsSimplifier.getName())) {
                 outputBbm = outputBbm.filter(modelsSimplifier.getModelRemovalPredicate(reportNode));
             }
         }
-        for (ModelsSubstitutionSimplifier modelsSimplifier : ServiceLoader.load(ModelsSubstitutionSimplifier.class)) {
+        for (ModelsSubstitutionSimplifier modelsSimplifier : modelSimplifiers.getModelsSubstitutionSimplifiers()) {
             if (modelSimplifierNames.contains(modelsSimplifier.getName())) {
                 outputBbm = outputBbm.map(modelsSimplifier.getModelSubstitutionFunction(network, dynawoParameters, reportNode))
                         .filter(Objects::nonNull);

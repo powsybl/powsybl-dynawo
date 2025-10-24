@@ -5,9 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo;
+package com.powsybl.dynawo.simplifiers;
 
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
 
@@ -16,11 +17,7 @@ import java.util.function.Function;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface ModelsSubstitutionSimplifier {
-
-    String getName();
-
-    String getDescription();
+public interface ModelsSubstitutionSimplifier extends ModelSimplifierInfo {
 
     Function<BlackBoxModel, BlackBoxModel> getModelSubstitutionFunction(Network network, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode);
 }
