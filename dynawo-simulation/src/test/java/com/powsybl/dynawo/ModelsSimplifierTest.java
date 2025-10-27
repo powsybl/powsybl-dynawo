@@ -14,9 +14,7 @@ import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.svarcs.BaseStaticVarCompensatorBuilder;
-import com.powsybl.dynawo.simplifiers.ModelSimplifiers;
-import com.powsybl.dynawo.simplifiers.ModelsRemovalSimplifier;
-import com.powsybl.dynawo.simplifiers.ModelsSubstitutionSimplifier;
+import com.powsybl.dynawo.simplifiers.*;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.api.BeforeAll;
@@ -44,18 +42,18 @@ class ModelsSimplifierTest {
     void loadRemovalSimplifiers() {
         List<ModelsRemovalSimplifier> simplifiers = MODELS_SIMPLIFIERS.getModelsRemovalSimplifiers();
         assertEquals(2, simplifiers.size());
-        ModelsRemovalSimplifier simplifier = simplifiers.getFirst();
-        assertEquals("Filter", simplifier.getName());
-        assertEquals("Filter Test", simplifier.getDescription());
+        ModelSimplifierInfo info = simplifiers.getFirst().getSimplifierInfo();
+        ModelSimplifierInfo expected = new ModelSimplifierInfo("Filter", "Filter Test", SimplifierType.REMOVAL);
+        assertEquals(expected, info);
     }
 
     @Test
     void loadSubstitutionSimplifiers() {
         List<ModelsSubstitutionSimplifier> simplifiers = MODELS_SIMPLIFIERS.getModelsSubstitutionSimplifiers();
         assertEquals(2, simplifiers.size());
-        ModelsSubstitutionSimplifier simplifier = simplifiers.getFirst();
-        assertEquals("Substitution", simplifier.getName());
-        assertEquals("Substitution Test", simplifier.getDescription());
+        ModelSimplifierInfo info = simplifiers.getFirst().getSimplifierInfo();
+        ModelSimplifierInfo expected = new ModelSimplifierInfo("Substitution", "Substitution Test", SimplifierType.SUBSTITUTION);
+        assertEquals(expected, info);
     }
 
     @Test
@@ -89,33 +87,18 @@ class ModelsSimplifierTest {
     public static class ModelsSimplifierFilter implements ModelsRemovalSimplifier {
 
         @Override
-        public String getName() {
-            return "Filter";
-        }
-
-        @Override
-        public String getDescription() {
-            return "Filter Test";
-        }
-
-        @Override
         public Predicate<BlackBoxModel> getModelRemovalPredicate(ReportNode reportNode) {
             return m -> !m.getDynamicModelId().equalsIgnoreCase("L2");
+        }
+
+        @Override
+        public ModelSimplifierInfo getSimplifierInfo() {
+            return new ModelSimplifierInfo("Filter", "Filter Test", SIMPLIFIER_TYPE);
         }
     }
 
     @AutoService(ModelsSubstitutionSimplifier.class)
     public static class ModelsSimplifierSubstitution implements ModelsSubstitutionSimplifier {
-
-        @Override
-        public String getName() {
-            return "Substitution";
-        }
-
-        @Override
-        public String getDescription() {
-            return "Substitution Test";
-        }
 
         @Override
         public Function<BlackBoxModel, BlackBoxModel> getModelSubstitutionFunction(Network network, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode) {
@@ -129,24 +112,24 @@ class ModelsSimplifierTest {
                 return m;
             };
         }
+
+        @Override
+        public ModelSimplifierInfo getSimplifierInfo() {
+            return new ModelSimplifierInfo("Substitution", "Substitution Test", SIMPLIFIER_TYPE);
+        }
     }
 
     @AutoService(ModelsRemovalSimplifier.class)
     public static class ModelsSimplifierFilter2 implements ModelsRemovalSimplifier {
 
         @Override
-        public String getName() {
-            return "Filter 2";
-        }
-
-        @Override
-        public String getDescription() {
-            return "Filter 2 Test";
-        }
-
-        @Override
         public Predicate<BlackBoxModel> getModelRemovalPredicate(ReportNode reportNode) {
             return m -> true;
+        }
+
+        @Override
+        public ModelSimplifierInfo getSimplifierInfo() {
+            return new ModelSimplifierInfo("Filter 2", "Filter 2 Test", SIMPLIFIER_TYPE);
         }
     }
 
@@ -154,18 +137,13 @@ class ModelsSimplifierTest {
     public static class ModelsSimplifierSubstitution2 implements ModelsSubstitutionSimplifier {
 
         @Override
-        public String getName() {
-            return "Substitution 2";
-        }
-
-        @Override
-        public String getDescription() {
-            return "Substitution Test 2";
-        }
-
-        @Override
         public Function<BlackBoxModel, BlackBoxModel> getModelSubstitutionFunction(Network network, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode) {
             return Function.identity();
+        }
+
+        @Override
+        public ModelSimplifierInfo getSimplifierInfo() {
+            return new ModelSimplifierInfo("Substitution 2", "Substitution Test 2", SIMPLIFIER_TYPE);
         }
     }
 }

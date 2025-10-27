@@ -32,10 +32,14 @@ public class ModelSimplifiers {
 
     private final List<ModelsRemovalSimplifier> modelsRemovalSimplifiers;
     private final List<ModelsSubstitutionSimplifier> modelsSubstitutionSimplifiers;
+    private final List<ModelSimplifierInfo> simplifierInfos;
 
     public ModelSimplifiers() {
         this.modelsRemovalSimplifiers = MODELS_REMOVAL_SUPPLIER.get();
         this.modelsSubstitutionSimplifiers = MODELS_SUBSTITUTION_SUPPLIER.get();
+        this.simplifierInfos = Stream.concat(modelsRemovalSimplifiers.stream(), modelsSubstitutionSimplifiers.stream())
+                .map(ModelSimplifier::getSimplifierInfo)
+                .toList();
     }
 
     public List<ModelsRemovalSimplifier> getModelsRemovalSimplifiers() {
@@ -46,13 +50,13 @@ public class ModelSimplifiers {
         return modelsSubstitutionSimplifiers;
     }
 
-    public List<String> getModelSimplifierName() {
-        return Stream.concat(modelsRemovalSimplifiers.stream(), modelsSubstitutionSimplifiers.stream())
-                .map(ModelSimplifierInfo::getName)
+    public List<String> getModelSimplifierNames() {
+        return simplifierInfos.stream()
+                .map(ModelSimplifierInfo::name)
                 .toList();
     }
 
-    public List<ModelSimplifierInfo> getModelSimplifierInfo() {
-        return Stream.concat(modelsRemovalSimplifiers.stream(), modelsSubstitutionSimplifiers.stream()).toList();
+    public List<ModelSimplifierInfo> getModelSimplifierInfos() {
+        return simplifierInfos;
     }
 }

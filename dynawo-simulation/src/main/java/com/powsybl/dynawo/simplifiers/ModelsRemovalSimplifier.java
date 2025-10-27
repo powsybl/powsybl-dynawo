@@ -15,7 +15,9 @@ import java.util.function.Predicate;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface ModelsRemovalSimplifier extends ModelSimplifierInfo {
+public interface ModelsRemovalSimplifier extends ModelSimplifier {
+
+    SimplifierType SIMPLIFIER_TYPE = SimplifierType.REMOVAL;
 
     Predicate<BlackBoxModel> getModelRemovalPredicate(ReportNode reportNode);
 }

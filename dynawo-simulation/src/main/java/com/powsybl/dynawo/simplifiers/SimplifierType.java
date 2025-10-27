@@ -7,16 +7,17 @@
  */
 package com.powsybl.dynawo.simplifiers;
 
-import java.util.Objects;
-
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record ModelSimplifierInfo(String name, String description, SimplifierType simplifierType) {
+public enum SimplifierType {
 
-    public ModelSimplifierInfo(String name, String description, SimplifierType simplifierType) {
-        this.name = Objects.requireNonNull(name);
-        this.description = description;
-        this.simplifierType = simplifierType;
-    }
+    /**
+     * Remove dynamic models
+     */
+    REMOVAL,
+    /**
+     * Replace, remove dynamic models or modify model parameter set
+     */
+    SUBSTITUTION
 }

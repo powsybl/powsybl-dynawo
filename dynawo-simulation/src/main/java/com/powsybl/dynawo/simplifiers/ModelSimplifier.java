@@ -7,16 +7,10 @@
  */
 package com.powsybl.dynawo.simplifiers;
 
-import java.util.Objects;
-
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record ModelSimplifierInfo(String name, String description, SimplifierType simplifierType) {
+public interface ModelSimplifier {
 
-    public ModelSimplifierInfo(String name, String description, SimplifierType simplifierType) {
-        this.name = Objects.requireNonNull(name);
-        this.description = description;
-        this.simplifierType = simplifierType;
-    }
+    ModelSimplifierInfo getSimplifierInfo();
 }

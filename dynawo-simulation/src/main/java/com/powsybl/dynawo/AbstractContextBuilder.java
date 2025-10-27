@@ -155,12 +155,12 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         ModelSimplifiers modelSimplifiers = new ModelSimplifiers();
         Stream<BlackBoxModel> outputBbm = inputBbm;
         for (ModelsRemovalSimplifier modelsSimplifier : modelSimplifiers.getModelsRemovalSimplifiers()) {
-            if (modelSimplifierNames.contains(modelsSimplifier.getName())) {
+            if (modelSimplifierNames.contains(modelsSimplifier.getSimplifierInfo().name())) {
                 outputBbm = outputBbm.filter(modelsSimplifier.getModelRemovalPredicate(reportNode));
             }
         }
         for (ModelsSubstitutionSimplifier modelsSimplifier : modelSimplifiers.getModelsSubstitutionSimplifiers()) {
-            if (modelSimplifierNames.contains(modelsSimplifier.getName())) {
+            if (modelSimplifierNames.contains(modelsSimplifier.getSimplifierInfo().name())) {
                 outputBbm = outputBbm.map(modelsSimplifier.getModelSubstitutionFunction(network, dynawoParameters, reportNode))
                         .filter(Objects::nonNull);
             }

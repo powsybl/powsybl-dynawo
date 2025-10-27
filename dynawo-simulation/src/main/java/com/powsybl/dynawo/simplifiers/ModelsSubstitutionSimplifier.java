@@ -17,7 +17,9 @@ import java.util.function.Function;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface ModelsSubstitutionSimplifier extends ModelSimplifierInfo {
+public interface ModelsSubstitutionSimplifier extends ModelSimplifier {
+
+    SimplifierType SIMPLIFIER_TYPE = SimplifierType.SUBSTITUTION;
 
     Function<BlackBoxModel, BlackBoxModel> getModelSubstitutionFunction(Network network, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode);
 }
