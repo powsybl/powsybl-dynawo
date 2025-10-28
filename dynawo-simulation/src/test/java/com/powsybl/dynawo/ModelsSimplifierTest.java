@@ -31,16 +31,16 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ModelsSimplifierTest {
 
-    private static ModelSimplifiers MODELS_SIMPLIFIERS;
+    private static ModelSimplifiers modelSimplifiers;
 
     @BeforeAll
     static void beforeAll() {
-        MODELS_SIMPLIFIERS = new ModelSimplifiers();
+        modelSimplifiers = new ModelSimplifiers();
     }
 
     @Test
     void loadRemovalSimplifiers() {
-        List<ModelsRemovalSimplifier> simplifiers = MODELS_SIMPLIFIERS.getModelsRemovalSimplifiers();
+        List<ModelsRemovalSimplifier> simplifiers = modelSimplifiers.getModelsRemovalSimplifiers();
         assertEquals(2, simplifiers.size());
         ModelSimplifierInfo info = simplifiers.getFirst().getSimplifierInfo();
         ModelSimplifierInfo expected = new ModelSimplifierInfo("Filter", "Filter Test", SimplifierType.REMOVAL);
@@ -49,7 +49,7 @@ class ModelsSimplifierTest {
 
     @Test
     void loadSubstitutionSimplifiers() {
-        List<ModelsSubstitutionSimplifier> simplifiers = MODELS_SIMPLIFIERS.getModelsSubstitutionSimplifiers();
+        List<ModelsSubstitutionSimplifier> simplifiers = modelSimplifiers.getModelsSubstitutionSimplifiers();
         assertEquals(2, simplifiers.size());
         ModelSimplifierInfo info = simplifiers.getFirst().getSimplifierInfo();
         ModelSimplifierInfo expected = new ModelSimplifierInfo("Substitution", "Substitution Test", SimplifierType.SUBSTITUTION);
