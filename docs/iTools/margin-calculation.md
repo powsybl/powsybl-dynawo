@@ -5,6 +5,7 @@ In the end, the results and the modified network can be exported to files.
 
 ## Usage
 ```
+$> itools margin-calculation --help
 usage: itools [OPTIONS] margin-calculation --case-file <FILE>
        --contingencies-file <FILE> --dynamic-models-file <FILE> [--help] [-I
        <property=value>] [--import-parameters <IMPORT_PARAMETERS>]
