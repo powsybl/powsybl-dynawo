@@ -12,6 +12,8 @@ import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
+import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
@@ -75,7 +77,7 @@ class EnergizedSimplifierTest {
                         """
                         + Simplifier test
                            + Energized model filter
-                              Equipment NGEN_NHV1 is not energized, model TransformerFixedRatio NGEN_NHV1 will be skipped
+                              Bus NGEN is not energized, model TransformerFixedRatio NGEN_NHV1 will be skipped
                         """),
                 Arguments.of(EurostagTutorialExample1Factory.create(),
                         (Consumer<Network>) n -> n.getBusBreakerView().getBus("NGEN").setV(1.0),
@@ -86,7 +88,7 @@ class EnergizedSimplifierTest {
                         """
                         + Simplifier test
                            + Energized model filter
-                              Equipment NGEN_NHV1 is not energized, model TransformerFixedRatio NGEN_NHV1 will be skipped
+                              Bus NHV1 is not energized, model TransformerFixedRatio NGEN_NHV1 will be skipped
                         """),
                 Arguments.of(HvdcTestNetwork.createVsc(),
                         (Consumer<Network>) n -> n.getBusBreakerView().getBus("B1").setV(1.0),
@@ -97,7 +99,7 @@ class EnergizedSimplifierTest {
                         """
                         + Simplifier test
                            + Energized model filter
-                              Equipment L is not energized, model HvdcPVInverted L will be skipped
+                              Bus VL2_2 is not energized, model HvdcPVInverted L will be skipped
                         """),
                 Arguments.of(HvdcTestNetwork.createVsc(),
                         (Consumer<Network>) n -> { },
@@ -108,7 +110,51 @@ class EnergizedSimplifierTest {
                         """
                         + Simplifier test
                            + Energized model filter
-                              Equipment L is not energized, model HvdcPVDanglingInverted L will be skipped
+                              Bus B1 is not energized, model HvdcPVDanglingInverted L will be skipped
+                        """),
+                Arguments.of(EurostagTutorialExample1Factory.create(),
+                        (Consumer<Network>) n -> n.getLine("NHV1_NHV2_1").getTerminal1().disconnect(),
+                        (Function<Network, BlackBoxModel>) n -> DynamicOverloadManagementSystemBuilder.of(n)
+                                .dynamicModelId("OMS")
+                                .parameterSetId("oms")
+                                .controlledBranch("NHV1_NHV2_1")
+                                .iMeasurement("NHV1_NHV2_2")
+                                .iMeasurementSide(TwoSides.TWO)
+                                .build(),
+                        """
+                        + Simplifier test
+                           + Energized model filter
+                              Equipment NHV1_NHV2_1 terminal is not connected, model CurrentLimitAutomaton OMS will be skipped
+                        """),
+                Arguments.of(EurostagTutorialExample1Factory.create(),
+                        (Consumer<Network>) n -> n.getBusBreakerView().getBus("NGEN").setV(1.0),
+                        (Function<Network, BlackBoxModel>) n -> DynamicOverloadManagementSystemBuilder.of(n)
+                                .dynamicModelId("OMS")
+                                .parameterSetId("oms")
+                                .controlledBranch("NHV1_NHV2_1")
+                                .iMeasurement("NGEN_NHV1")
+                                .iMeasurementSide(TwoSides.TWO)
+                                .build(),
+                        """
+                        + Simplifier test
+                           + Energized model filter
+                              Bus NHV1 is not energized, model CurrentLimitAutomaton OMS will be skipped
+                        """),
+                Arguments.of(EurostagTutorialExample1Factory.create(),
+                        (Consumer<Network>) n -> n.getBusBreakerView().getBus("NGEN").setV(1.0),
+                        (Function<Network, BlackBoxModel>) n -> DynamicTwoLevelOverloadManagementSystemBuilder.of(n)
+                                .dynamicModelId("OMSTL")
+                                .parameterSetId("oms")
+                                .controlledBranch("NHV1_NHV2_1")
+                                .iMeasurement1("NHV1_NHV2_1")
+                                .iMeasurement1Side(TwoSides.ONE)
+                                .iMeasurement2("NGEN_NHV1")
+                                .iMeasurement2Side(TwoSides.TWO)
+                                .build(),
+                        """
+                        + Simplifier test
+                           + Energized model filter
+                              Bus NHV1 is not energized, model CurrentLimitAutomatonTwoLevels OMSTL will be skipped
                         """)
         );
     }

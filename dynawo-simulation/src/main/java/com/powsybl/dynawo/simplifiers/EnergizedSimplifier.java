@@ -4,6 +4,8 @@ import com.google.auto.service.AutoService;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
+import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystem;
+import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelOverloadManagementSystem;
 import com.powsybl.dynawo.models.hvdc.BaseHvdc;
 import com.powsybl.iidm.network.*;
 
@@ -14,6 +16,11 @@ import java.util.function.Predicate;
  * <ul>
  *     <li>Equipment terminals are all connected (except dangling sides)</li>
  *     <li>Each terminal buses have a voltage level on</li>
+ * </ul>
+ * Filter overload management systems :
+ * <ul>
+ *     <li>monitored branch is energized</li>
+ *     <li>measuring point is energized</li>
  * </ul>
  *
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -33,11 +40,11 @@ public final class EnergizedSimplifier implements ModelsRemovalSimplifier {
     @Override
     public Predicate<BlackBoxModel> getModelRemovalPredicate(ReportNode reportNode) {
         ReportNode simplifierReport = SimplifierReports.createEnergizedSimplifierReportNode(reportNode);
-        return model -> {
-            if (model instanceof EquipmentBlackBoxModel eqBbm) {
-                return isEnergized(eqBbm, simplifierReport);
-            }
-            return true;
+        return model -> switch (model) {
+            case EquipmentBlackBoxModel eq -> isEnergized(eq, simplifierReport);
+            case DynamicTwoLevelOverloadManagementSystem tl -> isEnergized(tl, simplifierReport);
+            case DynamicOverloadManagementSystem ov -> isEnergized(ov, simplifierReport);
+            default -> true;
         };
     }
 
@@ -54,9 +61,22 @@ public final class EnergizedSimplifier implements ModelsRemovalSimplifier {
         };
     }
 
+    private static boolean isEnergized(DynamicTwoLevelOverloadManagementSystem bbm, ReportNode reportNode) {
+        return isEnergized((DynamicOverloadManagementSystem) bbm, reportNode)
+                && isEnergized(bbm.getSecondMeasuredTerminal(), reportNode, bbm);
+    }
+
+    private static boolean isEnergized(DynamicOverloadManagementSystem bbm, ReportNode reportNode) {
+        Branch<?> controlledBranch = bbm.getControlledBranch();
+        return isEnergized(controlledBranch.getTerminal1(), reportNode, bbm)
+                && isEnergized(controlledBranch.getTerminal2(), reportNode, bbm)
+                && isEnergized(bbm.getMeasuredTerminal(), reportNode, bbm);
+    }
+
     private static boolean isEnergized(Terminal terminal, ReportNode reportNode, BlackBoxModel bbm) {
         if (!terminal.isConnected()) {
-            SimplifierReports.reportDisconnectedTerminal(reportNode, bbm.getName(), bbm.getDynamicModelId());
+            SimplifierReports.reportDisconnectedTerminal(reportNode, bbm.getName(), bbm.getDynamicModelId(),
+                    terminal.getConnectable().getId());
             return false;
         }
         return isEnergized(terminal.getBusBreakerView().getBus(), reportNode, bbm);
@@ -64,7 +84,7 @@ public final class EnergizedSimplifier implements ModelsRemovalSimplifier {
 
     private static boolean isEnergized(Bus bus, ReportNode reportNode, BlackBoxModel bbm) {
         if (Double.isNaN(bus.getV())) {
-            SimplifierReports.reportVoltageLevelOff(reportNode, bbm.getName(), bbm.getDynamicModelId());
+            SimplifierReports.reportVoltageLevelOff(reportNode, bbm.getName(), bbm.getDynamicModelId(), bus.getId());
             return false;
         }
         return true;

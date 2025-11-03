@@ -15,8 +15,9 @@ import com.powsybl.commons.report.TypedValue;
  */
 public final class SimplifierReports {
 
-    private static final String STATIC_ID = "staticId";
+    private static final String EQUIPMENT_ID = "equipmentId";
     private static final String MODEL_NAME = "modelName";
+    private static final String MODEL_ID = "modelId";
 
     private SimplifierReports() {
     }
@@ -28,19 +29,21 @@ public final class SimplifierReports {
                 .add();
     }
 
-    static void reportDisconnectedTerminal(ReportNode reportNode, String modelName, String staticId) {
+    static void reportDisconnectedTerminal(ReportNode reportNode, String modelName, String modelId, String equipmentId) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.disconnectedTerminal")
                 .withUntypedValue(MODEL_NAME, modelName)
-                .withTypedValue(STATIC_ID, staticId, TypedValue.ID)
+                .withUntypedValue(MODEL_ID, modelId)
+                .withTypedValue(EQUIPMENT_ID, equipmentId, TypedValue.ID)
                 .add();
     }
 
-    static void reportVoltageLevelOff(ReportNode reportNode, String modelName, String staticId) {
+    static void reportVoltageLevelOff(ReportNode reportNode, String modelName, String modelId, String equipmentId) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.voltageLevelOff")
                 .withUntypedValue(MODEL_NAME, modelName)
-                .withTypedValue(STATIC_ID, staticId, TypedValue.ID)
+                .withUntypedValue(MODEL_ID, modelId)
+                .withTypedValue(EQUIPMENT_ID, equipmentId, TypedValue.ID)
                 .add();
     }
 
@@ -55,7 +58,7 @@ public final class SimplifierReports {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.subConnectedComponent")
                 .withUntypedValue(MODEL_NAME, modelName)
-                .withTypedValue(STATIC_ID, staticId, TypedValue.ID)
+                .withTypedValue("staticId", staticId, TypedValue.ID)
                 .add();
     }
 }
