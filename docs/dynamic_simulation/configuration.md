@@ -78,7 +78,7 @@ The default value is `null`.
 The default value is `null`.
 
 **modelSimplifiers**  
-`modelSimplifiers` defines the list of simplifier to use before macro connection computation **(TODO: link)**.  
+`modelSimplifiers` defines the list of simplifier to use before macro connection computation (see [here](model-simplifiers.md)).  
 The default value is an empty list.
 
 **mergeLoads**  
