@@ -5,16 +5,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo;
+package com.powsybl.dynawo.simplifiers;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.generators.BaseGenerator;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.svarcs.BaseStaticVarCompensatorBuilder;
-import com.powsybl.dynawo.simplifiers.*;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.api.BeforeAll;
@@ -41,7 +42,7 @@ class ModelsSimplifierTest {
     @Test
     void loadRemovalSimplifiers() {
         List<ModelsRemovalSimplifier> simplifiers = modelSimplifiers.getModelsRemovalSimplifiers();
-        assertEquals(2, simplifiers.size());
+        assertEquals(4, simplifiers.size());
         ModelSimplifierInfo info = simplifiers.getFirst().getSimplifierInfo();
         ModelSimplifierInfo expected = new ModelSimplifierInfo("Filter", "Filter Test", SimplifierType.REMOVAL);
         assertEquals(expected, info);
