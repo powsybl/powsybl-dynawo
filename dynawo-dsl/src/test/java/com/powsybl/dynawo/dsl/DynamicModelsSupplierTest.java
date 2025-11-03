@@ -239,9 +239,9 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                            + Groovy Dynamic Models Supplier
                               + Model TapChangerBlockingAutomaton ZAB instantiation KO
-                                 None of '[LOAD, Wrong_ID]' values from 'uMeasurements' field where found for energized and in main component equipment type(s) BUS/BUSBAR_SECTION
-                                 'uMeasurements' field value 'NGEN' should be energized and in main component
-                                 None of '[NGEN_NHV1, NGEN]' values from 'uMeasurements' field where found for energized and in main component equipment type(s) BUS/BUSBAR_SECTION
+                                 None of '[LOAD, Wrong_ID]' values from 'uMeasurements' field where found for energized and in main connected component equipment type(s) BUS/BUSBAR_SECTION
+                                 'uMeasurements' field value 'NGEN' should be energized and in main connected component
+                                 None of '[NGEN_NHV1, NGEN]' values from 'uMeasurements' field where found for energized and in main connected component equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' list is empty
                         """),
                 Arguments.of("/warnings/tapChangerCompatible.groovy", EurostagTutorialExample1Factory.create(),
