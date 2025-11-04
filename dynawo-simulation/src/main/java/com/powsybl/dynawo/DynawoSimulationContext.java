@@ -34,6 +34,7 @@ public class DynawoSimulationContext {
     private final SimulationTime simulationTime;
     private final SimulationTime finalStepTime;
     private final DynawoVersion dynawoVersion;
+    private final boolean defaultConfigVersion;
 
     public static class Builder extends AbstractContextBuilder<Builder> {
 
@@ -59,6 +60,11 @@ public class DynawoSimulationContext {
 
         public Builder finalStepConfig(FinalStepConfig finalStepConfig) {
             this.finalStepConfig = Objects.requireNonNull(finalStepConfig);
+            return self();
+        }
+
+        public Builder defaultConfigVersion(boolean enabled) {
+            this.defaultConfigVersion = enabled;
             return self();
         }
 
@@ -99,6 +105,7 @@ public class DynawoSimulationContext {
         this.simulationModels = builder.simulationModels;
         this.finalStepModels = builder.finalStepModels;
         this.dynawoVersion = builder.dynawoVersion;
+        this.defaultConfigVersion = builder.defaultConfigVersion;
     }
 
     public Network getNetwork() {
@@ -163,5 +170,9 @@ public class DynawoSimulationContext {
 
     public String getCurrentDynawoVersion() {
         return dynawoVersion.toString();
+    }
+
+    public boolean isDefaultConfigVersion() {
+        return defaultConfigVersion;
     }
 }

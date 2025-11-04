@@ -14,13 +14,15 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationParameters.SolverType;
 import com.powsybl.dynawo.SimulationTime;
 import com.powsybl.dynawo.commons.ExportMode;
-import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
-import com.powsybl.tools.PowsyblCoreVersion;
+import com.powsybl.tools.Version;
 
+import javax.swing.*;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -186,14 +188,27 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("lvlFilter", DynawoSimulationParameters.LogLevel.DEBUG.toString());
     }
 
-    private static void writeAdditionnalInfos(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
-        String currentPowsyblVersion = new PowsyblCoreVersion().getMavenProjectVersion();
-        String currentPowsyblDynawoVersion = new PowsyblDynawoVersion().getMavenProjectVersion();
+    private static void writeAdditionnalInfos(XMLStreamWriter writer, DynawoSimulationContext context) {
         String currentDynawoVersion = context.getCurrentDynawoVersion();
-
-        writer.writeComment("cvgPowsyblDynawoVersion = Powsybl-Dynawo : " + currentPowsyblDynawoVersion);
-        writer.writeComment("cvgPowsyblVersion = Powsybl : " + currentPowsyblVersion);
-        writer.writeComment("cvgDynawoVersion = Dynawo : " + currentDynawoVersion);
-
+        List<String> versions = new ArrayList<>();
+        versions.add("powsybl-dynawo: " + currentDynawoVersion);
+        if (context.isDefaultConfigVersion()) {
+            versions.add("dynawo_version: 1.5.0");
+            versions.add("powsybl_version: 7.0.0");
+        } else {
+            versions.addAll(
+                    Version.list()
+                            .stream()
+                            .map(version -> version.getRepositoryName() + ": " + version.getMavenProjectVersion())
+                            .toList()
+            );
+        }
+        versions.forEach(comment -> {
+            try {
+                writer.writeComment(comment);
+            } catch (XMLStreamException e) {
+                throw new RuntimeException("Error while writing XML comment: " + comment, e);
+            }
+        });
     }
 }

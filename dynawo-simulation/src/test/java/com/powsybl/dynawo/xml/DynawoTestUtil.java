@@ -31,9 +31,7 @@ import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 
@@ -46,6 +44,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
     protected List<BlackBoxModel> dynamicModels;
     protected List<BlackBoxModel> eventModels;
     protected List<OutputVariable> outputVariables;
+    protected Map<String, String> versions;
 
     @BeforeEach
     void setup() {
@@ -144,6 +143,12 @@ public class DynawoTestUtil extends AbstractSerDeTest {
                         .iMeasurement(l.getId())
                         .iMeasurementSide(TwoSides.ONE)
                         .build()));
+
+        //versions
+        versions = new HashMap<>();
+        versions.put("dynawo_version", "1.5.0");
+        versions.put("powsybl_version", "7.0.0");
+        versions.put("powsybl_dynawo_version", "3.1.0");
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
