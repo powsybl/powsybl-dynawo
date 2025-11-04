@@ -16,7 +16,6 @@ import com.powsybl.dynawo.SimulationTime;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.tools.Version;
 
-import javax.swing.*;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
@@ -188,7 +187,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("lvlFilter", DynawoSimulationParameters.LogLevel.DEBUG.toString());
     }
 
-    private static void writeAdditionnalInfos(XMLStreamWriter writer, DynawoSimulationContext context) {
+    private static void writeAdditionnalInfos(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
         String currentDynawoVersion = context.getCurrentDynawoVersion();
         List<String> versions = new ArrayList<>();
         versions.add("powsybl-dynawo: " + currentDynawoVersion);
@@ -203,12 +202,8 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
                             .toList()
             );
         }
-        versions.forEach(comment -> {
-            try {
-                writer.writeComment(comment);
-            } catch (XMLStreamException e) {
-                throw new RuntimeException("Error while writing XML comment: " + comment, e);
-            }
-        });
+        for (String comment : versions) {
+            writer.writeComment(comment);
+        }
     }
 }
