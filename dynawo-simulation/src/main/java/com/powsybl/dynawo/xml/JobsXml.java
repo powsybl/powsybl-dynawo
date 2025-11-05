@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.*;
-import static com.powsybl.dynawo.DynawoSimulationConstants.DYD_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUTS_FOLDER;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
