@@ -85,9 +85,9 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .join();
 
         assertEquals(1, result.getComponentResults().size());
-        LoadFlowResult.ComponentResult componentResult = result.getComponentResults().get(0);
+        LoadFlowResult.ComponentResult componentResult = result.getComponentResults().getFirst();
         assertEquals(CONVERGED, componentResult.getStatus());
-        assertEquals("B4", componentResult.getSlackBusResults().get(0).getId());
+        assertEquals("B4", componentResult.getSlackBusResults().getFirst().getId());
 
         StringWriter sw = new StringWriter();
         reportNode.print(sw);

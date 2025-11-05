@@ -49,8 +49,8 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
         EventModelsSupplier supplier = new GroovyEventModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<EventModel> eventModels = supplier.get(network);
         assertEquals(1, eventModels.size());
-        assertTrue(modelClass.isInstance(eventModels.get(0)));
-        assertEventModel(modelClass.cast(eventModels.get(0)), dynamicId, equipmentStaticId, lib, startTime);
+        assertTrue(modelClass.isInstance(eventModels.getFirst()));
+        assertEventModel(modelClass.cast(eventModels.getFirst()), dynamicId, equipmentStaticId, lib, startTime);
     }
 
     @ParameterizedTest(name = "{0}")

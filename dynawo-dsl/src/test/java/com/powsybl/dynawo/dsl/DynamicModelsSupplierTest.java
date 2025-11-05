@@ -67,8 +67,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network);
         assertEquals(1, dynamicModels.size());
-        assertTrue(modelClass.isInstance(dynamicModels.get(0)));
-        assertEquipmentBlackBoxModel(modelClass.cast(dynamicModels.get(0)), staticId, parameterId, lib);
+        assertTrue(modelClass.isInstance(dynamicModels.getFirst()));
+        assertEquipmentBlackBoxModel(modelClass.cast(dynamicModels.getFirst()), staticId, parameterId, lib);
     }
 
     @ParameterizedTest(name = "{0}")
@@ -77,8 +77,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network);
         assertEquals(1, dynamicModels.size());
-        assertTrue(modelClass.isInstance(dynamicModels.get(0)));
-        assertPureDynamicBlackBoxModel(modelClass.cast(dynamicModels.get(0)), dynamicId, parameterId, lib);
+        assertTrue(modelClass.isInstance(dynamicModels.getFirst()));
+        assertPureDynamicBlackBoxModel(modelClass.cast(dynamicModels.getFirst()), dynamicId, parameterId, lib);
     }
 
     @ParameterizedTest(name = "{0}")
@@ -95,8 +95,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network, reportNode);
         assertEquals(1, dynamicModels.size());
-        assertTrue(modelClass.isInstance(dynamicModels.get(0)));
-        assertEquals(terminalVarName, modelClass.cast(dynamicModels.get(0)).getTerminalVarName());
+        assertTrue(modelClass.isInstance(dynamicModels.getFirst()));
+        assertEquals(terminalVarName, modelClass.cast(dynamicModels.getFirst()).getTerminalVarName());
         checkReportNode(report);
     }
 
