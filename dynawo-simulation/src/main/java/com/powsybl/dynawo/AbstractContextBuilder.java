@@ -79,6 +79,11 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         return self();
     }
 
+    public T defaultConfigVersion(boolean enabled) {
+        this.defaultConfigVersion = enabled;
+        return self();
+    }
+
     protected final void setup() {
         setupData();
         setupMacroConnections();

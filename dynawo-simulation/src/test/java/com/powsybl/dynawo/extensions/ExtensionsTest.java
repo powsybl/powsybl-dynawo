@@ -35,7 +35,7 @@ class ExtensionsTest {
                         .parameterSetId("gen")
                         .build()
         );
-        new DynawoSimulationContext.Builder(network, dynamicModels).build();
+        new DynawoSimulationContext.Builder(network, dynamicModels).defaultConfigVersion(true).build();
 
         assertThat(gen.getExtensions()).extracting(e -> ((DynamicModelInfo<?>) e).getModelName())
                 .containsExactly("GeneratorFictitious");

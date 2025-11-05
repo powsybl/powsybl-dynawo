@@ -64,6 +64,7 @@ class MultiplesJobsXmlTest extends AbstractDynamicModelXmlTest {
                 new LoadsVariation(List.of(network.getLoad("LOAD"), network.getLoad("LOAD2")), 10));
         context = new MarginCalculationContext.Builder(network, dynamicModels, contingencies, loadsVariationList)
                 .marginCalculationParameters(parameters)
+                .defaultConfigVersion(true)
                 .build();
     }
 

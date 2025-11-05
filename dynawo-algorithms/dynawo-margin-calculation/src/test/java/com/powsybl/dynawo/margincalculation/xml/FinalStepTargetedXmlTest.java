@@ -66,6 +66,7 @@ class FinalStepTargetedXmlTest extends AbstractDynamicModelXmlTest {
                 new LoadsVariation(List.of(network.getLoad("LOAD2"), network.getLoad("LOAD3")), 30));
         context = new MarginCalculationContext.Builder(network, dynamicModels, Collections.emptyList(), loadsVariationList)
                 .marginCalculationParameters(parameters)
+                .defaultConfigVersion(true)
                 .build();
     }
 

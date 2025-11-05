@@ -33,8 +33,8 @@ public class DynawoSimulationContext {
     private final FinalStepModels finalStepModels;
     private final SimulationTime simulationTime;
     private final SimulationTime finalStepTime;
-    private final DynawoVersion dynawoVersion;
-    private final boolean defaultConfigVersion;
+    protected final DynawoVersion dynawoVersion;
+    protected final boolean defaultConfigVersion;
 
     public static class Builder extends AbstractContextBuilder<Builder> {
 
@@ -60,11 +60,6 @@ public class DynawoSimulationContext {
 
         public Builder finalStepConfig(FinalStepConfig finalStepConfig) {
             this.finalStepConfig = Objects.requireNonNull(finalStepConfig);
-            return self();
-        }
-
-        public Builder defaultConfigVersion(boolean enabled) {
-            this.defaultConfigVersion = enabled;
             return self();
         }
 
