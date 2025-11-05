@@ -21,6 +21,7 @@ import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
+import com.powsybl.loadflow.LoadFlowRunParameters;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.SecurityAnalysisRunParameters;
@@ -81,7 +82,11 @@ class DynaFlowTest extends AbstractDynawoTest {
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
-        LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNode)
+        LoadFlowRunParameters runParameters = new LoadFlowRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(loadFlowParameters)
+                .setReportNode(reportNode);
+        LoadFlowResult result = loadFlowProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, runParameters)
                 .join();
 
         assertEquals(1, result.getComponentResults().size());
@@ -119,7 +124,11 @@ class DynaFlowTest extends AbstractDynawoTest {
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
-        loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNodeLf).join();
+        LoadFlowRunParameters lfRunParameters = new LoadFlowRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(loadFlowParameters)
+                .setReportNode(reportNodeLf);
+        loadFlowProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, lfRunParameters).join();
 
         StringWriter swReportNodeLf = new StringWriter();
         reportNodeLf.print(swReportNodeLf);

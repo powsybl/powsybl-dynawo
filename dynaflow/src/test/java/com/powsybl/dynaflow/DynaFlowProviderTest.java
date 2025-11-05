@@ -20,6 +20,7 @@ import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.loadflow.LoadFlow;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
+import com.powsybl.loadflow.LoadFlowRunParameters;
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -139,7 +140,10 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/output.xiidm", "/results.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
+        LoadFlowRunParameters runParameters = new LoadFlowRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(params);
+        LoadFlowResult result = dynaFlowSimulation.run(network, runParameters);
         assertNotNull(result);
         assertEquals(FULLY_CONVERGED, result.getStatus());
 
@@ -160,7 +164,10 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/outputMergedLoads.xiidm", "/results.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
+        LoadFlowRunParameters runParameters = new LoadFlowRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(params);
+        LoadFlowResult result = dynaFlowSimulation.run(network, runParameters);
         assertNotNull(result);
         assertEquals(FULLY_CONVERGED, result.getStatus());
 
@@ -180,7 +187,10 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
 
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynawo_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
+        LoadFlowRunParameters runParameters = new LoadFlowRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(params);
+        LoadFlowResult result = dynaFlowSimulation.run(network, runParameters);
         assertNotNull(result);
         assertEquals(FAILED, result.getStatus());
     }
@@ -193,7 +203,10 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
 
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynawo_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        PowsyblException e = assertThrows(PowsyblException.class, () -> dynaFlowSimulation.run(network, computationManager, params));
+        LoadFlowRunParameters runParameters = new LoadFlowRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(params);
+        PowsyblException e = assertThrows(PowsyblException.class, () -> dynaFlowSimulation.run(network, runParameters));
         assertEquals("dynaflow-launcher version not supported. Must be >= " + DynawoConstants.VERSION_MIN, e.getMessage());
     }
 
