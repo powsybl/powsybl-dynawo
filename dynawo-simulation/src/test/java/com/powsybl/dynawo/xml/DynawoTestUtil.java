@@ -143,12 +143,6 @@ public class DynawoTestUtil extends AbstractSerDeTest {
                         .iMeasurement(l.getId())
                         .iMeasurementSide(TwoSides.ONE)
                         .build()));
-
-        //versions
-        versions = new HashMap<>();
-        versions.put("dynawo_version", "1.5.0");
-        versions.put("powsybl_version", "7.0.0");
-        versions.put("powsybl_dynawo_version", "3.1.0");
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {

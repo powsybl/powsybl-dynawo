@@ -20,8 +20,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -65,7 +63,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
     @Override
     public void write(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
         DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
-        writeAdditionnalInfos(writer, context);
+        writeAdditionalInfos(writer, context);
         writer.writeStartElement(DYN_URI, "job");
         writer.writeAttribute("name", context.getNetwork().getNameOrId());
         writeSolver(writer, parameters);
@@ -187,23 +185,17 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("lvlFilter", DynawoSimulationParameters.LogLevel.DEBUG.toString());
     }
 
-    private static void writeAdditionnalInfos(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
-        String currentDynawoVersion = context.getCurrentDynawoVersion();
-        List<String> versions = new ArrayList<>();
-        versions.add("dynawo: " + currentDynawoVersion);
+    private static void writeAdditionalInfos(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
+        writer.writeComment("dynawo: " + context.getCurrentDynawoVersion());
+
         if (context.isDefaultConfigVersion()) {
-            versions.add("powsybl-dynawo: 3.1.0-SNAPSHOT");
-            versions.add("powsybl-core: 7.0.0");
+            writer.writeComment("powsybl-dynawo: 3.1.0");
+            writer.writeComment("powsybl-core: 7.0.0");
         } else {
-            versions.addAll(
-                    Version.list()
-                            .stream()
-                            .map(version -> version.getRepositoryName() + ": " + version.getMavenProjectVersion())
-                            .toList()
-            );
-        }
-        for (String comment : versions) {
-            writer.writeComment(comment);
+            for (Version version : Version.list()) {
+                writer.writeComment(version.getRepositoryName() + ": " + version.getMavenProjectVersion());
+            }
         }
     }
+
 }
