@@ -12,6 +12,7 @@ import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
+import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynamicsimulation.DynamicSimulationResultImpl;
 import com.powsybl.dynamicsimulation.TimelineEvent;
@@ -81,9 +82,8 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         deleteExistingFile(basePath, FSV_OUTPUT_PATH, FSV_OUTPUT_FILENAME);
         writeInputFiles(workingDir);
 
-        Path tmpExecFile = Path.of(System.getProperty("java.io.tmpdir"), ".execTmp.txt");
+        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(".execTmp.txt");
         Files.writeString(tmpExecFile, workingDir.toAbsolutePath().toString());
-        LOGGER.info("Execution folder path written to temporary file: {}", tmpExecFile);
 
         return getCommandExecutions(command);
     }

@@ -32,13 +32,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static com.powsybl.loadflow.LoadFlowResult.ComponentResult.Status.CONVERGED;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -176,5 +178,26 @@ class DynaFlowTest extends AbstractDynawoTest {
         SecurityAnalysisResultSerializer.write(result, serializedResult);
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_nb_results.json"));
         assertTxtEquals(expected, serializedResult.toString());
+    }
+
+    @Test
+    void testExecutionTempFileAndReferencedFileExist() throws IOException {
+        Network network = IeeeCdfNetworkFactory.create14Solved();
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testIEEE14")
+                .build();
+        loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNode)
+                .join();
+        Path execTmpDir = localDir.getParent();
+        Path execTmpFilePath = execTmpDir.resolve(".execTmp.txt");
+        String content = Files.readString(execTmpFilePath);
+        Path referencedFile = Paths.get(content.trim());
+
+        assertTrue(Files.exists(execTmpFilePath));
+        assertNotNull(content);
+        assertFalse(content.isBlank());
+        assertTrue(Files.exists(referencedFile));
     }
 }
