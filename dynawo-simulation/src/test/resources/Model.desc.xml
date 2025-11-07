@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<model xmlns="http://www.rte-france.com/dynawo">
+    <name>Lib1</name>
+    <elements>
+        <parameters>
+            <parameter name="param1" valueType="INT" cardinality="1" readOnly="false"/>
+            <parameter name="param2" valueType="STRING" cardinality="*" readOnly="false"/>
+            <parameter name="readOnlyParam" valueType="INT" cardinality="1" readOnly="true"/>
+            <parameter name="defaultParam" valueType="INT" cardinality="1" readOnly="false" defaultValue="5"/>
+        </parameters>
+        <variables>
+            <variable name="var1" valueType="DOUBLE"/>
+            <variable name="var2" valueType="BOOL"/>
+        </variables>
+    </elements>
+</model>

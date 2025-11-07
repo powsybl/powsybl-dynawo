@@ -19,7 +19,7 @@ import java.util.function.Function;
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
-public abstract class AbstractDynawoConfig {
+public abstract class AbstractDynawoConfig implements DynawoConfig {
 
     private static final boolean DEBUG_DEFAULT = false;
 
@@ -45,6 +45,7 @@ public abstract class AbstractDynawoConfig {
         this(config.getPathProperty("homeDir"), config.getBooleanProperty("debug", DEBUG_DEFAULT));
     }
 
+    @Override
     public Path getHomeDir() {
         return homeDir;
     }
