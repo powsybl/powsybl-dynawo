@@ -17,19 +17,20 @@ import com.powsybl.iidm.network.Network;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ * @author Riad Benradi {@benradiria <riad.benradi at rte-france.com>}
  */
-public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<Injection<?>, EventActivePowerVariationBuilder> {
+public class EventReactivePowerVariationBuilder extends AbstractEventModelBuilder<Injection<?>, EventReactivePowerVariationBuilder> {
 
-    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ActivePowerVariation", "Active power variation on generator or load");
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ReactivePowerVariation", "Reactive power variation on generator or load");
 
-    protected Double deltaP;
+    protected Double deltaQ;
 
-    public static EventActivePowerVariationBuilder of(Network network) {
+    public static EventReactivePowerVariationBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
     }
 
-    public static EventActivePowerVariationBuilder of(Network network, ReportNode reportNode) {
-        return new EventActivePowerVariationBuilder(network, reportNode);
+    public static EventReactivePowerVariationBuilder of(Network network, ReportNode reportNode) {
+        return new EventReactivePowerVariationBuilder(network, reportNode);
     }
 
     public static ModelInfo getModelInfo() {
@@ -43,20 +44,20 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
         return MODEL_INFO.version().includes(dynawoVersion) ? MODEL_INFO : null;
     }
 
-    EventActivePowerVariationBuilder(Network network, ReportNode parentReportNode) {
+    EventReactivePowerVariationBuilder(Network network, ReportNode parentReportNode) {
         super(network, "GENERATOR/LOAD", parentReportNode);
     }
 
-    public EventActivePowerVariationBuilder deltaP(double deltaP) {
-        this.deltaP = deltaP;
+    public EventReactivePowerVariationBuilder deltaQ(double deltaQ) {
+        this.deltaQ = deltaQ;
         return self();
     }
 
     @Override
     protected void checkData() {
         super.checkData();
-        if (deltaP == null) {
-            BuilderReports.reportFieldNotSet(reportNode, "deltaP");
+        if (deltaQ == null) {
+            BuilderReports.reportFieldNotSet(reportNode, "deltaQ");
             isInstantiable = false;
         }
     }
@@ -73,12 +74,12 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
     }
 
     @Override
-    public EventActivePowerVariation build() {
-        return isInstantiable() ? new EventActivePowerVariation(eventId, builderEquipment.getEquipment(), MODEL_INFO, startTime, deltaP) : null;
+    public EventReactivePowerVariation build() {
+        return isInstantiable() ? new EventReactivePowerVariation(eventId, builderEquipment.getEquipment(), MODEL_INFO, startTime, deltaQ) : null;
     }
 
     @Override
-    protected EventActivePowerVariationBuilder self() {
+    protected EventReactivePowerVariationBuilder self() {
         return this;
     }
 }

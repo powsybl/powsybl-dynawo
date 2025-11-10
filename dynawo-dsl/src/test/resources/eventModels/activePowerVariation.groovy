@@ -8,7 +8,7 @@
 
 package eventModels
 
-Step {
+ActivePowerVariation {
     staticId "LOAD"
     startTime 2
     deltaP 0.2

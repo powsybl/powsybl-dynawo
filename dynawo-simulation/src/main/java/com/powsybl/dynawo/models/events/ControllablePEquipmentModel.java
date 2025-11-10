@@ -12,7 +12,7 @@ import com.powsybl.dynawo.models.Model;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface ControllableEquipmentModel extends Model {
+public interface ControllablePEquipmentModel extends Model {
 
     String getDeltaPVarName();
 }

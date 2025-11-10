@@ -163,6 +163,7 @@ Dynamic models:
 	WTG4AWeccCurrentSource (Dynawo Version 1.5.0)
 	WTG4BWeccCurrentSource (Dynawo Version 1.5.0)
 Event models:
+	ActivePowerVariation: Active power variation on generator or load (VersionInterval[min=1.5.0, max=null, endCause=null])
 	Disconnect: Disconnects a bus, a branch, an injection or an HVDC line (VersionInterval[min=1.5.0, max=null, endCause=null])
 	NodeFault: Node fault with configurable resistance, reactance and duration (VersionInterval[min=1.5.0, max=null, endCause=null])
-	Step: Power variation on generator or load (VersionInterval[min=1.5.0, max=null, endCause=null])
+	ReactivePowerVariation: Reactive power variation on generator or load (VersionInterval[min=1.5.0, max=null, endCause=null])

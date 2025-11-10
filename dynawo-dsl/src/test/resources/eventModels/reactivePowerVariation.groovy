@@ -5,11 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package smib
 
-ActivePowerVariation {
-    staticId "SM"
-    startTime 1
-    deltaP 0.02
+package eventModels
+
+import com.powsybl.dynawo.models.events.EventReactivePowerVariation
+
+ReactivePowerVariation {
+    staticId "LOAD"
+    startTime 2
+    deltaQ 0.2
 }
-

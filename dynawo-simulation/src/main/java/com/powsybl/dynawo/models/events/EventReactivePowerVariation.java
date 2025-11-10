@@ -25,8 +25,9 @@ import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ * @author Riad Benradi {@benradiria <riad.benradi at rte-france.com>}
  */
-public class EventActivePowerVariation extends AbstractEvent implements ContextDependentEvent {
+public class EventReactivePowerVariation extends AbstractEvent implements ContextDependentEvent {
 
     private static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
 
@@ -40,12 +41,12 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
         }
     }
 
-    private final double deltaP;
+    private final double deltaQ;
     private final ImmutableLateInit<EquipmentModelType> equipmentModelType = new ImmutableLateInit<>();
 
-    protected EventActivePowerVariation(String eventId, Injection<?> equipment, EventModelInfo eventModelInfo, double startTime, double deltaP) {
+    protected EventReactivePowerVariation(String eventId, Injection<?> equipment, EventModelInfo eventModelInfo, double startTime, double deltaQ) {
         super(eventId, equipment, eventModelInfo, startTime);
-        this.deltaP = deltaP;
+        this.deltaQ = deltaQ;
     }
 
     @Override
@@ -57,19 +58,23 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
         return DEFAULT_MODEL_LIB;
     }
 
-    private List<VarConnection> getVarConnectionsWith(ControllablePEquipmentModel connected) {
-        if (equipmentModelType.getValue().isSpecified()) {
-            return List.of(new VarConnection("step_step_value", connected.getDeltaPVarName()));
-        }
+    @Override
+    public String getName() {
+        return EventReactivePowerVariation.class.getSimpleName();
+    }
 
-        return List.of(new VarConnection("event_state1", connected.getDeltaPVarName()));
+    private List<VarConnection> getVarConnectionsWith(ControllableQEquipmentModel connected) {
+        if (equipmentModelType.getValue().isSpecified()) {
+            return List.of(new VarConnection("step_step_value", connected.getDeltaQVarName()));
+        }
+        return List.of(new VarConnection("event_state1", connected.getDeltaQVarName()));
     }
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
         adder.createMacroConnections(this,
                 getEquipment(),
-                ControllablePEquipmentModel.class,
+                ControllableQEquipmentModel.class,
                 this::getVarConnectionsWith);
     }
 
@@ -80,14 +85,13 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
 
     @Override
     protected void createEventSpecificParameters(ParametersSet paramSet) {
-        EquipmentModelType type = equipmentModelType.getValue();
         if (equipmentModelType.getValue().isSpecified()) {
             paramSet.addParameter("step_Value0", DOUBLE, Double.toString(0));
             paramSet.addParameter("step_tStep", DOUBLE, Double.toString(getStartTime()));
-            paramSet.addParameter("step_Height", DOUBLE, Double.toString(deltaP));
+            paramSet.addParameter("step_Height", DOUBLE, Double.toString(deltaQ));
         } else {
             paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
-            paramSet.addParameter("event_stateEvent1", DOUBLE, Double.toString(deltaP));
+            paramSet.addParameter("event_stateEvent1", DOUBLE, Double.toString(deltaQ));
         }
     }
 
@@ -104,8 +108,8 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
 
     @Override
     public void createNetworkParameter(ParametersSet networkParameters) {
-        if (equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_LOAD)) {
-            networkParameters.addParameter(getEquipment().getId() + "_isControllableP", BOOL, Boolean.toString(true));
+        if (equipmentModelType.getValue().equals(EventReactivePowerVariation.EquipmentModelType.DEFAULT_LOAD)) {
+            networkParameters.addParameter(getEquipment().getId() + "_isControllableQ", BOOL, Boolean.toString(true));
         }
     }
 
