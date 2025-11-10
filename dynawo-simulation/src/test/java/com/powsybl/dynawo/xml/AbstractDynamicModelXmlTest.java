@@ -14,6 +14,8 @@ import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.builders.AdditionalModelConfigLoader;
+import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
@@ -59,8 +61,10 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     @BeforeEach
     void setup() {
         setupNetwork();
-        addDynamicModels();
         setupDynawoSimulationParameters();
+        dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
+                ModelConfigsHandler.getInstance().addModels(new AdditionalModelConfigLoader(additionalModelPath)));
+        addDynamicModels();
         setupDynawoContext();
     }
 

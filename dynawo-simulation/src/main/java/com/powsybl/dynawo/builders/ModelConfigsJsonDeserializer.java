@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.powsybl.commons.json.JsonUtil;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.models.VarMapping;
 
 import java.io.IOException;
 import java.util.*;
@@ -68,6 +69,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
             DynawoVersion minVersion = VersionInterval.MODEL_DEFAULT_MIN_VERSION;
             DynawoVersion maxVersion = null;
             String endCause = null;
+            final List<VarMapping> varMapping = new ArrayList<>(0);
         };
         JsonUtil.parseObject(parser, name ->
             switch (parser.currentName()) {
@@ -103,11 +105,38 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
                     parsingContext.endCause = parser.nextTextValue();
                     yield true;
                 }
+                case "macroStaticRef" -> {
+                    JsonUtil.parseObjectArray(parser, parsingContext.varMapping::add,
+                            ModelConfigsJsonDeserializer::parseVarMapping);
+                    yield true;
+                }
                 default -> false;
             }
         );
         return new ModelConfig(parsingContext.lib, parsingContext.alias, parsingContext.internalModelPrefix,
                 parsingContext.properties, parsingContext.doc,
-                new VersionInterval(parsingContext.minVersion, parsingContext.maxVersion, parsingContext.endCause));
+                new VersionInterval(parsingContext.minVersion, parsingContext.maxVersion, parsingContext.endCause),
+                parsingContext.varMapping);
+    }
+
+    private static VarMapping parseVarMapping(JsonParser parser) {
+        var parsingContext = new Object() {
+            String dynamicVar;
+            String staticVar;
+        };
+        JsonUtil.parseObject(parser, name ->
+            switch (parser.currentName()) {
+                case "dynamicVar" -> {
+                    parsingContext.dynamicVar = parser.nextTextValue();
+                    yield true;
+                }
+                case "staticVar" -> {
+                    parsingContext.staticVar = parser.nextTextValue();
+                    yield true;
+                }
+                default -> false;
+            }
+        );
+        return new VarMapping(parsingContext.dynamicVar, parsingContext.staticVar);
     }
 }
