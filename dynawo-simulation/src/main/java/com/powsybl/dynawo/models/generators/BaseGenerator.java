@@ -24,18 +24,34 @@ import java.util.List;
  */
 public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements SpecifiedGeneratorModel {
 
+    private static final String DEFAULT_TERMINAL = "generator_terminal";
+    private static final String DEFAULT_SWITCH_OFF_SIGNAL_1 = "generator_switchOffSignal1";
+
     static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("generator_PGenPu", "p"),
             new VarMapping("generator_QGenPu", "q"),
             new VarMapping("generator_state", "state"));
 
+    private String terminal = DEFAULT_TERMINAL;
+    private String switchOffSignal1 = DEFAULT_SWITCH_OFF_SIGNAL_1;
+    private List<VarMapping> varMapping = VAR_MAPPING;
+
     protected BaseGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
         super(generator, parameterSetId, modelConfig);
+        String internalPrefix = modelConfig.internalModelPrefix();
+        if (internalPrefix != null) {
+            this.terminal = internalPrefix + "_terminal";
+            this.switchOffSignal1 = internalPrefix + "_switchOffSignal1";
+        }
+        List<VarMapping> varMapping = modelConfig.varMapping();
+        if (!varMapping.isEmpty()) {
+            this.varMapping = varMapping;
+        }
     }
 
     @Override
     public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
+        return varMapping;
     }
 
     @Override
@@ -53,11 +69,11 @@ public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> imp
     }
 
     public String getTerminalVarName() {
-        return "generator_terminal";
+        return terminal;
     }
 
     public String getSwitchOffSignalNodeVarName() {
-        return "generator_switchOffSignal1";
+        return switchOffSignal1;
     }
 
     @Override

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="GEN" lib="BaseGenerator2" parFile="models.par" parId="g" staticId="GEN">
+        <dyn:macroStaticRef id="MSR_BaseGenerator2"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnector id="MC_BaseGenerator2-DefaultEquipmentConnectionPoint">
+        <dyn:connect var1="generator2_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="generator2_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_BaseGenerator2">
+        <dyn:staticRef var="generator2_PGen2" staticVar="p"/>
+        <dyn:staticRef var="generator2_QGen2" staticVar="q"/>
+        <dyn:staticRef var="generator2_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_BaseGenerator2-DefaultEquipmentConnectionPoint" id1="GEN" id2="NETWORK"/>
+</dyn:dynamicModelsArchitecture>

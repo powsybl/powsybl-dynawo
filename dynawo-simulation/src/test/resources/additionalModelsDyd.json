@@ -1,0 +1,24 @@
+{
+  "BASE_GENERATOR": {
+    "libs": [
+      {
+        "lib": "BaseGenerator2",
+        "internalModelPrefix": "generator2",
+        "macroStaticRef": [
+          {
+            "dynamicVar":"generator2_PGen2",
+            "staticVar":"p"
+          },
+          {
+            "dynamicVar":"generator2_QGen2",
+            "staticVar":"q"
+          },
+          {
+            "dynamicVar":"generator2_state",
+            "staticVar":"state"
+          }
+        ]
+      }
+    ]
+  }
+}
