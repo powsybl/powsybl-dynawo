@@ -37,7 +37,7 @@ public class ModelDescriptionHandler {
             for (String lib : ModelConfigsHandler.getInstance().getSupportedLibs(dynawoVersion)) {
                 Path libPath = dbPath.resolve(String.format(DESC_FILE, lib));
                 if (Files.exists(libPath)) {
-                    FilteredDescriptionXml.load(dbPath.resolve(lib), md -> descriptions.put(md.name(), md));
+                    FilteredDescriptionXml.load(libPath, md -> descriptions.put(md.name(), md));
                 } else {
                     LOGGER.warn("Model {} desc file not found, model description cannot be loaded", lib);
                 }
