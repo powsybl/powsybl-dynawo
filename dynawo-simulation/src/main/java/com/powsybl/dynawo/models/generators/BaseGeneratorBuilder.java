@@ -10,6 +10,7 @@ package com.powsybl.dynawo.models.generators;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Collection;
@@ -63,8 +64,13 @@ public class BaseGeneratorBuilder extends AbstractGeneratorBuilder<BaseGenerator
     }
 
     @Override
-    public BaseGenerator build() {
-        return isInstantiable() ? new BaseGenerator(getEquipment(), parameterSetId, modelConfig) : null;
+    public EquipmentBlackBoxModel build() {
+        if (isInstantiable()) {
+            return modelConfig.lib().equalsIgnoreCase("InertialGrid")
+                    ? new InertialGrid(getEquipment(), parameterSetId, modelConfig)
+                    : new BaseGenerator(getEquipment(), parameterSetId, modelConfig);
+        }
+        return null;
     }
 
     @Override

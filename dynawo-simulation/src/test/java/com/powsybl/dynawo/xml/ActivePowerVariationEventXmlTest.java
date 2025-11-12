@@ -9,6 +9,7 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
+import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
@@ -26,6 +27,16 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void setupNetwork() {
         network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
+        network.getVoltageLevel("VLHV3").newGenerator()
+                .setId("GEN4")
+                .setConnectableBus("N1")
+                .setMinP(-9999.99)
+                .setMaxP(9999.99)
+                .setVoltageRegulatorOn(true)
+                .setTargetV(24.5)
+                .setTargetP(607.0)
+                .setTargetQ(301.0)
+                .add();
     }
 
     @Override
@@ -37,6 +48,10 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsGoverPropVRPropInt")
                 .staticId("GEN3")
                 .parameterSetId("GSTWPR")
+                .build());
+        dynamicModels.add(BaseGeneratorBuilder.of(network, "InertialGrid")
+                .staticId("GEN4")
+                .parameterSetId("IG")
                 .build());
         dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
                 .staticId("LOAD2")
@@ -56,6 +71,11 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("GEN3")
                 .startTime(1)
                 .deltaP(1.3)
+                .build());
+        eventModels.add(EventActivePowerVariationBuilder.of(network)
+                .staticId("GEN4")
+                .startTime(1)
+                .deltaP(1.4)
                 .build());
         // will be skipped
         eventModels.add(EventActivePowerVariationBuilder.of(network)

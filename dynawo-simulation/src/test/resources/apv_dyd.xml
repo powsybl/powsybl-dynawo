@@ -6,6 +6,9 @@
     <dyn:blackBoxModel id="GEN3" lib="GeneratorSynchronousFourWindingsGoverPropVRPropInt" parFile="models.par" parId="GSTWPR" staticId="GEN3">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsGoverPropVRPropInt"/>
     </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="GEN4" lib="InertialGrid" parFile="models.par" parId="IG" staticId="GEN4">
+        <dyn:macroStaticRef id="MSR_InertialGrid"/>
+    </dyn:blackBoxModel>
     <dyn:blackBoxModel id="LOAD2" lib="LoadAlphaBeta" parFile="models.par" parId="load" staticId="LOAD2">
         <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
     </dyn:blackBoxModel>
@@ -13,6 +16,7 @@
     <dyn:blackBoxModel id="Step_GEN" lib="EventSetPointReal" parFile="sim1.par" parId="Step_GEN"/>
     <dyn:blackBoxModel id="Step_GEN2" lib="Step" parFile="sim1.par" parId="Step_GEN2"/>
     <dyn:blackBoxModel id="Step_GEN3" lib="Step" parFile="sim1.par" parId="Step_GEN3"/>
+    <dyn:blackBoxModel id="Step_GEN4" lib="Step" parFile="sim1.par" parId="Step_GEN4"/>
     <dyn:blackBoxModel id="Step_LOAD2" lib="Step" parFile="sim1.par" parId="Step_LOAD2"/>
     <dyn:macroConnector id="MC_GeneratorPV-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
@@ -21,6 +25,10 @@
     <dyn:macroConnector id="MC_GeneratorSynchronousFourWindingsGoverPropVRPropInt-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_InertialGrid-DefaultEquipmentConnectionPoint">
+        <dyn:connect var1="inertialGrid_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="inertialGrid_injectorURI_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_LoadAlphaBeta-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="load_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
@@ -47,6 +55,9 @@
     <dyn:macroConnector id="MC_EventActivePowerVariation-GeneratorSynchronousFourWindingsGoverPropVRPropInt">
         <dyn:connect var1="step_step_value" var2="governor_deltaPmRefPu"/>
     </dyn:macroConnector>
+    <dyn:macroConnector id="MC_EventActivePowerVariation-InertialGrid">
+        <dyn:connect var1="step_step_value" var2="inertialGrid_reducedOrderSFR_PspPu"/>
+    </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventActivePowerVariation-LoadAlphaBeta">
         <dyn:connect var1="step_step_value" var2="load_deltaP"/>
     </dyn:macroConnector>
@@ -60,6 +71,11 @@
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
+    <dyn:macroStaticReference id="MSR_InertialGrid">
+        <dyn:staticRef var="inertialGrid_injectorURI_PInjPu" staticVar="p"/>
+        <dyn:staticRef var="inertialGrid_injectorURI_QInjPu" staticVar="q"/>
+        <dyn:staticRef var="inertialGrid_injectorURI_state" staticVar="state"/>
+    </dyn:macroStaticReference>
     <dyn:macroStaticReference id="MSR_LoadAlphaBeta">
         <dyn:staticRef var="load_PPu" staticVar="p"/>
         <dyn:staticRef var="load_QPu" staticVar="q"/>
@@ -67,6 +83,7 @@
     </dyn:macroStaticReference>
     <dyn:macroConnect connector="MC_GeneratorPV-DefaultEquipmentConnectionPoint" id1="GEN2" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsGoverPropVRPropInt-DefaultEquipmentConnectionPoint" id1="GEN3" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_InertialGrid-DefaultEquipmentConnectionPoint" id1="GEN4" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_LoadAlphaBeta-DefaultEquipmentConnectionPoint" id1="LOAD2" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorPV" id1="FREQ_SYNC" index1="0" id2="GEN2"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="GEN2"/>
@@ -75,5 +92,6 @@
     <dyn:macroConnect connector="MC_EventActivePowerVariation-DefaultGenerator" id1="Step_GEN" id2="NETWORK" name2="GEN"/>
     <dyn:macroConnect connector="MC_EventActivePowerVariation-GeneratorPV" id1="Step_GEN2" id2="GEN2"/>
     <dyn:macroConnect connector="MC_EventActivePowerVariation-GeneratorSynchronousFourWindingsGoverPropVRPropInt" id1="Step_GEN3" id2="GEN3"/>
+    <dyn:macroConnect connector="MC_EventActivePowerVariation-InertialGrid" id1="Step_GEN4" id2="GEN4"/>
     <dyn:macroConnect connector="MC_EventActivePowerVariation-LoadAlphaBeta" id1="Step_LOAD2" id2="LOAD2"/>
 </dyn:dynamicModelsArchitecture>
