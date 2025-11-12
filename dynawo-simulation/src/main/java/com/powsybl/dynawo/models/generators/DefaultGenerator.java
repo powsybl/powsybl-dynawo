@@ -25,13 +25,17 @@ public class DefaultGenerator extends AbstractInjectionDefaultModel implements C
         return "DefaultGenerator";
     }
 
+    private String getDeltaVar(String suffix) {
+        return "@NAME@" + suffix;
+    }
+
     @Override
     public String getDeltaPVarName() {
-        return "@NAME@_Pc";
+        return getDeltaVar("_Pc");
     }
 
     @Override
     public String getDeltaQVarName() {
-        return "@NAME@_Qc";
+        return getDeltaVar("_Qc");
     }
 }

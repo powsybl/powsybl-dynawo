@@ -10,51 +10,20 @@ package com.powsybl.dynawo.models.events;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
-import com.powsybl.dynawo.models.utils.ImmutableLateInit;
 import com.powsybl.dynawo.parameters.ParametersSet;
-import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Injection;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static com.powsybl.dynawo.parameters.ParameterType.BOOL;
-import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventActivePowerVariation extends AbstractEvent implements ContextDependentEvent {
-
-    private static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
-
-    private enum EquipmentModelType {
-        SPECIFIED,
-        DEFAULT_GENERATOR,
-        DEFAULT_LOAD;
-
-        public boolean isSpecified() {
-            return this == SPECIFIED;
-        }
-    }
-
-    private final double deltaP;
-    private final ImmutableLateInit<EquipmentModelType> equipmentModelType = new ImmutableLateInit<>();
+public class EventActivePowerVariation extends AbstractEventPower {
 
     protected EventActivePowerVariation(String eventId, Injection<?> equipment, EventModelInfo eventModelInfo, double startTime, double deltaP) {
-        super(eventId, equipment, eventModelInfo, startTime);
-        this.deltaP = deltaP;
-    }
-
-    @Override
-    public String getLib() {
-        if (equipmentModelType.getValue().isSpecified()) {
-            return super.getLib();
-        }
-
-        return DEFAULT_MODEL_LIB;
+        super(eventId, equipment, eventModelInfo, startTime, deltaP);
     }
 
     private List<VarConnection> getVarConnectionsWith(ControllablePEquipmentModel connected) {
@@ -74,35 +43,6 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
     }
 
     @Override
-    public void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder) {
-        super.createDynamicModelParameters(parametersAdder);
-    }
-
-    @Override
-    protected void createEventSpecificParameters(ParametersSet paramSet) {
-        EquipmentModelType type = equipmentModelType.getValue();
-        if (equipmentModelType.getValue().isSpecified()) {
-            paramSet.addParameter("step_Value0", DOUBLE, Double.toString(0));
-            paramSet.addParameter("step_tStep", DOUBLE, Double.toString(getStartTime()));
-            paramSet.addParameter("step_Height", DOUBLE, Double.toString(deltaP));
-        } else {
-            paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
-            paramSet.addParameter("event_stateEvent1", DOUBLE, Double.toString(deltaP));
-        }
-    }
-
-    @Override
-    public final void setEquipmentModelType(boolean hasDynamicModel) {
-        if (hasDynamicModel) {
-            equipmentModelType.setValue(EquipmentModelType.SPECIFIED);
-        } else if (IdentifiableType.GENERATOR == getEquipment().getType()) {
-            equipmentModelType.setValue(EquipmentModelType.DEFAULT_GENERATOR);
-        } else if (IdentifiableType.LOAD == getEquipment().getType()) {
-            equipmentModelType.setValue(EquipmentModelType.DEFAULT_LOAD);
-        }
-    }
-
-    @Override
     public void createNetworkParameter(ParametersSet networkParameters) {
         if (equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_LOAD)) {
             networkParameters.addParameter(getEquipment().getId() + "_isControllableP", BOOL, Boolean.toString(true));
@@ -110,7 +50,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
     }
 
     @Override
-    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
-        super.write(writer, parFileName);
+    public String getName() {
+        return EventActivePowerVariation.class.getSimpleName();
     }
 }
