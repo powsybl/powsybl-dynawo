@@ -14,10 +14,6 @@ import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Injection;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import java.util.function.Consumer;
-
 import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 
 /**
@@ -51,11 +47,6 @@ public abstract class AbstractEventPower extends AbstractEvent implements Contex
     }
 
     @Override
-    public void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder) {
-        super.createDynamicModelParameters(parametersAdder);
-    }
-
-    @Override
     public final void setEquipmentModelType(boolean hasDynamicModel) {
         if (hasDynamicModel) {
             equipmentModelType.setValue(EquipmentModelType.SPECIFIED);
@@ -77,10 +68,4 @@ public abstract class AbstractEventPower extends AbstractEvent implements Contex
             paramSet.addParameter("event_stateEvent1", DOUBLE, Double.toString(deltaValue));
         }
     }
-
-    @Override
-    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
-        super.write(writer, parFileName);
-    }
-
 }
