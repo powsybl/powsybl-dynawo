@@ -52,7 +52,7 @@ public class DefaultTransformer extends AbstractDefaultModel implements Transfor
 
     @Override
     public String getDisableInternalTapChangerVarName() {
-        return "@NAME@_disable_internal_tapChanger";
+        return "@NAME@_disable_internal_tapChanger_value";
     }
 
     @Override

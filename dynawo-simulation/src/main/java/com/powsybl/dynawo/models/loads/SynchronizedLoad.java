@@ -29,7 +29,7 @@ public class SynchronizedLoad extends BaseLoad implements FrequencySynchronizedM
     public List<VarConnection> getOmegaRefVarConnections() {
         return List.of(
                 new VarConnection("omegaRef_grp_@INDEX@_value", getOmegaRefPuVarName()),
-                new VarConnection("running_grp_@INDEX@", getRunningVarName())
+                new VarConnection("running_grp_@INDEX@_value", getRunningVarName())
         );
     }
 

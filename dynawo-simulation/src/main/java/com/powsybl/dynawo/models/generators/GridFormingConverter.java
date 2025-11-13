@@ -85,7 +85,7 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
         return List.of(
                 new VarConnection("omega_grp_@INDEX@_value", getOmegaPuVarName()),
                 new VarConnection("omegaRef_grp_@INDEX@_value", getOmegaRefPuVarName()),
-                new VarConnection("running_grp_@INDEX@", getRunningVarName())
+                new VarConnection("running_grp_@INDEX@_value", getRunningVarName())
         );
     }
 
