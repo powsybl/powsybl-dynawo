@@ -52,10 +52,10 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
     }
 
     private VarConnection getTapChangerBlockerVarConnection(TransformerSide side) {
-        return new VarConnection(getTapChangerBlockingVarName(side), "tapChanger" + side.getSideSuffix() + "_locked");
+        return new VarConnection(getTapChangerBlockingVarName(side), "transformer" + side.getSideSuffix() + "_locked");
     }
 
     private String getSwitchOffSignal(TransformerSide side) {
-        return "tapChanger" + side.getSideSuffix() + "_switchOffSignal1";
+        return "transformer" + side.getSideSuffix() + "_tapChanger_switchOffSignal1";
     }
 }
