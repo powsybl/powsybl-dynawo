@@ -46,7 +46,6 @@ public class DynawoTestUtil extends AbstractSerDeTest {
     protected List<BlackBoxModel> dynamicModels;
     protected List<BlackBoxModel> eventModels;
     protected List<OutputVariable> outputVariables;
-    protected Map<String, String> versions;
 
     @BeforeEach
     void setup() {

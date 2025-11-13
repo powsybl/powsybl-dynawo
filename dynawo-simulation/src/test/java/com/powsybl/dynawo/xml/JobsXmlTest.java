@@ -13,11 +13,19 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -85,5 +93,26 @@ class JobsXmlTest extends DynawoTestUtil {
         JobsXml.writeFinalStep(tmpDir, context);
         validate("jobs.xsd", "jobsWithFinalStep.xml",
                 tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME), true);
+    }
+
+    @Test
+    void testJobXmlComments() throws IOException, XMLStreamException {
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .build();
+        JobsXml.write(tmpDir, context);
+        XMLStreamReader xr = XMLInputFactory.newInstance()
+                .createXMLStreamReader(Files.newInputStream(tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME)));
+
+        List<String> expectedVersions = new ArrayList<>();
+        while (xr.hasNext()) {
+            if (xr.next() == XMLStreamConstants.COMMENT) {
+                expectedVersions.add(xr.getText());
+            }
+        }
+        assertEquals(3, expectedVersions.size());
+        assertEquals("dynawo: " + context.getCurrentDynawoVersion(), expectedVersions.getFirst());
     }
 }

@@ -60,10 +60,16 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
                 .createXmlFileFromDataSupplier(workingDir, context);
     }
 
+    protected void writeComments(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
+        writer.writeComment("dynawo: " + context.getCurrentDynawoVersion());
+        for (Version version : Version.list()) {
+            writer.writeComment(version.getRepositoryName() + ": " + version.getMavenProjectVersion());
+        }
+    }
+
     @Override
     public void write(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
         DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
-        writeAdditionalInfos(writer, context);
         writer.writeStartElement(DYN_URI, "job");
         writer.writeAttribute("name", context.getNetwork().getNameOrId());
         writeSolver(writer, parameters);
@@ -183,12 +189,5 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("tag", log.toString());
         writer.writeAttribute("file", log.getFileName());
         writer.writeAttribute("lvlFilter", DynawoSimulationParameters.LogLevel.DEBUG.toString());
-    }
-
-    private static void writeAdditionalInfos(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
-        writer.writeComment("dynawo: " + context.getCurrentDynawoVersion());
-        for (Version version : Version.list()) {
-            writer.writeComment(version.getRepositoryName() + ": " + version.getMavenProjectVersion());
-        }
     }
 }
