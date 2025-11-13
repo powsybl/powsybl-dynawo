@@ -9,12 +9,13 @@ package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.events.ControllablePEquipmentModel;
+import com.powsybl.dynawo.models.events.ControllableUEquipmentModel;
 import com.powsybl.iidm.network.Generator;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class SynchronizedGeneratorControllable extends SynchronizedGenerator implements ControllablePEquipmentModel {
+public class SynchronizedGeneratorControllable extends SynchronizedGenerator implements ControllablePEquipmentModel, ControllableUEquipmentModel {
 
     protected SynchronizedGeneratorControllable(Generator generator, String parameterSetId, ModelConfig modelConfig) {
         super(generator, parameterSetId, modelConfig);
@@ -23,5 +24,10 @@ public class SynchronizedGeneratorControllable extends SynchronizedGenerator imp
     @Override
     public String getDeltaPVarName() {
         return "generator_deltaPmRefPu_value";
+    }
+
+    @Override
+    public String getDeltaUVarName() {
+        return "generator_deltaURefPu";
     }
 }
