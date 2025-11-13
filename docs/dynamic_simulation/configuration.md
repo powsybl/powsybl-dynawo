@@ -77,9 +77,9 @@ The default value is `null`.
 `dump.fileName` defines the dump file name.  
 The default value is `null`.
 
-**useModelSimplifiers**  
-`useModelSimplifiers` defines if simplifiers are used before macro connection computation **(TODO: link)**.  
-The default value is `FALSE`.
+**modelSimplifiers**  
+`modelSimplifiers` defines the list of simplifier to use before macro connection computation **(TODO: link)**.  
+The default value is an empty list.
 
 **mergeLoads**  
 `mergeLoads` indicates if loads connected to the same bus are merged (except fictitious load).  
@@ -144,7 +144,8 @@ dynawo-simulation-default-parameters:
   dump.useAsInput: false
   dump.exportFolder: /home/user/dumps
   dump.fileName: dump.dmp
-  useModelSimplifiers: false
+  modelSimplifiers:
+    - EnergizedSimplifier
   mergeLoads: false
   timeline.exportMode: XML
   precision: 10e-6
@@ -168,7 +169,7 @@ dynawo-simulation-default-parameters:
   <dump.useAsInput>false</dump.useAsInput> 
   <dump.exportFolder>/home/user/dumps</dump.exportFolder>
   <dump.fileName>dump.dmp</dump.fileName>
-  <useModelSimplifiers>false</useModelSimplifiers>
+  <modelSimplifiers>EnergizedSimplifier</modelSimplifiers>
   <mergeLoads>false</mergeLoads>
   <timeline.exportMode>XML</timeline.exportMode>
   <precision>10e-6</precision>
