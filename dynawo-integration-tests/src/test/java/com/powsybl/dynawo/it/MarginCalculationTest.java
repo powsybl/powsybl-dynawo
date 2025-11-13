@@ -34,13 +34,18 @@ import com.powsybl.iidm.network.VariantManagerConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.dynawo.contingency.results.Status.CONVERGENCE;
 import static com.powsybl.dynawo.contingency.results.Status.CRITERIA_NON_RESPECTED;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -105,6 +110,25 @@ class MarginCalculationTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14MC() {
+        List<LoadIncreaseResult> results = setupIeee14MC();
+        assertThat(results).containsExactlyElementsOf(EXPECTED_RESULTS);
+    }
+
+    @Test
+    void testExecutionTempFileAndReferencedFileExist() throws IOException {
+        testIeee14MC();
+        Path execTmpDir = localDir.getParent();
+        Path execTmpFilePath = execTmpDir.resolve(".execTmp.txt");
+        String content = Files.readString(execTmpFilePath);
+        Path referencedFile = Paths.get(content.trim());
+
+        assertTrue(Files.exists(execTmpFilePath));
+        assertNotNull(content);
+        assertFalse(content.isBlank());
+        assertTrue(Files.exists(referencedFile));
+    }
+
+    private List<LoadIncreaseResult> setupIeee14MC() {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
@@ -139,16 +163,14 @@ class MarginCalculationTest extends AbstractDynawoTest {
 
         LoadsVariationSupplier loadsVariationSupplier = (n, r) ->
                 LOADS.stream().map(load -> new LoadsVariationBuilder(n, r)
-                        .loads(load)
-                        .variationValue(10)
-                        .build())
-                .toList();
+                                .loads(load)
+                                .variationValue(10)
+                                .build())
+                        .toList();
 
-        List<LoadIncreaseResult> results = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+        return provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
                         dynamicModelsSupplier, n -> contingencies, loadsVariationSupplier, runParameters)
                 .join()
                 .getLoadIncreaseResults();
-
-        assertThat(results).containsExactlyElementsOf(EXPECTED_RESULTS);
     }
 }

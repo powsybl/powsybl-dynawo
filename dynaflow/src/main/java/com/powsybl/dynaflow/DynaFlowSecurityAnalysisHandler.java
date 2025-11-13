@@ -15,6 +15,7 @@ import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
+import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.SidedContingencyElement;
 import com.powsybl.contingency.contingency.list.ContingencyList;
@@ -78,6 +79,10 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
         DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
         writeParameters(securityAnalysisParameters, workingDir);
         writeContingencies(contingencies, workingDir);
+
+        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(".execTmp.txt");
+        Files.writeString(tmpExecFile, workingDir.toAbsolutePath().toString());
+
         return getCommandExecutions(command);
     }
 
