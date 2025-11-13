@@ -51,7 +51,7 @@ public final class DefaultModelsHandler {
             throw new PowsyblException("No default model configuration for " + type);
         }
         if (configurationList.size() == 1) {
-            return configurationList.get(0);
+            return configurationList.getFirst();
         } else {
             for (DefaultModelConfiguration configuration : configurationList) {
                 if (connectableClass.isAssignableFrom(configuration.getEquipmentClass())) {

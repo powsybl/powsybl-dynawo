@@ -134,7 +134,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
                 (mc, f) -> { },
                 ReportNode.NO_OP
         );
-        BlackBoxModel bbm = dynamicModels.get(0);
+        BlackBoxModel bbm = dynamicModels.getFirst();
 
         Exception e = assertThrows(PowsyblException.class, () -> adder.createMacroConnections(bbm, gen, LineModel.class, l -> List.of()));
         assertEquals("The model identified by the id GEN5 does not match the expected model (LineModel)", e.getMessage());

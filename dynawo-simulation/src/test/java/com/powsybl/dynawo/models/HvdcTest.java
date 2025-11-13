@@ -49,7 +49,7 @@ class HvdcTest {
                 .parameterSetId("HVDC")
                 .build();
         assertEquals(1, hvdcVscDangling.getConnectedStations().size());
-        assertEquals(line.getConverterStation1(), hvdcVscDangling.getConnectedStations().get(0));
+        assertEquals(line.getConverterStation1(), hvdcVscDangling.getConnectedStations().getFirst());
     }
 
     @Test
@@ -79,8 +79,8 @@ class HvdcTest {
                     .dangling(TwoSides.ONE)
                     .build();
         assertEquals(1, hvdcPDangling.getConnectedStations().size());
-        assertEquals(line.getConverterStation1(), hvdcPDangling.getConnectedStations().get(0));
-        assertThat(reportNode.getChildren().get(0).getChildren().stream()
+        assertEquals(line.getConverterStation1(), hvdcPDangling.getConnectedStations().getFirst());
+        assertThat(reportNode.getChildren().getFirst().getChildren().stream()
                 .filter(r -> r.getMessageKey().equalsIgnoreCase("dynawo.dynasim.fieldOptionNotImplemented"))
                 .findFirst())
                 .isNotEmpty()

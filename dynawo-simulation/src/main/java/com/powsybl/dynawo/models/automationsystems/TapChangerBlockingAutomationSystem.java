@@ -81,7 +81,7 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
         }
         if (skippedTapChangers < (tapChangerEquipments.size() + tapChangerAutomatonIds.size())) {
             if (uMeasurements.size() == 1) {
-                adder.createMacroConnections(this, uMeasurements.get(0), ActionConnectionPoint.class, this::getVarConnectionsWith, MeasurementPointSuffix.of());
+                adder.createMacroConnections(this, uMeasurements.getFirst(), ActionConnectionPoint.class, this::getVarConnectionsWith, MeasurementPointSuffix.of());
             } else {
                 int i = 1;
                 for (Identifiable<?> measurement : uMeasurements) {
