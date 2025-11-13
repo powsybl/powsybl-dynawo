@@ -33,10 +33,9 @@ class JobsXmlTest extends DynawoTestUtil {
                 .dynawoParameters(parameters)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
-                .defaultConfigVersion(true)
                 .build();
         JobsXml.write(tmpDir, context);
-        validate("jobs.xsd", xmlResult, tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
+        validate("jobs.xsd", xmlResult, tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME), true);
     }
 
     private static Stream<Arguments> provideParameters() {
@@ -59,10 +58,9 @@ class JobsXmlTest extends DynawoTestUtil {
                 .dynawoParameters(parameters)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
-                .defaultConfigVersion(true)
                 .build();
         JobsXml.write(tmpDir, context);
-        validate("jobs.xsd", "jobsWithDump.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
+        validate("jobs.xsd", "jobsWithDump.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME), true);
     }
 
     @Test
@@ -71,10 +69,9 @@ class JobsXmlTest extends DynawoTestUtil {
                 .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
-                .defaultConfigVersion(true)
                 .build();
         JobsXml.write(tmpDir, context, "additional_models.dyd");
-        validate("jobs.xsd", "jobsWithAdditionalDyd.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
+        validate("jobs.xsd", "jobsWithAdditionalDyd.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME), true);
     }
 
     @Test
@@ -84,9 +81,9 @@ class JobsXmlTest extends DynawoTestUtil {
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .finalStepConfig(new FinalStepConfig(200, bbm -> bbm.getDynamicModelId().equalsIgnoreCase("LOAD2")))
-                .defaultConfigVersion(true)
                 .build();
         JobsXml.writeFinalStep(tmpDir, context);
-        validate("jobs.xsd", "jobsWithFinalStep.xml", tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME));
+        validate("jobs.xsd", "jobsWithFinalStep.xml",
+                tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME), true);
     }
 }

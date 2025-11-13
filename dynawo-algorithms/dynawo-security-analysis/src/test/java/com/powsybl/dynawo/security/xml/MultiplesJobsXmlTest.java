@@ -32,7 +32,7 @@ class MultiplesJobsXmlTest extends DynawoTestUtil {
                         .addLine("NHV1_NHV2_1")
                         .addGenerator("GEN2")
                         .build());
-        SecurityAnalysisContext context = new SecurityAnalysisContext.Builder(network, dynamicModels, contingencies).defaultConfigVersion(true).build();
+        SecurityAnalysisContext context = new SecurityAnalysisContext.Builder(network, dynamicModels, contingencies).build();
 
         MultipleJobsXml.write(tmpDir, context);
         validate("multipleJobs.xsd", "multipleJobs_sa.xml", tmpDir.resolve(MULTIPLE_JOBS_FILENAME));

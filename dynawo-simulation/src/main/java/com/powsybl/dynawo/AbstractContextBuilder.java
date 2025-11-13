@@ -52,7 +52,6 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     protected SimulationTime finalStepTime = null;
     protected DynawoVersion dynawoVersion = DynawoConstants.VERSION_MIN;
     protected ReportNode reportNode = ReportNode.NO_OP;
-    protected boolean defaultConfigVersion = false;
 
     protected AbstractContextBuilder(Network network, List<BlackBoxModel> dynamicModels) {
         this.network = network;
@@ -76,11 +75,6 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
 
     public T reportNode(ReportNode reportNode) {
         this.reportNode = DynawoSimulationReports.createDynawoSimulationContextReportNode(reportNode);
-        return self();
-    }
-
-    public T defaultConfigVersion(boolean enabled) {
-        this.defaultConfigVersion = enabled;
         return self();
     }
 

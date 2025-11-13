@@ -187,15 +187,8 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
 
     private static void writeAdditionalInfos(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
         writer.writeComment("dynawo: " + context.getCurrentDynawoVersion());
-
-        if (context.isDefaultConfigVersion()) {
-            writer.writeComment("powsybl-dynawo: 3.1.0");
-            writer.writeComment("powsybl-core: 7.0.0");
-        } else {
-            for (Version version : Version.list()) {
-                writer.writeComment(version.getRepositoryName() + ": " + version.getMavenProjectVersion());
-            }
+        for (Version version : Version.list()) {
+            writer.writeComment(version.getRepositoryName() + ": " + version.getMavenProjectVersion());
         }
     }
-
 }
