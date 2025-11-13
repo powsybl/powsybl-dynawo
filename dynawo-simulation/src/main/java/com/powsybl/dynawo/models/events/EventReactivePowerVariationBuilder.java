@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com/)
+ * Copyright (c) 2025, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -15,9 +15,9 @@ import com.powsybl.iidm.network.Network;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
- * @author Riad Benradi {@benradiria <riad.benradi at rte-france.com>}
+ * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public class EventReactivePowerVariationBuilder extends AbstractEventPowerBuilder<EventReactivePowerVariationBuilder, EventReactivePowerVariation> {
+public class EventReactivePowerVariationBuilder extends AbstractEventPowerVariationBuilder<EventReactivePowerVariationBuilder> {
 
     private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ReactivePowerVariation", "Reactive power variation on generator or load");
 
@@ -41,7 +41,7 @@ public class EventReactivePowerVariationBuilder extends AbstractEventPowerBuilde
     }
 
     EventReactivePowerVariationBuilder(Network network, ReportNode parentReportNode) {
-        super(network, parentReportNode, MODEL_INFO, "deltaQ");
+        super(network, parentReportNode, "deltaQ");
     }
 
     public EventReactivePowerVariationBuilder deltaQ(double deltaQ) {

@@ -16,7 +16,7 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventActivePowerVariationBuilder extends AbstractEventPowerBuilder<EventActivePowerVariationBuilder, EventActivePowerVariation> {
+public class EventActivePowerVariationBuilder extends AbstractEventPowerVariationBuilder<EventActivePowerVariationBuilder> {
 
     private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ActivePowerVariation", "Active power variation on generator or load");
 
@@ -40,7 +40,7 @@ public class EventActivePowerVariationBuilder extends AbstractEventPowerBuilder<
     }
 
     EventActivePowerVariationBuilder(Network network, ReportNode parentReportNode) {
-        super(network, parentReportNode, MODEL_INFO, "deltaP");
+        super(network, parentReportNode, "deltaP");
     }
 
     public EventActivePowerVariationBuilder deltaP(double deltaP) {

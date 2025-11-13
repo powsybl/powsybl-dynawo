@@ -9,7 +9,7 @@ package com.powsybl.dynawo.builders;
 
 /**
  * @param lib Lib name
- * @param alias Alias name
+ * @param alias Alias of the library name used in Powsybl-Dynawo
  * @param doc Definition of the event model
  * @param version Dynawo version range where the model can be used
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -33,6 +33,8 @@ public record EventModelInfo(String lib, String alias, String doc, VersionInterv
      * Concatenation of name, doc and version bound
      */
     public String formattedInfo() {
-        return String.format("%s: %s (%s)", name(), doc, version);
+        return name() + (alias != null ? " (" + lib + ")" : "")
+                + (doc != null ? ": " + doc : "")
+                + " (" + version.formattedInfo() + ")";
     }
 }

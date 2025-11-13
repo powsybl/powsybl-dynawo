@@ -1,5 +1,4 @@
 /**
- *
  * Copyright (c) 2025, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,41 +9,27 @@ package com.powsybl.dynawo.models.events;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.BuilderReports;
-import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.iidm.network.Injection;
 import com.powsybl.iidm.network.Network;
 
 /**
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public abstract class AbstractEventPowerBuilder<B extends AbstractEventPowerBuilder<B, E>, E extends AbstractEvent>
+public abstract class AbstractEventPowerVariationBuilder<B extends AbstractEventPowerVariationBuilder<B>>
         extends AbstractEventModelBuilder<Injection<?>, B> {
 
-    protected final EventModelInfo modelInfo;
+    protected final String deltaFieldName;
     protected Double deltaValue;
-    protected String deltaFieldName;
 
-    protected AbstractEventPowerBuilder(Network network, ReportNode parentReportNode, EventModelInfo modelInfo, String deltaFieldName) {
+    protected AbstractEventPowerVariationBuilder(Network network, ReportNode parentReportNode, String deltaFieldName) {
         super(network, "GENERATOR/LOAD", parentReportNode);
-        this.modelInfo = modelInfo;
         this.deltaFieldName = deltaFieldName;
-    }
-
-    @SuppressWarnings("unchecked")
-    public B deltaValue(double deltaValue) {
-        this.deltaValue = deltaValue;
-        return (B) this;
     }
 
     @Override
     protected Injection<?> findEquipment(String staticId) {
         Injection<?> equipment = network.getLoad(staticId);
         return equipment != null ? equipment : network.getGenerator(staticId);
-    }
-
-    @Override
-    protected String getModelName() {
-        return modelInfo.name();
     }
 
     @Override
@@ -55,8 +40,5 @@ public abstract class AbstractEventPowerBuilder<B extends AbstractEventPowerBuil
             isInstantiable = false;
         }
     }
-
-    @Override
-    public abstract E build();
 }
 

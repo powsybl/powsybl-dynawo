@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com/)
+ * Copyright (c) 2025, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -18,7 +18,7 @@ import java.io.IOException;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
- * @author Riad Benradi {@benradiria <riad.benradi at rte-france.com>}
+ * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
 class ReactivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
 
@@ -56,5 +56,6 @@ class ReactivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "rpv_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "rpv_par.xml", tmpDir.resolve(context.getSimulationParFile()));
+        validate("parameters.xsd", "rpv_network_par.xml", tmpDir.resolve("network.par"));
     }
 }

@@ -1,5 +1,4 @@
 /**
- *
  * Copyright (c) 2025, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,8 +8,9 @@
 package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynawo.models.Model;
+
 /**
- * @author Riad Benradi {@benradiria <riad.benradi at rte-france.com>}
+ * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
 
 public interface ControllableQEquipmentModel extends Model {
