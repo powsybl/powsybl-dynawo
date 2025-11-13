@@ -5,11 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
+package com.powsybl.dynawo.models.events;
 
-package eventModels
+import com.powsybl.dynawo.models.Model;
 
-Step {
-    staticId "LOAD"
-    startTime 2
-    deltaP 0.2
+/**
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ */
+public interface ControllablePEquipmentModel extends Model {
+
+    String getDeltaPVarName();
 }

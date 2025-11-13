@@ -5,11 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package smib
+
+package eventModels
 
 ActivePowerVariation {
-    staticId "SM"
-    startTime 1
-    deltaP 0.02
+    staticId "LOAD"
+    startTime 2
+    deltaP 0.2
 }
-
