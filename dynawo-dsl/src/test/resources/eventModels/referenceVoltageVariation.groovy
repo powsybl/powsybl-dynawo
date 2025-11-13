@@ -10,7 +10,7 @@
 package eventModels
 
 ReferenceVoltageVariation {
-    staticId "LOAD"
+    staticId "GEN"
     startTime 2
     deltaU 0.2
 }
