@@ -40,7 +40,7 @@
       "dumpFile" : null
     },
     "precision" : 1.0E-6,
-    "timelineExportMode" : "TXT",
+    "timelineExportMode" : "XML",
     "logLevelFilter" : "INFO",
     "specificLogs" : [ ],
     "criteriaFilePath" : null,
