@@ -21,7 +21,7 @@ import java.io.IOException;
 /**
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public class ReferenceVoltageVariationEventXmlTest extends AbstractDynamicModelXmlTest {
+class ReferenceVoltageVariationEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
