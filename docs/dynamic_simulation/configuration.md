@@ -92,7 +92,7 @@ The available `com.powsybl.dynawo.commons.ExportMode` values are:
 - `TXT`: same format as `CSV` but with `|` separator
 - `XML`
 
-The default value is `TXT`.
+The default value is `XML`.
 
 **precision**  
 `precision` defines the simulation step precision.  
