@@ -87,11 +87,11 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
 
     public boolean checkEquipmentData() {
         boolean emptyList = equipments.isEmpty();
-        if (emptyList && missingEquipmentIds.isEmpty()) {
+        if (emptyList || !missingEquipmentIds.isEmpty()) {
             BuilderReports.reportFieldNotSet(reportNode, fieldName);
             return false;
         }
-        return !emptyList;
+        return true;
     }
 
     public List<T> getEquipments() {
