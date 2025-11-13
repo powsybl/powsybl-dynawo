@@ -12,6 +12,7 @@ import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.builders.ModelInfo;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Injection;
 import com.powsybl.iidm.network.Network;
 
@@ -43,13 +44,12 @@ public class EventReferenceVoltageVariationBuilder extends AbstractEventModelBui
     }
 
     protected EventReferenceVoltageVariationBuilder(Network network, ReportNode parentReportNode) {
-        super(network, "GENERATOR/LOAD", parentReportNode);
+        super(network, "GENERATOR", parentReportNode);
     }
 
     @Override
-    protected Injection<?> findEquipment(String staticId) {
-        Injection<?> equipment = network.getLoad(staticId);
-        return equipment != null ? equipment : network.getGenerator(staticId);
+    protected Injection<Generator> findEquipment(String staticId) {
+        return network.getGenerator(staticId);
     }
 
     public EventReferenceVoltageVariationBuilder deltaU(double deltaU) {
@@ -73,7 +73,7 @@ public class EventReferenceVoltageVariationBuilder extends AbstractEventModelBui
 
     @Override
     public EventReferenceVoltageVariation build() {
-        return isInstantiable() ? new EventReferenceVoltageVariation(eventId, builderEquipment.getEquipment(), MODEL_INFO, startTime, deltaU) : null;
+        return isInstantiable() ? new EventReferenceVoltageVariation(eventId, (Injection<Generator>) builderEquipment.getEquipment(), MODEL_INFO, startTime, deltaU) : null;
     }
 
     @Override

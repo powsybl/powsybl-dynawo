@@ -13,7 +13,7 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.utils.ImmutableLateInit;
 import com.powsybl.dynawo.parameters.ParametersSet;
-import com.powsybl.iidm.network.IdentifiableType;
+import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Injection;
 
 import java.util.List;
@@ -30,8 +30,7 @@ public class EventReferenceVoltageVariation extends AbstractEvent implements Con
 
     protected enum EquipmentModelType {
         SPECIFIED,
-        DEFAULT_GENERATOR,
-        DEFAULT_LOAD;
+        DEFAULT_GENERATOR;
 
         public boolean isSpecified() {
             return this == SPECIFIED;
@@ -41,7 +40,7 @@ public class EventReferenceVoltageVariation extends AbstractEvent implements Con
     protected final double deltaU;
     protected final ImmutableLateInit<EquipmentModelType> equipmentModelType = new ImmutableLateInit<>();
 
-    protected EventReferenceVoltageVariation(String eventId, Injection<?> equipment, EventModelInfo eventModelInfo, double startTime, double deltaU) {
+    protected EventReferenceVoltageVariation(String eventId, Injection<Generator> equipment, EventModelInfo eventModelInfo, double startTime, double deltaU) {
         super(eventId, equipment, eventModelInfo, startTime);
         this.deltaU = deltaU;
     }
@@ -55,10 +54,8 @@ public class EventReferenceVoltageVariation extends AbstractEvent implements Con
     public final void setEquipmentModelType(boolean hasDynamicModel) {
         if (hasDynamicModel) {
             equipmentModelType.setValue(EquipmentModelType.SPECIFIED);
-        } else if (IdentifiableType.GENERATOR == getEquipment().getType()) {
+        } else {
             equipmentModelType.setValue(EquipmentModelType.DEFAULT_GENERATOR);
-        } else if (IdentifiableType.LOAD == getEquipment().getType()) {
-            equipmentModelType.setValue(EquipmentModelType.DEFAULT_LOAD);
         }
     }
 
@@ -92,7 +89,7 @@ public class EventReferenceVoltageVariation extends AbstractEvent implements Con
 
     @Override
     public void createNetworkParameter(ParametersSet networkParameters) {
-        if (equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_LOAD)) {
+        if (equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_GENERATOR)) {
             networkParameters.addParameter(getEquipment().getId() + "_isControllableU", BOOL, Boolean.toString(true));
         }
     }
