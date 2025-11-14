@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="NodeFault_NLOAD" lib="NodeFault" parFile="NodeFault_1.par" parId="NodeFault_NLOAD"/>
+    <dyn:macroConnector id="MC_NodeFault-DefaultActionConnectionPoint">
+        <dyn:connect var1="fault_terminal" var2="@NAME@_ACPIN"/>
+    </dyn:macroConnector>
+    <dyn:macroConnect connector="MC_NodeFault-DefaultActionConnectionPoint" id1="NodeFault_NLOAD" id2="NETWORK" name2="NLOAD"/>
+</dyn:dynamicModelsArchitecture>

@@ -29,9 +29,9 @@ public final class ResultsUtil {
 
     public static PostContingencyComputationStatus convertToPostStatus(Status status) {
         return switch (status) {
-            case CONVERGENCE -> PostContingencyComputationStatus.CONVERGED;
+            case CONVERGENCE, RESULT_FOUND -> PostContingencyComputationStatus.CONVERGED;
             case DIVERGENCE -> PostContingencyComputationStatus.SOLVER_FAILED;
-            case EXECUTION_PROBLEM, CRITERIA_NON_RESPECTED -> PostContingencyComputationStatus.FAILED;
+            case EXECUTION_PROBLEM, CRITERIA_NON_RESPECTED, CT_ABOVE_MAX_BOUND, CT_BELOW_MIN_BOUND -> PostContingencyComputationStatus.FAILED;
         };
     }
 
