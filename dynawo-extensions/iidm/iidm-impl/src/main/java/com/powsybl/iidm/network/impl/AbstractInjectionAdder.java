@@ -1,0 +1,57 @@
+/**
+ * Copyright (c) 2016, All partners of the iTesla project (http://www.itesla-project.eu/consortium)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+package com.powsybl.iidm.network.impl;
+
+import com.powsybl.commons.ref.Ref;
+
+/**
+ *
+ * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
+ */
+abstract class AbstractInjectionAdder<T extends AbstractInjectionAdder<T>> extends AbstractIdentifiableAdder<T> {
+
+    private Integer node;
+
+    private String bus;
+
+    private String connectableBus;
+
+    protected VoltageLevelExt voltageLevel;
+
+    public T setNode(int node) {
+        this.node = node;
+        return (T) this;
+    }
+
+    public T setBus(String bus) {
+        this.bus = bus;
+        return (T) this;
+    }
+
+    public T setConnectableBus(String connectableBus) {
+        this.connectableBus = connectableBus;
+        return (T) this;
+    }
+
+    @Override
+    protected NetworkImpl getNetwork() {
+        return voltageLevel.getNetwork();
+    }
+
+    protected Ref<NetworkImpl> getNetworkRef() {
+        return voltageLevel.getNetworkRef();
+    }
+
+    protected TerminalExt checkAndGetTerminal() {
+        return new TerminalBuilder(getNetworkRef(), this, null)
+                .setNode(node)
+                .setBus(bus)
+                .setConnectableBus(connectableBus)
+                .build();
+    }
+}
