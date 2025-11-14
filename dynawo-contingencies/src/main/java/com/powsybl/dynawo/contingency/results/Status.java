@@ -14,5 +14,8 @@ public enum Status {
         CONVERGENCE,
         DIVERGENCE,
         EXECUTION_PROBLEM,
-        CRITERIA_NON_RESPECTED
+        CRITERIA_NON_RESPECTED,
+        RESULT_FOUND,
+        CT_BELOW_MIN_BOUND,
+        CT_ABOVE_MAX_BOUND
 }

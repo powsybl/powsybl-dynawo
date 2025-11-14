@@ -22,5 +22,6 @@
         <module>dynawo-algorithms-commons</module>
         <module>dynawo-margin-calculation</module>
         <module>dynawo-security-analysis</module>
+        <module>dynawo-critical-time-calculation</module>
     </modules>
 </project>
