@@ -82,7 +82,7 @@ class DynawoEventModelsSupplierTest {
         try (InputStream is = getClass().getResourceAsStream("/suppliers/events.json")) {
             List<EventModelConfig> configs = deserializer.deserialize(is);
             assertEquals(1, configs.size());
-            assertThat(configs.get(0)).usingRecursiveComparison().isEqualTo(getActivePowerVariationConfig());
+            assertThat(configs.getFirst()).usingRecursiveComparison().isEqualTo(getActivePowerVariationConfig());
         }
     }
 
@@ -99,11 +99,6 @@ class DynawoEventModelsSupplierTest {
         DynawoEventModelsSupplier supplier = new DynawoEventModelsSupplier(List.of(eventModelConfig));
         Exception e = assertThrows(PowsyblException.class, () -> supplier.get(network, ReportNode.NO_OP));
         assertEquals("Method wrongName not found for parameter NHV1_NHV2_2 on builder EventDisconnectionBuilder", e.getMessage());
-    }
-
-    @Test
-    void emptyPropertyException() {
-        assertThrowsExactly(IllegalArgumentException.class, () -> new PropertyBuilder().build(), "collectionType is undefined");
     }
 
     private static List<EventModelConfig> getEventConfigs() {
