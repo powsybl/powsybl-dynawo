@@ -19,7 +19,7 @@ import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 /**
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public abstract class AbstractEventPower extends AbstractEvent implements ContextDependentEvent {
+public abstract class AbstractVariationEvent extends AbstractEvent implements ContextDependentEvent {
 
     protected static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
 
@@ -36,7 +36,7 @@ public abstract class AbstractEventPower extends AbstractEvent implements Contex
     protected final double deltaValue;
     protected final ImmutableLateInit<EquipmentModelType> equipmentModelType = new ImmutableLateInit<>();
 
-    protected AbstractEventPower(String eventId, Injection<?> equipment, EventModelInfo eventModelInfo, double startTime, double deltaValue) {
+    protected AbstractVariationEvent(String eventId, Injection<?> equipment, EventModelInfo eventModelInfo, double startTime, double deltaValue) {
         super(eventId, equipment, eventModelInfo, startTime);
         this.deltaValue = deltaValue;
     }

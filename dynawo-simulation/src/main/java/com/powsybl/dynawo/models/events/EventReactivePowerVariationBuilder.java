@@ -17,7 +17,7 @@ import com.powsybl.iidm.network.Network;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public class EventReactivePowerVariationBuilder extends AbstractEventPowerVariationBuilder<EventReactivePowerVariationBuilder> {
+public class EventReactivePowerVariationBuilder extends AbstractVariationEventBuilder<EventReactivePowerVariationBuilder> {
 
     private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ReactivePowerVariation", "Reactive power variation on generator or load");
 

@@ -15,13 +15,13 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public abstract class AbstractEventPowerVariationBuilder<B extends AbstractEventPowerVariationBuilder<B>>
+public abstract class AbstractVariationEventBuilder<B extends AbstractVariationEventBuilder<B>>
         extends AbstractEventModelBuilder<Injection<?>, B> {
 
     protected final String deltaFieldName;
     protected Double deltaValue;
 
-    protected AbstractEventPowerVariationBuilder(Network network, ReportNode parentReportNode, String deltaFieldName) {
+    protected AbstractVariationEventBuilder(Network network, ReportNode parentReportNode, String deltaFieldName) {
         super(network, "GENERATOR/LOAD", parentReportNode);
         this.deltaFieldName = deltaFieldName;
     }

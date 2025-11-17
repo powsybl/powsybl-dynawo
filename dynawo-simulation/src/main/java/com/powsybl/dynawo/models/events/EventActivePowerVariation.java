@@ -20,7 +20,7 @@ import static com.powsybl.dynawo.parameters.ParameterType.BOOL;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventActivePowerVariation extends AbstractEventPower {
+public class EventActivePowerVariation extends AbstractVariationEvent {
 
     protected EventActivePowerVariation(String eventId, Injection<?> equipment, EventModelInfo eventModelInfo, double startTime, double deltaP) {
         super(eventId, equipment, eventModelInfo, startTime, deltaP);

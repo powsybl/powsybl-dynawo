@@ -16,7 +16,7 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventActivePowerVariationBuilder extends AbstractEventPowerVariationBuilder<EventActivePowerVariationBuilder> {
+public class EventActivePowerVariationBuilder extends AbstractVariationEventBuilder<EventActivePowerVariationBuilder> {
 
     private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ActivePowerVariation", "Active power variation on generator or load");
 
