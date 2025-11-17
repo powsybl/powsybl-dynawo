@@ -34,7 +34,7 @@ public abstract class AbstractEventPower extends AbstractEvent implements Contex
     }
 
     protected final double deltaValue;
-    protected final ImmutableLateInit<EquipmentModelType> equipmentModelType = new ImmutableLateInit<>();
+    protected ImmutableLateInit<EquipmentModelType> equipmentModelType = new ImmutableLateInit<>();
 
     protected AbstractEventPower(String eventId, Injection<?> equipment, EventModelInfo eventModelInfo, double startTime, double deltaValue) {
         super(eventId, equipment, eventModelInfo, startTime);
@@ -47,7 +47,7 @@ public abstract class AbstractEventPower extends AbstractEvent implements Contex
     }
 
     @Override
-    public final void setEquipmentModelType(boolean hasDynamicModel) {
+    public void setEquipmentModelType(boolean hasDynamicModel) {
         if (hasDynamicModel) {
             equipmentModelType.setValue(EquipmentModelType.SPECIFIED);
         } else if (IdentifiableType.GENERATOR == getEquipment().getType()) {
