@@ -42,8 +42,7 @@ import java.util.function.Predicate;
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaflowReports.createSidedContingencyReportNode;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
-import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
-import static com.powsybl.dynawo.commons.DynawoConstants.TIMELINE_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 import static com.powsybl.dynawo.contingency.ContingencyResultsUtils.createSecurityAnalysisResult;
 
@@ -80,7 +79,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
         writeParameters(securityAnalysisParameters, workingDir);
         writeContingencies(contingencies, workingDir);
 
-        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(".execTmp.txt");
+        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(EXEC_TMP_FILENAME);
         Files.writeString(tmpExecFile, workingDir.toAbsolutePath().toString());
 
         return getCommandExecutions(command);

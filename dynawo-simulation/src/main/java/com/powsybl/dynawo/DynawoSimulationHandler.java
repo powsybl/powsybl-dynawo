@@ -82,7 +82,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         deleteExistingFile(basePath, FSV_OUTPUT_PATH, FSV_OUTPUT_FILENAME);
         writeInputFiles(workingDir);
 
-        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(".execTmp.txt");
+        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(".EXEC_TMP_FILENAME");
         Files.writeString(tmpExecFile, workingDir.toAbsolutePath().toString());
 
         return getCommandExecutions(command);

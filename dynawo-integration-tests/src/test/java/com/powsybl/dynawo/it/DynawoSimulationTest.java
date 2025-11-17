@@ -509,7 +509,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
     void testExecutionTempFileAndReferencedFileExist() throws IOException {
         setupIEEE14Simulation().get();
         Path execTmpDir = localDir.getParent();
-        Path execTmpFilePath = execTmpDir.resolve(".execTmp.txt");
+        Path execTmpFilePath = execTmpDir.resolve(".EXEC_TMP_FILENAME");
         String content = Files.readString(execTmpFilePath);
         Path referencedFile = Paths.get(content.trim());
 

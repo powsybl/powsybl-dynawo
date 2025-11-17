@@ -160,7 +160,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                 EventModelsSupplier.empty()
         );
         Path execTmpDir = localDir.getParent();
-        Path execTmpFilePath = execTmpDir.resolve(".execTmp.txt");
+        Path execTmpFilePath = execTmpDir.resolve(".EXEC_TMP_FILENAME");
         String content = Files.readString(execTmpFilePath);
         Path referencedFile = Paths.get(content.trim());
 

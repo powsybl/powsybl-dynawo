@@ -191,7 +191,7 @@ class DynaFlowTest extends AbstractDynawoTest {
         loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNode)
                 .join();
         Path execTmpDir = localDir.getParent();
-        Path execTmpFilePath = execTmpDir.resolve(".execTmp.txt");
+        Path execTmpFilePath = execTmpDir.resolve(".EXEC_TMP_FILENAME");
         String content = Files.readString(execTmpFilePath);
         Path referencedFile = Paths.get(content.trim());
 

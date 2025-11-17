@@ -51,7 +51,7 @@ public abstract class AbstractDynawoAlgorithmsHandler<R, S extends DynawoSimulat
         DynawoFilesUtils.deleteExistingFile(workingDir.resolve(OUTPUTS_FOLDER), FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
         writeInputFiles(workingDir);
 
-        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(".execTmp.txt");
+        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(".EXEC_TMP_FILENAME");
         Files.writeString(tmpExecFile, workingDir.toAbsolutePath().toString());
 
         return getCommandExecutions(command);
