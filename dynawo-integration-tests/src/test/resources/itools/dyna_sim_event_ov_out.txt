@@ -498,7 +498,7 @@ Loading network 'IEEE14.iidm'
       number of root functions evaluations       = 2161
       number of discrete variables evaluations   = 79
       number of mode evaluations                 = 66
-      end of job 'Job'
+      end of job 'ieee14bus'
 dynamic simulation results:
 +---------+
 | Result  |
