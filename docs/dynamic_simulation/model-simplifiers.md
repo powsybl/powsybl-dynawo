@@ -12,4 +12,4 @@ Filter overload management systems :
 * measuring point is energized
 
 ## Main connected component simplifier
-Filter equipment models in the main connected component.
+Filter injection and hvdc models in the main connected component.

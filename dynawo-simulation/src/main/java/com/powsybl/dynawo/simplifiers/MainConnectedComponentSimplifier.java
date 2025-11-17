@@ -16,7 +16,7 @@ import com.powsybl.iidm.network.*;
 import java.util.function.Predicate;
 
 /**
- * Filter equipment models in the main connected component
+ * Filter injection and hvdc models in the main connected component
  *
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 public final class MainConnectedComponentSimplifier implements ModelsRemovalSimplifier {
 
     private static final ModelSimplifierInfo MODEL_INFO = new ModelSimplifierInfo("mainComponentEquipment",
-            "Filter equipment in the main connected component",
+            "Filter injection and hvdc in the main connected component",
             SIMPLIFIER_TYPE);
 
     @Override
@@ -46,21 +46,14 @@ public final class MainConnectedComponentSimplifier implements ModelsRemovalSimp
     private static boolean isMainConnected(EquipmentBlackBoxModel bbm, ReportNode reportNode) {
         return switch (bbm.getEquipment()) {
             case Injection<?> inj -> isMainConnected(inj, reportNode, bbm);
-            case Branch<?> br -> isMainConnected(br, reportNode, bbm);
             case HvdcLine l -> isMainConnected(l.getConverterStation1(), reportNode, bbm)
-                    || isMainConnected(l.getConverterStation2(), reportNode, bbm);
-            case Bus b -> isMainConnected(b, reportNode, bbm);
+                    && isMainConnected(l.getConverterStation2(), reportNode, bbm);
             default -> true;
         };
     }
 
     private static boolean isMainConnected(Injection<?> equipment, ReportNode reportNode, BlackBoxModel bbm) {
         return isMainConnected(equipment.getTerminal().getBusBreakerView().getBus(), reportNode, bbm);
-    }
-
-    private static boolean isMainConnected(Branch<?> equipment, ReportNode reportNode, BlackBoxModel bbm) {
-        return isMainConnected(equipment.getTerminal1().getBusBreakerView().getBus(), reportNode, bbm)
-                || isMainConnected(equipment.getTerminal2().getBusBreakerView().getBus(), reportNode, bbm);
     }
 
     private static boolean isMainConnected(Bus bus, ReportNode reportNode, BlackBoxModel bbm) {
