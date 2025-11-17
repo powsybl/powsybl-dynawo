@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.generators;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
+import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.iidm.network.Bus;
@@ -30,6 +31,11 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
     protected SynchronousGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig, EnumGeneratorComponent generatorComponent) {
         super(generator, parameterSetId, modelConfig);
         this.generatorComponent = Objects.requireNonNull(generatorComponent);
+    }
+
+    @Override
+    public List<VarMapping> getVarsMapping() {
+        return generatorComponent.getVarMapping();
     }
 
     @Override
