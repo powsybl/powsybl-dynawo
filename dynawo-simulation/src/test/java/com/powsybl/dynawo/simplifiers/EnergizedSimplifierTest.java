@@ -16,7 +16,6 @@ import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOve
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
-import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
@@ -32,6 +31,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -51,7 +51,7 @@ class EnergizedSimplifierTest {
         EnergizedSimplifier simplifier = new EnergizedSimplifier();
         List<BlackBoxModel> filteredModels = dynamicModels.stream().filter(simplifier.getModelRemovalPredicate(reportNode)).toList();
 
-        assertEquals(0, filteredModels.size());
+        assertTrue(filteredModels.isEmpty());
         assertReport(expectedReport, reportNode);
     }
 
@@ -67,28 +67,6 @@ class EnergizedSimplifierTest {
                         + Simplifier test
                            + Energized model filter
                               Equipment GEN terminal is not connected, model GeneratorSynchronousFourWindings GEN will be skipped
-                        """),
-                Arguments.of(EurostagTutorialExample1Factory.create(),
-                        (Consumer<Network>) n -> { },
-                        (Function<Network, BlackBoxModel>) n -> TransformerFixedRatioBuilder.of(n, "TransformerFixedRatio")
-                                .staticId("NGEN_NHV1")
-                                .parameterSetId("TFR")
-                                .build(),
-                        """
-                        + Simplifier test
-                           + Energized model filter
-                              Bus NGEN is not energized, model TransformerFixedRatio NGEN_NHV1 will be skipped
-                        """),
-                Arguments.of(EurostagTutorialExample1Factory.create(),
-                        (Consumer<Network>) n -> n.getBusBreakerView().getBus("NGEN").setV(1.0),
-                        (Function<Network, BlackBoxModel>) n -> TransformerFixedRatioBuilder.of(n, "TransformerFixedRatio")
-                                .staticId("NGEN_NHV1")
-                                .parameterSetId("TFR")
-                                .build(),
-                        """
-                        + Simplifier test
-                           + Energized model filter
-                              Bus NHV1 is not energized, model TransformerFixedRatio NGEN_NHV1 will be skipped
                         """),
                 Arguments.of(HvdcTestNetwork.createVsc(),
                         (Consumer<Network>) n -> n.getBusBreakerView().getBus("B1").setV(1.0),

@@ -4,7 +4,7 @@ Simplifiers can be set in [Dynawo simulation parameters](configuration.md#option
 
 ## Energized simplifier
 Filter energized equipment models, namely :
-* Equipment terminals are all connected (except dangling sides)
+* Injection and hvdc terminals are all connected (except dangling sides)
 * Each terminal buses have a voltage level on
 
 Filter overload management systems :

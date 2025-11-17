@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 /**
  * Filter energized equipment models, namely :
  * <ul>
- *     <li>Equipment terminals are all connected (except dangling sides)</li>
+ *     <li>Injection and hvdc terminals are all connected (except dangling sides)</li>
  *     <li>Each terminal buses have a voltage level on</li>
  * </ul>
  * Filter overload management systems :
@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 public final class EnergizedSimplifier implements ModelsRemovalSimplifier {
 
     private static final ModelSimplifierInfo MODEL_INFO = new ModelSimplifierInfo("energizedEquipment",
-            "Filter equipment with all terminals connected (except dangling sides) and terminal buses with a voltage level on",
+            "Filter injection and hvdc with all terminals connected (except dangling sides) and terminal buses with a voltage level on and overload management systems with monitored branch and measuring point energized",
             SIMPLIFIER_TYPE);
 
     @Override
@@ -51,12 +51,10 @@ public final class EnergizedSimplifier implements ModelsRemovalSimplifier {
     private static boolean isEnergized(EquipmentBlackBoxModel bbm, ReportNode reportNode) {
         return switch (bbm.getEquipment()) {
             case Injection<?> inj -> isEnergized(inj.getTerminal(), reportNode, bbm);
-            case Branch<?> br -> isEnergized(br.getTerminal1(), reportNode, bbm) && isEnergized(br.getTerminal2(), reportNode, bbm);
             case HvdcLine l
                 when bbm instanceof BaseHvdc hvdcBbm -> hvdcBbm.getConnectedStations().stream()
                     .map(st -> isEnergized(st.getTerminal(), reportNode, bbm))
                     .reduce(true, (e1, e2) -> e1 && e2);
-            case Bus b -> isEnergized(b, reportNode, bbm);
             default -> true;
         };
     }
