@@ -42,6 +42,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
@@ -52,8 +53,7 @@ import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.commons.report.ReportNode.newRootReportNode;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -503,5 +503,19 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
         assertThat(result.getStatusText()).contains("KINSOL fails to solve the problem");
+    }
+
+    @Test
+    void testExecutionTempFileAndReferencedFileExist() throws IOException {
+        setupIEEE14Simulation().get();
+        Path execTmpDir = localDir.getParent();
+        Path execTmpFilePath = execTmpDir.resolve(".EXEC_TMP_FILENAME");
+        String content = Files.readString(execTmpFilePath);
+        Path referencedFile = Paths.get(content.trim());
+
+        assertTrue(Files.exists(execTmpFilePath));
+        assertNotNull(content);
+        assertFalse(content.isBlank());
+        assertTrue(Files.exists(referencedFile));
     }
 }
