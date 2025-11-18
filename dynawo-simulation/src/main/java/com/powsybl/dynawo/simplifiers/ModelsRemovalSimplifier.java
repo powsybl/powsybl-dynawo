@@ -5,18 +5,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo;
+package com.powsybl.dynawo.simplifiers;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.models.BlackBoxModel;
-import com.powsybl.iidm.network.Network;
 
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface ModelsSubstitutionSimplifier {
+public interface ModelsRemovalSimplifier extends ModelSimplifier {
 
-    Function<BlackBoxModel, BlackBoxModel> getModelSubstitutionFunction(Network network, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode);
+    SimplifierType SIMPLIFIER_TYPE = SimplifierType.REMOVAL;
+
+    Predicate<BlackBoxModel> getModelRemovalPredicate(ReportNode reportNode);
 }

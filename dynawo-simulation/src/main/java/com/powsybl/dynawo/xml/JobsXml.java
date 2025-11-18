@@ -62,7 +62,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
     public void write(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
         DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
         writer.writeStartElement(DYN_URI, "job");
-        writer.writeAttribute("name", "Job");
+        writer.writeAttribute("name", context.getNetwork().getNameOrId());
         writeSolver(writer, parameters);
         writeModeler(writer, parameters, additionalDydFile);
         writeSimulation(writer, parameters, simulationTimeSupplier.get());
