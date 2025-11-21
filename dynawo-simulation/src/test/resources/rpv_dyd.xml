@@ -4,7 +4,7 @@
         <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="ReactivePowerVariation_GEN" lib="EventSetPointReal" parFile="sim1.par" parId="ReactivePowerVariation_GEN"/>
-    <dyn:blackBoxModel id="ReactivePowerVariation_LOAD" lib="EventSetPointReal" parFile="sim1.par" parId="ReactivePowerVariation_LOAD"/>
+    <dyn:blackBoxModel id="ReactivePowerVariation_LOAD" lib="Step" parFile="sim1.par" parId="ReactivePowerVariation_LOAD"/>
     <dyn:blackBoxModel id="ReactivePowerVariation_LOAD2" lib="Step" parFile="sim1.par" parId="ReactivePowerVariation_LOAD2"/>
     <dyn:macroConnector id="MC_LoadAlphaBeta-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="load_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
@@ -14,7 +14,7 @@
         <dyn:connect var1="event_state1" var2="@NAME@_Qc"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventReactivePowerVariation-DefaultLoad">
-        <dyn:connect var1="event_state1" var2="@NAME@_DeltaQc"/>
+        <dyn:connect var1="step_step_value" var2="@NAME@_DeltaQc_value"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventReactivePowerVariation-LoadAlphaBeta">
         <dyn:connect var1="step_step_value" var2="load_deltaQ"/>

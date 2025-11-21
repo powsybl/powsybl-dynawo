@@ -20,8 +20,9 @@
         <dyn:par type="DOUBLE" name="step_Height" value="1.3"/>
     </dyn:set>
     <dyn:set id="ActivePowerVariation_LOAD">
-        <dyn:par type="DOUBLE" name="event_tEvent" value="10.0"/>
-        <dyn:par type="DOUBLE" name="event_stateEvent1" value="1.2"/>
+        <dyn:par type="DOUBLE" name="step_Value0" value="0.0"/>
+        <dyn:par type="DOUBLE" name="step_tStep" value="10.0"/>
+        <dyn:par type="DOUBLE" name="step_Height" value="1.2"/>
     </dyn:set>
     <dyn:set id="ActivePowerVariation_LOAD2">
         <dyn:par type="DOUBLE" name="step_Value0" value="0.0"/>

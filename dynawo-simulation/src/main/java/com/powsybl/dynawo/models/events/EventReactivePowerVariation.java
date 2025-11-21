@@ -28,10 +28,9 @@ public class EventReactivePowerVariation extends AbstractVariationEvent {
     }
 
     private List<VarConnection> getVarConnectionsWith(ControllableQEquipmentModel connected) {
-        if (equipmentModelType.getValue().isSpecified()) {
+        if (equipmentModelType.getValue().isStep()) {
             return List.of(new VarConnection("step_step_value", connected.getDeltaQVarName()));
         }
-
         return List.of(new VarConnection("event_state1", connected.getDeltaQVarName()));
     }
 
@@ -46,7 +45,7 @@ public class EventReactivePowerVariation extends AbstractVariationEvent {
     @Override
     public void createNetworkParameter(ParametersSet networkParameters) {
         if (equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_LOAD)) {
-            networkParameters.addParameter(getEquipment().getId() + "_isControllableQ", BOOL, Boolean.toString(true));
+            networkParameters.addParameter(getEquipment().getId() + "_isQControllable", BOOL, Boolean.toString(true));
         }
     }
 

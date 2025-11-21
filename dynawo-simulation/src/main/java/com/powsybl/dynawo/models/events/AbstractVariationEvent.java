@@ -24,12 +24,18 @@ public abstract class AbstractVariationEvent extends AbstractEvent implements Co
     protected static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
 
     protected enum EquipmentModelType {
-        SPECIFIED,
-        DEFAULT_GENERATOR,
-        DEFAULT_LOAD;
+        SPECIFIED(true),
+        DEFAULT_GENERATOR(false),
+        DEFAULT_LOAD(true);
 
-        public boolean isSpecified() {
-            return this == SPECIFIED;
+        private final boolean isStep;
+
+        EquipmentModelType(boolean isStep) {
+            this.isStep = isStep;
+        }
+
+        public boolean isStep() {
+            return isStep;
         }
     }
 
@@ -43,7 +49,7 @@ public abstract class AbstractVariationEvent extends AbstractEvent implements Co
 
     @Override
     public String getLib() {
-        return equipmentModelType.getValue().isSpecified() ? super.getLib() : DEFAULT_MODEL_LIB;
+        return equipmentModelType.getValue().isStep() ? super.getLib() : DEFAULT_MODEL_LIB;
     }
 
     @Override
@@ -59,7 +65,7 @@ public abstract class AbstractVariationEvent extends AbstractEvent implements Co
 
     @Override
     protected void createEventSpecificParameters(ParametersSet paramSet) {
-        if (equipmentModelType.getValue().isSpecified()) {
+        if (equipmentModelType.getValue().isStep()) {
             paramSet.addParameter("step_Value0", DOUBLE, "0.0");
             paramSet.addParameter("step_tStep", DOUBLE, Double.toString(getStartTime()));
             paramSet.addParameter("step_Height", DOUBLE, Double.toString(deltaValue));
