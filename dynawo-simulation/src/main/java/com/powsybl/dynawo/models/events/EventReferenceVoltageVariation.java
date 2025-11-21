@@ -35,7 +35,7 @@ public class EventReferenceVoltageVariation extends AbstractEventPower {
         }
     }
 
-    private List<VarConnection> getVarConnectionsWith(ControllableUEquipmentModel connected) {
+    private List<VarConnection> getVarConnectionsWith(UControllableEquipmentModel connected) {
         if (equipmentModelType.getValue().isSpecified()) {
             return List.of(new VarConnection("step_step_value", connected.getDeltaUVarName()));
         }
@@ -47,14 +47,14 @@ public class EventReferenceVoltageVariation extends AbstractEventPower {
     public void createMacroConnections(MacroConnectionsAdder adder) {
         adder.createMacroConnections(this,
                 getEquipment(),
-                ControllableUEquipmentModel.class,
+                UControllableEquipmentModel.class,
                 this::getVarConnectionsWith);
     }
 
     @Override
     public void createNetworkParameter(ParametersSet networkParameters) {
         if (equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_GENERATOR)) {
-            networkParameters.addParameter(getEquipment().getId() + "_isControllableU", BOOL, Boolean.toString(true));
+            networkParameters.addParameter(getEquipment().getId() + "_isUControllable", BOOL, Boolean.toString(true));
         }
     }
 
