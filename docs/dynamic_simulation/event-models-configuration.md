@@ -97,7 +97,7 @@ ActivePowerVariation {
 ```
 
 ### Reactive Power Variation
-Reactive power variation on generator or load.  
+Reactive power variation on load and generator without dynamic model.  
 With specific attribute:
 - `deltaQ`: reactive power variation.
 

@@ -8,14 +8,14 @@
 package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.events.ControllablePEquipmentModel;
-import com.powsybl.dynawo.models.events.ControllableQEquipmentModel;
+import com.powsybl.dynawo.models.events.PControllableEquipmentModel;
+import com.powsybl.dynawo.models.events.QControllableEquipmentModel;
 import com.powsybl.iidm.network.Load;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class BaseLoadControllable extends BaseLoad implements ControllablePEquipmentModel, ControllableQEquipmentModel {
+public class BaseLoadControllable extends BaseLoad implements PControllableEquipmentModel, QControllableEquipmentModel {
 
     protected BaseLoadControllable(Load load, String parameterSetId, ModelConfig modelConfig) {
         super(load, parameterSetId, modelConfig);

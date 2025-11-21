@@ -27,7 +27,7 @@ public class EventReactivePowerVariation extends AbstractVariationEvent {
         super(eventId, equipment, eventModelInfo, startTime, deltaQ);
     }
 
-    private List<VarConnection> getVarConnectionsWith(ControllableQEquipmentModel connected) {
+    private List<VarConnection> getVarConnectionsWith(QControllableEquipmentModel connected) {
         if (equipmentModelType.getValue().isStep()) {
             return List.of(new VarConnection("step_step_value", connected.getDeltaQVarName()));
         }
@@ -38,7 +38,7 @@ public class EventReactivePowerVariation extends AbstractVariationEvent {
     public void createMacroConnections(MacroConnectionsAdder adder) {
         adder.createMacroConnections(this,
                 getEquipment(),
-                ControllableQEquipmentModel.class,
+                QControllableEquipmentModel.class,
                 this::getVarConnectionsWith);
     }
 

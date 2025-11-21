@@ -26,7 +26,7 @@ public class EventActivePowerVariation extends AbstractVariationEvent {
         super(eventId, equipment, eventModelInfo, startTime, deltaP);
     }
 
-    private List<VarConnection> getVarConnectionsWith(ControllablePEquipmentModel connected) {
+    private List<VarConnection> getVarConnectionsWith(PControllableEquipmentModel connected) {
         if (equipmentModelType.getValue().isStep()) {
             return List.of(new VarConnection("step_step_value", connected.getDeltaPVarName()));
         }
@@ -37,7 +37,7 @@ public class EventActivePowerVariation extends AbstractVariationEvent {
     public void createMacroConnections(MacroConnectionsAdder adder) {
         adder.createMacroConnections(this,
                 getEquipment(),
-                ControllablePEquipmentModel.class,
+                PControllableEquipmentModel.class,
                 this::getVarConnectionsWith);
     }
 
