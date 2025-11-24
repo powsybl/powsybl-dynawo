@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+import static com.powsybl.dynawo.commons.DynawoConstants.EXEC_TMP_FILENAME;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -54,7 +55,7 @@ public abstract class AbstractDynawoTest {
 
     protected void testExecutionTempFile() {
         Path execTmpDir = localDir.getParent();
-        Path execTmpFilePath = execTmpDir.resolve(".EXEC_TMP_FILENAME");
+        Path execTmpFilePath = execTmpDir.resolve(EXEC_TMP_FILENAME);
         try {
             String content = Files.readString(execTmpFilePath);
             Path referencedFile = Paths.get(content.trim());
