@@ -13,9 +13,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -44,5 +50,21 @@ public abstract class AbstractDynawoTest {
 
     protected static InputStream getResourceAsStream(String name) {
         return Objects.requireNonNull(AbstractDynawoTest.class.getResourceAsStream(name));
+    }
+
+    protected void testExecutionTempFile() {
+        Path execTmpDir = localDir.getParent();
+        Path execTmpFilePath = execTmpDir.resolve(".EXEC_TMP_FILENAME");
+        try {
+            String content = Files.readString(execTmpFilePath);
+            Path referencedFile = Paths.get(content.trim());
+
+            assertTrue(Files.exists(execTmpFilePath));
+            assertNotNull(content);
+            assertFalse(content.isBlank());
+            assertTrue(Files.exists(referencedFile));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -32,7 +32,6 @@ import com.powsybl.security.dynamic.DynamicSecurityAnalysisProvider;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisRunParameters;
 import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -40,15 +39,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -79,6 +73,8 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                        EventModelsSupplier eventModelsSupplier, String resultsPath) throws IOException {
 
         SecurityAnalysisResult result = runDynawoSecurityAnalysis(criteriaPath, contingencies, eventModelsSupplier);
+
+        testExecutionTempFile();
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
@@ -120,7 +116,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
 
     private SecurityAnalysisResult runDynawoSecurityAnalysis(String criteriaPath,
                                                        List<Contingency> contingencies,
-                                                       EventModelsSupplier eventModelsSupplier) throws IOException {
+                                                       EventModelsSupplier eventModelsSupplier) {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
@@ -150,23 +146,5 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                         dynamicModelsSupplier, n -> contingencies, runParameters)
                 .join()
                 .getResult();
-    }
-
-    @Test
-    void testExecutionTempFileAndReferencedFileExist() throws IOException {
-        runDynawoSecurityAnalysis(
-                "/ieee14/dynamic-security-analysis/convergence/criteria.crt",
-                List.of(Contingency.line("_BUS____1-BUS____5-1_AC", "_BUS____5_VL")),
-                EventModelsSupplier.empty()
-        );
-        Path execTmpDir = localDir.getParent();
-        Path execTmpFilePath = execTmpDir.resolve(".EXEC_TMP_FILENAME");
-        String content = Files.readString(execTmpFilePath);
-        Path referencedFile = Paths.get(content.trim());
-
-        assertTrue(Files.exists(execTmpFilePath));
-        assertNotNull(content);
-        assertFalse(content.isBlank());
-        assertTrue(Files.exists(referencedFile));
     }
 }
