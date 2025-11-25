@@ -44,6 +44,11 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
     }
 
     @Override
+    public String getRunningVarName() {
+        return "generator_running";
+    }
+
+    @Override
     public List<VarConnection> getOmegaRefVarConnections() {
         return Arrays.asList(
                 new VarConnection("omega_grp_@INDEX@", OMEGA_PU_VAR_NAME),

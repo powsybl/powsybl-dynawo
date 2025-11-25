@@ -43,9 +43,9 @@ public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> imp
             this.terminal = internalPrefix + "_terminal";
             this.switchOffSignal1 = internalPrefix + "_switchOffSignal1";
         }
-        List<VarMapping> varMapping = modelConfig.varMapping();
+        List<VarMapping> configVarMapping = modelConfig.varMapping();
         if (!varMapping.isEmpty()) {
-            this.varMapping = varMapping;
+            this.varMapping = configVarMapping;
         }
     }
 
@@ -83,14 +83,6 @@ public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> imp
 
     public String getSwitchOffSignalAutomatonVarName() {
         return "generator_switchOffSignal3";
-    }
-
-    public String getRunningVarName() {
-        return "generator_running";
-    }
-
-    public String getQStatorPuVarName() {
-        return "generator_QStatorPu";
     }
 
     @Override
