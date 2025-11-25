@@ -2,6 +2,7 @@
 Dynamic model configuration creates dynamic models used by Dynawo.
 Most of the dynamic models are associated with a static equipment present in the network.
 If some equipments are not configured, Dynawo would use a default model and set of parameters.
+See the definition of all Dynawo models [here](dynamic-models-description.md).
 
 ## Implementation
 Powsybl-Dynawo handles two methods of configuration:
