@@ -33,7 +33,7 @@
     },
     "solverType" : "SIM",
     "mergeLoads" : false,
-    "useModelSimplifiers" : false,
+    "modelSimplifiers" : [ ],
     "dumpFileParameters" : {
       "exportDumpFile" : false,
       "useDumpFile" : false,
@@ -41,7 +41,7 @@
       "dumpFile" : null
     },
     "precision" : 1.0E-6,
-    "timelineExportMode" : "TXT",
+    "timelineExportMode" : "XML",
     "logLevelFilter" : "INFO",
     "specificLogs" : [ ],
     "criteriaFilePath" : null,

@@ -5,17 +5,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.models.loads;
+package com.powsybl.dynawo.simplifiers;
 
-import com.powsybl.dynawo.models.events.PControllableEquipmentModel;
-import com.powsybl.dynawo.models.events.QControllableEquipmentModel;
+import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.models.BlackBoxModel;
+
+import java.util.function.Predicate;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface DefaultControllableLoadModel extends PControllableEquipmentModel, QControllableEquipmentModel {
+public interface ModelsRemovalSimplifier extends ModelSimplifier {
 
-    String getDeltaPVarName();
+    SimplifierType SIMPLIFIER_TYPE = SimplifierType.REMOVAL;
 
-    String getDeltaQVarName();
+    Predicate<BlackBoxModel> getModelRemovalPredicate(ReportNode reportNode);
 }

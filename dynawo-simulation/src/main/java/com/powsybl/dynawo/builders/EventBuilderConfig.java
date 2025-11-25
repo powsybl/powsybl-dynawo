@@ -36,4 +36,5 @@ public class EventBuilderConfig {
     public ModelInfo getEventModelInfo() {
         return eventModelInfo;
     }
+
 }

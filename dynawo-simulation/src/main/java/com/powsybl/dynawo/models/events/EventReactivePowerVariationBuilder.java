@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com/)
+ * Copyright (c) 2025, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -15,17 +15,18 @@ import com.powsybl.iidm.network.Network;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public class EventActivePowerVariationBuilder extends AbstractVariationEventBuilder<EventActivePowerVariationBuilder> {
+public class EventReactivePowerVariationBuilder extends AbstractVariationEventBuilder<EventReactivePowerVariationBuilder> {
 
-    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ActivePowerVariation", "Active power variation on generator or load");
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ReactivePowerVariation", "Reactive power variation on generator or load");
 
-    public static EventActivePowerVariationBuilder of(Network network) {
+    public static EventReactivePowerVariationBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
     }
 
-    public static EventActivePowerVariationBuilder of(Network network, ReportNode reportNode) {
-        return new EventActivePowerVariationBuilder(network, reportNode);
+    public static EventReactivePowerVariationBuilder of(Network network, ReportNode reportNode) {
+        return new EventReactivePowerVariationBuilder(network, reportNode);
     }
 
     public static ModelInfo getModelInfo() {
@@ -39,12 +40,12 @@ public class EventActivePowerVariationBuilder extends AbstractVariationEventBuil
         return MODEL_INFO.version().includes(dynawoVersion) ? MODEL_INFO : null;
     }
 
-    EventActivePowerVariationBuilder(Network network, ReportNode parentReportNode) {
-        super(network, parentReportNode, "deltaP");
+    EventReactivePowerVariationBuilder(Network network, ReportNode parentReportNode) {
+        super(network, parentReportNode, "deltaQ");
     }
 
-    public EventActivePowerVariationBuilder deltaP(double deltaP) {
-        this.deltaValue = deltaP;
+    public EventReactivePowerVariationBuilder deltaQ(double deltaQ) {
+        this.deltaValue = deltaQ;
         return self();
     }
 
@@ -54,12 +55,12 @@ public class EventActivePowerVariationBuilder extends AbstractVariationEventBuil
     }
 
     @Override
-    public EventActivePowerVariation build() {
-        return isInstantiable() ? new EventActivePowerVariation(eventId, builderEquipment.getEquipment(), MODEL_INFO, startTime, deltaValue) : null;
+    public EventReactivePowerVariation build() {
+        return isInstantiable() ? new EventReactivePowerVariation(eventId, builderEquipment.getEquipment(), MODEL_INFO, startTime, deltaValue) : null;
     }
 
     @Override
-    protected EventActivePowerVariationBuilder self() {
+    protected EventReactivePowerVariationBuilder self() {
         return this;
     }
 }

@@ -19,37 +19,38 @@ import static com.powsybl.dynawo.parameters.ParameterType.BOOL;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public class EventActivePowerVariation extends AbstractVariationEvent {
+public class EventReactivePowerVariation extends AbstractVariationEvent {
 
-    protected EventActivePowerVariation(String eventId, Injection<?> equipment, EventModelInfo eventModelInfo, double startTime, double deltaP) {
-        super(eventId, equipment, eventModelInfo, startTime, deltaP);
+    protected EventReactivePowerVariation(String eventId, Injection<?> equipment, EventModelInfo eventModelInfo, double startTime, double deltaQ) {
+        super(eventId, equipment, eventModelInfo, startTime, deltaQ);
     }
 
-    private List<VarConnection> getVarConnectionsWith(PControllableEquipmentModel connected) {
+    private List<VarConnection> getVarConnectionsWith(QControllableEquipmentModel connected) {
         if (equipmentModelType.getValue().isStep()) {
-            return List.of(new VarConnection("step_step_value", connected.getDeltaPVarName()));
+            return List.of(new VarConnection("step_step_value", connected.getDeltaQVarName()));
         }
-        return List.of(new VarConnection("event_state1", connected.getDeltaPVarName()));
+        return List.of(new VarConnection("event_state1", connected.getDeltaQVarName()));
     }
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
         adder.createMacroConnections(this,
                 getEquipment(),
-                PControllableEquipmentModel.class,
+                QControllableEquipmentModel.class,
                 this::getVarConnectionsWith);
     }
 
     @Override
     public void createNetworkParameter(ParametersSet networkParameters) {
         if (equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_LOAD)) {
-            networkParameters.addParameter(getEquipment().getId() + "_isPControllable", BOOL, Boolean.toString(true));
+            networkParameters.addParameter(getEquipment().getId() + "_isQControllable", BOOL, Boolean.toString(true));
         }
     }
 
     @Override
     public String getName() {
-        return EventActivePowerVariation.class.getSimpleName();
+        return EventReactivePowerVariation.class.getSimpleName();
     }
 }

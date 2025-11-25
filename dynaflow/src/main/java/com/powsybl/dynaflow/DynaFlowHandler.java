@@ -12,6 +12,7 @@ import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
+import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynawo.commons.CommonReports;
 import com.powsybl.dynawo.commons.DynawoUtil;
@@ -71,6 +72,10 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
         network.getVariantManager().setWorkingVariant(workingStateId);
         DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
         DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
+
+        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(".EXEC_TMP_FILENAME");
+        Files.writeString(tmpExecFile, workingDir.toAbsolutePath().toString());
+
         return getCommandExecutions(command);
     }
 
