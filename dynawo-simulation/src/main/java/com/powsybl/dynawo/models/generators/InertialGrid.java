@@ -12,7 +12,7 @@ import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
-import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
+import com.powsybl.dynawo.models.events.PControllableEquipmentModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Generator;
 
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class InertialGrid extends AbstractEquipmentBlackBoxModel<Generator> implements ControllableEquipmentModel {
+public class InertialGrid extends AbstractEquipmentBlackBoxModel<Generator> implements PControllableEquipmentModel {
 
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("inertialGrid_injectorURI_PInjPu", "p"),

@@ -17,30 +17,30 @@ import java.util.Collection;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class BaseGeneratorBuilder extends AbstractGeneratorBuilder<BaseGeneratorBuilder> {
+public class InertialGridBuilder extends AbstractGeneratorBuilder<InertialGridBuilder> {
 
-    public static final String CATEGORY = "BASE_GENERATOR";
+    public static final String CATEGORY = "INERTIAL_GRID";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static BaseGeneratorBuilder of(Network network) {
+    public static InertialGridBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
     }
 
-    public static BaseGeneratorBuilder of(Network network, ReportNode reportNode) {
-        return new BaseGeneratorBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
+    public static InertialGridBuilder of(Network network, ReportNode reportNode) {
+        return new InertialGridBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
-    public static BaseGeneratorBuilder of(Network network, String modelName) {
+    public static InertialGridBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
 
-    public static BaseGeneratorBuilder of(Network network, String modelName, ReportNode reportNode) {
+    public static InertialGridBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
             BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
             return null;
         }
-        return new BaseGeneratorBuilder(network, modelConfig, reportNode);
+        return new InertialGridBuilder(network, modelConfig, reportNode);
     }
 
     public static ModelInfo getDefaultModelInfo() {
@@ -58,17 +58,17 @@ public class BaseGeneratorBuilder extends AbstractGeneratorBuilder<BaseGenerator
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected BaseGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+    protected InertialGridBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
         super(network, modelConfig, parentReportNode);
     }
 
     @Override
-    public BaseGenerator build() {
-        return isInstantiable() ? new BaseGenerator(getEquipment(), parameterSetId, modelConfig) : null;
+    public InertialGrid build() {
+        return isInstantiable() ? new InertialGrid(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override
-    protected BaseGeneratorBuilder self() {
+    protected InertialGridBuilder self() {
         return this;
     }
 }

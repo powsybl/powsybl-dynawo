@@ -8,9 +8,6 @@
       },
       {
         "lib": "GeneratorPVFixed"
-      },
-      {
-        "lib": "InertialGrid"
       }
     ]
   },
@@ -704,6 +701,14 @@
       {
         "lib": "NetworkTransformer",
         "minVersion": "1.7.0"
+      }
+    ]
+  },
+  "INERTIAL_GRID": {
+    "defaultLib": "InertialGrid",
+    "libs": [
+      {
+        "lib": "InertialGrid"
       }
     ]
   },

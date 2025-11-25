@@ -9,7 +9,7 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
-import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
+import com.powsybl.dynawo.models.generators.InertialGridBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
@@ -49,7 +49,7 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("GEN3")
                 .parameterSetId("GSTWPR")
                 .build());
-        dynamicModels.add(BaseGeneratorBuilder.of(network, "InertialGrid")
+        dynamicModels.add(InertialGridBuilder.of(network, "InertialGrid")
                 .staticId("GEN4")
                 .parameterSetId("IG")
                 .build());

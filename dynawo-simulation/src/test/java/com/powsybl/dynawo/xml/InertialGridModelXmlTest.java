@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
+import com.powsybl.dynawo.models.generators.InertialGridBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -27,7 +27,7 @@ class InertialGridModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(BaseGeneratorBuilder.of(network, "InertialGrid")
+        dynamicModels.add(InertialGridBuilder.of(network, "InertialGrid")
                 .staticId("GEN")
                 .parameterSetId("g")
                 .build());
