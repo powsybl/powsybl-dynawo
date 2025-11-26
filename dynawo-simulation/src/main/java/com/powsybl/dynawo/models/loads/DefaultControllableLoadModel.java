@@ -7,12 +7,15 @@
  */
 package com.powsybl.dynawo.models.loads;
 
-import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
+import com.powsybl.dynawo.models.events.PControllableEquipmentModel;
+import com.powsybl.dynawo.models.events.QControllableEquipmentModel;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface DefaultControllableLoadModel extends ControllableEquipmentModel {
+public interface DefaultControllableLoadModel extends PControllableEquipmentModel, QControllableEquipmentModel {
+
+    String getDeltaPVarName();
 
     String getDeltaQVarName();
 }

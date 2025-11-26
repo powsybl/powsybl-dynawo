@@ -5,11 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package smib
+package com.powsybl.dynawo.models.events;
 
-ActivePowerVariation {
-    staticId "SM"
-    startTime 1
-    deltaP 0.02
+import com.powsybl.dynawo.models.Model;
+
+/**
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ */
+public interface PControllableEquipmentModel extends Model {
+
+    String getDeltaPVarName();
 }
-
