@@ -708,7 +708,8 @@
     "defaultLib": "InertialGrid",
     "libs": [
       {
-        "lib": "InertialGrid"
+        "lib": "InertialGrid",
+        "minVersion": "1.7.0"
       }
     ]
   },

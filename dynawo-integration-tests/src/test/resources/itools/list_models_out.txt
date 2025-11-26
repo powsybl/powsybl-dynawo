@@ -112,6 +112,7 @@ Dynamic models:
 	HvdcVscDanglingUDc: Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one) (Dynawo Version 1.6.0)
 	HvdcVSCEmulation: Standard dynamic model for Hvdc-VSC link with AC emulation (Dynawo Version 1.5.0 - 1.5.0 (Renamed HvdcVscEmulation))
 	HvdcVscEmulation: Standard dynamic model for Hvdc-Vsc link with AC emulation (Dynawo Version 1.6.0)
+	InertialGrid (Dynawo Version 1.7.0)
 	InfiniteBus (Dynawo Version 1.5.0)
 	InfiniteBusWithImpedance (Dynawo Version 1.5.0)
 	InfiniteBusWithVariations (Dynawo Version 1.5.0)

@@ -8,6 +8,8 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.generators.InertialGridBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,11 @@ class InertialGridModelXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void setupNetwork() {
         network = EurostagTutorialExample1Factory.create();
+    }
+
+    @Override
+    protected DynawoSimulationContext.Builder setupDynawoContextBuilder() {
+        return super.setupDynawoContextBuilder().currentVersion(DynawoVersion.createFromString("1.7.0"));
     }
 
     @Override
