@@ -868,6 +868,23 @@
         "lib": "UnderVoltageAutomaton",
         "alias": "UnderVoltage",
         "doc": "Sends switch-off signal to the monitored generator when the voltage goes below a threshold"
+      },
+      {
+        "lib": "LVRT",
+        "doc": "Sends switch-off signal to the monitored generator when the voltage goes below a threshold"
+      }
+    ]
+  },
+  "OVER_VOLTAGE": {
+    "defaultLib": "HVRT",
+    "libs": [
+      {
+        "lib": "HVRT",
+        "doc": "Sends switch-off signal to the monitored generator when the voltage goes below a threshold"
+      },
+      {
+        "lib": "LVRT",
+        "doc": "Sends switch-off signal to the monitored generator when the voltage goes below a threshold"
       }
     ]
   }
