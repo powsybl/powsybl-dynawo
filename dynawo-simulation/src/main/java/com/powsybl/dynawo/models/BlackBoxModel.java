@@ -43,5 +43,14 @@ public interface BlackBoxModel extends Model {
 
     void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder);
 
+    void updateDynamicModelParameters(ParameterUpdater parameterUpdater);
+
     void createNetworkParameter(ParametersSet networkParameters);
+
+    /**
+     * If <code>true</code> every line, transformer and bus in the network need to have a specific dynamic model
+     */
+    boolean needMandatoryDynamicModels();
+
+    void createDynamicModelInfoExtension();
 }

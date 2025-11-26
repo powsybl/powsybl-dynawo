@@ -32,13 +32,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static com.powsybl.loadflow.LoadFlowResult.ComponentResult.Status.CONVERGED;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -70,7 +72,7 @@ class DynaFlowTest extends AbstractDynawoTest {
     @Test
     void testLf() throws IOException {
         Network network = IeeeCdfNetworkFactory.create14Solved();
-        network.getLine("L6-13-1").newCurrentLimits1()
+        network.getLine("L6-13-1").getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits()
                 .beginTemporaryLimit().setName("1").setAcceptableDuration(60).setValue(100).endTemporaryLimit()
                 .beginTemporaryLimit().setName("2").setAcceptableDuration(120).setValue(110).endTemporaryLimit()
                 .setPermanentLimit(200)
@@ -104,10 +106,11 @@ class DynaFlowTest extends AbstractDynawoTest {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         // Changing limits to have some pre- and post-contingencies limit violations
-        network.getLine("_BUS____1-BUS____5-1_AC").newCurrentLimits1().setPermanentLimit(500.).add();
-        network.getLine("_BUS____1-BUS____2-1_AC").newCurrentLimits1()
-                .beginTemporaryLimit().setName("tl").setAcceptableDuration(120).setValue(1200).endTemporaryLimit()
+        network.getLine("_BUS____1-BUS____5-1_AC").getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits()
+                .setPermanentLimit(500.).add();
+        network.getLine("_BUS____1-BUS____2-1_AC").getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits()
                 .setPermanentLimit(1500.)
+                .beginTemporaryLimit().setName("tl").setAcceptableDuration(120).setValue(1900).endTemporaryLimit()
                 .add();
         network.getVoltageLevelStream().forEach(vl -> vl.setHighVoltageLimit(vl.getNominalV() * 1.09));
         network.getVoltageLevelStream().forEach(vl -> vl.setLowVoltageLimit(vl.getNominalV() * 0.97));
@@ -175,5 +178,26 @@ class DynaFlowTest extends AbstractDynawoTest {
         SecurityAnalysisResultSerializer.write(result, serializedResult);
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_nb_results.json"));
         assertTxtEquals(expected, serializedResult.toString());
+    }
+
+    @Test
+    void testExecutionTempFileAndReferencedFileExist() throws IOException {
+        Network network = IeeeCdfNetworkFactory.create14Solved();
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testIEEE14")
+                .build();
+        loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNode)
+                .join();
+        Path execTmpDir = localDir.getParent();
+        Path execTmpFilePath = execTmpDir.resolve(".EXEC_TMP_FILENAME");
+        String content = Files.readString(execTmpFilePath);
+        Path referencedFile = Paths.get(content.trim());
+
+        assertTrue(Files.exists(execTmpFilePath));
+        assertNotNull(content);
+        assertFalse(content.isBlank());
+        assertTrue(Files.exists(referencedFile));
     }
 }

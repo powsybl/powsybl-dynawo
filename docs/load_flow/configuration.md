@@ -90,7 +90,7 @@ The default value is `null`.
 The default value is `null`.
 
 **mergeLoads**  
-`mergeLoads` indicates if loads connected to the same bus are merged.  
+`mergeLoads` indicates if loads connected to the same bus are merged (except fictitious load).  
 The default value is `TRUE`.
 
 ## Generic parameters

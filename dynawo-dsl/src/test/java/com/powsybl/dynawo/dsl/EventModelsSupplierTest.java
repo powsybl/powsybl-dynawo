@@ -80,7 +80,8 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/eventModels/equipmentDisconnection.groovy", EventInjectionDisconnection.class, EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "Disconnect_GEN", null, 1),
                 Arguments.of("/eventModels/hvdcDisconnection.groovy", EventHvdcDisconnection.class, LfResultsUtils.createHvdcTestNetworkVscWithLFResults(), "L", "Disconnect_L", null, 2),
                 Arguments.of("/eventModels/nodeFault.groovy", NodeFaultEvent.class, EurostagTutorialExample1Factory.createWithLFResults(), "NGEN", "NodeFault_NGEN", "NodeFault", 1),
-                Arguments.of("/eventModels/step.groovy", EventActivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "Step_LOAD", null, 2)
+                Arguments.of("/eventModels/activePowerVariation.groovy", EventActivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ActivePowerVariation_LOAD", null, 2),
+                Arguments.of("/eventModels/reactivePowerVariation.groovy", EventReactivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ReactivePowerVariation_LOAD", null, 2)
         );
     }
 
@@ -105,16 +106,25 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                            + Groovy Event Models Supplier
                               + Model NodeFault NodeFault_NGEN instantiation KO
-                                 faultTime should be strictly positive (0.0)
+                                 'faultTime' field threshold t > 0 has been crossed (current value 0.0)
                         """),
                 Arguments.of("/eventWarnings/missingAPVParameters.groovy",
                         LfResultsUtils.createSvcTestCaseWithLFResults(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model Step Step_SVC2 instantiation KO
+                              + Model ActivePowerVariation ActivePowerVariation_SVC2 instantiation KO
                                  'staticId' field value 'SVC2' not found for equipment type(s) GENERATOR/LOAD
                                  'deltaP' field is not set
+                        """),
+                Arguments.of("/eventWarnings/missingRPVParameters.groovy",
+                        LfResultsUtils.createSvcTestCaseWithLFResults(),
+                        """
+                        + DSL tests
+                           + Groovy Event Models Supplier
+                              + Model ReactivePowerVariation ReactivePowerVariation_SVC2 instantiation KO
+                                 'staticId' field value 'SVC2' not found for equipment type(s) GENERATOR/LOAD
+                                 'deltaQ' field is not set
                         """),
                 Arguments.of("/eventWarnings/missingDisconnectionEquipment.groovy", EurostagTutorialExample1Factory.createWithLFResults(),
                         """

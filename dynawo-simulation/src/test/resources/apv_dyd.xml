@@ -10,10 +10,11 @@
         <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
-    <dyn:blackBoxModel id="Step_GEN" lib="EventSetPointReal" parFile="sim1.par" parId="Step_GEN"/>
-    <dyn:blackBoxModel id="Step_GEN2" lib="Step" parFile="sim1.par" parId="Step_GEN2"/>
-    <dyn:blackBoxModel id="Step_GEN3" lib="Step" parFile="sim1.par" parId="Step_GEN3"/>
-    <dyn:blackBoxModel id="Step_LOAD2" lib="Step" parFile="sim1.par" parId="Step_LOAD2"/>
+    <dyn:blackBoxModel id="ActivePowerVariation_GEN" lib="EventSetPointReal" parFile="sim1.par" parId="ActivePowerVariation_GEN"/>
+    <dyn:blackBoxModel id="ActivePowerVariation_GEN2" lib="Step" parFile="sim1.par" parId="ActivePowerVariation_GEN2"/>
+    <dyn:blackBoxModel id="ActivePowerVariation_GEN3" lib="Step" parFile="sim1.par" parId="ActivePowerVariation_GEN3"/>
+    <dyn:blackBoxModel id="ActivePowerVariation_LOAD" lib="Step" parFile="sim1.par" parId="ActivePowerVariation_LOAD"/>
+    <dyn:blackBoxModel id="ActivePowerVariation_LOAD2" lib="Step" parFile="sim1.par" parId="ActivePowerVariation_LOAD2"/>
     <dyn:macroConnector id="MC_GeneratorPV-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
@@ -47,6 +48,9 @@
     <dyn:macroConnector id="MC_EventActivePowerVariation-GeneratorSynchronousFourWindingsGoverPropVRPropInt">
         <dyn:connect var1="step_step_value" var2="governor_deltaPmRefPu"/>
     </dyn:macroConnector>
+    <dyn:macroConnector id="MC_EventActivePowerVariation-DefaultLoad">
+        <dyn:connect var1="step_step_value" var2="@NAME@_DeltaPc_value"/>
+    </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventActivePowerVariation-LoadAlphaBeta">
         <dyn:connect var1="step_step_value" var2="load_deltaP"/>
     </dyn:macroConnector>
@@ -72,8 +76,9 @@
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="GEN2"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsGoverPropVRPropInt" id1="FREQ_SYNC" index1="1" id2="GEN3"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="1" id2="NETWORK" name2="GEN3"/>
-    <dyn:macroConnect connector="MC_EventActivePowerVariation-DefaultGenerator" id1="Step_GEN" id2="NETWORK" name2="GEN"/>
-    <dyn:macroConnect connector="MC_EventActivePowerVariation-GeneratorPV" id1="Step_GEN2" id2="GEN2"/>
-    <dyn:macroConnect connector="MC_EventActivePowerVariation-GeneratorSynchronousFourWindingsGoverPropVRPropInt" id1="Step_GEN3" id2="GEN3"/>
-    <dyn:macroConnect connector="MC_EventActivePowerVariation-LoadAlphaBeta" id1="Step_LOAD2" id2="LOAD2"/>
+    <dyn:macroConnect connector="MC_EventActivePowerVariation-DefaultGenerator" id1="ActivePowerVariation_GEN" id2="NETWORK" name2="GEN"/>
+    <dyn:macroConnect connector="MC_EventActivePowerVariation-GeneratorPV" id1="ActivePowerVariation_GEN2" id2="GEN2"/>
+    <dyn:macroConnect connector="MC_EventActivePowerVariation-GeneratorSynchronousFourWindingsGoverPropVRPropInt" id1="ActivePowerVariation_GEN3" id2="GEN3"/>
+    <dyn:macroConnect connector="MC_EventActivePowerVariation-DefaultLoad" id1="ActivePowerVariation_LOAD" id2="NETWORK" name2="LOAD"/>
+    <dyn:macroConnect connector="MC_EventActivePowerVariation-LoadAlphaBeta" id1="ActivePowerVariation_LOAD2" id2="LOAD2"/>
 </dyn:dynamicModelsArchitecture>

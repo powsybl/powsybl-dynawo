@@ -5,9 +5,9 @@
     <dyn:macroConnector id="MC_EventInjectionDisconnection-GeneratorSynchronousFourWindingsProportionalRegulations">
         <dyn:connect var1="event_state1" var2="generator_switchOffSignal2"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_EventBranchDisconnection-Line">
-        <dyn:connect var1="event_state1_value" var2="line_state_value"/>
+    <dyn:macroConnector id="MC_EventBranchDisconnection-DefaultLine">
+        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
     </dyn:macroConnector>
-    <dyn:macroConnect connector="MC_EventBranchDisconnection-Line" id1="Disconnect_NHV1_NHV2_1" id2="NHV1_NHV2_1"/>
+    <dyn:macroConnect connector="MC_EventBranchDisconnection-DefaultLine" id1="Disconnect_NHV1_NHV2_1" id2="NETWORK" name2="NHV1_NHV2_1"/>
     <dyn:macroConnect connector="MC_EventInjectionDisconnection-GeneratorSynchronousFourWindingsProportionalRegulations" id1="Disconnect_GEN2" id2="GEN2"/>
 </dyn:dynamicModelsArchitecture>

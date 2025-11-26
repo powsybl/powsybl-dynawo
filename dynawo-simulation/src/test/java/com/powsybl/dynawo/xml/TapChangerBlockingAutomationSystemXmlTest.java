@@ -11,7 +11,6 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerTapChangerBuilder;
 import com.powsybl.dynawo.models.loads.LoadTwoTransformersTapChangersBuilder;
-import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -41,10 +40,6 @@ class TapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlT
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(TransformerFixedRatioBuilder.of(network)
-                .staticId("NGEN_NHV1")
-                .parameterSetId("transformer")
-                .build());
         dynamicModels.add(LoadOneTransformerTapChangerBuilder.of(network, "LoadOneTransformerTapChanger")
                 .staticId("LOAD")
                 .parameterSetId("lot")

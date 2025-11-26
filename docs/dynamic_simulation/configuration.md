@@ -47,11 +47,11 @@ The default value is `solvers.par`.
 
 **network.parametersId**  
 `network.parametersId` defines the network parameters set id stored in `network.parametersFile`.  
-The default value is `1`.
+The default value is `Network`.
 
 **solver.parametersId**  
 `solver.parametersId` defines the solver parameters set id stored in `solver.parametersFile`.  
-The default value is `1`.
+The default value is `SIM`.
 
 **solver.type**  
 `solver.type` defines the solver used in the simulation.  
@@ -77,12 +77,12 @@ The default value is `null`.
 `dump.fileName` defines the dump file name.  
 The default value is `null`.
 
-**useModelSimplifiers**  
-`useModelSimplifiers` defines if simplifiers are used before macro connection computation **(TODO: link)**.  
-The default value is `FALSE`.
+**modelSimplifiers**  
+`modelSimplifiers` defines the list of simplifier to use before macro connection computation **(TODO: link)**.  
+The default value is an empty list.
 
 **mergeLoads**  
-`mergeLoads` defines if loads connected to the same bus are merged or not.  
+`mergeLoads` indicates if loads connected to the same bus are merged (except fictitious load).  
 The default value is `FALSE`.
 
 **timeline.exportMode**  
@@ -92,7 +92,7 @@ The available `com.powsybl.dynawo.commons.ExportMode` values are:
 - `TXT`: same format as `CSV` but with `|` separator
 - `XML`
 
-The default value is `TXT`.
+The default value is `XML`.
 
 **precision**  
 `precision` defines the simulation step precision.  
@@ -136,15 +136,16 @@ The default value is `null`.
 dynawo-simulation-default-parameters:
   parametersFile: /home/user/parametersFile
   network.parametersFile: /home/user/networkParametersFile
-  network.parametersId: 1
+  network.parametersId: Network
   solver.type: SIM
   solver.parametersFile: /home/user/solverParametersFile
-  solver.parametersId: 1
+  solver.parametersId: SIM
   dump.export: false
   dump.useAsInput: false
   dump.exportFolder: /home/user/dumps
   dump.fileName: dump.dmp
-  useModelSimplifiers: false
+  modelSimplifiers:
+    - EnergizedSimplifier
   mergeLoads: false
   timeline.exportMode: XML
   precision: 10e-6
@@ -168,7 +169,7 @@ dynawo-simulation-default-parameters:
   <dump.useAsInput>false</dump.useAsInput> 
   <dump.exportFolder>/home/user/dumps</dump.exportFolder>
   <dump.fileName>dump.dmp</dump.fileName>
-  <useModelSimplifiers>false</useModelSimplifiers>
+  <modelSimplifiers>EnergizedSimplifier</modelSimplifiers>
   <mergeLoads>false</mergeLoads>
   <timeline.exportMode>XML</timeline.exportMode>
   <precision>10e-6</precision>

@@ -43,6 +43,8 @@ abstract class AbstractXmlDynawoSimulationWriter<T> {
             XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
             try {
                 xmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
+                writeComments(xmlWriter, dataSupplier);
+
                 xmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
                 xmlWriter.writeStartElement(DYN_URI, xmlRootName);
                 xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
@@ -57,6 +59,10 @@ abstract class AbstractXmlDynawoSimulationWriter<T> {
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);
         }
+    }
+
+    protected void writeComments(XMLStreamWriter writer, T dataSupplier) throws XMLStreamException {
+        // do nothing
     }
 
     abstract void write(XMLStreamWriter writer, T dataSupplier) throws XMLStreamException;

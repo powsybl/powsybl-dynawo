@@ -38,6 +38,10 @@ class DisconnectDynamicBusEventXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("B1")
                 .parameterSetId("bus")
                 .build());
+        dynamicModels.add(StandardBusBuilder.of(network)
+                .staticId("B2")
+                .parameterSetId("bus")
+                .build());
         dynamicModels.add(LineBuilder.of(network)
                 .staticId("L1")
                 .parameterSetId("line")
