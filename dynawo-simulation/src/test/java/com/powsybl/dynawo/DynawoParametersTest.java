@@ -371,6 +371,11 @@ class DynawoParametersTest extends AbstractSerDeTest {
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(platformConfig);
         dynamicSimulationParameters.addExtension(DynawoSimulationParameters.class, dynawoParameters);
+        assertFalse(dynawoParameters.isMergeLoads());
+        assertEquals(1e-7, dynawoParameters.getPrecision());
+        assertEquals(SolverType.SIM, dynawoParameters.getSolverType());
+        assertEquals("solverParametersId", dynawoParameters.getSolverParameters().getId());
+
         JsonDynamicSimulationParameters.update(dynamicSimulationParameters, getClass().getResourceAsStream("/partial_dynawo_parameters_update.json"));
         assertEquals(1, dynamicSimulationParameters.getStartTime());
         DynawoSimulationParameters parameters = dynamicSimulationParameters.getExtension(DynawoSimulationParameters.class);
