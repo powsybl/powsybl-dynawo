@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
+import com.powsybl.dynawo.models.InjectionModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class InertialGrid extends AbstractEquipmentBlackBoxModel<Generator> implements PControllableEquipmentModel {
+public class InertialGrid extends AbstractEquipmentBlackBoxModel<Generator> implements InjectionModel, PControllableEquipmentModel {
 
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("inertialGrid_injectorURI_PInjPu", "p"),
@@ -59,6 +60,11 @@ public class InertialGrid extends AbstractEquipmentBlackBoxModel<Generator> impl
 
     public String getSwitchOffSignalNodeVarName() {
         return "inertialGrid_injectorURI_switchOffSignal1";
+    }
+
+    @Override
+    public String getSwitchOffSignalEventVarName() {
+        return "inertialGrid_injectorURI_switchOffSignal2";
     }
 
     @Override
