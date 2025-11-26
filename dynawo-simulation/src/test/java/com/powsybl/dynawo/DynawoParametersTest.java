@@ -364,7 +364,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
 
     @Test
     void partialUpdate() throws IOException {
-        initPlatformConfig("networkParametersId", SolverType.SIM, "solverParametersId", DEFAULT_MERGE_LOADS, DEFAULT_USE_MODEL_SIMPLIFIERS,
+        initPlatformConfig("networkParametersId", SolverType.SIM, "solverParametersId", DEFAULT_MERGE_LOADS, List.of(),
                 1e-7, DEFAULT_TIMELINE_EXPORT_MODE, DEFAULT_LOG_LEVEL_FILTER, EnumSet.noneOf(SpecificLog.class),
                 null, null);
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters();
