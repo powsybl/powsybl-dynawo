@@ -7,393 +7,404 @@ See how to use model in a simulation [here](dynamic-models-configuration.md).
 ### Generator
 
 #### Base generator
-##### GeneratorFictitious
+- GeneratorFictitious: 
 Fictitious generator (behaves in a similar way as an alpha-beta load)
 
-##### GeneratorPVFixed
+- GeneratorPVFixed
 
-##### GeneratorFictitious
+- GeneratorFictitious
 
-Fictitious generator (behaves in a similar way as an alpha-beta load)
 
 #### Synchronized generator
-##### GeneratorPQ
+- GeneratorPQ:
 Generator with fixed active and reactive power targets. The actual outputs may however vary in order to mimic frequency and voltage regulation.
 
-##### GeneratorPV
+- GeneratorPV: 
 Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation
 
-##### GeneratorPVDiagramPQ
+- GeneratorPVDiagramPQ
 
 #### Synchronous generator
-##### GeneratorSynchronousFourWindings
+- GeneratorSynchronousFourWindings:
 Four windings synchronous generator
 
-##### GeneratorSynchronousFourWindingsGovCt2St4b
+- GeneratorSynchronousFourWindingsGovCt2St4b
 
-##### GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4B
+- GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4B
 
-##### GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4BPssIEEE2B
+- GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4BPssIEEE2B
 
-##### GeneratorSynchronousFourWindingsGovSteam1St4b
+- GeneratorSynchronousFourWindingsGovSteam1St4b
 
-##### GeneratorSynchronousFourWindingsGovSteam1St4bPss2b
+- GeneratorSynchronousFourWindingsGovSteam1St4bPss2b
 
-##### GeneratorSynchronousFourWindingsGovSteamEuSt4b
+- GeneratorSynchronousFourWindingsGovSteamEuSt4b
 
-##### GeneratorSynchronousFourWindingsGoverPropVRPropInt
+- GeneratorSynchronousFourWindingsGoverPropVRPropInt
 
-##### GeneratorSynchronousFourWindingsIEEEG1Ac1a
+- GeneratorSynchronousFourWindingsIEEEG1Ac1a
 
-##### GeneratorSynchronousFourWindingsIEEEG1Dc1a
+- GeneratorSynchronousFourWindingsIEEEG1Dc1a
 
-##### GeneratorSynchronousFourWindingsIEEEG1IEEX2A
+- GeneratorSynchronousFourWindingsIEEEG1IEEX2A
 
-##### GeneratorSynchronousFourWindingsPmConstAc6aPss3b
+- GeneratorSynchronousFourWindingsPmConstAc6aPss3b
 
-##### GeneratorSynchronousFourWindingsPmConstAc7bPss3b
+- GeneratorSynchronousFourWindingsPmConstAc7bPss3b
 
-##### GeneratorSynchronousFourWindingsPmConstAc7cPss2c
+- GeneratorSynchronousFourWindingsPmConstAc7cPss2c
 
-##### GeneratorSynchronousFourWindingsPmConstAc8b
+- GeneratorSynchronousFourWindingsPmConstAc8b
 
-##### GeneratorSynchronousFourWindingsPmConstAc8bPss3b
+- GeneratorSynchronousFourWindingsPmConstAc8bPss3b
 
-##### GeneratorSynchronousFourWindingsPmConstDc1a
+- GeneratorSynchronousFourWindingsPmConstDc1a
 
-##### GeneratorSynchronousFourWindingsPmConstIEEX2A
+- GeneratorSynchronousFourWindingsPmConstIEEX2A
 
-##### GeneratorSynchronousFourWindingsPmConstSt5bPss2b
+- GeneratorSynchronousFourWindingsPmConstSt5bPss2b
 
-##### GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl1c
+- GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl1c
 
-##### GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl2c
+- GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl2c
 
-##### GeneratorSynchronousFourWindingsPmConstSt6bPss3b
+- GeneratorSynchronousFourWindingsPmConstSt6bPss3b
 
-##### GeneratorSynchronousFourWindingsPmConstSt6cPss6c
+- GeneratorSynchronousFourWindingsPmConstSt6cPss6c
 
-##### GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel2c
+- GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel2c
 
-##### GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel3c
+- GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel3c
 
-##### GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel4c
+- GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel4c
 
-##### GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel5c
+- GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel5c
 
-##### GeneratorSynchronousFourWindingsPmConstSt7bPss2a
+- GeneratorSynchronousFourWindingsPmConstSt7bPss2a
 
-##### GeneratorSynchronousFourWindingsPmConstSt7bPss2aUel1
+- GeneratorSynchronousFourWindingsPmConstSt7bPss2aUel1
 
-##### GeneratorSynchronousFourWindingsPmConstSt7bPss2aUel2c
+- GeneratorSynchronousFourWindingsPmConstSt7bPss2aUel2c
 
-##### GeneratorSynchronousFourWindingsPmConstSt9cPss2c
+- GeneratorSynchronousFourWindingsPmConstSt9cPss2c
 
-##### GeneratorSynchronousFourWindingsPmConstVRNordic
+- GeneratorSynchronousFourWindingsPmConstVRNordic
 
-##### GeneratorSynchronousFourWindingsPmConstVRNordicTfo
+- GeneratorSynchronousFourWindingsPmConstVRNordicTfo
 
-##### GeneratorSynchronousFourWindingsProportionalRegulations
+- GeneratorSynchronousFourWindingsProportionalRegulations
 
-##### GeneratorSynchronousFourWindingsTGov1Dc1a
+- GeneratorSynchronousFourWindingsTGov1Dc1a
 
-##### GeneratorSynchronousFourWindingsTGov1Sexs
+- GeneratorSynchronousFourWindingsTGov1Sexs
 
-##### GeneratorSynchronousFourWindingsTGov1SexsPss2A
+- GeneratorSynchronousFourWindingsTGov1SexsPss2A
 
-##### GeneratorSynchronousFourWindingsTGov1SexsPss2a
+- GeneratorSynchronousFourWindingsTGov1SexsPss2a
 
-##### GeneratorSynchronousFourWindingsTGov3IEEX2A
+- GeneratorSynchronousFourWindingsTGov3IEEX2A
 
-##### GeneratorSynchronousFourWindingsVRKundur
+- GeneratorSynchronousFourWindingsVRKundur
 
-##### GeneratorSynchronousFourWindingsVRKundurPssKundur
+- GeneratorSynchronousFourWindingsVRKundurPssKundur
 
-##### GeneratorSynchronousProportionalRegulationsInternalParameters
+- GeneratorSynchronousProportionalRegulationsInternalParameters
 
-##### GeneratorSynchronousThreeWindings
+- GeneratorSynchronousThreeWindings:
 Three windings synchronous generator
 
-##### GeneratorSynchronousThreeWindingsGovHydro4St4b
+- GeneratorSynchronousThreeWindingsGovHydro4St4b
 
-##### GeneratorSynchronousThreeWindingsGoverNordicVRNordic
+- GeneratorSynchronousThreeWindingsGoverNordicVRNordic
 
-##### GeneratorSynchronousThreeWindingsGoverNordicVRNordicTfo
+- GeneratorSynchronousThreeWindingsGoverNordicVRNordicTfo
 
-##### GeneratorSynchronousThreeWindingsGoverPropVRPropInt
+- GeneratorSynchronousThreeWindingsGoverPropVRPropInt
 
-##### GeneratorSynchronousThreeWindingsHyGovBbSex1
+- GeneratorSynchronousThreeWindingsHyGovBbSex1
 
-##### GeneratorSynchronousThreeWindingsHyGovScrx
+- GeneratorSynchronousThreeWindingsHyGovScrx
 
-##### GeneratorSynchronousThreeWindingsHyGovScrxTfo
+- GeneratorSynchronousThreeWindingsHyGovScrxTfo
 
-##### GeneratorSynchronousThreeWindingsIEEEG2BbSex1
+- GeneratorSynchronousThreeWindingsIEEEG2BbSex1
 
-##### GeneratorSynchronousThreeWindingsIeeeG1IeeeT1
+- GeneratorSynchronousThreeWindingsIeeeG1IeeeT1
 
-##### GeneratorSynchronousThreeWindingsIeeeG1IeeeT1Tfo
+- GeneratorSynchronousThreeWindingsIeeeG1IeeeT1Tfo
 
-##### GeneratorSynchronousThreeWindingsIeeeG1Scrx
+- GeneratorSynchronousThreeWindingsIeeeG1Scrx
 
-##### GeneratorSynchronousThreeWindingsIeeeG1ScrxTfo
+- GeneratorSynchronousThreeWindingsIeeeG1ScrxTfo
 
-##### GeneratorSynchronousThreeWindingsPmConstExAc1
+- GeneratorSynchronousThreeWindingsPmConstExAc1
 
-##### GeneratorSynchronousThreeWindingsPmConstExAc1Tfo
+- GeneratorSynchronousThreeWindingsPmConstExAc1Tfo
 
-##### GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a
+- GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a
 
-##### GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1aTfo
+- GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1aTfo
 
-##### GeneratorSynchronousThreeWindingsPmConstScrx
+- GeneratorSynchronousThreeWindingsPmConstScrx
 
-##### GeneratorSynchronousThreeWindingsPmConstScrxTfo
+- GeneratorSynchronousThreeWindingsPmConstScrxTfo
 
-##### GeneratorSynchronousThreeWindingsPmConstVRNordic
+- GeneratorSynchronousThreeWindingsPmConstVRNordic
 
-##### GeneratorSynchronousThreeWindingsPmConstVRNordicTfo
+- GeneratorSynchronousThreeWindingsPmConstVRNordicTfo
 
-##### GeneratorSynchronousThreeWindingsProportionalRegulations
+- GeneratorSynchronousThreeWindingsProportionalRegulations
 
 
 #### Signal N generator
-##### GeneratorPQPropDiagramPQSignalN
+- GeneratorPQPropDiagramPQSignalN
 
-##### GeneratorPQPropSignalN
+- GeneratorPQPropSignalN
 
-##### GeneratorPVDiagramPQSignalN
+- GeneratorPVDiagramPQSignalN
 
-##### GeneratorPVPropSignalN
+- GeneratorPVPropSignalN
 
-##### GeneratorPVRemoteDiagramPQSignalN
+- GeneratorPVRemoteDiagramPQSignalN
 
-##### GeneratorPVRemoteSignalN
+- GeneratorPVRemoteSignalN
 
-##### GeneratorPVSignalN
+- GeneratorPVSignalN
 
-##### GeneratorPVTfoDiagramPQSignalN
+- GeneratorPVTfoDiagramPQSignalN
 
-##### GeneratorPVTfoSignalN
+- GeneratorPVTfoSignalN
+
+
+#### Inertial grid
+- InertialGrid
 
 
 #### Wecc
-##### PhotovoltaicsWeccCurrentSource
+- PhotovoltaicsWeccCurrentSource
 
-##### PhotovoltaicsWeccCurrentSourceB
+- PhotovoltaicsWeccCurrentSourceB
 
-##### PhotovoltaicsWeccVoltageSource
+- PhotovoltaicsWeccVoltageSource
 
-##### PhotovoltaicsWeccVoltageSourceA
+- PhotovoltaicsWeccVoltageSourceA
 
-##### PhotovoltaicsWeccVoltageSourceB
+- PhotovoltaicsWeccVoltageSourceB
 
-##### WT4AWeccCurrentSource
+- WT4AWeccCurrentSource
 
-##### WT4BWeccCurrentSource
+- WT4BWeccCurrentSource
 
-##### WTG4AWeccCurrentSource
+- WTG4AWeccCurrentSource
 
-##### WTG4BWeccCurrentSource
+- WTG4BWeccCurrentSource
 
 
 #### Grid forming converter
-##### GridFormingConverterDispatchableVirtualOscillatorControl
+- GridFormingConverterDispatchableVirtualOscillatorControl
 
-##### GridFormingConverterDroopControl
+- GridFormingConverterDroopControl
 
-##### GridFormingConverterMatchingControl
+- GridFormingConverterMatchingControl
 
 ### Load
 #### Base load
 
-##### ElectronicLoad
+- ElectronicLoad
 
-##### LoadAlphaBeta
+- LoadAlphaBeta
 Voltage-dependent load
 
-##### LoadAlphaBetaMotor
+- LoadAlphaBetaMotor
 
-##### LoadAlphaBetaMotorFifthOrder
+- LoadAlphaBetaMotorFifthOrder
 
-##### LoadAlphaBetaMotorSimplified
+- LoadAlphaBetaMotorSimplified
 
-##### LoadAlphaBetaRestorative
+- LoadAlphaBetaRestorative:
 Restorative load model with a voltage-dependent behavior when the voltage hits the limits
 
-##### LoadAlphaBetaRestorativeLimitsRecalc
+- LoadAlphaBetaRestorativeLimitsRecalc
 
-##### LoadAlphaBetaRestorativeNetwork
+- LoadAlphaBetaRestorativeNetwork
 
-##### LoadAlphaBetaThreeMotorFifthOrder
+- LoadAlphaBetaThreeMotorFifthOrder
 
-##### LoadAlphaBetaTwoMotorFifthOrder
+- LoadAlphaBetaTwoMotorFifthOrder
 
-##### LoadAlphaBetaTwoMotorSimplified
+- LoadAlphaBetaTwoMotorSimplified
 
-##### LoadPQ
+- LoadPQ: 
 PQ load
 
-##### LoadZIP
+- LoadZIP
 
 #### Load one transformer
-##### LoadOneTransformer
+- LoadOneTransformer:
 Load behind one transformer
 
 #### Load two transformers
-##### LoadTwoTransformers
+- LoadTwoTransformers:
 Load behind two transformers
 
 #### Load one transformer tap changer
-##### LoadOneTransformerTapChanger
+- LoadOneTransformerTapChanger:
 Load behind one transformer with a tap changer
 
 #### Load two transformers tap changer
-##### LoadTwoTransformersTapChangers
+- LoadTwoTransformersTapChangers:
 Load behind two transformers with tap changers
 
 ### HVDC
 #### HVDC P
-##### HvdcPQProp
+- HvdcPQProp
 
-##### HvdcPQPropDangling
+- HvdcPQPropDangling
 
-##### HvdcPQPropDanglingDiagramPQ
+- HvdcPQPropDanglingDiagramPQ
 
-##### HvdcPQPropDiagramPQ
+- HvdcPQPropDiagramPQ
 
-##### HvdcPQPropDiagramPQEmulation
+- HvdcPQPropDiagramPQEmulation
 
-##### HvdcPQPropDiagramPQEmulationSet
+- HvdcPQPropDiagramPQEmulationSet
 
-##### HvdcPQPropDiagramPQEmulationVariableK
+- HvdcPQPropDiagramPQEmulationVariableK
 
-##### HvdcPQPropEmulation
+- HvdcPQPropEmulation
 
-##### HvdcPQPropEmulationSet
+- HvdcPQPropEmulationSet
 
-##### HvdcPQPropEmulationVariableK
+- HvdcPQPropEmulationVariableK
 
-##### HvdcPTanPhi
+- HvdcPTanPhi
 
-##### HvdcPTanPhiDangling
+- HvdcPTanPhiDangling
 
-##### HvdcPTanPhiDanglingDiagramPQ
+- HvdcPTanPhiDanglingDiagramPQ
 
-##### HvdcPTanPhiDiagramPQ
+- HvdcPTanPhiDiagramPQ
 
-##### HvdcPV
+- HvdcPV
 
-##### HvdcPVDangling
+- HvdcPVDangling
 
-##### HvdcPVDanglingDiagramPQ
+- HvdcPVDanglingDiagramPQ
 
-##### HvdcPVDiagramPQ
+- HvdcPVDiagramPQ
 
-##### HvdcPVDiagramPQEmulation
+- HvdcPVDiagramPQEmulation
 
-##### HvdcPVDiagramPQEmulationSet
+- HvdcPVDiagramPQEmulationSet
 
-##### HvdcPVEmulation
+- HvdcPVEmulation
 
-##### HvdcPVEmulationSet
+- HvdcPVEmulationSet
 
 #### HVDC VSC
-##### HvdcVSC
+- HvdcVSC:
 Standard dynamic model for Hvdc-VSC link
 
-##### HvdcVSCDanglingP
+- HvdcVSCDanglingP:
 Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)
 
-##### HvdcVSCDanglingUdc
+- HvdcVSCDanglingUdc:
 Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)
 
-##### HvdcVSCEmulation
+- HvdcVSCEmulation:
 Standard dynamic model for Hvdc-VSC link with AC emulation
 
-##### HvdcVsc
+- HvdcVsc:
 Standard dynamic model for Hvdc-Vsc link
 
-##### HvdcVscDanglingP
+- HvdcVscDanglingP:
 Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)
 
-##### HvdcVscDanglingUDc
+- HvdcVscDanglingUDc:
 Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)
 
-##### HvdcVscEmulation
+- HvdcVscEmulation:
 Standard dynamic model for Hvdc-Vsc link with AC emulation
 
 
 #### Static var Compensator
-##### StaticVarCompensator
+- StaticVarCompensator:
 Standard static var compensator
 
-##### StaticVarCompensatorPV
+- StaticVarCompensatorPV
 
-##### StaticVarCompensatorPVModeHandling
+- StaticVarCompensatorPVModeHandling
 
-##### StaticVarCompensatorPVProp
+- StaticVarCompensatorPVProp
 
-##### StaticVarCompensatorPVPropModeHandling
+- StaticVarCompensatorPVPropModeHandling
 
-##### StaticVarCompensatorPVPropRemote
+- StaticVarCompensatorPVPropRemote
 
-##### StaticVarCompensatorPVPropRemoteModeHandling
+- StaticVarCompensatorPVPropRemoteModeHandling
 
-##### StaticVarCompensatorPVRemote
+- StaticVarCompensatorPVRemote
 
-##### StaticVarCompensatorPVRemoteModeHandling
+- StaticVarCompensatorPVRemoteModeHandling
 
 #### Shunt
-##### ShuntB
+- ShuntB
 
-##### ShuntBWithSections
+- ShuntBWithSections
 
-#### Bus
-##### Bus
+### Bus
+
+#### Base bus
+- Bus:
 Standard bus
 
 #### Infinite bus
-##### InfiniteBus
+- InfiniteBus
 
-##### InfiniteBusWithImpedance
+- InfiniteBusWithImpedance
 
-##### InfiniteBusWithVariations
+- InfiniteBusWithVariations
 
 #### Line
-##### Line
+- Line:
 Standard line
 
 #### Transformer
-##### NetworkTransformer
+- NetworkTransformer
 
-##### TransformerFixedRatio
+- TransformerFixedRatio
 
 
+## Automation system model
 
-## Automation system models
-
-### TapChangerAutomaton
-Tap changer
-
-### TapChangerBlockingAutomaton
-Blocks tap changers when one of the monitored voltages goes below a threshold
-
-### OverloadManagementSystem
+### Overload management system
+- OverloadManagementSystem:
 Automation system which emits a specific order when the current on the monitored line exceeds a given threshold for a given duration
 
-### TwoLevelOverloadManagementSystem
+### Two level overload management system
+- TwoLevelOverloadManagementSystem:
 Automation system which emits a specific order when the current on two monitored lines exceeds a given threshold for a given duration
 
-### UnderVoltage
-Sends switch-off signal to the monitored generator when the voltage goes below a threshold
-
-### PhaseShifterI
+### Phase shifter I
+- PhaseShifterI:
 Phase-shifter which monitors a given current. When the current goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated
 
-### PhaseShifterBlockingI
+### Phase shifter blocking I
+- PhaseShifterBlockingI:
 Blocks phase shifter I when the monitored intensity goes below a threshold
 
-### PhaseShifterP
+### Phase shifter P
+- PhaseShifterP:
 Phase-shifter which monitors a given active power. When the active power goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated
 
+### Tap changer automaton
+- TapChangerAutomaton:
+Tap changer
+
+### Tap changer blocking automaton
+- TapChangerBlockingAutomaton:
+Blocks tap changers when one of the monitored voltages goes below a threshold
+
+### Under voltage
+- UnderVoltage:
+Sends switch-off signal to the monitored generator when the voltage goes below a threshold
