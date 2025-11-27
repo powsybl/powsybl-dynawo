@@ -29,8 +29,8 @@ public class SynchronizedGenerator extends BaseGenerator implements FrequencySyn
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
         return List.of(
-                new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
-                new VarConnection("running_grp_@INDEX@", getRunningVarName())
+                new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName())
+                // new VarConnection("running_grp_@INDEX@", getRunningVarName())
         );
     }
 
