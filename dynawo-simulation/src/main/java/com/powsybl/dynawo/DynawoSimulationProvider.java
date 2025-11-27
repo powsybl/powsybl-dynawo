@@ -18,6 +18,7 @@ import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawo.builders.AdditionalModelConfigLoader;
 import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.commons.ExecutionEnvironmentUtils;
 import com.powsybl.dynawo.json.DynawoSimulationParametersSerializer;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.dynawo.commons.DynawoUtil;
@@ -28,7 +29,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
-import static com.powsybl.dynawo.commons.DynawoConstants.INFIX_VERSION;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -95,8 +95,10 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
         ReportNode dsReportNode = DynawoSimulationReports.createDynawoSimulationReportNode(reportNode, network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ExecutionEnvironment execEnvVersionCheck = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX + INFIX_VERSION, false, parameters.getDebugDir());
+        String dumpDir = parameters.getDebugDir();
+        ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX, dumpDir);
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, computationManager, getVersionCommand(config), DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(parameters);
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
                 ModelConfigsHandler.getInstance().addModels(new AdditionalModelConfigLoader(additionalModelPath)));
@@ -111,7 +113,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                 .reportNode(reportNode)
                 .build();
 
-        ExecutionEnvironment execEnvSimulation = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(), parameters.getDebugDir());
+        ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX, dumpDir);
         return computationManager.execute(execEnvSimulation, new DynawoSimulationHandler(context, getCommand(config), reportNode));
     }
 

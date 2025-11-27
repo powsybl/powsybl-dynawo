@@ -1,6 +1,3 @@
-
-
-
 /**
  * Copyright (c) 2020, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -21,6 +18,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.ExecutionEnvironmentUtils;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -32,7 +30,8 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.dynaflow.DynaFlowParameters.MODULE_SPECIFIC_PARAMETERS;
-import static com.powsybl.dynawo.commons.DynawoConstants.*;
+import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME_PATH;
 
 /**
  *
@@ -104,11 +103,12 @@ public class DynaFlowProvider implements LoadFlowProvider {
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
         DynaFlowParameters.log(loadFlowParameters, dynaFlowParameters);
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
-        ExecutionEnvironment execEnvVersionCheck = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX + INFIX_VERSION, false);
+
+        ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX);
         Command versionCmd = getVersionCommand(config);
         DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, computationManager, versionCmd, DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
 
-        ExecutionEnvironment execEnvSimulation = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
+        ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX);
         return computationManager.execute(execEnvSimulation, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, getCommand(config), reportNode));
     }
 

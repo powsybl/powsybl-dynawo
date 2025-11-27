@@ -20,20 +20,19 @@ import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.commons.ExecutionEnvironmentUtils;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.dynawo.margincalculation.loadsvariation.supplier.LoadsVariationSupplier;
 import com.powsybl.dynawo.margincalculation.results.MarginCalculationResult;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynawo.DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME;
 import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsCommandUtil.getCommand;
 import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsCommandUtil.getVersionCommand;
-import static com.powsybl.dynawo.commons.DynawoConstants.INFIX_VERSION;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -63,8 +62,10 @@ public class MarginCalculationProvider implements Versionable {
 
         ReportNode mcReportNode = MarginCalculationReports.createMarginCalculationReportNode(runParameters.getReportNode(), network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ExecutionEnvironment execEnvVersionCheck = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX + INFIX_VERSION, false, runParameters.getMarginCalculationParameters().getDebugDir());
+        String dumpDir = runParameters.getMarginCalculationParameters().getDebugDir();
+        ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX, dumpDir);
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+
         MarginCalculationParameters parameters = runParameters.getMarginCalculationParameters();
         DynawoSimulationParameters dynawoParameters = parameters.getDynawoParameters();
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
@@ -80,8 +81,7 @@ public class MarginCalculationProvider implements Versionable {
                 .workingVariantId(workingVariantId)
                 .build();
 
-        ExecutionEnvironment execEnvSimulation = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX + INFIX_VERSION, config.isDebug(), runParameters.getMarginCalculationParameters().getDebugDir());
-
+        ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX, dumpDir);
         return runParameters.getComputationManager().execute(execEnvSimulation,
                 new MarginCalculationHandler(context, getCommand(config, "MC", "dynawo_dynamic_mc"), mcReportNode));
     }
