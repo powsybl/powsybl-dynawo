@@ -171,6 +171,24 @@ public final class MarginCalculationParameters {
     }
 
     /**
+     * Creates a builder for MarginCalculationParameters with values from another MarginCalculationParameters object
+     */
+    public static Builder builder(MarginCalculationParameters parameters) {
+        return new Builder()
+                .setStartTime(parameters.getStartTime())
+                .setStopTime(parameters.getStopTime())
+                .setMarginCalculationStartTime(parameters.getMarginCalculationStartTime())
+                .setLoadIncreaseStartTime(parameters.getLoadIncreaseStartTime())
+                .setLoadIncreaseStopTime(parameters.getLoadIncreaseStopTime())
+                .setContingenciesStartTime(parameters.getContingenciesStartTime())
+                .setCalculationType(parameters.getCalculationType())
+                .setAccuracy(parameters.getAccuracy())
+                .setLoadModelsRule(parameters.getLoadModelsRule())
+                .setDynawoParameters(parameters.getDynawoParameters())
+                .setDebugDir(parameters.getDebugDir());
+    }
+
+    /**
      * Loads parameters from the default platform configuration.
      */
     public static MarginCalculationParameters load() {

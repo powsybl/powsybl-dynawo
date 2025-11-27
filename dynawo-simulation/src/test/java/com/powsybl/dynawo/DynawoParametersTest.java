@@ -362,6 +362,29 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertTrue(parameters.isMergeLoads());
     }
 
+    @Test
+    void partialUpdate() throws IOException {
+        initPlatformConfig("networkParametersId", SolverType.SIM, "solverParametersId", DEFAULT_MERGE_LOADS, List.of(),
+                1e-7, DEFAULT_TIMELINE_EXPORT_MODE, DEFAULT_LOG_LEVEL_FILTER, EnumSet.noneOf(SpecificLog.class),
+                null, null);
+        DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters();
+        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(platformConfig);
+        dynamicSimulationParameters.addExtension(DynawoSimulationParameters.class, dynawoParameters);
+        assertFalse(dynawoParameters.isMergeLoads());
+        assertEquals(1e-7, dynawoParameters.getPrecision());
+        assertEquals(SolverType.SIM, dynawoParameters.getSolverType());
+        assertEquals("solverParametersId", dynawoParameters.getSolverParameters().getId());
+
+        JsonDynamicSimulationParameters.update(dynamicSimulationParameters, getClass().getResourceAsStream("/partial_dynawo_parameters_update.json"));
+        assertEquals(1, dynamicSimulationParameters.getStartTime());
+        DynawoSimulationParameters parameters = dynamicSimulationParameters.getExtension(DynawoSimulationParameters.class);
+        assertFalse(parameters.isMergeLoads());
+        //set to 1e-7 in platform config
+        assertEquals(1e-7, parameters.getPrecision());
+        assertEquals(SolverType.IDA, parameters.getSolverType());
+        assertEquals("ida", parameters.getSolverParameters().getId());
+    }
+
     private void createFiles(String parametersFile, String networkParametersFile, String solverParametersFile, String criteriaFile, String additionalModelsFile) throws IOException {
         Files.createDirectories(fileSystem.getPath(USER_HOME));
         copyFile("/parametersSet/models.par", parametersFile);
