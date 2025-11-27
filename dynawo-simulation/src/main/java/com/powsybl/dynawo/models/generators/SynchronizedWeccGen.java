@@ -28,8 +28,8 @@ public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronize
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
         return List.of(
-                new VarConnection("omegaRef_grp_@INDEX@_value", getOmegaRefPuVarName()),
-                new VarConnection("running_grp_@INDEX@", getRunningVarName())
+                new VarConnection("omegaRef_grp_@INDEX@_value", getOmegaRefPuVarName())
+                // new VarConnection("running_grp_@INDEX@", getRunningVarName())
         );
     }
 
