@@ -1,8 +1,10 @@
 /**
- * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ *
+ * Copyright (c) 2020-2025, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
  */
 package com.powsybl.dynawo.xml;
 
@@ -12,6 +14,7 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationParameters.SolverType;
 import com.powsybl.dynawo.SimulationTime;
 import com.powsybl.dynawo.commons.ExportMode;
+import com.powsybl.tools.Version;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -55,6 +58,14 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
     public static void writeFinalStep(Path workingDir, DynawoSimulationContext context) throws IOException {
         new JobsXml(FINAL_STEP_JOBS_FILENAME, context::getFinalStepSimulationTime, FINAL_STEP_DYD_FILENAME)
                 .createXmlFileFromDataSupplier(workingDir, context);
+    }
+
+    @Override
+    protected void writeComments(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
+        writer.writeComment("dynawo: " + context.getCurrentDynawoVersion());
+        for (Version version : Version.list()) {
+            writer.writeComment(version.getRepositoryName() + ": " + version.getMavenProjectVersion());
+        }
     }
 
     @Override

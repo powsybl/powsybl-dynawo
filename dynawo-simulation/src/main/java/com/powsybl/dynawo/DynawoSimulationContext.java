@@ -8,6 +8,7 @@ package com.powsybl.dynawo;
 
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.OutputVariable;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
 import com.powsybl.dynawo.parameters.ParametersSet;
@@ -32,6 +33,7 @@ public class DynawoSimulationContext {
     private final FinalStepModels finalStepModels;
     private final SimulationTime simulationTime;
     private final SimulationTime finalStepTime;
+    protected final DynawoVersion dynawoVersion;
 
     public static class Builder extends AbstractContextBuilder<Builder> {
 
@@ -96,6 +98,7 @@ public class DynawoSimulationContext {
         this.outputVariables = builder.outputVariables;
         this.simulationModels = builder.simulationModels;
         this.finalStepModels = builder.finalStepModels;
+        this.dynawoVersion = builder.dynawoVersion;
     }
 
     public Network getNetwork() {
@@ -156,5 +159,9 @@ public class DynawoSimulationContext {
 
     public Optional<DynawoData> getFinalStepDydData() {
         return Optional.ofNullable(finalStepModels);
+    }
+
+    public String getCurrentDynawoVersion() {
+        return dynawoVersion.toString();
     }
 }
