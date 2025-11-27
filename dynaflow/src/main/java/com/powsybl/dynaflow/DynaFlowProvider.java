@@ -24,6 +24,7 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowProvider;
 import com.powsybl.loadflow.LoadFlowResult;
+import com.powsybl.loadflow.LoadFlowRunParameters;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -93,12 +94,13 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
-    public CompletableFuture<LoadFlowResult> run(Network network, ComputationManager computationManager, String workingStateId,
-                                                 LoadFlowParameters loadFlowParameters, ReportNode reportNode) {
+    public CompletableFuture<LoadFlowResult> run(Network network, String workingStateId, LoadFlowRunParameters loadFlowRunParameters) {
         Objects.requireNonNull(network);
-        Objects.requireNonNull(computationManager);
         Objects.requireNonNull(workingStateId);
-        Objects.requireNonNull(loadFlowParameters);
+        Objects.requireNonNull(loadFlowRunParameters);
+        ComputationManager computationManager = Objects.requireNonNull(loadFlowRunParameters.getComputationManager());
+        LoadFlowParameters loadFlowParameters = Objects.requireNonNull(loadFlowRunParameters.getLoadFlowParameters());
+        ReportNode reportNode = Objects.requireNonNull(loadFlowRunParameters.getReportNode());
 
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
         DynaFlowParameters.log(loadFlowParameters, dynaFlowParameters);

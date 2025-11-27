@@ -150,9 +150,10 @@ public class MarginCalculationTool implements Tool {
         ContingenciesProvider contingenciesProvider = new GroovyDslContingenciesProviderFactory().create(contingenciesFile);
         Path loadVariationsFile = context.getFileSystem().getPath(line.getOptionValue(LOAD_VARIATIONS_FILE));
         LoadsVariationSupplier loadsVariationSupplier = LoadsVariationSupplier.getLoadsVariationSupplierForJson(loadVariationsFile);
-        MarginCalculationParameters parameters = line.hasOption(PARAMETERS_FILE) ?
-                JsonMarginCalculationParameters.read(context.getFileSystem().getPath(line.getOptionValue(PARAMETERS_FILE)))
-                : MarginCalculationParameters.load();
+        MarginCalculationParameters parameters = MarginCalculationParameters.load();
+        if (line.hasOption(PARAMETERS_FILE)) {
+            parameters = JsonMarginCalculationParameters.update(parameters, context.getFileSystem().getPath(line.getOptionValue(PARAMETERS_FILE)));
+        }
         MarginCalculationRunParameters runParameters = new MarginCalculationRunParameters()
                 .setMarginCalculationParameters(parameters)
                 .setComputationManager(context.getShortTimeExecutionComputationManager())

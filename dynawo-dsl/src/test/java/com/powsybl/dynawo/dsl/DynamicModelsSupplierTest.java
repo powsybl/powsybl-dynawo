@@ -67,8 +67,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network);
         assertEquals(1, dynamicModels.size());
-        assertTrue(modelClass.isInstance(dynamicModels.get(0)));
-        assertEquipmentBlackBoxModel(modelClass.cast(dynamicModels.get(0)), staticId, parameterId, lib);
+        assertTrue(modelClass.isInstance(dynamicModels.getFirst()));
+        assertEquipmentBlackBoxModel(modelClass.cast(dynamicModels.getFirst()), staticId, parameterId, lib);
     }
 
     @ParameterizedTest(name = "{0}")
@@ -77,8 +77,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network);
         assertEquals(1, dynamicModels.size());
-        assertTrue(modelClass.isInstance(dynamicModels.get(0)));
-        assertPureDynamicBlackBoxModel(modelClass.cast(dynamicModels.get(0)), dynamicId, parameterId, lib);
+        assertTrue(modelClass.isInstance(dynamicModels.getFirst()));
+        assertPureDynamicBlackBoxModel(modelClass.cast(dynamicModels.getFirst()), dynamicId, parameterId, lib);
     }
 
     @ParameterizedTest(name = "{0}")
@@ -95,8 +95,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network, reportNode);
         assertEquals(1, dynamicModels.size());
-        assertTrue(modelClass.isInstance(dynamicModels.get(0)));
-        assertEquals(terminalVarName, modelClass.cast(dynamicModels.get(0)).getTerminalVarName());
+        assertTrue(modelClass.isInstance(dynamicModels.getFirst()));
+        assertEquals(terminalVarName, modelClass.cast(dynamicModels.getFirst()).getTerminalVarName());
         checkReportNode(report);
     }
 
@@ -118,7 +118,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/hvdcP.groovy", BaseHvdc.class, HvdcTestNetwork.createVsc(), "L", "HVDC", "HvdcPV"),
                 Arguments.of("/dynamicModels/hvdcVsc.groovy", BaseHvdc.class, HvdcTestNetwork.createVsc(), "L", "HVDC", "HvdcVsc"),
                 Arguments.of("/dynamicModels/hvdcPDangling.groovy", HvdcDangling.class, HvdcTestNetwork.createVsc(), "L", "HVDC", "HvdcPVDanglingDiagramPQ"),
-                Arguments.of("/dynamicModels/hvdcVscDangling.groovy", HvdcDangling.class, HvdcTestNetwork.createVsc(), "L", "HVDC", "HvdcVscDanglingUdc"),
+                Arguments.of("/dynamicModels/hvdcVscDangling.groovy", HvdcDangling.class, HvdcTestNetwork.createVsc(), "L", "HVDC", "HvdcVscDanglingUDc"),
                 Arguments.of("/dynamicModels/loadAB.groovy", BaseLoad.class, EurostagTutorialExample1Factory.create(), "LOAD", "LAB", "LoadAlphaBetaRestorative"),
                 Arguments.of("/dynamicModels/loadABControllable.groovy", BaseLoadControllable.class, EurostagTutorialExample1Factory.create(), "LOAD", "LAB", "LoadAlphaBeta"),
                 Arguments.of("/dynamicModels/loadTransformer.groovy", LoadOneTransformer.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOT", "LoadOneTransformer"),
@@ -239,9 +239,9 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                            + Groovy Dynamic Models Supplier
                               + Model TapChangerBlockingAutomaton ZAB instantiation KO
-                                 None of '[LOAD, Wrong_ID]' values from 'uMeasurements' field where found for energized and in main component equipment type(s) BUS/BUSBAR_SECTION
-                                 'uMeasurements' field value 'NGEN' should be energized and in main component
-                                 None of '[NGEN_NHV1, NGEN]' values from 'uMeasurements' field where found for energized and in main component equipment type(s) BUS/BUSBAR_SECTION
+                                 None of '[LOAD, Wrong_ID]' values from 'uMeasurements' field where found for energized and in main connected component equipment type(s) BUS/BUSBAR_SECTION
+                                 'uMeasurements' field value 'NGEN' should be energized and in main connected component
+                                 None of '[NGEN_NHV1, NGEN]' values from 'uMeasurements' field where found for energized and in main connected component equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' list is empty
                         """),
                 Arguments.of("/warnings/tapChangerCompatible.groovy", EurostagTutorialExample1Factory.create(),

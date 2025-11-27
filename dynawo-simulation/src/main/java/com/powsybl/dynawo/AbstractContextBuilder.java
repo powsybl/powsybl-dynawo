@@ -19,6 +19,10 @@ import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.AbstractBus;
 import com.powsybl.dynawo.models.frequencysynchronizers.*;
 import com.powsybl.dynawo.parameters.ParametersSet;
+import com.powsybl.dynawo.simplifiers.ModelSimplifiers;
+import com.powsybl.dynawo.simplifiers.ModelsRemovalSimplifier;
+import com.powsybl.dynawo.simplifiers.ModelsSubstitutionSimplifier;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 
 import java.util.*;
@@ -92,7 +96,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
 
     protected void setupMacroConnections() {
         simulationModels = SimulationModels.createFrom(blackBoxModelSupplier, dynamicModels, eventModels, dynamicModelsParameters::add,
-                dynawoParameters.getNetworkParameters(), reportNode);
+                dynawoParameters, reportNode);
         if (!finalStepDynamicModels.isEmpty()) {
             finalStepModels = FinalStepModels.createFrom(blackBoxModelSupplier, simulationModels, finalStepDynamicModels,
                     dynamicModelsParameters::add, reportNode);
@@ -112,8 +116,10 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     private void setupDynamicModels() {
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId(reportNode).and(supportedVersion(dynawoVersion, reportNode)));
-        if (dynawoParameters.isUseModelSimplifiers()) {
-            uniqueIdsDynamicModels = simplifyModels(uniqueIdsDynamicModels);
+
+        Set<String> modelSimplifierNames = dynawoParameters.getModelSimplifiers();
+        if (!modelSimplifierNames.isEmpty()) {
+            uniqueIdsDynamicModels = simplifyModels(uniqueIdsDynamicModels, modelSimplifierNames);
         }
 
         if (finalStepConfig != null) {
@@ -126,16 +132,38 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         }
         setupFrequencySynchronizer();
         blackBoxModelSupplier = BlackBoxModelSupplier.createFrom(dynamicModels);
+        checkForbiddenDefaultModels();
     }
 
-    private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm) {
-        Stream<BlackBoxModel> outputBbm = inputBbm;
-        for (ModelsRemovalSimplifier modelsSimplifier : ServiceLoader.load(ModelsRemovalSimplifier.class)) {
-            outputBbm = outputBbm.filter(modelsSimplifier.getModelRemovalPredicate(reportNode));
+    private void checkForbiddenDefaultModels() {
+        if (dynamicModels.stream().anyMatch(BlackBoxModel::needMandatoryDynamicModels)) {
+            checkEquipmentDynamicModels(network.getLines());
+            checkEquipmentDynamicModels(network.getTwoWindingsTransformers());
+            checkEquipmentDynamicModels(network.getBusBreakerView().getBuses());
         }
-        for (ModelsSubstitutionSimplifier modelsSimplifier : ServiceLoader.load(ModelsSubstitutionSimplifier.class)) {
-            outputBbm = outputBbm.map(modelsSimplifier.getModelSubstitutionFunction(network, dynawoParameters, reportNode))
-                    .filter(Objects::nonNull);
+    }
+
+    private <E extends Identifiable<E>> void checkEquipmentDynamicModels(Iterable<E> equipments) {
+        for (E equipment : equipments) {
+            if (!blackBoxModelSupplier.hasDynamicModel(equipment)) {
+                throw new PowsyblException(String.format("At least one dynamic model forbid default models and the equipment %s does not possess a dynamic model", equipment.getId()));
+            }
+        }
+    }
+
+    private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, Set<String> modelSimplifierNames) {
+        ModelSimplifiers modelSimplifiers = new ModelSimplifiers();
+        Stream<BlackBoxModel> outputBbm = inputBbm;
+        for (ModelsRemovalSimplifier modelsSimplifier : modelSimplifiers.getModelsRemovalSimplifiers()) {
+            if (modelSimplifierNames.contains(modelsSimplifier.getSimplifierInfo().name())) {
+                outputBbm = outputBbm.filter(modelsSimplifier.getModelRemovalPredicate(reportNode));
+            }
+        }
+        for (ModelsSubstitutionSimplifier modelsSimplifier : modelSimplifiers.getModelsSubstitutionSimplifiers()) {
+            if (modelSimplifierNames.contains(modelsSimplifier.getSimplifierInfo().name())) {
+                outputBbm = outputBbm.map(modelsSimplifier.getModelSubstitutionFunction(network, dynawoParameters, reportNode))
+                        .filter(Objects::nonNull);
+            }
         }
         return outputBbm;
     }

@@ -8,31 +8,33 @@
 package com.powsybl.dynawo.builders;
 
 /**
- * @param name Model name
+ * @param lib Lib name
+ * @param alias Alias of the library name used in Powsybl-Dynawo
  * @param doc Definition of the event model
  * @param version Dynawo version range where the model can be used
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record EventModelInfo(String name, String doc, VersionInterval version) implements ModelInfo {
+public record EventModelInfo(String lib, String alias, String doc, VersionInterval version) implements ModelInfo {
 
-    public EventModelInfo(String name, String info) {
-        this(name, info, VersionInterval.createDefaultVersion());
+    public EventModelInfo(String lib, String alias, String info) {
+        this(lib, alias, info, VersionInterval.createDefaultVersion());
+    }
+
+    public EventModelInfo(String lib, String info) {
+        this(lib, null, info, VersionInterval.createDefaultVersion());
     }
 
     @Override
-    public String lib() {
-        return name;
-    }
-
-    @Override
-    public String alias() {
-        return null;
+    public String name() {
+        return alias == null ? lib : alias;
     }
 
     /**
      * Concatenation of name, doc and version bound
      */
     public String formattedInfo() {
-        return String.format("%s: %s (%s)", name, doc, version);
+        return name() + (alias != null ? " (" + lib + ")" : "")
+                + (doc != null ? ": " + doc : "")
+                + " (" + version.formattedInfo() + ")";
     }
 }

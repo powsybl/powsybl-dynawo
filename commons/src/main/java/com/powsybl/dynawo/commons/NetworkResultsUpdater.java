@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.google.common.collect.Iterables;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.commons.loadmerge.LoadPowersSigns;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
@@ -15,8 +14,8 @@ import com.powsybl.iidm.network.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,11 +32,10 @@ public final class NetworkResultsUpdater {
     public static void update(Network targetNetwork, Network sourceNetwork, boolean mergeLoads) {
         updateLoads(targetNetwork, sourceNetwork, mergeLoads);
         for (Line lineSource : sourceNetwork.getLines()) {
-            update(targetNetwork.getLine(lineSource.getId()).getTerminal1(), lineSource.getTerminal1());
-            update(targetNetwork.getLine(lineSource.getId()).getTerminal2(), lineSource.getTerminal2());
+            update(targetNetwork.getLine(lineSource.getId()), lineSource);
         }
         for (DanglingLine sourceDangling : sourceNetwork.getDanglingLines()) {
-            update(targetNetwork.getDanglingLine(sourceDangling.getId()).getTerminal(), sourceDangling.getTerminal());
+            update(targetNetwork.getDanglingLine(sourceDangling.getId()), sourceDangling);
         }
 
         updateHvdcLines(targetNetwork, sourceNetwork.getHvdcLines());
@@ -45,16 +43,18 @@ public final class NetworkResultsUpdater {
         updateThreeWindingsTransformers(targetNetwork, sourceNetwork.getThreeWindingsTransformers());
 
         for (Generator sourceGenerator : sourceNetwork.getGenerators()) {
-            update(targetNetwork.getGenerator(sourceGenerator.getId()).getTerminal(), sourceGenerator.getTerminal());
+            update(targetNetwork.getGenerator(sourceGenerator.getId()), sourceGenerator);
         }
         for (ShuntCompensator sourceShuntCompensator : sourceNetwork.getShuntCompensators()) {
-            targetNetwork.getShuntCompensator(sourceShuntCompensator.getId()).setSolvedSectionCount(sourceShuntCompensator.getSectionCount());
-            update(targetNetwork.getShuntCompensator(sourceShuntCompensator.getId()).getTerminal(), sourceShuntCompensator.getTerminal());
+            ShuntCompensator targetShuntCompensator = targetNetwork.getShuntCompensator(sourceShuntCompensator.getId());
+            targetShuntCompensator.setSolvedSectionCount(sourceShuntCompensator.getSectionCount());
+            update(targetShuntCompensator, sourceShuntCompensator);
         }
         for (StaticVarCompensator sourceStaticVarCompensator : sourceNetwork.getStaticVarCompensators()) {
-            update(targetNetwork.getStaticVarCompensator(sourceStaticVarCompensator.getId()).getTerminal(), sourceStaticVarCompensator.getTerminal());
-            targetNetwork.getStaticVarCompensator(sourceStaticVarCompensator.getId()).setRegulationMode(sourceStaticVarCompensator.getRegulationMode());
-            targetNetwork.getStaticVarCompensator(sourceStaticVarCompensator.getId()).setRegulating(sourceStaticVarCompensator.isRegulating());
+            StaticVarCompensator targetStaticVarCompensator = targetNetwork.getStaticVarCompensator(sourceStaticVarCompensator.getId());
+            update(targetStaticVarCompensator, sourceStaticVarCompensator);
+            targetStaticVarCompensator.setRegulationMode(sourceStaticVarCompensator.getRegulationMode());
+            targetStaticVarCompensator.setRegulating(sourceStaticVarCompensator.isRegulating());
         }
         for (Switch sourceSwitch : sourceNetwork.getSwitches()) {
             targetNetwork.getSwitch(sourceSwitch.getId()).setOpen(sourceSwitch.isOpen());
@@ -79,34 +79,25 @@ public final class NetworkResultsUpdater {
 
     private static void updateHvdcLines(Network targetNetwork, Iterable<HvdcLine> hvdcLines) {
         for (HvdcLine sourceHvdcLine : hvdcLines) {
-            Terminal targetTerminal1 = targetNetwork.getHvdcLine(sourceHvdcLine.getId()).getConverterStation(TwoSides.ONE).getTerminal();
-            Terminal targetTerminal2 = targetNetwork.getHvdcLine(sourceHvdcLine.getId()).getConverterStation(TwoSides.TWO).getTerminal();
-            Terminal sourceTerminal1 = sourceHvdcLine.getConverterStation(TwoSides.ONE).getTerminal();
-            Terminal sourceTerminal2 = sourceHvdcLine.getConverterStation(TwoSides.TWO).getTerminal();
-            update(targetTerminal1, sourceTerminal1);
-            update(targetTerminal2, sourceTerminal2);
+            HvdcLine targetHvdcLine = targetNetwork.getHvdcLine(sourceHvdcLine.getId());
+            update(targetHvdcLine.getConverterStation(TwoSides.ONE), sourceHvdcLine.getConverterStation(TwoSides.ONE));
+            update(targetHvdcLine.getConverterStation(TwoSides.TWO), sourceHvdcLine.getConverterStation(TwoSides.TWO));
         }
     }
 
     private static void updateTwoWindingsTransformers(Network targetNetwork, Iterable<TwoWindingsTransformer> twoWindingsTransformers) {
-        for (TwoWindingsTransformer sourceTwoWindingsTransformer : twoWindingsTransformers) {
-            Terminal targetTerminal1 = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getTerminal1();
-            Terminal targetTerminal2 = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getTerminal2();
-            Terminal sourceTerminal1 = sourceTwoWindingsTransformer.getTerminal1();
-            Terminal sourceTerminal2 = sourceTwoWindingsTransformer.getTerminal2();
-            update(targetTerminal1, sourceTerminal1);
-            update(targetTerminal2, sourceTerminal2);
+        for (TwoWindingsTransformer sourceTransformer : twoWindingsTransformers) {
+            TwoWindingsTransformer targetTransformer = targetNetwork.getTwoWindingsTransformer(sourceTransformer.getId());
+            update(targetTransformer, sourceTransformer);
 
-            PhaseTapChanger sourcePhaseTapChanger = sourceTwoWindingsTransformer.getPhaseTapChanger();
-            PhaseTapChanger targetPhaseTapChanger = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getPhaseTapChanger();
+            PhaseTapChanger targetPhaseTapChanger = targetTransformer.getPhaseTapChanger();
             if (targetPhaseTapChanger != null) {
-                targetPhaseTapChanger.setSolvedTapPosition(sourcePhaseTapChanger.getTapPosition());
+                targetPhaseTapChanger.setSolvedTapPosition(sourceTransformer.getPhaseTapChanger().getTapPosition());
             }
 
-            RatioTapChanger sourceRatioTapChanger = sourceTwoWindingsTransformer.getRatioTapChanger();
-            RatioTapChanger targetRatioTapChanger = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getRatioTapChanger();
+            RatioTapChanger targetRatioTapChanger = targetTransformer.getRatioTapChanger();
             if (targetRatioTapChanger != null) {
-                targetRatioTapChanger.setSolvedTapPosition(sourceRatioTapChanger.getTapPosition());
+                targetRatioTapChanger.setSolvedTapPosition(sourceTransformer.getRatioTapChanger().getTapPosition());
             }
         }
     }
@@ -136,6 +127,15 @@ public final class NetworkResultsUpdater {
         }
     }
 
+    private static void update(Branch<?> target, Branch<?> source) {
+        update(target.getTerminal1(), source.getTerminal1());
+        update(target.getTerminal2(), source.getTerminal2());
+    }
+
+    private static void update(Injection<?> target, Injection<?> source) {
+        update(target.getTerminal(), source.getTerminal());
+    }
+
     private static void update(Terminal target, Terminal source) {
         target.setP(source.getP());
         target.setQ(source.getQ());
@@ -159,35 +159,40 @@ public final class NetworkResultsUpdater {
     }
 
     private static void updateLoads(Network targetNetwork, Network sourceNetwork, boolean mergeLoads) {
-        if (!mergeLoads) {
-            for (Load sourceLoad : sourceNetwork.getLoads()) {
-                update(targetNetwork.getLoad(sourceLoad.getId()).getTerminal(), sourceLoad.getTerminal());
-            }
-        } else {
-            Map<String, Bus> sourceBusesById = sourceNetwork.getBusBreakerView().getBusStream().collect(Collectors.toMap(Identifiable::getId, Function.identity()));
+        if (mergeLoads) {
+            Network.BusBreakerView sourceBusBreakerView = sourceNetwork.getBusBreakerView();
             for (Bus busTarget : targetNetwork.getBusBreakerView().getBuses()) {
-                updateLoads(busTarget, sourceBusesById.get(busTarget.getId()));
+                updateLoadsWithMergedLoads(busTarget, sourceBusBreakerView.getBus(busTarget.getId()));
+            }
+            //handle fictitious load
+            sourceNetwork.getLoadStream()
+                    .filter(Identifiable::isFictitious)
+                    .forEach(l -> update(targetNetwork.getLoad(l.getId()), l));
+        } else {
+            for (Load sourceLoad : sourceNetwork.getLoads()) {
+                update(targetNetwork.getLoad(sourceLoad.getId()), sourceLoad);
             }
         }
     }
 
-    private static void updateLoads(Bus busTarget, Bus busSource) {
+    private static void updateLoadsWithMergedLoads(Bus busTarget, Bus busSource) {
         Iterable<Load> loadsTarget = busTarget.getLoads();
-        int nbLoads = Iterables.size(loadsTarget);
-        if (nbLoads == 0) {
+        if (loadsTarget instanceof Collection<Load> c ? c.isEmpty() : !loadsTarget.iterator().hasNext()) {
             return;
         }
-        Map<LoadPowersSigns, Terminal> mergedLoadsTerminal = busSource.getLoadStream()
-                .collect(Collectors.toMap(LoadsMerger::getLoadPowersSigns, Load::getTerminal));
-        LoadsMerger.getLoadPowersSignsGrouping(busTarget).forEach((loadPowersSigns, loadsGroup) -> {
-            Terminal mergedLoadTerminal = Optional.ofNullable(mergedLoadsTerminal.get(loadPowersSigns))
-                    .orElseThrow(() -> new PowsyblException("Missing merged load in bus " + busTarget.getId()));
-            if (loadsGroup.size() == 1) {
-                update(loadsGroup.get(0).getTerminal(), mergedLoadTerminal);
+
+        Map<LoadPowersSigns, Terminal> mergedLoadsTerminals = LoadsMerger.getLoadTerminalByPowersSigns(busSource);
+        LoadsMerger.getLoadTerminalsByPowersSigns(busTarget).forEach((loadPowersSigns, loadTerminalsGroup) -> {
+            Terminal mergedLoadTerminal = mergedLoadsTerminals.get(loadPowersSigns);
+            if (mergedLoadTerminal == null) {
+                throw new PowsyblException("Missing merged load in bus " + busTarget.getId());
+            }
+            if (loadTerminalsGroup.size() == 1) {
+                update(loadTerminalsGroup.getFirst(), mergedLoadTerminal);
             } else {
-                double groupP = loadsGroup.stream().map(Load::getTerminal).mapToDouble(Terminal::getP).sum();
-                double groupQ = loadsGroup.stream().map(Load::getTerminal).mapToDouble(Terminal::getQ).sum();
-                loadsGroup.forEach(load -> update(load.getTerminal(), mergedLoadTerminal, groupP, groupQ));
+                double groupP = loadTerminalsGroup.stream().mapToDouble(Terminal::getP).sum();
+                double groupQ = loadTerminalsGroup.stream().mapToDouble(Terminal::getQ).sum();
+                loadTerminalsGroup.forEach(terminal -> update(terminal, mergedLoadTerminal, groupP, groupQ));
             }
         });
     }

@@ -42,6 +42,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
@@ -52,8 +53,7 @@ import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.commons.report.ReportNode.newRootReportNode;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -93,7 +93,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu_value"));
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(23, timeLine.size());
-        checkTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
+        checkTimeLineEvent(timeLine.getFirst(), 0, "_GEN____8_SM", "PMIN : activation");
     }
 
     @Test
@@ -162,7 +162,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(1, timeLine.size());
-        checkTimeLineEvent(timeLine.get(0), 0, "G1", "PMIN : activation");
+        checkTimeLineEvent(timeLine.getFirst(), 0, "G1", "PMIN : activation");
     }
 
     @Test
@@ -194,7 +194,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(7, timeLine.size());
-        checkTimeLineEvent(timeLine.get(0), 30.0, "_BUS____5-BUS____6-1_PS", "Tap +1");
+        checkTimeLineEvent(timeLine.getFirst(), 30.0, "_BUS____5-BUS____6-1_PS", "Tap position change (increment)");
     }
 
     @Test
@@ -221,7 +221,6 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
-
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
         assertEquals(35, result.getCurves().size());
@@ -282,7 +281,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(0, result.getCurves().size());
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(11, timeLine.size());
-        checkTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
+        checkTimeLineEvent(timeLine.getFirst(), 0, "_GEN____8_SM", "PMIN : activation");
     }
 
     private void checkTimeLineEvent(TimelineEvent event, double time, String modelName, String message) {
@@ -410,7 +409,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
 
-        ReportNode eventReport = reportNode.getChildren().get(0);
+        ReportNode eventReport = reportNode.getChildren().getFirst();
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
@@ -440,7 +439,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
 
-        eventReport = reportNode.getChildren().get(0);
+        eventReport = reportNode.getChildren().getFirst();
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
@@ -498,10 +497,24 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
 
-        ReportNode eventReport = reportNode.getChildren().get(0);
+        ReportNode eventReport = reportNode.getChildren().getFirst();
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
         assertThat(result.getStatusText()).contains("KINSOL fails to solve the problem");
+    }
+
+    @Test
+    void testExecutionTempFileAndReferencedFileExist() throws IOException {
+        setupIEEE14Simulation().get();
+        Path execTmpDir = localDir.getParent();
+        Path execTmpFilePath = execTmpDir.resolve(".EXEC_TMP_FILENAME");
+        String content = Files.readString(execTmpFilePath);
+        Path referencedFile = Paths.get(content.trim());
+
+        assertTrue(Files.exists(execTmpFilePath));
+        assertNotNull(content);
+        assertFalse(content.isBlank());
+        assertTrue(Files.exists(referencedFile));
     }
 }

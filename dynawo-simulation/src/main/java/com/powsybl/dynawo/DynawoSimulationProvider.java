@@ -32,7 +32,7 @@ import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(DynamicSimulationProvider.class)
 public class DynawoSimulationProvider implements DynamicSimulationProvider {

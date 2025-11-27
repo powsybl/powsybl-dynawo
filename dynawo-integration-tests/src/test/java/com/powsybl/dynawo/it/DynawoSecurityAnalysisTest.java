@@ -32,6 +32,7 @@ import com.powsybl.security.dynamic.DynamicSecurityAnalysisProvider;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisRunParameters;
 import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -39,10 +40,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -69,39 +75,14 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
 
     @ParameterizedTest
     @MethodSource("provideSimulationParameter")
-    void testIeee14DSA(String criteriaPath, List<Contingency> contingencies, EventModelsSupplier eventModelsSupplier, String resultsPath) throws IOException {
-        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+    void testIeee14DSA(String criteriaPath, List<Contingency> contingencies,
+                       EventModelsSupplier eventModelsSupplier, String resultsPath) throws IOException {
 
-        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/ieee14/dynamicModels.groovy"),
-                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
-
-        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
-                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
-                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2")
-                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
-                .setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass().getResource(criteriaPath)).getPath()));
-
-        ReportNode reportNode = ReportNode.newRootReportNode()
-                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
-                        PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
-                .withMessageTemplate("testIEEE14")
-                .build();
-
-        DynamicSecurityAnalysisRunParameters runParameters = new DynamicSecurityAnalysisRunParameters()
-                .setComputationManager(computationManager)
-                .setDynamicSecurityAnalysisParameters(parameters)
-                .setEventModelsSupplier(eventModelsSupplier)
-                .setReportNode(reportNode);
-
-        SecurityAnalysisResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
-                        dynamicModelsSupplier, n -> contingencies, runParameters)
-                .join()
-                .getResult();
+        SecurityAnalysisResult result = runDynawoSecurityAnalysis(criteriaPath, contingencies, eventModelsSupplier);
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
+
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream(resultsPath));
         ComparisonUtils.assertTxtEquals(expected, serializedResult.toString());
     }
@@ -135,5 +116,57 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                                         .build()),
                         "/ieee14/dynamic-security-analysis/convergence/results.json")
         );
+    }
+
+    private SecurityAnalysisResult runDynawoSecurityAnalysis(String criteriaPath,
+                                                       List<Contingency> contingencies,
+                                                       EventModelsSupplier eventModelsSupplier) throws IOException {
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/ieee14/dynamicModels.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
+                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2")
+                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
+                .setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass().getResource(criteriaPath)).getPath()));
+
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
+                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testIEEE14")
+                .build();
+
+        DynamicSecurityAnalysisRunParameters runParameters = new DynamicSecurityAnalysisRunParameters()
+                .setComputationManager(computationManager)
+                .setDynamicSecurityAnalysisParameters(parameters)
+                .setEventModelsSupplier(eventModelsSupplier)
+                .setReportNode(reportNode);
+
+        return provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                        dynamicModelsSupplier, n -> contingencies, runParameters)
+                .join()
+                .getResult();
+    }
+
+    @Test
+    void testExecutionTempFileAndReferencedFileExist() throws IOException {
+        runDynawoSecurityAnalysis(
+                "/ieee14/dynamic-security-analysis/convergence/criteria.crt",
+                List.of(Contingency.line("_BUS____1-BUS____5-1_AC", "_BUS____5_VL")),
+                EventModelsSupplier.empty()
+        );
+        Path execTmpDir = localDir.getParent();
+        Path execTmpFilePath = execTmpDir.resolve(".EXEC_TMP_FILENAME");
+        String content = Files.readString(execTmpFilePath);
+        Path referencedFile = Paths.get(content.trim());
+
+        assertTrue(Files.exists(execTmpFilePath));
+        assertNotNull(content);
+        assertFalse(content.isBlank());
+        assertTrue(Files.exists(referencedFile));
     }
 }
