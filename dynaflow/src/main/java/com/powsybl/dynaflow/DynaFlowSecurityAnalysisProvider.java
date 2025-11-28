@@ -33,7 +33,6 @@ import java.util.function.Supplier;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
-import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 
 /**

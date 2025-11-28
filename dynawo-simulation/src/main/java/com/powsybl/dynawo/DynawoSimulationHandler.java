@@ -12,6 +12,7 @@ import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
+import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynamicsimulation.DynamicSimulationResultImpl;
 import com.powsybl.dynamicsimulation.TimelineEvent;
@@ -80,6 +81,10 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         deleteExistingFile(basePath, CURVES_OUTPUT_PATH, CURVES_FILENAME);
         deleteExistingFile(basePath, FSV_OUTPUT_PATH, FSV_OUTPUT_FILENAME);
         writeInputFiles(workingDir);
+
+        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(EXEC_TMP_FILENAME);
+        Files.writeString(tmpExecFile, workingDir.toAbsolutePath().toString());
+
         return getCommandExecutions(command);
     }
 
@@ -176,8 +181,8 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).resolve(CURVES_FILENAME);
         if (Files.exists(curvesPath)) {
             TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false,
-                            TimeSeries.TimeFormat.FRACTIONS_OF_SECOND, true, true))
-                    .values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
+                            TimeSeries.TimeFormat.FRACTIONS_OF_SECOND, true)).values()
+                    .forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
         } else {
             LOGGER.warn("Curves folder not found");
             status = DynamicSimulationResult.Status.FAILURE;

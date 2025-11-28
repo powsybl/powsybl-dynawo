@@ -52,10 +52,10 @@ public final class BuilderReports {
                 .add();
     }
 
-    public static void reportModelNotFound(ReportNode reportNode, String builderName, String modelName) {
+    public static void reportModelNotFound(ReportNode reportNode, String category, String modelName) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.modelNotFound")
-                .withUntypedValue("builderName", builderName)
+                .withUntypedValue("category", category)
                 .withUntypedValue(MODEL_NAME, modelName)
                 .withSeverity(TypedValue.INFO_SEVERITY)
                 .add();
@@ -74,6 +74,16 @@ public final class BuilderReports {
                 .withMessageTemplate("dynawo.dynasim.fieldNotSet")
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportFieldReplacement(ReportNode reportNode, String fieldName, String replacementName, String replacement) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.fieldReplacement")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue("replacementName", replacementName)
+                .withUntypedValue("replacement", replacement)
+                .withSeverity(TypedValue.TRACE_SEVERITY)
                 .add();
     }
 

@@ -39,7 +39,7 @@ public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder
     public static LineBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, LineBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
             return null;
         }
         return new LineBuilder(network, modelConfig, reportNode);

@@ -38,6 +38,6 @@ class StandardBusTest {
         DynawoSimulationContext.Builder contextBuilder = new DynawoSimulationContext.Builder(network, dynamicModels);
         assertThatThrownBy(contextBuilder::build)
                 .isInstanceOf(PowsyblException.class)
-                .hasMessage("The equipment NHV1_NHV2_1 linked to the StandardBus NHV1 does not possess a dynamic model");
+                .hasMessage("At least one dynamic model forbid default models and the equipment NHV1_NHV2_1 does not possess a dynamic model");
     }
 }

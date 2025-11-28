@@ -11,6 +11,8 @@ import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
+import com.powsybl.iidm.network.extensions.DynamicModelInfo;
+import com.powsybl.iidm.network.extensions.DynamicModelInfoAdder;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -61,6 +63,16 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<T>> 
         if (hasVarMapping) {
             MacroStaticReference.writeMacroStaticRef(writer, getName());
             writer.writeEndElement();
+        }
+    }
+
+    @Override
+    public void createDynamicModelInfoExtension() {
+        DynamicModelInfo<T> extension = equipment.getExtension(DynamicModelInfo.class);
+        if (extension == null) {
+            equipment.newExtension(DynamicModelInfoAdder.class).setModelName(modelConfig.name()).add();
+        } else {
+            extension.setModelName(modelConfig.name());
         }
     }
 }

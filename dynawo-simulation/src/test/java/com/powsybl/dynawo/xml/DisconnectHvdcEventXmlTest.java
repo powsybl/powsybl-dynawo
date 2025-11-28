@@ -9,6 +9,7 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.LfResultsUtils;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
@@ -34,13 +35,16 @@ import java.util.stream.Stream;
 class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static final String HVDC_NAME = "L";
+    private static final DynawoVersion DYNAWO_VERSION = new DynawoVersion(1, 6, 0);
 
     @BeforeEach
     void setup(String dydName, String parName, Function< Network, BlackBoxModel> hvdcConstructor,
                Function< Network, BlackBoxModel> disconnectConstructor) {
         setupNetwork();
         addDynamicModels(hvdcConstructor, disconnectConstructor);
-        setupDynawoContext();
+        context = setupDynawoContextBuilder()
+                .currentVersion(DYNAWO_VERSION)
+                .build();
     }
 
     protected void setupNetwork() {
@@ -111,7 +115,7 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .build()),
                 Arguments.of("disconnect_hvdc_vsc_dangling_dyd.xml",
                         "disconnect_hvdc_par.xml",
-                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVscDanglingUdc")
+                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVscDanglingUDc")
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
                                 .dangling(TwoSides.TWO)

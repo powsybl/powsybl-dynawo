@@ -80,10 +80,14 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
             }
         }
         if (skippedTapChangers < (tapChangerEquipments.size() + tapChangerAutomatonIds.size())) {
-            int i = 1;
-            for (Identifiable<?> measurement : uMeasurements) {
-                adder.createMacroConnections(this, measurement, ActionConnectionPoint.class, this::getVarConnectionsWith, MeasurementPointSuffix.of(i));
-                i++;
+            if (uMeasurements.size() == 1) {
+                adder.createMacroConnections(this, uMeasurements.getFirst(), ActionConnectionPoint.class, this::getVarConnectionsWith, MeasurementPointSuffix.of());
+            } else {
+                int i = 1;
+                for (Identifiable<?> measurement : uMeasurements) {
+                    adder.createMacroConnections(this, measurement, ActionConnectionPoint.class, this::getVarConnectionsWith, MeasurementPointSuffix.of(i));
+                    i++;
+                }
             }
         } else {
             isConnected = false;
