@@ -52,6 +52,7 @@ import java.util.stream.Stream;
 @Disabled
 public class ModelsTest extends AbstractDynawoTest {
 
+    //TODO check models in every supported version
     private static final DynawoVersion DYNAWO_VERSION = DynawoVersion.createFromString("1.7.0");
     private static final Network SMIB = Network.read(new ResourceDataSource("SMIB", new ResourceSet("/smib", "SMIB.iidm")));
     private static final Network EUROSTAG = EurostagTutorialExample1Factory.create();
