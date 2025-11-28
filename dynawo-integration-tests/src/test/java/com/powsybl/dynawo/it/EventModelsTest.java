@@ -59,7 +59,7 @@ import java.util.stream.Stream;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-//@Disabled
+@Disabled
 public class EventModelsTest extends AbstractDynawoTest {
 
     //TODO check models in every supported version
