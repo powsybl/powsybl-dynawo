@@ -188,7 +188,7 @@ public final class NetworkResultsUpdater {
                 throw new PowsyblException("Missing merged load in bus " + busTarget.getId());
             }
             if (loadTerminalsGroup.size() == 1) {
-                update(loadTerminalsGroup.get(0), mergedLoadTerminal);
+                update(loadTerminalsGroup.getFirst(), mergedLoadTerminal);
             } else {
                 double groupP = loadTerminalsGroup.stream().mapToDouble(Terminal::getP).sum();
                 double groupQ = loadTerminalsGroup.stream().mapToDouble(Terminal::getQ).sum();

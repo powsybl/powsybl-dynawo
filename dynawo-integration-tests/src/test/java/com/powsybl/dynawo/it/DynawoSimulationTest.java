@@ -92,7 +92,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu_value"));
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(23, timeLine.size());
-        checkTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
+        checkTimeLineEvent(timeLine.getFirst(), 0, "_GEN____8_SM", "PMIN : activation");
     }
 
     @Test
@@ -161,7 +161,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(1, timeLine.size());
-        checkTimeLineEvent(timeLine.get(0), 0, "G1", "PMIN : activation");
+        checkTimeLineEvent(timeLine.getFirst(), 0, "G1", "PMIN : activation");
     }
 
     @Test
@@ -193,7 +193,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(7, timeLine.size());
-        checkTimeLineEvent(timeLine.get(0), 30.0, "_BUS____5-BUS____6-1_PS", "Tap position change (increment)");
+        checkTimeLineEvent(timeLine.getFirst(), 30.0, "_BUS____5-BUS____6-1_PS", "Tap position change (increment)");
     }
 
     @Test
@@ -280,7 +280,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(0, result.getCurves().size());
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(11, timeLine.size());
-        checkTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
+        checkTimeLineEvent(timeLine.getFirst(), 0, "_GEN____8_SM", "PMIN : activation");
     }
 
     private void checkTimeLineEvent(TimelineEvent event, double time, String modelName, String message) {
@@ -408,7 +408,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
 
-        ReportNode eventReport = reportNode.getChildren().get(0);
+        ReportNode eventReport = reportNode.getChildren().getFirst();
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
@@ -438,7 +438,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
 
-        eventReport = reportNode.getChildren().get(0);
+        eventReport = reportNode.getChildren().getFirst();
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
@@ -496,7 +496,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
 
-        ReportNode eventReport = reportNode.getChildren().get(0);
+        ReportNode eventReport = reportNode.getChildren().getFirst();
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());

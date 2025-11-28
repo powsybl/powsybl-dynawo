@@ -36,7 +36,7 @@ public class PropertyBuilder {
 
     public Property build() {
         if (collectionType == null) {
-            throw new IllegalArgumentException("collectionType is undefined");
+            return null;
         }
         return switch (collectionType) {
             case SINGLE -> new Property(name, type.isConversionFree() ? value : type.convertValue(value), type.getPropertyClass());
