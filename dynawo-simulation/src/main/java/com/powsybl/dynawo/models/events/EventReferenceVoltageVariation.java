@@ -11,11 +11,9 @@ package com.powsybl.dynawo.models.events;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
-import static com.powsybl.dynawo.parameters.ParameterType.BOOL;
 
 /**
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
@@ -49,13 +47,6 @@ public class EventReferenceVoltageVariation extends AbstractEventPower {
                 getEquipment(),
                 UControllableEquipmentModel.class,
                 this::getVarConnectionsWith);
-    }
-
-    @Override
-    public void createNetworkParameter(ParametersSet networkParameters) {
-        if (equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_GENERATOR)) {
-            networkParameters.addParameter(getEquipment().getId() + "_isUControllable", BOOL, Boolean.toString(true));
-        }
     }
 
     @Override
