@@ -13,6 +13,5 @@ import com.powsybl.dynawo.models.Model;
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
 public interface UControllableEquipmentModel extends Model {
-
     String getDeltaUVarName();
 }
