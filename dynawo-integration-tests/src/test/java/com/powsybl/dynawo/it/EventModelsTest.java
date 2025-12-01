@@ -21,10 +21,7 @@ import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.buses.StandardBusBuilder;
-import com.powsybl.dynawo.models.events.AbstractEvent;
-import com.powsybl.dynawo.models.events.EventActivePowerVariation;
-import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
-import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
+import com.powsybl.dynawo.models.events.*;
 import com.powsybl.dynawo.models.generators.*;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
@@ -93,11 +90,11 @@ public class EventModelsTest extends AbstractDynawoTest {
 
 
     /**
-     *
+     * Test every event with the different connectable models
      * @param network
      * @param eventModelSupplier Event supplier with the event to be tested
      * @param dynamicModelSupplier List of dynamic models to be tested with the event
-     * @param defaultModelIds Id list of equipment without model on which the vent should be tested
+     * @param defaultModelIds ID list of equipment without model to be tested with the event
      */
     @MethodSource("eventModelBuilderProvider")
     @ParameterizedTest
@@ -236,6 +233,20 @@ public class EventModelsTest extends AbstractDynawoTest {
                                 SynchronousGeneratorBuilder.of(n, "GeneratorSynchronousFourWindingsGoverPropVRPropInt")
                                         .staticId("GEN")
                                         .parameterSetId("SynchronousGenerator")
+                                        .build()),
+                        List.of("LOAD", "GEN")
+                ),
+                Arguments.of(
+                        EUROSTAG,
+                        (BiFunction<Network, String, EventModel>) (n, id) -> EventReactivePowerVariationBuilder.of(n)
+                                .staticId(id)
+                                .startTime(0.1)
+                                .deltaQ(0.5)
+                                .build(),
+                        (Function<Network, List<EquipmentBlackBoxModel>>) (n) -> List.of(
+                                BaseLoadBuilder.of(n, "LoadAlphaBeta")
+                                        .staticId("LOAD")
+                                        .parameterSetId("LAB")
                                         .build()),
                         List.of("LOAD", "GEN")
                 )
