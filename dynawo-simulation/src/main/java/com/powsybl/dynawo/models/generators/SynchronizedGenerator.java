@@ -9,12 +9,14 @@ package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
+import com.powsybl.dynawo.models.VarPrefix;
 import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
@@ -22,13 +24,34 @@ import java.util.List;
  */
 public class SynchronizedGenerator extends BaseGenerator implements FrequencySynchronizedModel {
 
+    private static final String DEFAULT_OMEGA_REF_PU = "generator_omegaRefPu";
+    private static final String DEFAULT_RUNNING = "generator_running";
+
+    private String omegaRefPu = DEFAULT_OMEGA_REF_PU;
+    private String running = DEFAULT_RUNNING;
+
     protected SynchronizedGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
         super(generator, parameterSetId, modelConfig);
+        Map<String, VarPrefix> configVarPrefix = modelConfig.varPrefix();
+        if (!configVarPrefix.isEmpty()) {
+            VarPrefix varPrefix = configVarPrefix.get("omegaRefPu");
+            if (varPrefix != null) {
+                this.omegaRefPu = varPrefix.toVarName();
+            }
+            if ((varPrefix = configVarPrefix.get("running")) != null) {
+                this.running = varPrefix.toVarName();
+            }
+        }
+    }
+
+    @Override
+    public String getOmegaRefPuVarName() {
+        return omegaRefPu;
     }
 
     @Override
     public String getRunningVarName() {
-        return "generator_running";
+        return running;
     }
 
     @Override

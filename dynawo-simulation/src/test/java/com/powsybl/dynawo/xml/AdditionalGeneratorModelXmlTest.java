@@ -10,6 +10,7 @@ package com.powsybl.dynawo.xml;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
+import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -26,7 +27,7 @@ class AdditionalGeneratorModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
-        network = EurostagTutorialExample1Factory.create();
+        network = EurostagTutorialExample1Factory.createWithMoreGenerators();
     }
 
     @Override
@@ -43,7 +44,11 @@ class AdditionalGeneratorModelXmlTest extends AbstractDynamicModelXmlTest {
     protected void addDynamicModels() {
         dynamicModels.add(BaseGeneratorBuilder.of(network, "BaseGenerator2")
                 .staticId("GEN")
-                .parameterSetId("g")
+                .parameterSetId("GPQ")
+                .build());
+        dynamicModels.add(SynchronousGeneratorBuilder.of(network, "SynchronousGenerator2")
+                .staticId("GEN2")
+                .parameterSetId("GSTWPR")
                 .build());
     }
 

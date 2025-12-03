@@ -10,6 +10,7 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
+import com.powsybl.dynawo.models.VarPrefix;
 import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.iidm.network.Bus;
@@ -17,6 +18,7 @@ import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -24,13 +26,32 @@ import java.util.Objects;
  */
 public class SynchronousGenerator extends BaseGenerator implements FrequencySynchronizedModel {
 
-    private static final String OMEGA_PU_VAR_NAME = "generator_omegaPu";
+    private static final String DEFAULT_OMEGA_PU_VAR_NAME = "generator_omegaPu";
+    private static final String DEFAULT_OMEGA_REF_PU = "generator_omegaRefPu";
+    private static final String DEFAULT_RUNNING = "generator_running";
+
+    private String omegaPu = DEFAULT_OMEGA_PU_VAR_NAME;
+    private String omegaRefPu = DEFAULT_OMEGA_REF_PU;
+    private String running = DEFAULT_RUNNING;
 
     private final EnumGeneratorComponent generatorComponent;
 
     protected SynchronousGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig, EnumGeneratorComponent generatorComponent) {
         super(generator, parameterSetId, modelConfig);
         this.generatorComponent = Objects.requireNonNull(generatorComponent);
+        Map<String, VarPrefix> configVarPrefix = modelConfig.varPrefix();
+        if (!configVarPrefix.isEmpty()) {
+            VarPrefix varPrefix = configVarPrefix.get("omegaPu");
+            if (varPrefix != null) {
+                this.omegaPu = varPrefix.toVarName();
+            }
+            if ((varPrefix = configVarPrefix.get("omegaRefPu")) != null) {
+                this.omegaRefPu = varPrefix.toVarName();
+            }
+            if ((varPrefix = configVarPrefix.get("running")) != null) {
+                this.running = varPrefix.toVarName();
+            }
+        }
     }
 
     @Override
@@ -44,14 +65,19 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
     }
 
     @Override
+    public String getOmegaRefPuVarName() {
+        return omegaRefPu;
+    }
+
+    @Override
     public String getRunningVarName() {
-        return "generator_running";
+        return running;
     }
 
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
         return Arrays.asList(
-                new VarConnection("omega_grp_@INDEX@", OMEGA_PU_VAR_NAME),
+                new VarConnection("omega_grp_@INDEX@", omegaPu),
                 new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
                 new VarConnection("running_grp_@INDEX@", getRunningVarName())
         );

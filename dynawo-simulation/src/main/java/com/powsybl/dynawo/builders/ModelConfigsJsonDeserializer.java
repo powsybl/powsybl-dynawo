@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.powsybl.commons.json.JsonUtil;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.VarMapping;
+import com.powsybl.dynawo.models.VarPrefix;
 
 import java.io.IOException;
 import java.util.*;
@@ -70,6 +71,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
             DynawoVersion maxVersion = null;
             String endCause = null;
             final List<VarMapping> varMapping = new ArrayList<>(0);
+            final Map<String, VarPrefix> varPrefix = new HashMap<>(0);
         };
         JsonUtil.parseObject(parser, name ->
             switch (parser.currentName()) {
@@ -110,13 +112,18 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
                             ModelConfigsJsonDeserializer::parseVarMapping);
                     yield true;
                 }
+                case "variablePrefix" -> {
+                    JsonUtil.parseObjectArray(parser, vp -> parsingContext.varPrefix.put(vp.variable(), vp),
+                            ModelConfigsJsonDeserializer::parseVarPrefix);
+                    yield true;
+                }
                 default -> false;
             }
         );
         return new ModelConfig(parsingContext.lib, parsingContext.alias, parsingContext.internalModelPrefix,
                 parsingContext.properties, parsingContext.doc,
                 new VersionInterval(parsingContext.minVersion, parsingContext.maxVersion, parsingContext.endCause),
-                parsingContext.varMapping);
+                parsingContext.varMapping, parsingContext.varPrefix);
     }
 
     private static VarMapping parseVarMapping(JsonParser parser) {
@@ -138,5 +145,26 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
             }
         );
         return new VarMapping(parsingContext.dynamicVar, parsingContext.staticVar);
+    }
+
+    private static VarPrefix parseVarPrefix(JsonParser parser) {
+        var parsingContext = new Object() {
+            String variable;
+            String prefix;
+        };
+        JsonUtil.parseObject(parser, name ->
+            switch (parser.currentName()) {
+                case "variable" -> {
+                    parsingContext.variable = parser.nextTextValue();
+                    yield true;
+                }
+                case "prefix" -> {
+                    parsingContext.prefix = parser.nextTextValue();
+                    yield true;
+                }
+                default -> false;
+            }
+        );
+        return new VarPrefix(parsingContext.variable, parsingContext.prefix);
     }
 }

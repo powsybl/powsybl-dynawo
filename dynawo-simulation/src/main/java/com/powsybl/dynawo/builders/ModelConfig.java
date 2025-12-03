@@ -8,16 +8,18 @@
 package com.powsybl.dynawo.builders;
 
 import com.powsybl.dynawo.models.VarMapping;
+import com.powsybl.dynawo.models.VarPrefix;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public record ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, String doc,
-                          VersionInterval version, List<VarMapping> varMapping) implements ModelInfo {
+                          VersionInterval version, List<VarMapping> varMapping, Map<String, VarPrefix> varPrefix) implements ModelInfo {
 
     private static final String CONTROLLABLE_PROPERTY = "CONTROLLABLE";
     private static final String DANGLING_PROPERTY = "DANGLING";
@@ -25,7 +27,8 @@ public record ModelConfig(String lib, String alias, String internalModelPrefix, 
     private static final String TRANSFORMER_PROPERTY = "TRANSFORMER";
     private static final String AUXILIARY_PROPERTY = "AUXILIARY";
 
-    public ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, String doc, VersionInterval version, List<VarMapping> varMapping) {
+    public ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, String doc,
+                       VersionInterval version, List<VarMapping> varMapping, Map<String, VarPrefix> varPrefix) {
         this.lib = Objects.requireNonNull(lib);
         this.alias = alias;
         this.internalModelPrefix = internalModelPrefix;
@@ -33,18 +36,21 @@ public record ModelConfig(String lib, String alias, String internalModelPrefix, 
         this.doc = doc;
         this.version = Objects.requireNonNull(version);
         this.varMapping = varMapping;
+        this.varPrefix = varPrefix;
     }
 
     public ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, String doc, VersionInterval version) {
-        this(lib, alias, internalModelPrefix, properties, doc, version, Collections.emptyList());
+        this(lib, alias, internalModelPrefix, properties, doc, version, Collections.emptyList(), Collections.emptyMap());
     }
 
     public ModelConfig(String lib, List<String> properties) {
-        this(lib, null, null, properties, null, VersionInterval.createDefaultVersion(), Collections.emptyList());
+        this(lib, null, null, properties, null, VersionInterval.createDefaultVersion(),
+                Collections.emptyList(), Collections.emptyMap());
     }
 
     public ModelConfig(String lib) {
-        this(lib, null, null, Collections.emptyList(), null, VersionInterval.createDefaultVersion(), Collections.emptyList());
+        this(lib, null, null, Collections.emptyList(), null, VersionInterval.createDefaultVersion(),
+                Collections.emptyList(), Collections.emptyMap());
     }
 
     public boolean isControllable() {

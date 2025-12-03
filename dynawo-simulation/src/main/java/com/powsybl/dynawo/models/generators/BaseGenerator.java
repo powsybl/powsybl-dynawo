@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.models.VarPrefix;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
@@ -15,8 +16,8 @@ import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -26,6 +27,8 @@ public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> imp
 
     private static final String DEFAULT_TERMINAL = "generator_terminal";
     private static final String DEFAULT_SWITCH_OFF_SIGNAL_1 = "generator_switchOffSignal1";
+    private static final String DEFAULT_SWITCH_OFF_SIGNAL_2 = "generator_switchOffSignal2";
+    private static final String DEFAULT_SWITCH_OFF_SIGNAL_3 = "generator_switchOffSignal3";
 
     static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("generator_PGenPu", "p"),
@@ -34,17 +37,27 @@ public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> imp
 
     private String terminal = DEFAULT_TERMINAL;
     private String switchOffSignal1 = DEFAULT_SWITCH_OFF_SIGNAL_1;
+    private String switchOffSignal2 = DEFAULT_SWITCH_OFF_SIGNAL_2;
+    private String switchOffSignal3 = DEFAULT_SWITCH_OFF_SIGNAL_3;
     private List<VarMapping> varMapping = VAR_MAPPING;
 
     protected BaseGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
         super(generator, parameterSetId, modelConfig);
-        String internalPrefix = modelConfig.internalModelPrefix();
-        if (internalPrefix != null) {
-            this.terminal = internalPrefix + "_terminal";
-            this.switchOffSignal1 = internalPrefix + "_switchOffSignal1";
+        Map<String, VarPrefix> configVarPrefix = modelConfig.varPrefix();
+        if (!configVarPrefix.isEmpty()) {
+            VarPrefix varPrefix = configVarPrefix.get("terminal");
+            if (varPrefix != null) {
+                this.terminal = varPrefix.toVarName();
+            }
+            if ((varPrefix = configVarPrefix.get("switchOffSignal")) != null) {
+                String switchOff = varPrefix.toVarName();
+                this.switchOffSignal1 = switchOff + 1;
+                this.switchOffSignal2 = switchOff + 2;
+                this.switchOffSignal3 = switchOff + 3;
+            }
         }
         List<VarMapping> configVarMapping = modelConfig.varMapping();
-        if (!varMapping.isEmpty()) {
+        if (!configVarMapping.isEmpty()) {
             this.varMapping = configVarMapping;
         }
     }
@@ -78,11 +91,11 @@ public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> imp
 
     @Override
     public String getSwitchOffSignalEventVarName() {
-        return "generator_switchOffSignal2";
+        return switchOffSignal2;
     }
 
     public String getSwitchOffSignalAutomatonVarName() {
-        return "generator_switchOffSignal3";
+        return switchOffSignal3;
     }
 
     @Override

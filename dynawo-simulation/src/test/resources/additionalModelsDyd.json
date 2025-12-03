@@ -3,7 +3,16 @@
     "libs": [
       {
         "lib": "BaseGenerator2",
-        "internalModelPrefix": "generator2",
+        "variablePrefix": [
+          {
+            "variable":"terminal",
+            "prefix":"generatorAlt"
+          },
+          {
+            "variable":"switchOffSignal",
+            "prefix":"generatorAlt"
+          }
+        ],
         "macroStaticRef": [
           {
             "dynamicVar":"generator2_PGen2",
@@ -16,6 +25,31 @@
           {
             "dynamicVar":"generator2_state",
             "staticVar":"state"
+          }
+        ]
+      }
+    ]
+  },
+  "SYNCHRONOUS_GENERATOR": {
+    "libs": [
+      {
+        "lib": "SynchronousGenerator2",
+        "variablePrefix": [
+          {
+            "variable":"switchOffSignal",
+            "prefix":"injector"
+          },
+          {
+            "variable":"omegaPu",
+            "prefix":"control"
+          },
+          {
+            "variable":"omegaRefPu",
+            "prefix":"control"
+          },
+          {
+            "variable":"running",
+            "prefix":"converter"
           }
         ]
       }
