@@ -166,7 +166,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         Path timelineFile = outputsFolder.resolve(TIMELINE_FOLDER).resolve(TIMELINE_FILENAME + exportMode.getFileExtension());
         if (Files.exists(timelineFile)) {
             TimeLineParser.parse(timelineFile, exportMode)
-                    .forEach(e -> timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message())));
+                        .forEach(e -> timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message())));
         } else {
             LOGGER.warn("Timeline file not found");
         }
@@ -175,14 +175,14 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     private void setCurves(Path workingDir) throws IOException {
         Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).resolve(CURVES_FILENAME);
         if (Files.exists(curvesPath)) {
-            if (Files.size(curvesPath) != 0) {
+            if (Files.size(curvesPath) > 0) {
                 TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false,
                                 TimeSeries.TimeFormat.FRACTIONS_OF_SECOND, true)).values()
                         .forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
             } else {
-                LOGGER.warn("CRV file couldn't be parsed");
+                LOGGER.warn("CRV file is empty");
                 status = DynamicSimulationResult.Status.FAILURE;
-                statusText = "CRV file couldn't be parsed";
+                statusText = "CRV file is empty";
             }
         } else {
             LOGGER.warn("Curves folder not found");
@@ -191,7 +191,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         }
     }
 
-    private void setFinalStateValues(Path workingDir) throws IOException {
+    private void setFinalStateValues(Path workingDir) {
         Path fsvPath = workingDir.resolve(FSV_OUTPUT_PATH).resolve(FSV_OUTPUT_FILENAME);
         if (Files.exists(fsvPath)) {
             new CsvFsvParser(';').parse(fsvPath).forEach(e -> fsv.put(e.model() + "_" + e.variable(), e.value()));

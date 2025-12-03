@@ -64,6 +64,8 @@ public class DynawoOutputVariablesBuilder {
     public DynawoOutputVariablesBuilder variable(String variable) {
         if (!variable.isEmpty()) {
             this.variables = List.of(variable);
+        } else {
+            this.variables = Collections.emptyList();
         }
         return this;
     }

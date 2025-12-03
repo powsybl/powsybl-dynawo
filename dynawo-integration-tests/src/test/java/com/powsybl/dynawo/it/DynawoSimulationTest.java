@@ -291,12 +291,35 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
                         PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
-                .withMessageTemplate("testIeee14WithWrongGroovyVariablesForCRV")
+                .withMessageTemplate("IEEE14 test")
                 .build();
 
-        DynamicSimulationResult result = setupIEEE14SimulationWithWrongGroovyVariables(reportNode).get();
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
+                GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        GroovyOutputVariablesSupplier outputVariablesSupplier = new GroovyOutputVariablesSupplier(
+                getResourceAsStream("/error/outputWrongVariables.groovy"),
+                GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
+                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2")
+                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
+                .setTimelineExportMode(ExportMode.XML);
+
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
+                .join();
+
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
-        assertEquals("CRV file couldn't be parsed", result.getStatusText());
+        assertEquals("CRV file is empty", result.getStatusText());
     }
 
     private void checkTimeLineEvent(TimelineEvent event, double time, String modelName, String message) {
@@ -352,32 +375,6 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
         GroovyOutputVariablesSupplier outputVariablesSupplier = new GroovyOutputVariablesSupplier(
                 getResourceAsStream("/ieee14/disconnectline/outputVariables.groovy"),
-                GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
-
-        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
-                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
-                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2")
-                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
-                .setTimelineExportMode(ExportMode.XML);
-
-        return () -> provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
-                .join();
-    }
-
-    private Supplier<DynamicSimulationResult> setupIEEE14SimulationWithWrongGroovyVariables(ReportNode reportNode) {
-        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
-
-        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
-                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
-
-        GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
-                getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
-                GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
-
-        GroovyOutputVariablesSupplier outputVariablesSupplier = new GroovyOutputVariablesSupplier(
-                getResourceAsStream("/ieee14/disconnectline/outputWrongVariables.groovy"),
                 GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
