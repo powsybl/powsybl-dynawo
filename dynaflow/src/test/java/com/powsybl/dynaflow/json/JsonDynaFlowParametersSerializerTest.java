@@ -95,10 +95,33 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
     @Test
     void serializeWithDefaultDynaflowParameters() throws IOException {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
-
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
-
         roundTripTest(parameters, JsonLoadFlowParameters::write,
                 JsonLoadFlowParameters::read, "/dynaflow_default_serialization.json");
+    }
+
+    @Test
+    void partialUpdate() {
+        LoadFlowParameters lfParameters = LoadFlowParameters.load();
+        JsonLoadFlowParameters.update(lfParameters, getClass().getResourceAsStream("/partial_dynaflow_parameters_update.json"));
+        assertTrue(lfParameters.isTransformerVoltageControlOn());
+
+        DynaFlowParameters dynaFlowParameters = lfParameters.getExtension(DynaFlowParameters.class);
+        assertNotNull(dynaFlowParameters);
+        //set false in config.yml
+        assertFalse(dynaFlowParameters.getSvcRegulationOn());
+        assertFalse(dynaFlowParameters.getShuntRegulationOn());
+        assertTrue(dynaFlowParameters.getAutomaticSlackBusOn());
+        assertEquals(45d, dynaFlowParameters.getDsoVoltageLevel(), 0);
+        assertEquals(DynaFlowConstants.ActivePowerCompensation.P, dynaFlowParameters.getActivePowerCompensation());
+        assertEquals("path/to/settingFile", dynaFlowParameters.getSettingPath());
+        assertNull(dynaFlowParameters.getAssemblingPath());
+        assertEquals(0d, dynaFlowParameters.getStartTime(), 0.1d);
+        assertEquals(150d, dynaFlowParameters.getStopTime(), 0.1d);
+        assertNull(dynaFlowParameters.getPrecision());
+        assertThat(dynaFlowParameters.getChosenOutputs()).containsExactlyInAnyOrderElementsOf(EnumSet.of(DynaFlowConstants.OutputTypes.TIMELINE));
+        assertEquals(10d, dynaFlowParameters.getTimeStep(), 0.1d);
+        assertEquals(DynaFlowConstants.StartingPointMode.WARM, dynaFlowParameters.getStartingPointMode());
+        assertTrue(dynaFlowParameters.isMergeLoads());
     }
 }

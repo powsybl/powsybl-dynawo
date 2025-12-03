@@ -105,6 +105,12 @@ class MarginCalculationTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14MC() {
+        List<LoadIncreaseResult> results = setupIeee14MC();
+        assertThat(results).containsExactlyElementsOf(EXPECTED_RESULTS);
+        testExecutionTempFile();
+    }
+
+    private List<LoadIncreaseResult> setupIeee14MC() {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
@@ -139,16 +145,14 @@ class MarginCalculationTest extends AbstractDynawoTest {
 
         LoadsVariationSupplier loadsVariationSupplier = (n, r) ->
                 LOADS.stream().map(load -> new LoadsVariationBuilder(n, r)
-                        .loads(load)
-                        .variationValue(10)
-                        .build())
-                .toList();
+                                .loads(load)
+                                .variationValue(10)
+                                .build())
+                        .toList();
 
-        List<LoadIncreaseResult> results = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+        return provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
                         dynamicModelsSupplier, n -> contingencies, loadsVariationSupplier, runParameters)
                 .join()
                 .getLoadIncreaseResults();
-
-        assertThat(results).containsExactlyElementsOf(EXPECTED_RESULTS);
     }
 }

@@ -127,7 +127,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
         List<Parameter> parameters = new DynaFlowProvider().getSpecificParameters(platformConfig);
 
-        assertEquals(false, parameters.get(0).getDefaultValue());
+        assertEquals(false, parameters.getFirst().getDefaultValue());
     }
 
     @Test
