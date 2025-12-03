@@ -73,7 +73,7 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
         DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
         DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
 
-        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(".EXEC_TMP_FILENAME");
+        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(EXEC_TMP_FILENAME);
         Files.writeString(tmpExecFile, workingDir.toAbsolutePath().toString());
 
         return getCommandExecutions(command);

@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements SpecifiedGeneratorModel {
 
-    protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+    static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("generator_PGenPu", "p"),
             new VarMapping("generator_QGenPu", "q"),
             new VarMapping("generator_state", "state"));
