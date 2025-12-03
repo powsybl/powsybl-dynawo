@@ -16,7 +16,10 @@ import java.util.List;
  */
 public enum EnumGeneratorComponent {
 
-    NONE("generator_terminal", BaseGenerator.VAR_MAPPING),
+    NONE("generator_terminal", List.of(
+            new VarMapping("generator_PGenPu", "p"),
+            new VarMapping("generator_QGenPu", "q"),
+            new VarMapping("generator_state", "state"))),
     TRANSFORMER("transformer_terminal1", List.of(
             new VarMapping("transformer_P1GenPu", "p"),
             new VarMapping("transformer_Q1GenPu", "q"),

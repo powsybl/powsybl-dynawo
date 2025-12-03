@@ -25,25 +25,24 @@ import java.util.Map;
  */
 public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements SpecifiedGeneratorModel {
 
-    private static final String DEFAULT_TERMINAL = "generator_terminal";
     private static final String DEFAULT_SWITCH_OFF_SIGNAL_1 = "generator_switchOffSignal1";
     private static final String DEFAULT_SWITCH_OFF_SIGNAL_2 = "generator_switchOffSignal2";
     private static final String DEFAULT_SWITCH_OFF_SIGNAL_3 = "generator_switchOffSignal3";
 
-    static final List<VarMapping> VAR_MAPPING = Arrays.asList(
-            new VarMapping("generator_PGenPu", "p"),
-            new VarMapping("generator_QGenPu", "q"),
-            new VarMapping("generator_state", "state"));
-
-    private String terminal = DEFAULT_TERMINAL;
+    private final List<VarMapping> varMapping;
+    private String terminal;
     private String switchOffSignal1 = DEFAULT_SWITCH_OFF_SIGNAL_1;
     private String switchOffSignal2 = DEFAULT_SWITCH_OFF_SIGNAL_2;
     private String switchOffSignal3 = DEFAULT_SWITCH_OFF_SIGNAL_3;
-    private List<VarMapping> varMapping = VAR_MAPPING;
 
     protected BaseGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
+        this(generator, parameterSetId, modelConfig, EnumGeneratorComponent.NONE);
+    }
+
+    protected BaseGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig, EnumGeneratorComponent generatorComponent) {
         super(generator, parameterSetId, modelConfig);
         Map<String, VarPrefix> configVarPrefix = modelConfig.varPrefix();
+        this.terminal = generatorComponent.getTerminalVarName();
         if (!configVarPrefix.isEmpty()) {
             VarPrefix varPrefix = configVarPrefix.get("terminal");
             if (varPrefix != null) {
@@ -57,9 +56,7 @@ public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> imp
             }
         }
         List<VarMapping> configVarMapping = modelConfig.varMapping();
-        if (!configVarMapping.isEmpty()) {
-            this.varMapping = configVarMapping;
-        }
+        this.varMapping = configVarMapping.isEmpty() ? generatorComponent.getVarMapping() : configVarMapping;
     }
 
     @Override

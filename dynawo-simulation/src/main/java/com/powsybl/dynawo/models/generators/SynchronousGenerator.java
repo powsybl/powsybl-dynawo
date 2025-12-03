@@ -54,15 +54,16 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
         }
     }
 
-    @Override
-    public List<VarMapping> getVarsMapping() {
-        return generatorComponent.getVarMapping();
-    }
-
-    @Override
-    public String getTerminalVarName() {
-        return generatorComponent.getTerminalVarName();
-    }
+    //TODO remove
+//    @Override
+//    public List<VarMapping> getVarsMapping() {
+//        return generatorComponent.getVarMapping();
+//    }
+//
+//    @Override
+//    public String getTerminalVarName() {
+//        return generatorComponent.getTerminalVarName();
+//    }
 
     @Override
     public String getOmegaRefPuVarName() {
