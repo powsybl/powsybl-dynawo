@@ -60,14 +60,18 @@ class MarginCalculationTest extends AbstractDynawoTest {
     private static final List<String> LOADS = List.of("_LOAD___3_EC", "_LOAD___6_EC", "_LOAD___9_EC");
 
     private static final List<LoadIncreaseResult> EXPECTED_RESULTS = List.of(
+                new LoadIncreaseResult(100, CRITERIA_NON_RESPECTED, List.of(),
+                        List.of(new FailedCriterion("total load power = 207.704MW > 200MW (criteria id: Risque protection)", 56.929320))),
                 new LoadIncreaseResult(0, CONVERGENCE,
                         List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
                                 new ScenarioResult(GEN_ID, CONVERGENCE))),
                 new LoadIncreaseResult(50, CONVERGENCE,
                         List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
                                 new ScenarioResult(GEN_ID, CONVERGENCE))),
-                new LoadIncreaseResult(75, CRITERIA_NON_RESPECTED),
-                new LoadIncreaseResult(63, CRITERIA_NON_RESPECTED),
+                new LoadIncreaseResult(75, CRITERIA_NON_RESPECTED, List.of(),
+                        List.of(new FailedCriterion("total load power = 200.133MW > 200MW (criteria id: Risque protection)", 55.0))),
+                new LoadIncreaseResult(63, CRITERIA_NON_RESPECTED, List.of(),
+                        List.of(new FailedCriterion("total load power = 232.439MW > 200MW (criteria id: Risque QdE)", 79.689024))),
                 new LoadIncreaseResult(57, CONVERGENCE,
                         List.of(new ScenarioResult(LINE_ID, CRITERIA_NON_RESPECTED,
                                         List.of(new FailedCriterion("total load power = 221.465MW > 200MW (criteria id: Risque QdE)", 174.2))),
@@ -101,6 +105,12 @@ class MarginCalculationTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14MC() {
+        List<LoadIncreaseResult> results = setupIeee14MC();
+        assertThat(results).containsExactlyElementsOf(EXPECTED_RESULTS);
+        testExecutionTempFile();
+    }
+
+    private List<LoadIncreaseResult> setupIeee14MC() {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
@@ -135,16 +145,14 @@ class MarginCalculationTest extends AbstractDynawoTest {
 
         LoadsVariationSupplier loadsVariationSupplier = (n, r) ->
                 LOADS.stream().map(load -> new LoadsVariationBuilder(n, r)
-                        .loads(load)
-                        .variationValue(10)
-                        .build())
-                .toList();
+                                .loads(load)
+                                .variationValue(10)
+                                .build())
+                        .toList();
 
-        List<LoadIncreaseResult> results = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+        return provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
                         dynamicModelsSupplier, n -> contingencies, loadsVariationSupplier, runParameters)
                 .join()
                 .getLoadIncreaseResults();
-
-        assertThat(results).containsExactlyElementsOf(EXPECTED_RESULTS);
     }
 }

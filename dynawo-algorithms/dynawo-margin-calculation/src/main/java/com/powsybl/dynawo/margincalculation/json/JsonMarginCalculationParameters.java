@@ -56,6 +56,31 @@ public final class JsonMarginCalculationParameters {
     }
 
     /**
+     * Updates parameters by reading the content of a JSON file.
+     */
+    public static MarginCalculationParameters update(MarginCalculationParameters parameters, Path jsonFile) {
+        Objects.requireNonNull(jsonFile);
+
+        try (InputStream is = Files.newInputStream(jsonFile)) {
+            return update(parameters, is);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
+     * Updates parameters by reading the content of a JSON stream.
+     */
+    public static MarginCalculationParameters update(MarginCalculationParameters parameters, InputStream jsonStream) {
+        try {
+            ObjectMapper objectMapper = createObjectMapper();
+            return objectMapper.readerForUpdating(parameters).readValue(jsonStream);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
      * Writes parameters as JSON to a file.
      */
     public static void write(MarginCalculationParameters parameters, Path jsonFile) {

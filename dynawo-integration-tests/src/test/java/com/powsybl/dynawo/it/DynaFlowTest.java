@@ -21,6 +21,7 @@ import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
+import com.powsybl.loadflow.LoadFlowRunParameters;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.SecurityAnalysisRunParameters;
@@ -38,7 +39,7 @@ import java.util.Objects;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static com.powsybl.loadflow.LoadFlowResult.ComponentResult.Status.CONVERGED;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -81,18 +82,23 @@ class DynaFlowTest extends AbstractDynawoTest {
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
-        LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNode)
+        LoadFlowRunParameters runParameters = new LoadFlowRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(loadFlowParameters)
+                .setReportNode(reportNode);
+        LoadFlowResult result = loadFlowProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, runParameters)
                 .join();
 
         assertEquals(1, result.getComponentResults().size());
-        LoadFlowResult.ComponentResult componentResult = result.getComponentResults().get(0);
+        LoadFlowResult.ComponentResult componentResult = result.getComponentResults().getFirst();
         assertEquals(CONVERGED, componentResult.getStatus());
-        assertEquals("B4", componentResult.getSlackBusResults().get(0).getId());
+        assertEquals("B4", componentResult.getSlackBusResults().getFirst().getId());
 
         StringWriter sw = new StringWriter();
         reportNode.print(sw);
         System.out.println(sw);
 
+        testExecutionTempFile();
         InputStream refStream = Objects.requireNonNull(getClass().getResourceAsStream("/loadflow_timeline_report.txt"));
         String refLogExport = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStream), StandardCharsets.UTF_8));
         String logExport = TestUtil.normalizeLineSeparator(sw.toString());
@@ -107,8 +113,8 @@ class DynaFlowTest extends AbstractDynawoTest {
         network.getLine("_BUS____1-BUS____5-1_AC").getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits()
                 .setPermanentLimit(500.).add();
         network.getLine("_BUS____1-BUS____2-1_AC").getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits()
-                .beginTemporaryLimit().setName("tl").setAcceptableDuration(120).setValue(1200).endTemporaryLimit()
                 .setPermanentLimit(1500.)
+                .beginTemporaryLimit().setName("tl").setAcceptableDuration(120).setValue(1900).endTemporaryLimit()
                 .add();
         network.getVoltageLevelStream().forEach(vl -> vl.setHighVoltageLimit(vl.getNominalV() * 1.09));
         network.getVoltageLevelStream().forEach(vl -> vl.setLowVoltageLimit(vl.getNominalV() * 0.97));
@@ -119,7 +125,11 @@ class DynaFlowTest extends AbstractDynawoTest {
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
-        loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNodeLf).join();
+        LoadFlowRunParameters lfRunParameters = new LoadFlowRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(loadFlowParameters)
+                .setReportNode(reportNodeLf);
+        loadFlowProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, lfRunParameters).join();
 
         StringWriter swReportNodeLf = new StringWriter();
         reportNodeLf.print(swReportNodeLf);
@@ -172,6 +182,7 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .join()
                 .getResult();
 
+        testExecutionTempFile();
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_nb_results.json"));

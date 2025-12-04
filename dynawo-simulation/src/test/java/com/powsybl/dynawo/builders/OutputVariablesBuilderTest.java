@@ -43,7 +43,7 @@ class OutputVariablesBuilderTest {
                 .variable("generator_omegaPu")
                 .build();
         assertEquals(1, outputVariables.size());
-        OutputVariable variable = outputVariables.get(0);
+        OutputVariable variable = outputVariables.getFirst();
         assertEquals("BBM_GEN", variable.getModelId());
         assertEquals("generator_omegaPu", variable.getVariableName());
     }
@@ -55,7 +55,7 @@ class OutputVariablesBuilderTest {
                 .variables("generator_omegaPu", "generator_PGen")
                 .build();
         assertEquals(2, outputVariables.size());
-        OutputVariable variable = outputVariables.get(0);
+        OutputVariable variable = outputVariables.getFirst();
         assertEquals("NETWORK", variable.getModelId());
         assertEquals("GEN_generator_omegaPu", variable.getVariableName());
     }
