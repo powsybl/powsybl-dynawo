@@ -187,6 +187,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         }
     }
 
+    // TODO remplacer with one lopp with switch pattern matching
     private <R extends Model> List<R> filterDynamicModels(Class<R> modelClass) {
         return dynamicModels.stream()
                 .filter(modelClass::isInstance)
