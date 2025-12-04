@@ -1,0 +1,58 @@
+/**
+ * Copyright (c) 2023, RTE (http://www.rte-france.com/)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+package com.powsybl.dynawo.models.automationsystems;
+
+import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.builders.AbstractDynamicModelBuilder;
+import com.powsybl.dynawo.builders.BuilderReports;
+import com.powsybl.dynawo.builders.ModelBuilder;
+import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.iidm.network.Network;
+
+import java.util.Objects;
+
+/**
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ */
+//TODO rename - make  Automaton and equipment sub class ?
+public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>> extends AbstractDynamicModelBuilder implements ModelBuilder<DynamicModel> {
+
+    protected String parameterSetId;
+    protected final ModelConfig modelConfig;
+
+    protected AbstractModelBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, parentReportNode);
+        this.modelConfig = Objects.requireNonNull(modelConfig);
+    }
+
+    public T parameterSetId(String parameterSetId) {
+        this.parameterSetId = parameterSetId;
+        return self();
+    }
+
+    @Override
+    protected void checkData() {
+        if (parameterSetId == null) {
+            String id = getModelId();
+            BuilderReports.reportFieldReplacement(reportNode, "parameterSetId", "dynamicModelId", id);
+            parameterSetId = id;
+        }
+    }
+
+    @Override
+    public String getModelName() {
+        return modelConfig.name();
+    }
+
+    protected String getLib() {
+        return modelConfig.lib();
+    }
+
+    protected abstract T self();
+}
