@@ -14,6 +14,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.UnderVoltageAutomationSystemBuilder;
+import com.powsybl.dynawo.models.automationsystems.HighVoltageRideThroughAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterBlockingIAutomationSystemBuilder;
@@ -53,6 +54,7 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(TapChangerAutomationSystemBuilder.CATEGORY, TapChangerAutomationSystemBuilder::of, TapChangerAutomationSystemBuilder::getSupportedModelInfos),
             new BuilderConfig(TapChangerBlockingAutomationSystemBuilder.CATEGORY, TapChangerBlockingAutomationSystemBuilder::of, TapChangerBlockingAutomationSystemBuilder::getSupportedModelInfos),
             new BuilderConfig(UnderVoltageAutomationSystemBuilder.CATEGORY, UnderVoltageAutomationSystemBuilder::of, UnderVoltageAutomationSystemBuilder::getSupportedModelInfos),
+            new BuilderConfig(HighVoltageRideThroughAutomationSystemBuilder.CATEGORY, HighVoltageRideThroughAutomationSystemBuilder::of, HighVoltageRideThroughAutomationSystemBuilder::getSupportedModelInfos),
             new BuilderConfig(PhaseShifterPAutomationSystemBuilder.CATEGORY, PhaseShifterPAutomationSystemBuilder::of, PhaseShifterPAutomationSystemBuilder::getSupportedModelInfos),
             new BuilderConfig(PhaseShifterIAutomationSystemBuilder.CATEGORY, PhaseShifterIAutomationSystemBuilder::of, PhaseShifterIAutomationSystemBuilder::getSupportedModelInfos),
             new BuilderConfig(PhaseShifterBlockingIAutomationSystemBuilder.CATEGORY, PhaseShifterBlockingIAutomationSystemBuilder::of, PhaseShifterBlockingIAutomationSystemBuilder::getSupportedModelInfos),
@@ -70,6 +72,7 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(BaseShuntBuilder.CATEGORY, BaseShuntBuilder::of, BaseShuntBuilder::getSupportedModelInfos),
             new BuilderConfig(BaseStaticVarCompensatorBuilder.CATEGORY, BaseStaticVarCompensatorBuilder::of, BaseStaticVarCompensatorBuilder::getSupportedModelInfos),
             new BuilderConfig(BaseGeneratorBuilder.CATEGORY, BaseGeneratorBuilder::of, BaseGeneratorBuilder::getSupportedModelInfos),
+            new BuilderConfig(GeneratorAlphaBetaBuilder.CATEGORY, GeneratorAlphaBetaBuilder::of, GeneratorAlphaBetaBuilder::getSupportedModelInfos),
             new BuilderConfig(SynchronizedGeneratorBuilder.CATEGORY, SynchronizedGeneratorBuilder::of, SynchronizedGeneratorBuilder::getSupportedModelInfos),
             new BuilderConfig(SynchronousGeneratorBuilder.CATEGORY, SynchronousGeneratorBuilder::of, SynchronousGeneratorBuilder::getSupportedModelInfos),
             new BuilderConfig(WeccBuilder.CATEGORY, WeccBuilder::of, WeccBuilder::getSupportedModelInfos),

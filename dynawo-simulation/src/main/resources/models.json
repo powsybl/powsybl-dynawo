@@ -11,6 +11,15 @@
       }
     ]
   },
+  "GENERATOR_ALPHABETA": {
+    "defaultLib": "DYNModelGeneratorAlphaBeta",
+    "libs": [
+      {
+        "lib": "DYNModelGeneratorAlphaBeta",
+        "doc": "Fictitious generator (behaves in a similar way as an alpha-beta load)"
+      }
+    ]
+  },
   "SYNCHRONOUS_GENERATOR": {
     "defaultLib": "GeneratorSynchronousFourWindings",
     "libs": [
@@ -880,10 +889,6 @@
     "libs": [
       {
         "lib": "HVRT",
-        "doc": "Sends switch-off signal to the monitored generator when the voltage goes below a threshold"
-      },
-      {
-        "lib": "LVRT",
         "doc": "Sends switch-off signal to the monitored generator when the voltage goes below a threshold"
       }
     ]
