@@ -10,11 +10,8 @@ package com.powsybl.dynawo.models.frequencysynchronizers;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-//TODO rename
+//TODO rename - check if the interface as to extends FrequencySynchronizedModel
 public interface PowerAngleModel extends FrequencySynchronizedModel {
 
-    //TODO remove default - check the proper value for every synchronous gen
-    default String getThetaVarName() {
-        return "generator_theta";
-    }
+    String getThetaVarName();
 }

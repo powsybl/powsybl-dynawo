@@ -71,4 +71,9 @@ public class SynchronousGenerator extends BaseGenerator implements PowerAngleMod
     public Bus getConnectableBus() {
         return BusUtils.getConnectableBus(equipment);
     }
+
+    @Override
+    public String getThetaVarName() {
+        return "generator_theta";
+    }
 }
