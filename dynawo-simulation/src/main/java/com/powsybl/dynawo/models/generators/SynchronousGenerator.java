@@ -10,7 +10,7 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
-import com.powsybl.dynawo.models.frequencysynchronizers.AngledModel;
+import com.powsybl.dynawo.models.frequencysynchronizers.PowerAngleModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
@@ -22,7 +22,7 @@ import java.util.Objects;
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
-public class SynchronousGenerator extends BaseGenerator implements AngledModel {
+public class SynchronousGenerator extends BaseGenerator implements PowerAngleModel {
 
     private static final String OMEGA_PU_VAR_NAME = "generator_omegaPu";
 

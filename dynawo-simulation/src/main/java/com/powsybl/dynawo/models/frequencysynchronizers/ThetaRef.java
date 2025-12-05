@@ -7,14 +7,12 @@
  */
 package com.powsybl.dynawo.models.frequencysynchronizers;
 
+import java.util.List;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-//TODO rename
-public interface AngledModel extends FrequencySynchronizedModel {
+public interface ThetaRef {
 
-    //TODO remove default - check the proper value for every synchronous gen
-    default String getThetaVarName() {
-        return "generator_theta";
-    }
+    void setSynchronousGenerators(List<PowerAngleModel> synchronousGenerators);
 }

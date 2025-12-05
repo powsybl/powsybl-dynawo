@@ -15,7 +15,6 @@ import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
-import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.AbstractBus;
 import com.powsybl.dynawo.models.frequencysynchronizers.*;
 import com.powsybl.dynawo.parameters.ParametersSet;
@@ -169,8 +168,14 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     }
 
     private void setupFrequencySynchronizer() {
-        List<SignalNModel> signalNModels = filterDynamicModels(SignalNModel.class);
-        List<FrequencySynchronizedModel> frequencySynchronizedModels = filterDynamicModels(FrequencySynchronizedModel.class);
+        List<SignalNModel> signalNModels = new ArrayList<>();
+        List<FrequencySynchronizedModel> frequencySynchronizedModels = new ArrayList<>();
+        List<PowerAngleModel> powerAngleModels = new ArrayList<>();
+        ThetaRef thetaRef = filterDynamicModels(signalNModels, frequencySynchronizedModels, powerAngleModels);
+        if (thetaRef != null) {
+            thetaRef.setSynchronousGenerators(powerAngleModels);
+        }
+        //TODO handle setpoint or signal N + thetaRef case
         boolean hasSpecificBuses = dynamicModels.stream().anyMatch(AbstractBus.class::isInstance);
         boolean hasFrequencySynchronizedModels = !frequencySynchronizedModels.isEmpty();
         boolean hasSignalNModels = !signalNModels.isEmpty();
@@ -187,12 +192,24 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         }
     }
 
-    // TODO remplacer with one lopp with switch pattern matching
-    private <R extends Model> List<R> filterDynamicModels(Class<R> modelClass) {
-        return dynamicModels.stream()
-                .filter(modelClass::isInstance)
-                .map(modelClass::cast)
-                .toList();
+    private ThetaRef filterDynamicModels(List<SignalNModel> signalNModels,
+                                     List<FrequencySynchronizedModel> frequencySynchronizedModels,
+                                     List<PowerAngleModel> powerAngleModels) {
+        ThetaRef thetaRef = null;
+        for (BlackBoxModel bbm : dynamicModels) {
+            switch (bbm) {
+                case SignalNModel sn -> signalNModels.add(sn);
+                case FrequencySynchronizedModel fsm -> {
+                    frequencySynchronizedModels.add(fsm);
+                    if (fsm instanceof PowerAngleModel pa) {
+                        powerAngleModels.add(pa);
+                    }
+                }
+                case ThetaRef tr -> thetaRef = tr;
+                default -> { }
+            }
+        }
+        return thetaRef;
     }
 
     protected static Predicate<BlackBoxModel> distinctByDynamicId(ReportNode reportNode) {
