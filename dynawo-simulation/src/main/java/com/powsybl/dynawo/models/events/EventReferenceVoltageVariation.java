@@ -30,11 +30,6 @@ public class EventReferenceVoltageVariation extends AbstractEvent {
         this.deltaU = deltaU;
     }
 
-    @Override
-    public String getLib() {
-        return super.getLib();
-    }
-
     private List<VarConnection> getVarConnectionsWith(UControllableEquipmentModel connected) {
         return List.of(new VarConnection("step_step_value", connected.getDeltaUVarName()));
     }
