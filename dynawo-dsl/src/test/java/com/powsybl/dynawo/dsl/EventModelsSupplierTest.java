@@ -50,6 +50,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
         List<EventModel> eventModels = supplier.get(network);
         assertEquals(1, eventModels.size());
         assertTrue(modelClass.isInstance(eventModels.getFirst()));
+        assertEventModel(modelClass.cast(eventModels.getFirst()), dynamicId, equipmentStaticId, lib, startTime);
     }
 
     @ParameterizedTest(name = "{0}")
@@ -81,7 +82,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/eventModels/nodeFault.groovy", NodeFaultEvent.class, EurostagTutorialExample1Factory.createWithLFResults(), "NGEN", "NodeFault_NGEN", "NodeFault", 1),
                 Arguments.of("/eventModels/activePowerVariation.groovy", EventActivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ActivePowerVariation_LOAD", null, 2),
                 Arguments.of("/eventModels/reactivePowerVariation.groovy", EventReactivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ReactivePowerVariation_LOAD", null, 2),
-                Arguments.of("/eventModels/referenceVoltageVariation.groovy", EventReferenceVoltageVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "ReferenceVoltageVariation_GEN", null, 2)
+                Arguments.of("/eventModels/referenceVoltageVariation.groovy", EventReferenceVoltageVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "ReferenceVoltageVariation_GEN", "Step", 2)
         );
     }
 
