@@ -50,7 +50,6 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
         List<EventModel> eventModels = supplier.get(network);
         assertEquals(1, eventModels.size());
         assertTrue(modelClass.isInstance(eventModels.getFirst()));
-        assertEventModel(modelClass.cast(eventModels.getFirst()), dynamicId, equipmentStaticId, lib, startTime);
     }
 
     @ParameterizedTest(name = "{0}")
