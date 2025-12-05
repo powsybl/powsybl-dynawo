@@ -137,6 +137,21 @@ public final class MacroConnectionsAdder {
 
     /**
      * Creates macro connection from equipment and model class
+     * Suffixes MacroConnector id with string
+     */
+    public <T extends Model> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, String parametrizedName) {
+        T connectedModel = getDynamicModel(equipment, modelClass, true);
+        if (connectedModel != null) {
+            String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getName(), connectedModel.getName(), parametrizedName);
+            MacroConnect mc = new MacroConnect(macroConnectorId, originModel.getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
+            addMacroConnections(connectedModel, macroConnectorId, mc, varConnectionsSupplier);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Creates macro connection from equipment and model class
      * Suffixes MacroConnector id and connection with MacroConnectionSuffix (different id and connection suffix)
      */
     public <T extends Model> void createMacroConnections(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, BiFunction<T, String, List<VarConnection>> varConnectionsSupplier, MacroConnectionSuffix suffix) {
