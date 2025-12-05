@@ -20,6 +20,24 @@
       }
     ]
   },
+  "GFM": {
+    "defaultLib": "DynGridFormingVirtualSynchronousMachine",
+    "libs": [
+      {
+        "lib": "DynGridFormingVirtualSynchronousMachine",
+        "doc": "GFM"
+      }
+    ]
+  },
+  "GFL": {
+    "defaultLib": "DynGridFollowing",
+    "libs": [
+      {
+        "lib": "DynGridFollowing",
+        "doc": "GFL"
+      }
+    ]
+  },
   "SYNCHRONOUS_GENERATOR": {
     "defaultLib": "GeneratorSynchronousFourWindings",
     "libs": [

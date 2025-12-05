@@ -45,6 +45,14 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
 
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
+        if (getLib().contains("VRAnsal")) {
+            return Arrays.asList(
+                    new VarConnection("omega_grp_@INDEX@", OMEGA_PU_VAR_NAME),
+                    new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
+                    new VarConnection("running_grp_@INDEX@", getRunningVarName()),
+                    new VarConnection("omegaRef_grp_@INDEX@_value", "voltageRegulator_omegaRefPu")
+            );
+        }
         return Arrays.asList(
                 new VarConnection("omega_grp_@INDEX@", OMEGA_PU_VAR_NAME),
                 new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
