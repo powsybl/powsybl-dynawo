@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawo.models.generators;
 
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarMapping;
 
 import java.util.List;
@@ -30,6 +32,19 @@ public enum EnumGeneratorComponent {
             new VarMapping("coupling_Q1GenPu", "q"),
             new VarMapping("generator_state", "state")
     ));
+
+    public static EnumGeneratorComponent createFrom(ModelConfig modelConfig) {
+        boolean aux = modelConfig.hasAuxiliary();
+        boolean transformer = modelConfig.hasTransformer();
+        if (aux && transformer) {
+            return EnumGeneratorComponent.AUXILIARY_TRANSFORMER;
+        } else if (transformer) {
+            return EnumGeneratorComponent.TRANSFORMER;
+        } else if (aux) {
+            throw new PowsyblException("Generator component auxiliary without transformer is not supported");
+        }
+        return EnumGeneratorComponent.NONE;
+    }
 
     EnumGeneratorComponent(String terminalVarName, List<VarMapping> varMapping) {
         this.terminalVarName = terminalVarName;

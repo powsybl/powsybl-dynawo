@@ -21,28 +21,15 @@ public abstract class AbstractSynchronousGeneratorBuilder<R extends AbstractSync
         super(network, modelConfig, reportNode);
     }
 
-    protected EnumGeneratorComponent getGeneratorComponent() {
-        boolean aux = modelConfig.hasAuxiliary();
-        boolean transformer = modelConfig.hasTransformer();
-        if (aux && transformer) {
-            return EnumGeneratorComponent.AUXILIARY_TRANSFORMER;
-        } else if (transformer) {
-            return EnumGeneratorComponent.TRANSFORMER;
-        } else if (aux) {
-            throw new PowsyblException("Generator component auxiliary without transformer is not supported");
-        }
-        return EnumGeneratorComponent.NONE;
-    }
-
     @Override
     public SynchronousGenerator build() {
         if (isInstantiable()) {
             if (modelConfig.isControllable()) {
-                return isGeneratorCustom() ? new CustomSynchronousGeneratorControllable(getEquipment(), parameterSetId, modelConfig, getGeneratorComponent())
-                        : new SynchronousGeneratorControllable(getEquipment(), parameterSetId, modelConfig, getGeneratorComponent());
+                return isGeneratorCustom() ? new CustomSynchronousGeneratorControllable(getEquipment(), parameterSetId, modelConfig)
+                        : new SynchronousGeneratorControllable(getEquipment(), parameterSetId, modelConfig);
             } else {
-                return isGeneratorCustom() ? new CustomSynchronousGenerator(getEquipment(), parameterSetId, modelConfig, getGeneratorComponent())
-                        : new SynchronousGenerator(getEquipment(), parameterSetId, modelConfig, getGeneratorComponent());
+                return isGeneratorCustom() ? new CustomSynchronousGenerator(getEquipment(), parameterSetId, modelConfig)
+                        : new SynchronousGenerator(getEquipment(), parameterSetId, modelConfig);
             }
         }
         return null;

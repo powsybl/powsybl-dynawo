@@ -27,11 +27,11 @@ import static com.powsybl.dynawo.models.generators.GeneratorProperties.*;
  */
 public class SynchronousGenerator extends BaseGenerator implements FrequencySynchronizedModel {
 
-    private final EnumGeneratorComponent generatorComponent;
+    protected final EnumGeneratorComponent generatorComponent;
 
-    protected SynchronousGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig, EnumGeneratorComponent generatorComponent) {
+    protected SynchronousGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
         super(generator, parameterSetId, modelConfig);
-        this.generatorComponent = Objects.requireNonNull(generatorComponent);
+        this.generatorComponent = EnumGeneratorComponent.createFrom(modelConfig);
     }
 
     @Override

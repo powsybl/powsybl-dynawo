@@ -20,9 +20,9 @@ public class CustomSynchronousGeneratorControllable extends SynchronousGenerator
 
     private final CustomGeneratorComponent customComponent;
 
-    protected CustomSynchronousGeneratorControllable(Generator generator, String parameterSetId, ModelConfig modelConfig, EnumGeneratorComponent generatorComponent) {
-        super(generator, parameterSetId, modelConfig, generatorComponent);
-        this.customComponent = CustomGeneratorComponent.fromModelConfig(modelConfig);
+    protected CustomSynchronousGeneratorControllable(Generator generator, String parameterSetId, ModelConfig modelConfig) {
+        super(generator, parameterSetId, modelConfig);
+        this.customComponent = CustomGeneratorComponent.fromModelConfig(modelConfig, generatorComponent);
     }
 
     @Override
