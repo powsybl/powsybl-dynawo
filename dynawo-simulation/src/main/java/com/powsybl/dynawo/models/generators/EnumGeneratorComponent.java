@@ -26,7 +26,7 @@ public enum EnumGeneratorComponent {
             new VarMapping("coupling_P1GenPu", "p"),
             new VarMapping("coupling_Q1GenPu", "q"),
             new VarMapping("generator_state", "state")
-    ));
+    )),
     AUXILIARY("coupling_terminal1", List.of(
             new VarMapping("coupling_P1GenPu", "p"),
             new VarMapping("coupling_Q1GenPu", "q"),
