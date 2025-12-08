@@ -14,7 +14,6 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.VarMapping;
-import com.powsybl.dynawo.models.VarPrefix;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.lines.LineBuilder;
 import com.powsybl.iidm.network.Network;
@@ -101,7 +100,7 @@ class ModelConfigLoaderTest {
         ModelConfig completeModel = new ModelConfig("PhotovoltaicsWeccCurrentSource", "Wecc", "WTG4A", List.of("SYNCHRONIZED"), "Photovoltaics Wecc generator",
                 new VersionInterval(new DynawoVersion(1, 3, 0), new DynawoVersion(1, 4, 0), "Deleted"),
                 List.of(new VarMapping("wecc_state", "state")),
-                Map.of("terminal", new VarPrefix("terminal", "WT")));
+                Map.of("terminal", "WT_terminal"));
 
         assertEquals(defaultModel, synchroGens.getDefaultModelConfig());
         assertThat(synchroGens.getModelInfos())

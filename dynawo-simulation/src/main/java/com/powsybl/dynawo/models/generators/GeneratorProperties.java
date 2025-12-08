@@ -5,14 +5,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.models;
+package com.powsybl.dynawo.models.generators;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record VarPrefix(String variable, String prefix) {
+final class GeneratorProperties {
 
-    public String toVarName() {
-        return prefix + "_" + variable;
+    static final String DEFAULT_SWITCH_OFF_SIGNAL = "generator_switchOffSignal";
+    static final String DEFAULT_OMEGA_PU = "generator_omegaPu";
+    static final String DEFAULT_OMEGA_REF_PU = "generator_omegaRefPu";
+    static final String DEFAULT_RUNNING = "generator_running";
+
+    private GeneratorProperties() {
     }
 }

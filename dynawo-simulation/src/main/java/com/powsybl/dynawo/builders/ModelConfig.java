@@ -8,7 +8,6 @@
 package com.powsybl.dynawo.builders;
 
 import com.powsybl.dynawo.models.VarMapping;
-import com.powsybl.dynawo.models.VarPrefix;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.Objects;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public record ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, String doc,
-                          VersionInterval version, List<VarMapping> varMapping, Map<String, VarPrefix> varPrefix) implements ModelInfo {
+                          VersionInterval version, List<VarMapping> varMapping, Map<String, String> varPrefix) implements ModelInfo {
 
     private static final String CONTROLLABLE_PROPERTY = "CONTROLLABLE";
     private static final String DANGLING_PROPERTY = "DANGLING";
@@ -28,7 +27,7 @@ public record ModelConfig(String lib, String alias, String internalModelPrefix, 
     private static final String AUXILIARY_PROPERTY = "AUXILIARY";
 
     public ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, String doc,
-                       VersionInterval version, List<VarMapping> varMapping, Map<String, VarPrefix> varPrefix) {
+                       VersionInterval version, List<VarMapping> varMapping, Map<String, String> varPrefix) {
         this.lib = Objects.requireNonNull(lib);
         this.alias = alias;
         this.internalModelPrefix = internalModelPrefix;

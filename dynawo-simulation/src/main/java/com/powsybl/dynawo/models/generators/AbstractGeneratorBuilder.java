@@ -27,4 +27,8 @@ public abstract class AbstractGeneratorBuilder<R extends AbstractEquipmentModelB
     protected Generator findEquipment(String staticId) {
         return network.getGenerator(staticId);
     }
+
+    protected boolean isGeneratorCustom() {
+        return !modelConfig.varPrefix().isEmpty() || !modelConfig.varMapping().isEmpty();
+    }
 }
