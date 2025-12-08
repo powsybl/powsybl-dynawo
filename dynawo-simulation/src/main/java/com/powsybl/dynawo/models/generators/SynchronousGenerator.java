@@ -17,7 +17,6 @@ import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static com.powsybl.dynawo.models.generators.GeneratorProperties.*;
 
