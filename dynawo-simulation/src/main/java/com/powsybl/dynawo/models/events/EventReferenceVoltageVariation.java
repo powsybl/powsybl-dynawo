@@ -51,6 +51,5 @@ public class EventReferenceVoltageVariation extends AbstractEvent {
         paramSet.addParameter("step_Value0", DOUBLE, "0.0");
         paramSet.addParameter("step_tStep", DOUBLE, Double.toString(getStartTime()));
         paramSet.addParameter("step_Height", DOUBLE, Double.toString(deltaU));
-
     }
 }
