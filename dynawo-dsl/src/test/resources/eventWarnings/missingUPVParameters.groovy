@@ -7,7 +7,7 @@
  */
 package eventWarnings
 
-ReactivePowerVariation {
+ReferenceVoltageVariation {
     staticId "SVC2"
     startTime 2
 }
