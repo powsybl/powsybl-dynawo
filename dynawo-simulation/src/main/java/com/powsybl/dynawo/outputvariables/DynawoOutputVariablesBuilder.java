@@ -13,6 +13,7 @@ import com.powsybl.dynawo.builders.BuilderReports;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * An output variable for <pre>Dynawo</pre> can be defined using {@code staticId} and {@code variable} or {@code dynamicModelId} and {@code variable}.
@@ -23,6 +24,7 @@ import java.util.function.Consumer;
 public class DynawoOutputVariablesBuilder {
 
     private static final String DEFAULT_DYNAMIC_MODEL_ID = "NETWORK";
+    private static final String VARIABLES_FIELD = "variables";
 
     private final ReportNode reportNode;
     private boolean isInstantiable = true;
@@ -50,17 +52,21 @@ public class DynawoOutputVariablesBuilder {
     }
 
     public DynawoOutputVariablesBuilder variables(String... variables) {
-        this.variables = List.of(variables);
+        this.variables = Stream.of(variables).filter(v -> !v.isEmpty()).toList();
         return this;
     }
 
     public DynawoOutputVariablesBuilder variables(List<String> variables) {
-        this.variables = variables;
+        this.variables = variables.stream().filter(v -> !v.isEmpty()).toList();
         return this;
     }
 
     public DynawoOutputVariablesBuilder variable(String variable) {
-        this.variables = List.of(variable);
+        if (!variable.isEmpty()) {
+            this.variables = List.of(variable);
+        } else {
+            this.variables = Collections.emptyList();
+        }
         return this;
     }
 
@@ -78,10 +84,10 @@ public class DynawoOutputVariablesBuilder {
             BuilderReports.reportFieldConflict(reportNode, "dynamicModelId", "staticId");
         }
         if (variables == null) {
-            BuilderReports.reportFieldNotSet(reportNode, "variables");
+            BuilderReports.reportFieldNotSet(reportNode, VARIABLES_FIELD);
             isInstantiable = false;
         } else if (variables.isEmpty()) {
-            BuilderReports.reportEmptyList(reportNode, "variables");
+            BuilderReports.reportEmptyList(reportNode, VARIABLES_FIELD);
             isInstantiable = false;
         }
     }
