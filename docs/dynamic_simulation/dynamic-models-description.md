@@ -7,536 +7,536 @@ See how to use model in a simulation [here](dynamic-models-configuration.md).
 ### Generator
 
 #### Base generator
-- GeneratorFictitious: 
-Fictitious generator (behaves in a similar way as an alpha-beta load)
+- `GeneratorFictitious`: 
+Fictitious generator (behaves in a similar way as an alpha-beta load).
 
-- GeneratorPVFixed:
+- `GeneratorPVFixed`:
 Simplified generator model with fixed active and reactive power.
 
-- GeneratorFictitious:
+- `GeneratorFictitious`:
 Simplified generator model with voltage-dependent active and reactive power.
 
 
 #### Synchronized generator
-- GeneratorPQ:
+- `GeneratorPQ`:
 Generator with fixed active and reactive power targets. The actual outputs may however vary in order to mimic frequency and voltage regulation.
 
-- GeneratorPV: 
+- `GeneratorPV`: 
 Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation.
 
-- GeneratorPVDiagramPQ:
+- `GeneratorPVDiagramPQ`:
 Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation. Active and reactive power are within the diagram PQ.
 
 #### Synchronous generator
-- GeneratorSynchronousFourWindings:
-Four windings synchronous generator.
+- `GeneratorSynchronousFourWindings`:
+Four-winding synchronous generator.
 
-- GeneratorSynchronousFourWindingsGovCt2St4b: 
-Four windings synchronous generator with governor GOVCT2 regulation and voltage regulator ST4B (IEEE).
+- `GeneratorSynchronousFourWindingsGovCt2St4b`: 
+Four-winding synchronous generator with governor GOVCT2 regulation and voltage regulator ST4B (IEEE).
 
-- GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4B: 
-Four windings synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE).
+- `GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4B`: 
+Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE).
 
-- GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4BPssIEEE2B:
-Four windings synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE) and power system stabilizer PSS2B (IEEE).
+- `GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4BPssIEEE2B`:
+Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE) and power system stabilizer PSS2B (IEEE).
 
-- GeneratorSynchronousFourWindingsGovSteam1St4b: 
-Four windings synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE).
+- `GeneratorSynchronousFourWindingsGovSteam1St4b`: 
+Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE).
 
-- GeneratorSynchronousFourWindingsGovSteam1St4bPss2b: 
-Four windings synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE) and power system stabilizer PSS2B (IEEE).
+- `GeneratorSynchronousFourWindingsGovSteam1St4bPss2b`: 
+Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE) and power system stabilizer PSS2B (IEEE).
 
-- GeneratorSynchronousFourWindingsGovSteamEuSt4b: 
-Four windings synchronous generator with governor GOVSteamEU (IEEE) and voltage regulator ST4B (IEEE).
+- `GeneratorSynchronousFourWindingsGovSteamEuSt4b`: 
+Four-winding synchronous generator with governor GOVSteamEU (IEEE) and voltage regulator ST4B (IEEE).
 
-- GeneratorSynchronousFourWindingsGoverPropVRPropInt: 
-Four windings synchronous generator with simplified proportional control for governor and simplified proportional integral (PI) control for voltage regulator.
+- `GeneratorSynchronousFourWindingsGoverPropVRPropInt`: 
+Four-winding synchronous generator with simplified proportional control for governor and simplified proportional integral (PI) control for voltage regulator.
 
-- GeneratorSynchronousFourWindingsIEEEG1Ac1a: 
-Four windings synchronous generator with governor IEEEG1 regulation and voltage regulator AC1A (IEEE).
+- `GeneratorSynchronousFourWindingsIEEEG1Ac1a`: 
+Four-winding synchronous generator with governor IEEEG1 regulation and voltage regulator AC1A (IEEE).
 
-- GeneratorSynchronousFourWindingsIEEEG1Dc1a: 
-Four windings synchronous generator with governor IEEEG1 regulation and voltage regulator DC1A (IEEE).
+- `GeneratorSynchronousFourWindingsIEEEG1Dc1a`: 
+Four-winding synchronous generator with governor IEEEG1 regulation and voltage regulator DC1A (IEEE).
 
-- GeneratorSynchronousFourWindingsIEEEG1IEEX2A: 
-Four windings synchronous generator with governor IEEEG1 regulation and voltage regulator IEEX2A.
+- `GeneratorSynchronousFourWindingsIEEEG1IEEX2A`: 
+Four-winding synchronous generator with governor IEEEG1 regulation and voltage regulator IEEX2A.
 
-- GeneratorSynchronousFourWindingsPmConstAc6aPss3b: 
-Four windings synchronous generator with constant mechanical power and voltage regulator AC6A (IEEE) and power system stabilizer PSS3B (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstAc6aPss3b`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator AC6A (IEEE) and power system stabilizer PSS3B (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstAc7bPss3b: 
-Four windings synchronous generator with constant mechanical power and voltage regulator AC7B (IEEE) and power system stabilizer PSS3B (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstAc7bPss3b`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator AC7B (IEEE) and power system stabilizer PSS3B (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstAc7cPss2c: 
-Four windings synchronous generator with constant mechanical power and voltage regulator AC7C (IEEE) and power system stabilizer PSS2C (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstAc7cPss2c`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator AC7C (IEEE) and power system stabilizer PSS2C (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstAc8b: 
-Four windings synchronous generator with constant mechanical power and voltage regulator AC8B (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstAc8b`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator AC8B (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstAc8bPss3b: 
-Four windings synchronous generator with constant mechanical power and voltage regulator AC8B (IEEE) and power system stabilizer PSS3B (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstAc8bPss3b`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator AC8B (IEEE) and power system stabilizer PSS3B (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstDc1a: 
-Four windings synchronous generator with constant mechanical power and voltage regulator DC1A (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstDc1a`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator DC1A (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstIEEX2A: 
-Four windings synchronous generator with constant mechanical power and voltage regulator IEEX2A (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstIEEX2A`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator IEEX2A (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt5bPss2b: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST5B (IEEE) and power system stabilizer PSS2B (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt5bPss2b`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST5B (IEEE) and power system stabilizer PSS2B (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl1c: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST5B (IEEE) and power system stabilizer PSS2B (IEEE) and stator current limiter SCL1C (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl1c`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST5B (IEEE) and power system stabilizer PSS2B (IEEE) and stator current limiter SCL1C (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl2c: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST5C (IEEE) and power system stabilizer PSS2B (IEEE) and stator current limiter SCL2C (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl2c`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST5C (IEEE) and power system stabilizer PSS2B (IEEE) and stator current limiter SCL2C (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt6bPss3b: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST6B (IEEE) and power system stabilizer PSS3B (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt6bPss3b`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST6B (IEEE) and power system stabilizer PSS3B (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt6cPss6c: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt6cPss6c`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel2c: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE) and over excitation limiter OEL2C (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel2c`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE) and over excitation limiter OEL2C (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel3c: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE) and over excitation limiter OEL3C (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel3c`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE) and over excitation limiter OEL3C (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel4c: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE) and over excitation limiter OEL4C (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel4c`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE) and over excitation limiter OEL4C (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel5c: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE) and over excitation limiter OEL5C (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel5c`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE) and over excitation limiter OEL5C (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt7bPss2a: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST7B (IEEE) and power system stabilizer PSS2A (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt7bPss2a`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST7B (IEEE) and power system stabilizer PSS2A (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt7bPss2aUel1: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST7B (IEEE) and power system stabilizer PSS2A (IEEE) and under excitation limiter UEL1 (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt7bPss2aUel1`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST7B (IEEE) and power system stabilizer PSS2A (IEEE) and under excitation limiter UEL1 (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt7bPss2aUel2c: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST7B (IEEE) and power system stabilizer PSS2A (IEEE) and under excitation limiter UEL2C (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt7bPss2aUel2c`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST7B (IEEE) and power system stabilizer PSS2A (IEEE) and under excitation limiter UEL2C (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstSt9cPss2c: 
-Four windings synchronous generator with constant mechanical power and voltage regulator ST9C (IEEE) and power system stabilizer PSS2C (IEEE).
+- `GeneratorSynchronousFourWindingsPmConstSt9cPss2c`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator ST9C (IEEE) and power system stabilizer PSS2C (IEEE).
 
-- GeneratorSynchronousFourWindingsPmConstVRNordic: 
-Four windings synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system).
+- `GeneratorSynchronousFourWindingsPmConstVRNordic`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system).
 
-- GeneratorSynchronousFourWindingsPmConstVRNordicTfo: 
-Four windings synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system) and generator transformer.
+- `GeneratorSynchronousFourWindingsPmConstVRNordicTfo`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system) and generator transformer.
 
-- GeneratorSynchronousFourWindingsProportionalRegulations: 
-Four windings synchronous generator with simplified proportional control for governor and simplified proportional control for voltage regulator.
+- `GeneratorSynchronousFourWindingsProportionalRegulations`: 
+Four-winding synchronous generator with simplified proportional control for governor and simplified proportional control for voltage regulator.
 
-- GeneratorSynchronousFourWindingsTGov1Dc1a: 
-Four windings synchronous generator with governor TGOV1 (IEC) and voltage regulator DC1A (IEEE).
+- `GeneratorSynchronousFourWindingsTGov1Dc1a`: 
+Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator DC1A (IEEE).
 
-- GeneratorSynchronousFourWindingsTGov1Sexs: 
-Four windings synchronous generator with governor TGOV1 (IEC) and voltage regulator SEXS.
+- `GeneratorSynchronousFourWindingsTGov1Sexs`: 
+Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator SEXS.
 
-- GeneratorSynchronousFourWindingsTGov1SexsPss2A: 
-Four windings synchronous generator with governor TGOV1 (IEC) and voltage regulator SEXS and power system stabilizer PSS2A (IEEE).
+- `GeneratorSynchronousFourWindingsTGov1SexsPss2A`: 
+Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator SEXS and power system stabilizer PSS2A (IEEE).
 
-- GeneratorSynchronousFourWindingsTGov1SexsPss2a: 
-Four windings synchronous generator with governor TGOV1 (IEC) and voltage regulator SEXS and power system stabilizer PSS2A (IEEE).
+- `GeneratorSynchronousFourWindingsTGov1SexsPss2a`: 
+Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator SEXS and power system stabilizer PSS2A (IEEE).
 
-- GeneratorSynchronousFourWindingsTGov3IEEX2A: 
-Four windings synchronous generator with governor TGOV1 (IEC) and voltage regulator IEEX2A.
+- `GeneratorSynchronousFourWindingsTGov3IEEX2A`: 
+Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator IEEX2A.
 
-- GeneratorSynchronousFourWindingsVRKundur: 
-Four windings synchronous generator with constant mechanical power and voltage regulator VRKundur (Kundur).
+- `GeneratorSynchronousFourWindingsVRKundur`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator VRKundur (Kundur).
 
-- GeneratorSynchronousFourWindingsVRKundurPssKundur: 
-Four windings synchronous generator with constant mechanical power and voltage regulator VRKundur (Kundur) and power system stabilizer VRKundur (Kundur).
+- `GeneratorSynchronousFourWindingsVRKundurPssKundur`: 
+Four-winding synchronous generator with constant mechanical power and voltage regulator VRKundur (Kundur) and power system stabilizer VRKundur (Kundur).
 
-- GeneratorSynchronousProportionalRegulationsInternalParameters: 
+- `GeneratorSynchronousProportionalRegulationsInternalParameters`: 
 Synchronous generator, initialized with internal parameters with proportional control for governor and proportional control for voltage regulator.
 
-- GeneratorSynchronousThreeWindings:
-Three windings synchronous generator
+- `GeneratorSynchronousThreeWindings`:
+Three-winding synchronous generator.
 
-- GeneratorSynchronousThreeWindingsGovHydro4St4b:
-Three windings synchronous generator with governor GovHydro4 (IEC) and voltage regulator ST4B (IEEE).
+- `GeneratorSynchronousThreeWindingsGovHydro4St4b`:
+Three-winding synchronous generator with governor GovHydro4 (IEC) and voltage regulator ST4B (IEEE).
 
-- GeneratorSynchronousThreeWindingsGoverNordicVRNordic:
-Three windings synchronous generator with governor GoverNordic and voltage regulator VRNordic (for Nordic 32-bus test system).
+- `GeneratorSynchronousThreeWindingsGoverNordicVRNordic`:
+Three-winding synchronous generator with governor GoverNordic and voltage regulator VRNordic (for Nordic 32-bus test system).
 
-- GeneratorSynchronousThreeWindingsGoverNordicVRNordicTfo:
-Three windings synchronous generator with governor GoverNordic and voltage regulator VRNordic (for Nordic 32-bus test system) and generator transformer.
+- `GeneratorSynchronousThreeWindingsGoverNordicVRNordicTfo`:
+Three-winding synchronous generator with governor GoverNordic and voltage regulator VRNordic (for Nordic 32-bus test system) and generator transformer.
 
-- GeneratorSynchronousThreeWindingsGoverPropVRPropInt: 
-Three windings synchronous generator with simplified proportional control for governor and simplified proportional integral (PI) control for voltage regulator.
+- `GeneratorSynchronousThreeWindingsGoverPropVRPropInt`: 
+Three-winding synchronous generator with simplified proportional control for governor and simplified proportional integral (PI) control for voltage regulator.
 
-- GeneratorSynchronousThreeWindingsHyGovBbSex1:
-Three windings synchronous generator with governor HYGOV and Brown Boveri Static Exciter BBSEX1 (IEC).
+- `GeneratorSynchronousThreeWindingsHyGovBbSex1`:
+Three-winding synchronous generator with governor HYGOV and Brown Boveri Static Exciter BBSEX1 (IEC).
 
-- GeneratorSynchronousThreeWindingsHyGovScrx:
-Three windings synchronous generator with governor HYGOV and exciter SCRX (IEC).
+- `GeneratorSynchronousThreeWindingsHyGovScrx`:
+Three-winding synchronous generator with governor HYGOV and exciter SCRX (IEC).
 
-- GeneratorSynchronousThreeWindingsHyGovScrxTfo:
-Three windings synchronous generator with governor HYGOV and exciter SCRX (IEC) and generator transformer.
+- `GeneratorSynchronousThreeWindingsHyGovScrxTfo`:
+Three-winding synchronous generator with governor HYGOV and exciter SCRX (IEC) and generator transformer.
 
-- GeneratorSynchronousThreeWindingsIEEEG2BbSex1:
-Three windings synchronous generator with governor IEEEG2 and Brown Boveri Static Exciter BBSEX1 (IEC).
+- `GeneratorSynchronousThreeWindingsIEEEG2BbSex1`:
+Three-winding synchronous generator with governor IEEEG2 and Brown Boveri Static Exciter BBSEX1 (IEC).
 
-- GeneratorSynchronousThreeWindingsIeeeG1IeeeT1:
-Three windings synchronous generator with governor IEEEG1 and exciter IEEET1.
+- `GeneratorSynchronousThreeWindingsIeeeG1IeeeT1`:
+Three-winding synchronous generator with governor IEEEG1 and exciter IEEET1.
 
-- GeneratorSynchronousThreeWindingsIeeeG1IeeeT1Tfo:
-Three windings synchronous generator with governor IEEEG1 and exciter IEEET1 and generator transformer.
+- `GeneratorSynchronousThreeWindingsIeeeG1IeeeT1Tfo`:
+Three-winding synchronous generator with governor IEEEG1 and exciter IEEET1 and generator transformer.
 
-- GeneratorSynchronousThreeWindingsIeeeG1Scrx:
-Three windings synchronous generator with governor IEEEG1 and exciter SCRX (IEC).
+- `GeneratorSynchronousThreeWindingsIeeeG1Scrx`:
+Three-winding synchronous generator with governor IEEEG1 and exciter SCRX (IEC).
 
-- GeneratorSynchronousThreeWindingsIeeeG1ScrxTfo:
-Three windings synchronous generator with governor IEEEG1 and exciter SCRX (IEC) and generator transformer.
+- `GeneratorSynchronousThreeWindingsIeeeG1ScrxTfo`:
+Three-winding synchronous generator with governor IEEEG1 and exciter SCRX (IEC) and generator transformer.
 
-- GeneratorSynchronousThreeWindingsPmConstExAc1:
-Three windings synchronous generator with constant mechanical power and exciter EXAC1 (IEEE).
+- `GeneratorSynchronousThreeWindingsPmConstExAc1`:
+Three-winding synchronous generator with constant mechanical power and exciter EXAC1 (IEEE).
 
-- GeneratorSynchronousThreeWindingsPmConstExAc1Tfo:
-Three windings synchronous generator with constant mechanical power and exciter EXAC1 (IEEE) and generator transformer.
+- `GeneratorSynchronousThreeWindingsPmConstExAc1Tfo`:
+Three-winding synchronous generator with constant mechanical power and exciter EXAC1 (IEEE) and generator transformer.
 
-- GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a:
-Three windings synchronous generator with constant mechanical power and exciter AC1A (IEEE).
+- `GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a`:
+Three-winding synchronous generator with constant mechanical power and exciter AC1A (IEEE).
 
-- GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1aTfo:
-Three windings synchronous generator with constant mechanical power and exciter AC1A (IEEE) and generator transformer.
+- `GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1aTfo`:
+Three-winding synchronous generator with constant mechanical power and exciter AC1A (IEEE) and generator transformer.
 
-- GeneratorSynchronousThreeWindingsPmConstScrx:
-Three windings synchronous generator with constant mechanical power and exciter SCRX (IEC).
+- `GeneratorSynchronousThreeWindingsPmConstScrx`:
+Three-winding synchronous generator with constant mechanical power and exciter SCRX (IEC).
 
-- GeneratorSynchronousThreeWindingsPmConstScrxTfo:
-Three windings synchronous generator with constant mechanical power and exciter SCRX (IEC) and generator transformer.
+- `GeneratorSynchronousThreeWindingsPmConstScrxTfo`:
+Three-winding synchronous generator with constant mechanical power and exciter SCRX (IEC) and generator transformer.
 
-- GeneratorSynchronousThreeWindingsPmConstVRNordic:
-Three windings synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system).
+- `GeneratorSynchronousThreeWindingsPmConstVRNordic`:
+Three-winding synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system).
 
-- GeneratorSynchronousThreeWindingsPmConstVRNordicTfo:
-Three windings synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system) and generator transformer.
+- `GeneratorSynchronousThreeWindingsPmConstVRNordicTfo`:
+Three-winding synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system) and generator transformer.
 
-- GeneratorSynchronousThreeWindingsProportionalRegulations: 
-Three windings synchronous generator with simplified proportional control for governor and simplified proportional control for voltage regulator.
+- `GeneratorSynchronousThreeWindingsProportionalRegulations`: 
+Three-winding synchronous generator with simplified proportional control for governor and simplified proportional control for voltage regulator.
 
 
 #### Signal N generator
-- GeneratorPQPropDiagramPQSignalN:
+- `GeneratorPQPropDiagramPQSignalN`:
 Simplified generator PQ with a PQ diagram, based on SignalN for the frequency handling and with a proportional reactive power regulation.
 
-- GeneratorPQPropSignalN:
+- `GeneratorPQPropSignalN`:
 Simplified generator PQ based on SignalN for the frequency handling and with a proportional reactive power regulation.
 
-- GeneratorPVDiagramPQSignalN:
-Simplified generator PV based on SignalN for the frequency handling with an N points PQ diagram..
+- `GeneratorPVDiagramPQSignalN`:
+Simplified generator PV based on SignalN for the frequency handling with an N points PQ diagram.
 
-- GeneratorPVPropSignalN:
+- `GeneratorPVPropSignalN`:
 Simplified  generator PV based on SignalN for the frequency handling and with a proportional voltage regulation.
 
-- GeneratorPVRemoteDiagramPQSignalN:
+- `GeneratorPVRemoteDiagramPQSignalN`:
 Simplified generator PV with a PQ diagram, based on SignalN for the frequency handling and a remote voltage regulation.
 
-- GeneratorPVRemoteSignalN:
+- `GeneratorPVRemoteSignalN`:
 Simplified generator PV based on SignalN for the frequency handling and a remote voltage regulation.
 
-- GeneratorPVSignalN:
+- `GeneratorPVSignalN`:
 Simplified generator PV based on SignalN for the frequency handling and voltage following the voltage target URef.
 
-- GeneratorPVTfoDiagramPQSignalN:
+- `GeneratorPVTfoDiagramPQSignalN`:
 Simplified generator PV based on SignalN for the frequency handling, with a simplified transformer, a voltage regulation at stator and with an N points PQ diagram.
 
-- GeneratorPVTfoSignalN:
+- `GeneratorPVTfoSignalN`:
 Simplified generator PV based on SignalN for the frequency handling, with a simplified transformer and a voltage regulation at stator.
 
 
 #### Inertial grid
-- InertialGrid:
+- `InertialGrid`:
 Generation system with average frequency response.
 
 #### Wecc
-- PhotovoltaicsWeccCurrentSource:
+- `PhotovoltaicsWeccCurrentSource`:
 WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCA with a current source as interface with the grid.
 
-- PhotovoltaicsWeccCurrentSourceB:
+- `PhotovoltaicsWeccCurrentSourceB`:
 WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a current source as interface with the grid.
 
-- PhotovoltaicsWeccVoltageSource:
+- `PhotovoltaicsWeccVoltageSource`:
 WECC Photovoltaics grid following model with plant control REPCA, current control REECA, generator/converter REGCB with a voltage source as interface with the grid.
 
-- PhotovoltaicsWeccVoltageSourceA:
+- `PhotovoltaicsWeccVoltageSourceA`:
 WECC Photovoltaics grid following model with plant control REPCA, current control REECA, generator/converter REGCB with a voltage source as interface with the grid.
 
-- PhotovoltaicsWeccVoltageSourceB:
+- `PhotovoltaicsWeccVoltageSourceB`:
 WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a voltage source as interface with the grid.
 
-- WT4AWeccCurrentSource:
+- `WT4AWeccCurrentSource`:
 WECC Wind Turbine model with a simplified drive train model WTGT A, without the plant controller, with current control REECA, and generator/convertor REGCB with a current source as interface with the grid.
 
-- WT4BWeccCurrentSource: 
+- `WT4BWeccCurrentSource`: 
 WECC Wind Turbine model without plant controller, with current control REECA, and generator/converter REGCB with a current source as interface with the grid.
 
-- WTG4AWeccCurrentSource:
-WECC Wind Turbine model with a simplified drive train model WTGTA, current control REECA, and generator/converter REGCB with a current source as interface with the grid
+- `WTG4AWeccCurrentSource`:
+WECC Wind Turbine model with a simplified drive train model WTGTA, current control REECA, and generator/converter REGCB with a current source as interface with the grid.
 
-- WTG4BWeccCurrentSource:
-WECC Wind Turbine model with a simplified drive train model WTGTB, current control REECA, and generator/converter REGCB with a current source as interface with the grid
+- `WTG4BWeccCurrentSource`:
+WECC Wind Turbine model with a simplified drive train model WTGTB, current control REECA, and generator/converter REGCB with a current source as interface with the grid.
 
 
 #### Grid forming converter
-- GridFormingConverterDispatchableVirtualOscillatorControl:
-Grid forming converter model with Dispatchable Virutal Oscillator (DVO) control.
+- `GridFormingConverterDispatchableVirtualOscillatorControl`:
+Grid forming converter model with Dispatchable Virtual Oscillator (DVO) control.
 
-- GridFormingConverterDroopControl:
+- `GridFormingConverterDroopControl`:
 Grid forming converter model with droop control.
 
-- GridFormingConverterMatchingControl:
+- `GridFormingConverterMatchingControl`:
 Grid forming converter model with matching control.
 
 ### Load
 #### Base load
 
-- ElectronicLoad:
+- `ElectronicLoad`:
 Constant power load with disconnection and reconnections depending on the voltage.
 
-- LoadAlphaBeta:
+- `LoadAlphaBeta`:
 Voltage-dependent load.
 
-- LoadAlphaBetaMotor:
+- `LoadAlphaBetaMotor`:
 Alpha-beta load in parallel with a simple motor model.
 
-- LoadAlphaBetaMotorFifthOrder:
+- `LoadAlphaBetaMotorFifthOrder`:
 Alpha-beta load in parallel with a fifth-order motor model.
 
-- LoadAlphaBetaMotorSimplified:
+- `LoadAlphaBetaMotorSimplified`:
 Alpha-beta load in parallel with a simple motor model.
 
-- LoadAlphaBetaRestorative:
+- `LoadAlphaBetaRestorative`:
 Restorative load model with a voltage-dependent behavior when the voltage hits the limits.
 
-- LoadAlphaBetaRestorativeLimitsRecalc:
+- `LoadAlphaBetaRestorativeLimitsRecalc`:
 Restorative load model with a voltage-dependent behavior when the voltage hits the limits, with limits recalculation at initialization.
 
-- LoadAlphaBetaRestorativeNetwork:
+- `LoadAlphaBetaRestorativeNetwork`:
 Restorative load model with a voltage-dependent behavior when the voltage hits the limits, same model as in the Network.
 
-- LoadAlphaBetaThreeMotorFifthOrder:
+- `LoadAlphaBetaThreeMotorFifthOrder`:
 Alpha-beta load in parallel with three fifth-order motor models.
 
-- LoadAlphaBetaTwoMotorFifthOrder:
+- `LoadAlphaBetaTwoMotorFifthOrder`:
 Alpha-beta load in parallel with two fifth-order motor models.
 
-- LoadAlphaBetaTwoMotorSimplified:
+- `LoadAlphaBetaTwoMotorSimplified`:
 Alpha-beta load in parallel with two simplified motor models.
 
-- LoadPQ: 
+- `LoadPQ`: 
 PQ load.
 
-- LoadZIP:
+- `LoadZIP`:
 ZIP coefficients load model.
 
 #### Load one transformer
-- LoadOneTransformer:
-Load behind one transformer
+- `LoadOneTransformer`:
+Load behind one transformer.
 
 #### Load two transformers
-- LoadTwoTransformers:
-Load behind two transformers
+- `LoadTwoTransformers`:
+Load behind two transformers.
 
 #### Load one transformer tap changer
-- LoadOneTransformerTapChanger:
-Load behind one transformer with a tap changer
+- `LoadOneTransformerTapChanger`:
+Load behind one transformer with a tap changer.
 
 #### Load two transformers tap changer
-- LoadTwoTransformersTapChangers:
-Load behind two transformers with tap changers
+- `LoadTwoTransformersTapChangers`:
+Load behind two transformers with tap changers.
 
 ### HVDC
 #### HVDC P
-- HvdcPQProp:
+- `HvdcPQProp`:
 HVDC link with a proportional reactive power control. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice.
 
-- HvdcPQPropDangling:
+- `HvdcPQPropDangling`:
 HVDC link with a proportional reactive power control. terminal1 can inject a fixed reactive power or use the proportional control, depending on the user's choice. terminal2 is connected to a switched-off bus.
 
-- HvdcPQPropDanglingDiagramPQ:
+- `HvdcPQPropDanglingDiagramPQ`:
 HVDC link with a proportional reactive power control and a PQ diagram. terminal1 can inject a fixed reactive power or use the proportional control, depending on the user's choice. terminal2 is connected to a switched-off bus.
 
-- HvdcPQPropDiagramPQ:
+- `HvdcPQPropDiagramPQ`:
 HVDC link with a proportional reactive power control and a PQ diagram. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice.
 
-- HvdcPQPropDiagramPQEmulation:
+- `HvdcPQPropDiagramPQEmulation`:
 HVDC link with AC Emulation control for active power and a proportional reactive power control and a PQ diagram. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice.
 
-- HvdcPQPropDiagramPQEmulationSet:
+- `HvdcPQPropDiagramPQEmulationSet`:
 HVDC link with AC Emulation control for active power (initialization with PRefSet0Pu set by user) and a proportional reactive power control and a PQ diagram. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice.
 
-- HvdcPQPropDiagramPQEmulationVariableK:
+- `HvdcPQPropDiagramPQEmulationVariableK`:
 HVDC link with AC Emulation control for active power (initialization with a variable KACEmulation) and a proportional reactive power control and a PQ diagram. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice.
 
-- HvdcPQPropEmulation:
+- `HvdcPQPropEmulation`:
 HVDC link with AC Emulation control for active power and a proportional reactive power control. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice.
 
-- HvdcPQPropEmulationSet:
+- `HvdcPQPropEmulationSet`:
 HVDC link with AC Emulation control for active power (initialization with PRefSet0Pu set by user) and a proportional reactive power control. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice.
 
-- HvdcPQPropEmulationVariableK:
+- `HvdcPQPropEmulationVariableK`:
 HVDC link with AC Emulation control for active power (initialization with a variable KACEmulation) and a proportional reactive power control. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice.
 
-- HvdcPTanPhi:
+- `HvdcPTanPhi`:
 HVDC link with P and Q=tan(Phi)*P regulation.
 
-- HvdcPTanPhiDangling:
+- `HvdcPTanPhiDangling`:
 HVDC link with P and Q=tan(Phi)*P regulation with terminal2 connected to a switched-off bus.
 
-- HvdcPTanPhiDanglingDiagramPQ:
- HVDC link with P and Q=tan(Phi)*P regulation, a PQ diagram and with terminal2 connected to a switched-off bus.
+- `HvdcPTanPhiDanglingDiagramPQ`:
+HVDC link with P and Q=tan(Phi)*P regulation, a PQ diagram and with terminal2 connected to a switched-off bus.
 
-- HvdcPTanPhiDiagramPQ:
+- `HvdcPTanPhiDiagramPQ`:
 HVDC link with P and Q=tan(Phi)*P regulation and a PQ diagram.
 
-- HvdcPV:
+- `HvdcPV`:
 PV HVDC link. Each terminal can regulate the voltage or the reactive power, depending on the user's choice.
 
-- HvdcPVDangling:
+- `HvdcPVDangling`:
 PV HVDC link with terminal2 connected to a switched-off bus.
 
-- HvdcPVDanglingDiagramPQ:
+- `HvdcPVDanglingDiagramPQ`:
 PV HVDC link with a PQ diagram and terminal2 connected to a switched-off bus.
 
-- HvdcPVDiagramPQ:
+- `HvdcPVDiagramPQ`:
 PV HVDC link with a PQ diagram. Each terminal can regulate the voltage or the reactive power, depending on the user's choice.
 
-- HvdcPVDiagramPQEmulation:
+- `HvdcPVDiagramPQEmulation`:
 PV HVDC link with AC Emulation control for active power and a PQ diagram. Each terminal can regulate the voltage or the reactive power, depending on the user's choice.
 
-- HvdcPVDiagramPQEmulationSet:
+- `HvdcPVDiagramPQEmulationSet`:
 PV HVDC link with AC Emulation control for active power (initialization with PRefSet0Pu set by user) and a PQ diagram. Each terminal can regulate the voltage or the reactive power, depending on the user's choice.
 
-- HvdcPVEmulation:
+- `HvdcPVEmulation`:
 PV HVDC link with AC Emulation control for active power. Each terminal can regulate the voltage or the reactive power, depending on the user's choice.
 
-- HvdcPVEmulationSet:
+- `HvdcPVEmulationSet`:
 PV HVDC link with AC Emulation control for active power (initialization with PRefSet0Pu set by user). Each terminal can regulate the voltage or the reactive power, depending on the user's choice.
 
 #### HVDC VSC
-- HvdcVSC:
+- `HvdcVSC`:
 Standard dynamic model for Hvdc-VSC link.
 
-- HvdcVSCDanglingP:
+- `HvdcVSCDanglingP`:
 Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one).
 
-- HvdcVSCDanglingUdc:
+- `HvdcVSCDanglingUdc`:
 Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one).
 
-- HvdcVSCEmulation:
+- `HvdcVSCEmulation`:
 Standard dynamic model for Hvdc-VSC link with AC emulation.
 
-- HvdcVsc:
+- `HvdcVsc`:
 Standard dynamic model for Hvdc-Vsc link.
 
-- HvdcVscDanglingP:
+- `HvdcVscDanglingP`:
 Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one).
 
-- HvdcVscDanglingUDc:
+- `HvdcVscDanglingUDc`:
 Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one).
 
-- HvdcVscEmulation:
+- `HvdcVscEmulation`:
 Standard dynamic model for Hvdc-Vsc link with AC emulation.
 
 
 #### Static var Compensator
-- StaticVarCompensator:
+- `StaticVarCompensator`:
 Standard static var compensator.
 
-- StaticVarCompensatorPV:
+- `StaticVarCompensatorPV`:
 PV static var compensator model without mode handling.
 
-- StaticVarCompensatorPVModeHandling:
+- `StaticVarCompensatorPVModeHandling`:
 PV static var compensator model with mode handling.
 
-- StaticVarCompensatorPVProp:
+- `StaticVarCompensatorPVProp`:
 PV static var compensator model with slope without mode handling.
 
-- StaticVarCompensatorPVPropModeHandling:
+- `StaticVarCompensatorPVPropModeHandling`:
 PV static var compensator model with slope and mode handling.
 
-- StaticVarCompensatorPVPropRemote:
+- `StaticVarCompensatorPVPropRemote`:
 PV static var compensator model with remote voltage regulation, slope and without mode handling.
 
-- StaticVarCompensatorPVPropRemoteModeHandling:
+- `StaticVarCompensatorPVPropRemoteModeHandling`:
 PV static var compensator model with remote voltage regulation, slope and mode handling.
 
-- StaticVarCompensatorPVRemote:
+- `StaticVarCompensatorPVRemote`:
 PV static var compensator model with remote voltage regulation without mode handling.
 
-- StaticVarCompensatorPVRemoteModeHandling:
+- `StaticVarCompensatorPVRemoteModeHandling`:
 PV static var compensator model with remote voltage regulation, slope and mode handling.
 
 #### Shunt
-- ShuntB:
+- `ShuntB`:
 Shunt element with constant susceptance, reactive power depends on voltage.
 
-- ShuntBWithSections:
+- `ShuntBWithSections`:
 Shunt element with voltage-dependent reactive power and a variable susceptance given by a table and a section.
 
 ### Bus
 
 #### Base bus
-- Bus:
+- `Bus`:
 Standard bus.
 
 #### Infinite bus
-- InfiniteBus:
+- `InfiniteBus`:
 Infinite bus.
 
-- InfiniteBusWithImpedance:
+- `InfiniteBusWithImpedance`:
 Infinite bus connected to an impedance.
 
-- InfiniteBusWithVariations:
+- `InfiniteBusWithVariations`:
 Infinite bus with configurable variations on the voltage module and on the frequency.
 
 #### Line
-- Line:
+- `Line`:
 Standard line.
 
 #### Transformer
-- NetworkTransformer:
+- `NetworkTransformer`:
 Two windings transformer with a fixed ratio, same model as the Network one.
 
-- TransformerFixedRatio:
+- `TransformerFixedRatio`:
 Two winding transformer with a fixed ratio.
 
 ## Automation system model
 
 ### Overload management system
-- OverloadManagementSystem:
+- `OverloadManagementSystem`:
 Automation system which emits a specific order when the current on the monitored line exceeds a given threshold for a given duration.
 
 ### Two level overload management system
-- TwoLevelOverloadManagementSystem:
+- `TwoLevelOverloadManagementSystem`:
 Automation system which emits a specific order when the current on two monitored lines exceeds a given threshold for a given duration.
 
 ### Phase shifter I
-- PhaseShifterI:
+- `PhaseShifterI`:
 Phase-shifter which monitors a given current. When the current goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated.
 
 ### Phase shifter blocking I
-- PhaseShifterBlockingI:
+- `PhaseShifterBlockingI`:
 Blocks phase shifter I when the monitored intensity goes below a threshold.
 
 ### Phase shifter P
-- PhaseShifterP:
+- `PhaseShifterP`:
 Phase-shifter which monitors a given active power. When the active power goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated.
 
 ### Tap changer automaton
-- TapChangerAutomaton:
+- `TapChangerAutomaton`:
 Tap changer.
 
 ### Tap changer blocking automaton
-- TapChangerBlockingAutomaton:
+- `TapChangerBlockingAutomaton`:
 Blocks tap changers when one of the monitored voltages goes below a threshold.
 
 ### Under voltage
-- UnderVoltage:
+- `UnderVoltage`:
 Sends switch-off signal to the monitored generator when the voltage goes below a threshold.
