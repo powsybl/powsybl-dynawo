@@ -16,6 +16,8 @@ final class GeneratorProperties {
     static final String DEFAULT_OMEGA_PU = "generator_omegaPu";
     static final String DEFAULT_OMEGA_REF_PU = "generator_omegaRefPu";
     static final String DEFAULT_RUNNING = "generator_running";
+    static final String GENERATOR_STATE = "generator_state";
+    static final String STATE = "state";
 
     private GeneratorProperties() {
     }

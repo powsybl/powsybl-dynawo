@@ -13,6 +13,9 @@ import com.powsybl.dynawo.models.VarMapping;
 
 import java.util.List;
 
+import static com.powsybl.dynawo.models.generators.GeneratorProperties.GENERATOR_STATE;
+import static com.powsybl.dynawo.models.generators.GeneratorProperties.STATE;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -21,16 +24,16 @@ public enum EnumGeneratorComponent {
     NONE("generator_terminal", List.of(
             new VarMapping("generator_PGenPu", "p"),
             new VarMapping("generator_QGenPu", "q"),
-            new VarMapping("generator_state", "state"))),
+            new VarMapping(GENERATOR_STATE, STATE))),
     TRANSFORMER("transformer_terminal1", List.of(
             new VarMapping("transformer_P1GenPu", "p"),
             new VarMapping("transformer_Q1GenPu", "q"),
-            new VarMapping("generator_state", "state")
+            new VarMapping(GENERATOR_STATE, STATE)
     )),
     AUXILIARY_TRANSFORMER("coupling_terminal1", List.of(
             new VarMapping("coupling_P1GenPu", "p"),
             new VarMapping("coupling_Q1GenPu", "q"),
-            new VarMapping("generator_state", "state")
+            new VarMapping(GENERATOR_STATE, STATE)
     ));
 
     public static EnumGeneratorComponent createFrom(ModelConfig modelConfig) {

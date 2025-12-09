@@ -72,7 +72,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
             DynawoVersion maxVersion = null;
             String endCause = null;
             final List<VarMapping> varMapping = new ArrayList<>(0);
-            final Map<String, String> varPrefix = new HashMap<>(0);
+            final Map<String, String> varPrefix = HashMap.newHashMap(0);
         };
         JsonUtil.parseObject(parser, name ->
             switch (parser.currentName()) {
