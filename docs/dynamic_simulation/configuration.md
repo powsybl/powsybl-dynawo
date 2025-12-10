@@ -77,7 +77,7 @@ The default value is `null`.
 `dump.fileName` defines the dump file name.  
 The default value is `null`.
 
-**modelSimplifiers**  
+#### modelSimplifiers
 `modelSimplifiers` defines the list of simplifier to use before macro connection computation (see [here](model-simplifiers.md)).  
 The default value is an empty list.
 

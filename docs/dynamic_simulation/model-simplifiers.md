@@ -1,6 +1,6 @@
 # Model simplifiers
 Model simplifiers allow user to remove or substitute dynamic models based on various rules.
-Simplifiers can be set in [Dynawo simulation parameters](configuration.md#optional-parameters) listing the simplifier name.
+Simplifiers can be set in [Dynawo simulation parameters](configuration.md#modelsimplifiers) listing the simplifier name.
 
 ## Energized equipment
 Add `energizedEquipment` in the configuration list to use it.
@@ -15,4 +15,5 @@ Filter overload management systems :
 
 ## Main connected component equipment
 Add `mainComponentEquipment` in the configuration list to use it.
+
 Filter injection and hvdc models in the main connected component.
