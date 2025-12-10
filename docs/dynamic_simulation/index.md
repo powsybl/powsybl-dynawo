@@ -4,8 +4,10 @@
 :hidden:
 configuration.md
 dynamic-models-configuration.md
+dynamic-models-description.md
 event-models-configuration.md
 output-variables-configuration.md
+model-simplifiers.md
 additional-models.md
 ```
 

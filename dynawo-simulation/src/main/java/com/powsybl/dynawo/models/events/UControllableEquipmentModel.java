@@ -5,9 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package eventWarnings
+package com.powsybl.dynawo.models.events;
 
-ReactivePowerVariation {
-    staticId "SVC2"
-    startTime 2
+import com.powsybl.dynawo.models.Model;
+
+/**
+ * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
+ */
+public interface UControllableEquipmentModel extends Model {
+    String getDeltaUVarName();
 }

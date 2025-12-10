@@ -283,6 +283,43 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         checkTimeLineEvent(timeLine.getFirst(), 0, "_GEN____8_SM", "PMIN : activation");
     }
 
+    @Test
+    void testIeee14WithWrongGroovyVariablesForCRV() {
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
+                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("IEEE14 test")
+                .build();
+
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
+                GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        GroovyOutputVariablesSupplier outputVariablesSupplier = new GroovyOutputVariablesSupplier(
+                getResourceAsStream("/error/outputWrongVariables.groovy"),
+                GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
+                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2")
+                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
+                .setTimelineExportMode(ExportMode.XML);
+
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
+                .join();
+
+        assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
+        assertEquals("CRV file is empty", result.getStatusText());
+    }
+
     private void checkTimeLineEvent(TimelineEvent event, double time, String modelName, String message) {
         assertEquals(time, event.time());
         assertEquals(modelName, event.modelName());
