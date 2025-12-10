@@ -121,7 +121,7 @@ Alternatively, you can provide parameters as a JSON file where supported
 (for example when using `itools loadflow` command):
 ```json
 {
-  "version" : "1.9",
+  "version" : "1.10",
   "useReactiveLimits" : true,
   "extensions" : {
     "DynaflowParameters" : {
