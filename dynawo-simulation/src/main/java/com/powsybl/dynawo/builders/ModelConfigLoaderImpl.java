@@ -21,9 +21,7 @@ import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAu
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.buses.StandardBusBuilder;
-import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
-import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
+import com.powsybl.dynawo.models.events.*;
 import com.powsybl.dynawo.models.generators.*;
 import com.powsybl.dynawo.models.loads.*;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
@@ -77,6 +75,8 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
 
     private static final Stream<EventBuilderConfig> EVENT_BUILDER_CONFIGS = Stream.of(
             new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.getModelInfo()),
+            new EventBuilderConfig(EventReactivePowerVariationBuilder::of, EventReactivePowerVariationBuilder.getModelInfo()),
+            new EventBuilderConfig(EventReferenceVoltageVariationBuilder::of, EventReferenceVoltageVariationBuilder.getModelInfo()),
             new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.getModelInfo()),
             new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.getModelInfo()));
 

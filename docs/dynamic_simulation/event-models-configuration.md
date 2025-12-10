@@ -60,13 +60,13 @@ Disconnect {
 ```
 
 ### Active Power Variation
-Power variation on generator or load.  
+Active power variation on generator or load.  
 With specific attribute:
 - `deltaP`: active power variation.
 
 **Groovy script:**
 ```groovy
-Step {
+ActivePowerVariation {
     staticId "LOAD"
     startTime 2
     deltaP 0.2
@@ -75,7 +75,7 @@ Step {
 **Json configuration:**
 ```json
 {
-  "model":"Step",
+  "model":"ActivePowerVariation",
   "properties":[
     {
       "name":"staticId",
@@ -89,6 +89,80 @@ Step {
     },
     {
       "name":"deltaP",
+      "value":"0.2",
+      "type":"DOUBLE"
+    }
+  ]
+}
+```
+
+### Reactive Power Variation
+Reactive power variation on load and generator without dynamic model.  
+With specific attribute:
+- `deltaQ`: reactive power variation.
+
+**Groovy script:**
+```groovy
+ReactivePowerVariation {
+    staticId "LOAD"
+    startTime 2
+    deltaQ 0.2
+}
+```
+**Json configuration:**
+```json
+{
+  "model":"ReactivePowerVariation",
+  "properties":[
+    {
+      "name":"staticId",
+      "value":"LOAD",
+      "type":"STRING"
+    },
+    {
+      "name":"startTime",
+      "value":"2",
+      "type":"DOUBLE"
+    },
+    {
+      "name":"deltaQ",
+      "value":"0.2",
+      "type":"DOUBLE"
+    }
+  ]
+}
+```
+
+### Reference Voltage Variation
+Reference voltage variation on synchronized/synchronous generator  
+With specific attribute:
+- `deltaU`: reference voltage variation.
+
+**Groovy script:**
+```groovy
+ReferenceVoltageVariation {
+    staticId "GEN"
+    startTime 2
+    deltaU 0.2
+}
+```
+**Json configuration:**
+```json
+{
+  "model":"ReferenceVoltageVariation",
+  "properties":[
+    {
+      "name":"staticId",
+      "value":"GEN",
+      "type":"STRING"
+    },
+    {
+      "name":"startTime",
+      "value":"2",
+      "type":"DOUBLE"
+    },
+    {
+      "name":"deltaU",
       "value":"0.2",
       "type":"DOUBLE"
     }
@@ -151,4 +225,6 @@ NodeFault {
 Ultimately, all groovy scripts or Json configuration file call the dedicated builders that can be used directly by developers in order to create a custom `EventModelsSupplier`:
 - EventDisconnectionBuilder
 - EventActivePowerVariationBuilder
+- EventReactivePowerVariationBuilder
+- EventReferenceVoltageVariationBuilder
 - NodeFaultEventBuilder

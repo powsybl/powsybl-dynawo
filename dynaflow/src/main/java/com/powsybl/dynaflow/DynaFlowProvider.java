@@ -18,6 +18,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.ExecutionEnvironmentUtils;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -104,10 +105,13 @@ public class DynaFlowProvider implements LoadFlowProvider {
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
         DynaFlowParameters.log(loadFlowParameters, dynaFlowParameters);
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
-        ExecutionEnvironment execEnv = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
+
+        ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX);
         Command versionCmd = getVersionCommand(config);
-        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, versionCmd, DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
-        return computationManager.execute(execEnv, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, getCommand(config), reportNode));
+        DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, computationManager, versionCmd, DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
+
+        ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX);
+        return computationManager.execute(execEnvSimulation, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, getCommand(config), reportNode));
     }
 
     @Override
