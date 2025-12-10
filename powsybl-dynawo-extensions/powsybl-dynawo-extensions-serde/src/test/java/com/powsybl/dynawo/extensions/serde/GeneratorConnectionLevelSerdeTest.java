@@ -26,7 +26,10 @@ class GeneratorConnectionLevelSerdeTest extends AbstractSerDeTest {
     void testXmlSerializer() throws IOException {
         var network = EurostagTutorialExample1Factory.create();
         var generator = network.getGenerator("GEN");
-        new GeneratorConnectionLevelAdderImpl(generator).withLevel(GeneratorConnectionLevel.GeneratorConnectionLevelType.TSO).add();
+
+        generator.newExtension(GeneratorConnectionLevelAdderImpl.class)
+            .withLevel(GeneratorConnectionLevel.GeneratorConnectionLevelType.TSO)
+            .add();
         network.setCaseDate(java.time.ZonedDateTime.parse("2016-12-07T11:18:52.881+01:00"));
         String xmlRefFile = "/generatorConnectionLevel.xml";
 

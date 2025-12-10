@@ -25,9 +25,9 @@ class SynchronizedGeneratorPropertiesSerDeTest extends AbstractSerDeTest {
     void testXmlSerializer() throws IOException {
         var network = EurostagTutorialExample1Factory.create();
         var generator = network.getGenerator("GEN");
-        new SynchronizedGeneratorPropertiesAdderImpl(generator)
-                .withType("t")
+        generator.newExtension(SynchronizedGeneratorPropertiesAdderImpl.class)
                 .withRpcl2(true)
+                .withType("t")
                 .add();
 
         network.setCaseDate(java.time.ZonedDateTime.parse("2016-12-07T11:18:52.881+01:00"));

@@ -27,10 +27,9 @@ class VoltageLevelLoadCharacteristicsSerDeTest extends AbstractSerDeTest {
         var network = EurostagTutorialExample1Factory.create();
         var vl = network.getVoltageLevel("VLHV1");
 
-        new VoltageLevelLoadCharacteristicsAdderImpl(vl)
+        vl.newExtension(VoltageLevelLoadCharacteristicsAdderImpl.class)
                 .withCharacteristic(VoltageLevelLoadCharacteristics.Type.INDUSTRIAL)
                 .add();
-
         network.setCaseDate(java.time.ZonedDateTime.parse("2016-12-07T11:18:52.881+01:00"));
 
         roundTripXmlTest(network,

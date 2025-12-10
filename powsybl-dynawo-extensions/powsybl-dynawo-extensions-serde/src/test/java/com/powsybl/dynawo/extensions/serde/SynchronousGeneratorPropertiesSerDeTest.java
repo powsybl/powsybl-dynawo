@@ -26,7 +26,7 @@ class SynchronousGeneratorPropertiesSerDeTest extends AbstractSerDeTest {
     void testXmlSerializer() throws IOException {
         var network = EurostagTutorialExample1Factory.create();
         var generator = network.getGenerator("GEN");
-        new SynchronousGeneratorPropertiesAdderImpl(generator)
+        generator.newExtension(SynchronousGeneratorPropertiesAdderImpl.class)
             .withGovernor("governor")
             .withPss("pss")
             .withVoltageRegulator("voltageRegulator")
