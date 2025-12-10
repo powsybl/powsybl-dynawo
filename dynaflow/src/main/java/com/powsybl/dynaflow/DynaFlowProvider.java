@@ -149,7 +149,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
-    public List<Parameter> getSpecificParameters() {
+    public List<Parameter> getRawSpecificParameters() {
         return DynaFlowParameters.SPECIFIC_PARAMETERS;
     }
 
