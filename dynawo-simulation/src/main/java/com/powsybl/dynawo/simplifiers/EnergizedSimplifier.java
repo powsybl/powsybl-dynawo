@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2025, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 package com.powsybl.dynawo.simplifiers;
 
 import com.google.auto.service.AutoService;
@@ -51,10 +58,10 @@ public final class EnergizedSimplifier implements ModelsRemovalSimplifier {
     private static boolean isEnergized(EquipmentBlackBoxModel bbm, ReportNode reportNode) {
         return switch (bbm.getEquipment()) {
             case Injection<?> inj -> isEnergized(inj.getTerminal(), reportNode, bbm);
-            case HvdcLine l
-                when bbm instanceof BaseHvdc hvdcBbm -> hvdcBbm.getConnectedStations().stream()
-                    .map(st -> isEnergized(st.getTerminal(), reportNode, bbm))
-                    .reduce(true, (e1, e2) -> e1 && e2);
+            case HvdcLine l when bbm instanceof BaseHvdc hvdcBbm ->
+                    hvdcBbm.getConnectedStations().stream()
+                            .map(st -> isEnergized(st.getTerminal(), reportNode, bbm))
+                            .reduce(true, (e1, e2) -> e1 && e2);
             default -> true;
         };
     }
