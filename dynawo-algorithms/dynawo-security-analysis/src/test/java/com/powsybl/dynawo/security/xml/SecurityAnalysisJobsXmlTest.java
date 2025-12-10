@@ -27,6 +27,6 @@ class SecurityAnalysisJobsXmlTest extends DynawoTestUtil {
     void testJobXml() throws IOException, SAXException {
         DynawoSimulationContext context = new SecurityAnalysisContext.Builder(network, dynamicModels, Collections.emptyList()).build();
         JobsXml.write(tmpDir, context);
-        validate("jobs.xsd", "saJobs.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
+        validate("jobs.xsd", "saJobs.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME), true);
     }
 }

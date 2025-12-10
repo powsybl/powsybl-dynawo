@@ -17,9 +17,7 @@ import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAu
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.buses.StandardBusBuilder;
-import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
-import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
+import com.powsybl.dynawo.models.events.*;
 import com.powsybl.dynawo.models.generators.*;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
@@ -218,5 +216,7 @@ class BuildersTest {
         assertNull(EventActivePowerVariationBuilder.of(NETWORK).build());
         assertNull(NodeFaultEventBuilder.of(NETWORK).build());
         assertNull(EventDisconnectionBuilder.of(NETWORK).build());
+        assertNull(EventReactivePowerVariationBuilder.of(NETWORK).build());
+        assertNull(EventReferenceVoltageVariationBuilder.of(NETWORK).build());
     }
 }
