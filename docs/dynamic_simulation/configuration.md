@@ -145,7 +145,7 @@ dynawo-simulation-default-parameters:
   dump.exportFolder: /home/user/dumps
   dump.fileName: dump.dmp
   modelSimplifiers:
-    - EnergizedSimplifier
+    - energizedEquipment
   mergeLoads: false
   timeline.exportMode: XML
   precision: 10e-6
@@ -169,7 +169,7 @@ dynawo-simulation-default-parameters:
   <dump.useAsInput>false</dump.useAsInput> 
   <dump.exportFolder>/home/user/dumps</dump.exportFolder>
   <dump.fileName>dump.dmp</dump.fileName>
-  <modelSimplifiers>EnergizedSimplifier</modelSimplifiers>
+  <modelSimplifiers>energizedEquipment</modelSimplifiers>
   <mergeLoads>false</mergeLoads>
   <timeline.exportMode>XML</timeline.exportMode>
   <precision>10e-6</precision>
