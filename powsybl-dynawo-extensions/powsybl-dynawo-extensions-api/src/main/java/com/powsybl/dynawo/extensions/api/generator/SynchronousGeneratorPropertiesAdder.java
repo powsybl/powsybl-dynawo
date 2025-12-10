@@ -1,0 +1,43 @@
+/**
+ * Copyright (c) 2025, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+package com.powsybl.dynawo.extensions.api.generator;
+
+import com.powsybl.commons.extensions.ExtensionAdder;
+import com.powsybl.iidm.network.Generator;
+
+/**
+ * @author Gautier Bureau {@literal <gautier.bureau at rte-france.com>}
+ */
+public interface SynchronousGeneratorPropertiesAdder extends ExtensionAdder<Generator, SynchronousGeneratorProperties> {
+
+    @Override
+    default Class<SynchronousGeneratorProperties> getExtensionClass() {
+        return SynchronousGeneratorProperties.class;
+    }
+
+    SynchronousGeneratorPropertiesAdder withNumberOfWindings(SynchronousGeneratorProperties.Windings numberOfWindings);
+
+    SynchronousGeneratorPropertiesAdder withGovernor(String governor);
+
+    SynchronousGeneratorPropertiesAdder withVoltageRegulator(String voltageRegulator);
+
+    SynchronousGeneratorPropertiesAdder withPss(String voltageRegulator);
+
+    SynchronousGeneratorPropertiesAdder withAuxiliaries(boolean auxiliaries);
+
+    SynchronousGeneratorPropertiesAdder withInternalTransformer(boolean internalTransformer);
+
+    SynchronousGeneratorPropertiesAdder withRpcl(RpclType rpcl);
+
+    SynchronousGeneratorPropertiesAdder withUva(SynchronousGeneratorProperties.Uva uva);
+
+    SynchronousGeneratorPropertiesAdder withAggregated(boolean aggregated);
+
+    SynchronousGeneratorPropertiesAdder withQlim(boolean qlim);
+
+}
