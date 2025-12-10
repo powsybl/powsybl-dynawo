@@ -12,13 +12,17 @@ import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
+import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
+import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -53,6 +57,23 @@ class EnergizedSimplifierTest {
 
         assertTrue(filteredModels.isEmpty());
         assertReport(expectedReport, reportNode);
+    }
+
+    @Test
+    void testNoFilterEnergizedSimplifier() {
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
+        List<BlackBoxModel> dynamicModels = List.of(
+                LoadOneTransformerBuilder.of(network)
+                        .staticId("LOAD")
+                        .build(),
+                TapChangerAutomationSystemBuilder.of(network)
+                        .dynamicModelId("TC")
+                        .staticId("LOAD")
+                        .build());
+        EnergizedSimplifier simplifier = new EnergizedSimplifier();
+        List<BlackBoxModel> filteredModels = dynamicModels.stream().filter(simplifier.getModelRemovalPredicate(ReportNode.NO_OP)).toList();
+
+        assertEquals(2, filteredModels.size());
     }
 
     private static Stream<Arguments> provideEquipment() {

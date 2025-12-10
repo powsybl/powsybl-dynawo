@@ -12,8 +12,10 @@ import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
+import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -23,7 +25,6 @@ import java.io.StringWriter;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -39,6 +40,13 @@ class MainConnectedComponentSimplifierTest {
                 .withMessageTemplate("simplifierTest")
                 .build();
         List<BlackBoxModel> dynamicModels = List.of(
+                LoadOneTransformerBuilder.of(network)
+                        .staticId("LOAD")
+                        .build(),
+                TapChangerAutomationSystemBuilder.of(network)
+                        .dynamicModelId("TC")
+                        .staticId("LOAD")
+                        .build(),
                 SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
                         .staticId("GEN3")
                         .build(),
@@ -56,7 +64,7 @@ class MainConnectedComponentSimplifierTest {
                   Equipment L is not in main connected component, the model HvdcPV L will be skipped
             """;
 
-        assertTrue(filteredModels.isEmpty());
+        assertEquals(2, filteredModels.size());
         assertReport(expectedReport, reportNode);
     }
 
