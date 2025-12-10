@@ -7,6 +7,7 @@ dynamic-models-configuration.md
 dynamic-models-description.md
 event-models-configuration.md
 output-variables-configuration.md
+model-simplifiers.md
 ```
 
 PowSyBl provides an implementation of the [DynamicSimulation API from powsybl-core](inv:powsyblcore:*:*#simulation/dynamic/index) with [Dynaωo](https://dynawo.github.io), a tool for long-term stability simulation.
