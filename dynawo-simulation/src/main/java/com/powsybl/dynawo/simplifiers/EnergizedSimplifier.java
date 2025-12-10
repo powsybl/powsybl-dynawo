@@ -59,9 +59,9 @@ public final class EnergizedSimplifier implements ModelsRemovalSimplifier {
         return switch (bbm.getEquipment()) {
             case Injection<?> inj -> isEnergized(inj.getTerminal(), reportNode, bbm);
             case HvdcLine l when bbm instanceof BaseHvdc hvdcBbm ->
-                    hvdcBbm.getConnectedStations().stream()
-                            .map(st -> isEnergized(st.getTerminal(), reportNode, bbm))
-                            .reduce(true, (e1, e2) -> e1 && e2);
+                hvdcBbm.getConnectedStations().stream()
+                        .map(st -> isEnergized(st.getTerminal(), reportNode, bbm))
+                        .reduce(true, (e1, e2) -> e1 && e2);
             default -> true;
         };
     }
