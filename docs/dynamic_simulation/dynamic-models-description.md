@@ -34,17 +34,13 @@ Four-winding synchronous generator.
 - `GeneratorSynchronousFourWindingsGovCt2St4b`: 
 Four-winding synchronous generator with governor GOVCT2 regulation and voltage regulator ST4B (IEEE).
 
-- `GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4B`: 
-Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE).
-
-- `GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4BPssIEEE2B`:
-Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE) and power system stabilizer PSS2B (IEEE).
-
 - `GeneratorSynchronousFourWindingsGovSteam1St4b`: 
 Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE).
+(:warning: Named `GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4B` in Dynawo 1.6.0 and below)
 
 - `GeneratorSynchronousFourWindingsGovSteam1St4bPss2b`: 
 Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE) and power system stabilizer PSS2B (IEEE).
+(:warning: Named `GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4BPssIEEE2B` in Dynawo 1.6.0 and below)
 
 - `GeneratorSynchronousFourWindingsGovSteamEuSt4b`: 
 Four-winding synchronous generator with governor GOVSteamEU (IEEE) and voltage regulator ST4B (IEEE).
@@ -136,11 +132,9 @@ Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulat
 - `GeneratorSynchronousFourWindingsTGov1Sexs`: 
 Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator SEXS.
 
-- `GeneratorSynchronousFourWindingsTGov1SexsPss2A`: 
-Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator SEXS and power system stabilizer PSS2A (IEEE).
-
 - `GeneratorSynchronousFourWindingsTGov1SexsPss2a`: 
 Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator SEXS and power system stabilizer PSS2A (IEEE).
+(:warning: Named `GeneratorSynchronousFourWindingsTGov1SexsPss2A` in Dynawo 1.6.0 and below)
 
 - `GeneratorSynchronousFourWindingsTGov3IEEX2A`: 
 Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator IEEX2A.
@@ -195,15 +189,11 @@ Three-winding synchronous generator with governor IEEEG1 and exciter SCRX (IEC) 
 
 - `GeneratorSynchronousThreeWindingsPmConstExAc1`:
 Three-winding synchronous generator with constant mechanical power and exciter EXAC1 (IEEE).
+(:warning: Named `GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a` in Dynawo 1.6.0)
 
 - `GeneratorSynchronousThreeWindingsPmConstExAc1Tfo`:
 Three-winding synchronous generator with constant mechanical power and exciter EXAC1 (IEEE) and generator transformer.
-
-- `GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a`:
-Three-winding synchronous generator with constant mechanical power and exciter AC1A (IEEE).
-
-- `GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1aTfo`:
-Three-winding synchronous generator with constant mechanical power and exciter AC1A (IEEE) and generator transformer.
+(:warning: Named `GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1aTfo` in Dynawo 1.6.0)
 
 - `GeneratorSynchronousThreeWindingsPmConstScrx`:
 Three-winding synchronous generator with constant mechanical power and exciter SCRX (IEC).
@@ -255,20 +245,16 @@ Simplified generator PV based on SignalN for the frequency handling, with a simp
 Generation system with average frequency response.
 
 #### Wecc
-- `PhotovoltaicsWeccCurrentSource`:
-WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCA with a current source as interface with the grid.
-
 - `PhotovoltaicsWeccCurrentSourceB`:
 WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a current source as interface with the grid.
-
-- `PhotovoltaicsWeccVoltageSource`:
-WECC Photovoltaics grid following model with plant control REPCA, current control REECA, generator/converter REGCB with a voltage source as interface with the grid.
+(:warning: Named `PhotovoltaicsWeccCurrentSource` in Dynawo 1.6.0 and below)
 
 - `PhotovoltaicsWeccVoltageSourceA`:
 WECC Photovoltaics grid following model with plant control REPCA, current control REECA, generator/converter REGCB with a voltage source as interface with the grid.
 
 - `PhotovoltaicsWeccVoltageSourceB`:
 WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a voltage source as interface with the grid.
+(:warning: Named `PhotovoltaicsWeccVoltageSource` in Dynawo 1.6.0 and below)
 
 - `WT4AWeccCurrentSource`:
 WECC Wind Turbine model with a simplified drive train model WTGT A, without the plant controller, with current control REECA, and generator/convertor REGCB with a current source as interface with the grid.
@@ -420,29 +406,21 @@ PV HVDC link with AC Emulation control for active power. Each terminal can regul
 PV HVDC link with AC Emulation control for active power (initialization with PRefSet0Pu set by user). Each terminal can regulate the voltage or the reactive power, depending on the user's choice.
 
 #### HVDC VSC
-- `HvdcVSC`:
-Standard dynamic model for Hvdc-VSC link.
-
-- `HvdcVSCDanglingP`:
-Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one).
-
-- `HvdcVSCDanglingUdc`:
-Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one).
-
-- `HvdcVSCEmulation`:
-Standard dynamic model for Hvdc-VSC link with AC emulation.
-
 - `HvdcVsc`:
 Standard dynamic model for Hvdc-Vsc link.
+(:warning: Named `HvdcVSC` in Dynawo 1.5.0 and below)
 
 - `HvdcVscDanglingP`:
 Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one).
+(:warning: Named `HvdcVSCDanglingP` in Dynawo 1.5.0 and below)
 
 - `HvdcVscDanglingUDc`:
-Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one).
+Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (DC  control on the main one).
+(:warning: Named `HvdcVSCDanglingUdc` in Dynawo 1.5.0 and below)
 
 - `HvdcVscEmulation`:
 Standard dynamic model for Hvdc-Vsc link with AC emulation.
+(:warning: Named `HvdcVSCEmulation` in Dynawo 1.5.0 and below)
 
 
 #### Static var Compensator
@@ -502,10 +480,10 @@ Standard line.
 
 #### Transformer
 - `NetworkTransformer`:
-Two windings transformer with a fixed ratio, same model as the Network one.
+Two-winding transformer with a fixed ratio, same model as the Network one.
 
 - `TransformerFixedRatio`:
-Two winding transformer with a fixed ratio.
+Two-winding transformer with a fixed ratio.
 
 ## Automation system model
 

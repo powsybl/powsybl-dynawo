@@ -468,7 +468,7 @@
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)",
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (DC voltage control on the main one)",
         "minVersion": "1.6.0"
       },
       {
@@ -497,7 +497,7 @@
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)",
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (DC voltage control on the main one)",
         "maxVersion": "1.5.0",
         "endCause": "Renamed HvdcVscDanglingUDc"
       }
