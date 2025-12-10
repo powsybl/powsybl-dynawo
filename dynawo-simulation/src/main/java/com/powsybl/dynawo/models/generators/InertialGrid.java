@@ -47,19 +47,11 @@ public class InertialGrid extends AbstractEquipmentBlackBoxModel<Generator> impl
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         List<VarConnection> varConnections = new ArrayList<>(2);
-        varConnections.add(new VarConnection(getTerminalVarName(), connected.getTerminalVarName()));
+        varConnections.add(new VarConnection("inertialGrid_terminal", connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()
-                .map(switchOff -> new VarConnection(getSwitchOffSignalNodeVarName(), switchOff))
+                .map(switchOff -> new VarConnection("inertialGrid_injectorURI_switchOffSignal1", switchOff))
                 .ifPresent(varConnections::add);
         return varConnections;
-    }
-
-    public String getTerminalVarName() {
-        return "inertialGrid_terminal";
-    }
-
-    public String getSwitchOffSignalNodeVarName() {
-        return "inertialGrid_injectorURI_switchOffSignal1";
     }
 
     @Override
