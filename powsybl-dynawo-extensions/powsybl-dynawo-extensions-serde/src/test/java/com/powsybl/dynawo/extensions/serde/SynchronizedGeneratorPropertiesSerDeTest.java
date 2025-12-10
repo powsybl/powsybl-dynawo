@@ -1,4 +1,3 @@
-package com.powsybl.dynawo.extensions.serde;
 /**
  * Copyright (c) 2025, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -6,6 +5,8 @@ package com.powsybl.dynawo.extensions.serde;
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
+
+package com.powsybl.dynawo.extensions.serde;
 
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynawo.extensions.impl.generator.SynchronizedGeneratorPropertiesAdderImpl;
