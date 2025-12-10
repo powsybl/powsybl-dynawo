@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class CustomBaseGenerator extends BaseGenerator implements SpecifiedGeneratorModel {
+public class CustomBaseGenerator extends BaseGenerator {
 
     private final CustomGeneratorComponent customComponent;
 
