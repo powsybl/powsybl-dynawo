@@ -126,7 +126,7 @@ The default value is `null`.
 #### additionalModelsFile
 `additionalModelsFile` defines the JSON file listing additional models used in the simulation.  
 The file must follow the `models.json` pattern defined [here](dynamic-models-configuration.md#supported-models).
-The models added in the file cannot overload an existing model and must belong to an existing category otherwise they will be skipped.  
+The models added in the file cannot overload an existing model and must belong to an existing category otherwise they will be skipped (see [here](additional-models.md)).  
 The default value is `null`.
 
 ### Examples

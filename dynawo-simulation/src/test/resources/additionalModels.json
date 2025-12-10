@@ -2,7 +2,7 @@
   "BASE_GENERATOR": {
     "libs": [
       {
-        "lib": "AdditionalGenerator1"
+        "lib": "Generator2"
       },
       {
         "lib": "AdditionalGenerator2"
