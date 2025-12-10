@@ -167,3 +167,4 @@ Event models:
 	Disconnect: Disconnects a bus, a branch, an injection or an HVDC line (Dynawo Version 1.5.0)
 	NodeFault: Node fault with configurable resistance, reactance and duration (Dynawo Version 1.5.0)
 	ReactivePowerVariation (Step): Reactive power variation on generator or load (Dynawo Version 1.5.0)
+	ReferenceVoltageVariation (Step): Reference voltage variation on synchronous/synchronized generator (Dynawo Version 1.5.0)

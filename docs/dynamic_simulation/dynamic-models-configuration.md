@@ -150,8 +150,8 @@ TwoLevelOverloadManagementSystem {
     controlledBranch "LINE1"
     iMeasurement1 "TFO1"
     iMeasurement1Side TwoSides.TWO
-    iMeasurement1 "LINE2"
-    iMeasurement1Side TwoSides.ONE
+    iMeasurement2 "LINE2"
+    iMeasurement2Side TwoSides.ONE
 }
 ```
 **Json configuration:**

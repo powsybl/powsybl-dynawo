@@ -7,22 +7,40 @@
  */
 package com.powsybl.dynawo.models.generators;
 
+import com.powsybl.dynawo.models.VarMapping;
+
+import java.util.List;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public enum EnumGeneratorComponent {
 
-    NONE("generator_terminal"),
-    TRANSFORMER("transformer_terminal1"),
-    AUXILIARY_TRANSFORMER("coupling_terminal1");
+    NONE("generator_terminal", BaseGenerator.VAR_MAPPING),
+    TRANSFORMER("transformer_terminal1", List.of(
+            new VarMapping("transformer_P1GenPu", "p"),
+            new VarMapping("transformer_Q1GenPu", "q"),
+            new VarMapping("generator_state", "state")
+    )),
+    AUXILIARY_TRANSFORMER("coupling_terminal1", List.of(
+            new VarMapping("coupling_P1GenPu", "p"),
+            new VarMapping("coupling_Q1GenPu", "q"),
+            new VarMapping("generator_state", "state")
+    ));
 
-    EnumGeneratorComponent(String terminalVarName) {
+    EnumGeneratorComponent(String terminalVarName, List<VarMapping> varMapping) {
         this.terminalVarName = terminalVarName;
+        this.varMapping = varMapping;
     }
 
     private final String terminalVarName;
+    private final List<VarMapping> varMapping;
 
     public String getTerminalVarName() {
         return terminalVarName;
+    }
+
+    public List<VarMapping> getVarMapping() {
+        return varMapping;
     }
 }

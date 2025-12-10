@@ -6,13 +6,11 @@
  */
 package com.powsybl.dynaflow;
 
-import com.google.common.collect.ImmutableMap;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynawo.commons.AbstractDynawoConfig;
 
 import java.nio.file.Path;
-import java.util.Map;
 
 /**
  *
@@ -37,11 +35,6 @@ public class DynaFlowConfig extends AbstractDynawoConfig {
 
     private DynaFlowConfig(ModuleConfig config) {
         super(config);
-    }
-
-    public Map<String, String> createEnv() {
-        return ImmutableMap.<String, String>builder()
-                .build();
     }
 
     @Override
