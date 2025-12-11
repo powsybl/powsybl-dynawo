@@ -41,11 +41,6 @@
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-iidm-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.google.auto.service</groupId>
-            <artifactId>auto-service-annotations</artifactId>
-            <version>1.1.1</version>
-        </dependency>
 
         <!-- Test-only dependencies -->
         <dependency>

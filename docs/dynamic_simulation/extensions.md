@@ -72,7 +72,7 @@ generator.newExtension(GeneratorConnectionLevelAdder.class)
 ## Voltage level load characteristics
 
 This extension is used to define the load characteristic type for a voltage level.  
-This extension is attached to a [voltage level](inv:powsyblcore:*:*#network_subnetwork.md#voltagelevel).
+This extension is attached to a [voltage level](inv:powsyblcore:*:*:#voltage-level).
 
 | Attribute | Type | Unit | Required | Default value | Description |
 |-----------|------|------|----------|---------------|-------------|
