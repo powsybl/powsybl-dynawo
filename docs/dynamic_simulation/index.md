@@ -8,6 +8,7 @@ dynamic-models-description.md
 event-models-configuration.md
 output-variables-configuration.md
 model-simplifiers.md
+extensions.md
 additional-models.md
 ```
 
