@@ -704,6 +704,15 @@
       }
     ]
   },
+  "INERTIAL_GRID": {
+    "defaultLib": "InertialGrid",
+    "libs": [
+      {
+        "lib": "InertialGrid",
+        "minVersion": "1.7.0"
+      }
+    ]
+  },
   "WECC": {
     "defaultLib": "WTG4AWeccCurrentSource",
     "libs": [

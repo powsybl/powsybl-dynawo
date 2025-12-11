@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="GEN" lib="InertialGrid" parFile="models.par" parId="g" staticId="GEN">
+        <dyn:macroStaticRef id="MSR_InertialGrid"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnector id="MC_InertialGrid-DefaultEquipmentConnectionPoint">
+        <dyn:connect var1="inertialGrid_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="inertialGrid_injectorURI_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_InertialGrid">
+        <dyn:staticRef var="inertialGrid_injectorURI_PInjPu" staticVar="p"/>
+        <dyn:staticRef var="inertialGrid_injectorURI_QInjPu" staticVar="q"/>
+        <dyn:staticRef var="inertialGrid_injectorURI_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_InertialGrid-DefaultEquipmentConnectionPoint" id1="GEN" id2="NETWORK"/>
+</dyn:dynamicModelsArchitecture>
