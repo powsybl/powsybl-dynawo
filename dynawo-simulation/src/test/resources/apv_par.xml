@@ -19,6 +19,11 @@
         <dyn:par type="DOUBLE" name="step_tStep" value="1.0"/>
         <dyn:par type="DOUBLE" name="step_Height" value="1.3"/>
     </dyn:set>
+    <dyn:set id="ActivePowerVariation_GEN4">
+        <dyn:par type="DOUBLE" name="step_Value0" value="0.0"/>
+        <dyn:par type="DOUBLE" name="step_tStep" value="1.0"/>
+        <dyn:par type="DOUBLE" name="step_Height" value="1.4"/>
+    </dyn:set>
     <dyn:set id="ActivePowerVariation_LOAD">
         <dyn:par type="DOUBLE" name="step_Value0" value="0.0"/>
         <dyn:par type="DOUBLE" name="step_tStep" value="10.0"/>
