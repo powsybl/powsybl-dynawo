@@ -8,7 +8,7 @@
 
 package dynamicModels
 
-List[] measurements = [["OldId", "NGEN", "NHV1"], ["NHV1", "OldId"], ["NHV2"]]
+List[] measurements = [["NGEN", "NHV1"], ["NHV1"], ["NHV2"]]
 
 TapChangerBlockingAutomaton {
     dynamicModelId "ZAB"
