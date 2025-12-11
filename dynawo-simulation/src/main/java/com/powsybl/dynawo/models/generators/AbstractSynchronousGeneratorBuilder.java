@@ -24,11 +24,9 @@ public abstract class AbstractSynchronousGeneratorBuilder<R extends AbstractSync
     public SynchronousGenerator build() {
         if (isInstantiable()) {
             if (modelConfig.isControllable()) {
-                return isGeneratorCustom() ? new CustomSynchronousGeneratorControllable(getEquipment(), parameterSetId, modelConfig)
-                        : new SynchronousGeneratorControllable(getEquipment(), parameterSetId, modelConfig);
+                return new SynchronousGeneratorControllable(getEquipment(), parameterSetId, modelConfig);
             } else {
-                return isGeneratorCustom() ? new CustomSynchronousGenerator(getEquipment(), parameterSetId, modelConfig)
-                        : new SynchronousGenerator(getEquipment(), parameterSetId, modelConfig);
+                return new SynchronousGenerator(getEquipment(), parameterSetId, modelConfig);
             }
         }
         return null;

@@ -23,38 +23,28 @@ import static com.powsybl.dynawo.models.generators.GeneratorProperties.*;
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ * @author Olivier Perrin {@literal <olivier.perrin at rte-france.com>}
  */
 public class SynchronousGenerator extends BaseGenerator implements FrequencySynchronizedModel {
 
-    protected final EnumGeneratorComponent generatorComponent;
-
     protected SynchronousGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
-        super(generator, parameterSetId, modelConfig);
-        this.generatorComponent = EnumGeneratorComponent.createFrom(modelConfig);
-    }
-
-    @Override
-    public List<VarMapping> getVarsMapping() {
-        return generatorComponent.getVarMapping();
-    }
-
-    @Override
-    public String getTerminalVarName() {
-        return generatorComponent.getTerminalVarName();
+        super(generator, parameterSetId, modelConfig,
+                isGeneratorCustom(modelConfig) ? CustomGeneratorComponent.fromModelConfig(modelConfig, EnumGeneratorComponent.createFrom(modelConfig)) :
+                        new Description(EnumGeneratorComponent.createFrom(modelConfig)));
     }
 
     @Override
     public String getOmegaRefPuVarName() {
-        return DEFAULT_OMEGA_REF_PU;
+        return getComponentDescription().omegaRefPu();
     }
 
     @Override
     public String getRunningVarName() {
-        return DEFAULT_RUNNING;
+        return getComponentDescription().running();
     }
 
     public String getOmegaPuVarName() {
-        return DEFAULT_OMEGA_PU;
+        return getComponentDescription().omegaPu();
     }
 
     @Override
@@ -76,5 +66,38 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
     @Override
     public Bus getConnectableBus() {
         return BusUtils.getConnectableBus(equipment);
+    }
+
+    static class Description extends BaseGenerator.Description implements ComponentDescription {
+        protected EnumGeneratorComponent generatorComponent;
+
+        Description(EnumGeneratorComponent generatorComponent) {
+            this.generatorComponent = generatorComponent;
+        }
+
+        @Override
+        public List<VarMapping> varMapping() {
+            return generatorComponent.getVarMapping();
+        }
+
+        @Override
+        public String terminal() {
+            return generatorComponent.getTerminalVarName();
+        }
+
+        @Override
+        public String omegaRefPu() {
+            return DEFAULT_OMEGA_REF_PU;
+        }
+
+        @Override
+        public String running() {
+            return DEFAULT_RUNNING;
+        }
+
+        @Override
+        public String omegaPu() {
+            return DEFAULT_OMEGA_PU;
+        }
     }
 }

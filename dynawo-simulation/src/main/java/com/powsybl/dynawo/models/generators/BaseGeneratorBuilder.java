@@ -65,8 +65,7 @@ public class BaseGeneratorBuilder extends AbstractGeneratorBuilder<BaseGenerator
     @Override
     public BaseGenerator build() {
         if (isInstantiable()) {
-            return isGeneratorCustom() ? new CustomBaseGenerator(getEquipment(), parameterSetId, modelConfig)
-                    : new BaseGenerator(getEquipment(), parameterSetId, modelConfig);
+            return new BaseGenerator(getEquipment(), parameterSetId, modelConfig);
         }
         return null;
     }

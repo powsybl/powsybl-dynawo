@@ -20,16 +20,29 @@ import java.util.List;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ * @author Olivier Perrin {@literal <olivier.perrin at rte-france.com>}
  */
 public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements SpecifiedGeneratorModel {
 
+    private static final ComponentDescription DEFAULT_COMPONENT_DESCRIPTION = new Description();
+    private final ComponentDescription componentDescription;
+
     protected BaseGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
-        super(generator, parameterSetId, modelConfig);
+        this(generator, parameterSetId, modelConfig,
+                isGeneratorCustom(modelConfig) ? CustomGeneratorComponent.fromModelConfig(modelConfig) : DEFAULT_COMPONENT_DESCRIPTION);
     }
 
-    @Override
-    public List<VarMapping> getVarsMapping() {
-        return EnumGeneratorComponent.NONE.getVarMapping();
+    protected BaseGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig, ComponentDescription componentDescription) {
+        super(generator, parameterSetId, modelConfig);
+        this.componentDescription = componentDescription;
+    }
+
+    protected static boolean isGeneratorCustom(ModelConfig modelConfig) {
+        return !modelConfig.varPrefix().isEmpty() || !modelConfig.varMapping().isEmpty();
+    }
+
+    protected ComponentDescription getComponentDescription() {
+        return componentDescription;
     }
 
     @Override
@@ -46,25 +59,59 @@ public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> imp
         return varConnections;
     }
 
+    @Override
+    public List<VarMapping> getVarsMapping() {
+        return getComponentDescription().varMapping();
+    }
+
     public String getTerminalVarName() {
-        return EnumGeneratorComponent.NONE.getTerminalVarName();
+        return getComponentDescription().terminal();
     }
 
     public String getSwitchOffSignalNodeVarName() {
-        return "generator_switchOffSignal1";
+        return getComponentDescription().switchOffSignalNode();
     }
 
     @Override
     public String getSwitchOffSignalEventVarName() {
-        return "generator_switchOffSignal2";
+        return getComponentDescription().switchOffSignalEvent();
     }
 
+    @Override
     public String getSwitchOffSignalAutomatonVarName() {
-        return "generator_switchOffSignal3";
+        return getComponentDescription().switchOffSignalAutomaton();
     }
 
     @Override
     public String getUPuVarName() {
         return "generator_UPu";
+    }
+
+    static class Description implements ComponentDescription {
+
+        @Override
+        public List<VarMapping> varMapping() {
+            return EnumGeneratorComponent.NONE.getVarMapping();
+        }
+
+        @Override
+        public String terminal() {
+            return EnumGeneratorComponent.NONE.getTerminalVarName();
+        }
+
+        @Override
+        public String switchOffSignalNode() {
+            return "generator_switchOffSignal1";
+        }
+
+        @Override
+        public String switchOffSignalEvent() {
+            return "generator_switchOffSignal2";
+        }
+
+        @Override
+        public String switchOffSignalAutomaton() {
+            return "generator_switchOffSignal3";
+        }
     }
 }

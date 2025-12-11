@@ -19,7 +19,7 @@ import static com.powsybl.dynawo.models.generators.GeneratorProperties.*;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public record CustomGeneratorComponent(String terminal, String switchOffSignal, String omegaRefPu, String omegaPu,
-                                       String running, List<VarMapping> varMapping) {
+                                       String running, List<VarMapping> varMapping) implements ComponentDescription {
 
     public static CustomGeneratorComponent fromModelConfig(ModelConfig modelConfig) {
         return fromModelConfig(modelConfig, EnumGeneratorComponent.NONE);
