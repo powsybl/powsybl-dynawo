@@ -17,8 +17,8 @@
     </parent>
 
     <artifactId>powsybl-dynawo-extensions-api</artifactId>
-    <name>powsybl-dynawo extensions API</name>
-    <description>powsybl-dynawo extensions api</description>
+    <name>Dynawo extensions API</name>
+    <description>An API for Dynawo extensions</description>
     <dependencies>
         <dependency>
             <groupId>com.powsybl</groupId>

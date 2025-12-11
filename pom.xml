@@ -54,7 +54,7 @@
         <module>dynawo-algorithms</module>
         <module>distribution</module>
         <module>dynawo-contingencies</module>
-        <module>powsybl-dynawo-extensions</module>
+        <module>dynawo-extensions</module>
     </modules>
 
     <properties>

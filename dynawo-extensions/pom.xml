@@ -18,10 +18,10 @@
 
     <artifactId>powsybl-dynawo-extensions</artifactId>
     <packaging>pom</packaging>
-    <name>Powsybl Dynawo extensions</name>
+    <name>Dynawo extensions</name>
     <modules>
-        <module>powsybl-dynawo-extensions-impl</module>
-        <module>powsybl-dynawo-extensions-serde</module>
-        <module>powsybl-dynawo-extensions-api</module>
+        <module>dynawo-extensions-impl</module>
+        <module>dynawo-extensions-serde</module>
+        <module>dynawo-extensions-api</module>
     </modules>
 </project>

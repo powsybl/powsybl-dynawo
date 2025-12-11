@@ -49,7 +49,7 @@ public class SynchronousGeneratorPropertiesAdderImpl extends AbstractExtensionAd
 
         Objects.requireNonNull(numberOfWindings, "numberOfWindings");
         if (governor == null ^ voltageRegulator == null) {
-            throw new PowsyblException("Governor and Voltage regulator must be both instanced");
+            throw new PowsyblException("Governor and Voltage regulator must be both instantiated or both null");
         }
 
         return new SynchronousGeneratorPropertiesImpl(extendable,

@@ -19,8 +19,8 @@
     </parent>
 
     <artifactId>powsybl-dynawo-extensions-impl</artifactId>
-    <name>powsybl dynawo Extensions Implementation</name>
-    <description>Implementation of powsybl-dynawo extensions</description>
+    <name>Dynawo extensions implementation</name>
+    <description>Implementation of Dynawo extensions</description>
 
     <dependencies>
 
