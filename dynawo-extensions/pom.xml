@@ -19,6 +19,7 @@
     <artifactId>powsybl-dynawo-extensions</artifactId>
     <packaging>pom</packaging>
     <name>Dynawo extensions</name>
+    <description>Dynawo extensions module for powsybl</description>
     <modules>
         <module>dynawo-extensions-impl</module>
         <module>dynawo-extensions-serde</module>

@@ -5,7 +5,7 @@ This document describes the Dynawo-specific extensions that can be added to vari
 ## Synchronized generator properties
 
 This extension is used to configure Dynawo-specific metadata for synchronized generators.  
-This extension is attached to a [generator](inv:powsyblcore:*:*#grid_model/network_subnetwork.md#generator).
+This extension is attached to a [generator](inv:powsyblcore:*:*:#generator).
 
 | Attribute | Type | Unit | Required | Default value | Description |
 |-----------|------|------|----|---|-------------|
@@ -22,7 +22,7 @@ generator.newExtension(SynchronizedGeneratorPropertiesAdder.class)
 
 ## Synchronous generator properties
 This extension is used to configure Dynawo-specific metadata for synchronous generators.  
-This extension is attached to a [generator](inv:powsyblcore:*:*#grid_model/network_subnetwork.md#generator).
+This extension is attached to a [generator](inv:powsyblcore:*:*:#generator).
 
 | Attribute | Type | Unit | Required | Default value | Description |
 |-----------|------|-----|----|---|-------------|
@@ -56,7 +56,7 @@ generator.newExtension(SynchronousGeneratorPropertiesAdder.class)
 ## Generator connection level
 
 This extension is used to define the connection level of a generator.  
-This extension is attached to a [generator](inv:powsyblcore:*:*#grid_model/network_subnetwork.md#generator).
+This extension is attached to a [generator](inv:powsyblcore:*:*:#generator).
 
 | Attribute | Type | Unit | Required | Default value | Description |
 |-----------|------|------|----------|---------------|-------------|
