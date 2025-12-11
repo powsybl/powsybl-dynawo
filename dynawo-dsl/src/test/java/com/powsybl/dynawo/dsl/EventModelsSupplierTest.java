@@ -49,8 +49,8 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
         EventModelsSupplier supplier = new GroovyEventModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<EventModel> eventModels = supplier.get(network);
         assertEquals(1, eventModels.size());
-        assertTrue(modelClass.isInstance(eventModels.get(0)));
-        assertEventModel(modelClass.cast(eventModels.get(0)), dynamicId, equipmentStaticId, lib, startTime);
+        assertTrue(modelClass.isInstance(eventModels.getFirst()));
+        assertEventModel(modelClass.cast(eventModels.getFirst()), dynamicId, equipmentStaticId, lib, startTime);
     }
 
     @ParameterizedTest(name = "{0}")
@@ -81,7 +81,8 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/eventModels/hvdcDisconnection.groovy", EventHvdcDisconnection.class, LfResultsUtils.createHvdcTestNetworkVscWithLFResults(), "L", "Disconnect_L", null, 2),
                 Arguments.of("/eventModels/nodeFault.groovy", NodeFaultEvent.class, EurostagTutorialExample1Factory.createWithLFResults(), "NGEN", "NodeFault_NGEN", "NodeFault", 1),
                 Arguments.of("/eventModels/activePowerVariation.groovy", EventActivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ActivePowerVariation_LOAD", null, 2),
-                Arguments.of("/eventModels/reactivePowerVariation.groovy", EventReactivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ReactivePowerVariation_LOAD", null, 2)
+                Arguments.of("/eventModels/reactivePowerVariation.groovy", EventReactivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ReactivePowerVariation_LOAD", null, 2),
+                Arguments.of("/eventModels/referenceVoltageVariation.groovy", EventReferenceVoltageVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "ReferenceVoltageVariation_GEN", "Step", 2)
         );
     }
 
@@ -125,6 +126,15 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                               + Model ReactivePowerVariation ReactivePowerVariation_SVC2 instantiation KO
                                  'staticId' field value 'SVC2' not found for equipment type(s) GENERATOR/LOAD
                                  'deltaQ' field is not set
+                        """),
+                Arguments.of("/eventWarnings/missingUPVParameters.groovy",
+                        LfResultsUtils.createSvcTestCaseWithLFResults(),
+                        """
+                        + DSL tests
+                           + Groovy Event Models Supplier
+                              + Model ReferenceVoltageVariation ReferenceVoltageVariation_SVC2 instantiation KO
+                                 'staticId' field value 'SVC2' not found for equipment type(s) GENERATOR
+                                 'deltaU' field is not set
                         """),
                 Arguments.of("/eventWarnings/missingDisconnectionEquipment.groovy", EurostagTutorialExample1Factory.createWithLFResults(),
                         """

@@ -31,29 +31,29 @@ The `dynawo-simulation-default-parameters` module defines the default values for
 
 ### Required parameters
 
-**parametersFile**  
+#### parametersFile
 `parametersFile` defines the path of the main parameters file.  
 The default value is `models.par`.
 
-**network.parametersFile**  
+#### network.parametersFile
 `network.parametersFile` defines the path of the network parameters file.  
 The default value is `network.par`.
 
-**solver.parametersFile**  
+#### solver.parametersFile
 `solver.parametersFile` defines the path of the solver parameters file.  
 The default value is `solvers.par`.
 
 ### Optional parameters
 
-**network.parametersId**  
+#### network.parametersId
 `network.parametersId` defines the network parameters set id stored in `network.parametersFile`.  
 The default value is `Network`.
 
-**solver.parametersId**  
+#### solver.parametersId
 `solver.parametersId` defines the solver parameters set id stored in `solver.parametersFile`.  
 The default value is `SIM`.
 
-**solver.type**  
+#### solver.type
 `solver.type` defines the solver used in the simulation.  
 The available `com.powsybl.dynawo.DynawoSimulationParameters.SolverType` values are:
 - `SIM`: the simplified solver (fixed time step solver)
@@ -61,31 +61,31 @@ The available `com.powsybl.dynawo.DynawoSimulationParameters.SolverType` values 
 
 The default value is `SIM`.
 
-**dump.export**  
+#### dump.export
 `dump.export` defines if the dynamic simulation result should be exported as a dump.  
 The default value is `FALSE`.
 
-**dump.useAsInput**  
+#### dump.useAsInput
 `dump.useAsInput` defines if a previous simulation result dump should be used as input for the current simulation.  
 The default value is `FALSE`.
 
-**dump.exportFolder**  
+#### dump.exportFolder
 `dump.exportFolder` defines the folder name where the dump is exported.  
 The default value is `null`.
 
-**dump.fileName**  
+#### dump.fileName
 `dump.fileName` defines the dump file name.  
 The default value is `null`.
 
-**modelSimplifiers**  
-`modelSimplifiers` defines the list of simplifier to use before macro connection computation **(TODO: link)**.  
+#### modelSimplifiers
+`modelSimplifiers` defines the list of simplifier to use before macro connection computation (see [here](model-simplifiers.md)).  
 The default value is an empty list.
 
-**mergeLoads**  
+#### mergeLoads
 `mergeLoads` indicates if loads connected to the same bus are merged (except fictitious load).  
 The default value is `FALSE`.
 
-**timeline.exportMode**  
+#### timeline.exportMode
 `timeline.exportMode` defines the file extension of the timeline export.  
 The available `com.powsybl.dynawo.commons.ExportMode` values are:
 - `CSV`
@@ -94,11 +94,11 @@ The available `com.powsybl.dynawo.commons.ExportMode` values are:
 
 The default value is `XML`.
 
-**precision**  
+#### precision
 `precision` defines the simulation step precision.  
 The default value is `1e-6`.
 
-**log.levelFilter**  
+#### log.levelFilter
 `log.levelFilter` defines the log level for Dynawo log.  
 The available `com.powsybl.dynawo.DynawoSimulationParameters.LogLevel` values are:
 - `DEBUG`
@@ -108,7 +108,7 @@ The available `com.powsybl.dynawo.DynawoSimulationParameters.LogLevel` values ar
 
 The default value is `INFO`.
 
-**log.specificLogs**  
+#### log.specificLogs
 `log.specificLogs` defines as a list the specifics logs to return besides the regular Dynawo log.  
 The available `com.powsybl.dynawo.DynawoSimulationParameters.SpecificLog` values are:
 - `NETWORK`
@@ -119,11 +119,11 @@ The available `com.powsybl.dynawo.DynawoSimulationParameters.SpecificLog` values
 
 The default value is an empty list.
 
-**criteria.file**  
+#### criteria.file
 `criteria.file` defines the simulation criteria file.  
 The default value is `null`.
 
-**additionalModelsFile**  
+#### additionalModelsFile
 `additionalModelsFile` defines the JSON file listing additional models used in the simulation.  
 The file must follow the `models.json` pattern defined [here](dynamic-models-configuration.md#supported-models).
 The models added in the file cannot overload an existing model and must belong to an existing category otherwise they will be skipped.  
@@ -145,7 +145,7 @@ dynawo-simulation-default-parameters:
   dump.exportFolder: /home/user/dumps
   dump.fileName: dump.dmp
   modelSimplifiers:
-    - EnergizedSimplifier
+    - energizedEquipment
   mergeLoads: false
   timeline.exportMode: XML
   precision: 10e-6
@@ -169,7 +169,7 @@ dynawo-simulation-default-parameters:
   <dump.useAsInput>false</dump.useAsInput> 
   <dump.exportFolder>/home/user/dumps</dump.exportFolder>
   <dump.fileName>dump.dmp</dump.fileName>
-  <modelSimplifiers>EnergizedSimplifier</modelSimplifiers>
+  <modelSimplifiers>energizedEquipment</modelSimplifiers>
   <mergeLoads>false</mergeLoads>
   <timeline.exportMode>XML</timeline.exportMode>
   <precision>10e-6</precision>

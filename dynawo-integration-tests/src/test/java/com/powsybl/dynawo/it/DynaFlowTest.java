@@ -21,6 +21,7 @@ import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
+import com.powsybl.loadflow.LoadFlowRunParameters;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.SecurityAnalysisRunParameters;
@@ -32,9 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 
@@ -83,18 +82,23 @@ class DynaFlowTest extends AbstractDynawoTest {
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
-        LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNode)
+        LoadFlowRunParameters runParameters = new LoadFlowRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(loadFlowParameters)
+                .setReportNode(reportNode);
+        LoadFlowResult result = loadFlowProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, runParameters)
                 .join();
 
         assertEquals(1, result.getComponentResults().size());
-        LoadFlowResult.ComponentResult componentResult = result.getComponentResults().get(0);
+        LoadFlowResult.ComponentResult componentResult = result.getComponentResults().getFirst();
         assertEquals(CONVERGED, componentResult.getStatus());
-        assertEquals("B4", componentResult.getSlackBusResults().get(0).getId());
+        assertEquals("B4", componentResult.getSlackBusResults().getFirst().getId());
 
         StringWriter sw = new StringWriter();
         reportNode.print(sw);
         System.out.println(sw);
 
+        testExecutionTempFile();
         InputStream refStream = Objects.requireNonNull(getClass().getResourceAsStream("/loadflow_timeline_report.txt"));
         String refLogExport = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStream), StandardCharsets.UTF_8));
         String logExport = TestUtil.normalizeLineSeparator(sw.toString());
@@ -121,7 +125,11 @@ class DynaFlowTest extends AbstractDynawoTest {
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
-        loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNodeLf).join();
+        LoadFlowRunParameters lfRunParameters = new LoadFlowRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(loadFlowParameters)
+                .setReportNode(reportNodeLf);
+        loadFlowProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, lfRunParameters).join();
 
         StringWriter swReportNodeLf = new StringWriter();
         reportNodeLf.print(swReportNodeLf);
@@ -174,30 +182,10 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .join()
                 .getResult();
 
+        testExecutionTempFile();
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_nb_results.json"));
         assertTxtEquals(expected, serializedResult.toString());
-    }
-
-    @Test
-    void testExecutionTempFileAndReferencedFileExist() throws IOException {
-        Network network = IeeeCdfNetworkFactory.create14Solved();
-        ReportNode reportNode = ReportNode.newRootReportNode()
-                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
-                .withMessageTemplate("testIEEE14")
-                .build();
-        loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNode)
-                .join();
-        Path execTmpDir = localDir.getParent();
-        Path execTmpFilePath = execTmpDir.resolve(".EXEC_TMP_FILENAME");
-        String content = Files.readString(execTmpFilePath);
-        Path referencedFile = Paths.get(content.trim());
-
-        assertTrue(Files.exists(execTmpFilePath));
-        assertNotNull(content);
-        assertFalse(content.isBlank());
-        assertTrue(Files.exists(referencedFile));
     }
 }

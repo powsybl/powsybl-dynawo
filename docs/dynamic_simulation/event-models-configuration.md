@@ -133,6 +133,43 @@ ReactivePowerVariation {
 }
 ```
 
+### Reference Voltage Variation
+Reference voltage variation on synchronized/synchronous generator  
+With specific attribute:
+- `deltaU`: reference voltage variation.
+
+**Groovy script:**
+```groovy
+ReferenceVoltageVariation {
+    staticId "GEN"
+    startTime 2
+    deltaU 0.2
+}
+```
+**Json configuration:**
+```json
+{
+  "model":"ReferenceVoltageVariation",
+  "properties":[
+    {
+      "name":"staticId",
+      "value":"GEN",
+      "type":"STRING"
+    },
+    {
+      "name":"startTime",
+      "value":"2",
+      "type":"DOUBLE"
+    },
+    {
+      "name":"deltaU",
+      "value":"0.2",
+      "type":"DOUBLE"
+    }
+  ]
+}
+```
+
 ### Node Fault
 Node fault with configurable resistance, reactance and duration.  
 With specific attributes:
@@ -189,4 +226,5 @@ Ultimately, all groovy scripts or Json configuration file call the dedicated bui
 - EventDisconnectionBuilder
 - EventActivePowerVariationBuilder
 - EventReactivePowerVariationBuilder
+- EventReferenceVoltageVariationBuilder
 - NodeFaultEventBuilder

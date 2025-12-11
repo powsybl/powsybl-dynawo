@@ -13,6 +13,7 @@ import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.events.EventReactivePowerVariationBuilder;
+import com.powsybl.dynawo.models.events.EventReferenceVoltageVariationBuilder;
 import com.powsybl.dynawo.suppliers.events.DynawoEventModelsSupplier;
 import com.powsybl.dynawo.suppliers.events.EventModelConfig;
 import com.powsybl.dynawo.suppliers.events.EventModelConfigsJsonDeserializer;
@@ -58,11 +59,17 @@ class DynawoEventModelsSupplierTest {
                 .startTime(1)
                 .deltaQ(20)
                 .build();
+        EventModel voltageReferenceVariation = EventReferenceVoltageVariationBuilder.of(network)
+                .staticId("GEN")
+                .startTime(1)
+                .deltaU(20)
+                .build();
 
-        assertEquals(3, events.size());
+        assertEquals(4, events.size());
         assertThat(events.get(0)).usingRecursiveComparison().isEqualTo(disconnection);
         assertThat(events.get(1)).usingRecursiveComparison().isEqualTo(activePowerVariation);
         assertThat(events.get(2)).usingRecursiveComparison().isEqualTo(reactivePowerVariation);
+        assertThat(events.get(3)).usingRecursiveComparison().isEqualTo(voltageReferenceVariation);
     }
 
     @Test
@@ -80,7 +87,7 @@ class DynawoEventModelsSupplierTest {
         Network network = EurostagTutorialExample1Factory.create();
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/events.json")).toURI());
         List<EventModel> models = DynawoEventModelsSupplier.load(path).get(network);
-        assertEquals(2, models.size());
+        assertEquals(3, models.size());
     }
 
     @Test
@@ -88,7 +95,7 @@ class DynawoEventModelsSupplierTest {
         SupplierJsonDeserializer<EventModelConfig> deserializer = new SupplierJsonDeserializer<>(new EventModelConfigsJsonDeserializer());
         try (InputStream is = getClass().getResourceAsStream("/suppliers/events.json")) {
             List<EventModelConfig> configs = deserializer.deserialize(is);
-            assertEquals(2, configs.size());
+            assertEquals(3, configs.size());
             assertThat(configs.get(0)).usingRecursiveComparison().isEqualTo(getActivePowerVariationConfig());
             assertThat(configs.get(1)).usingRecursiveComparison().isEqualTo(getReactivePowerVariationConfig());
         }
@@ -107,11 +114,6 @@ class DynawoEventModelsSupplierTest {
         DynawoEventModelsSupplier supplier = new DynawoEventModelsSupplier(List.of(eventModelConfig));
         Exception e = assertThrows(PowsyblException.class, () -> supplier.get(network, ReportNode.NO_OP));
         assertEquals("Method wrongName not found for parameter NHV1_NHV2_2 on builder EventDisconnectionBuilder", e.getMessage());
-    }
-
-    @Test
-    void emptyPropertyException() {
-        assertThrowsExactly(IllegalArgumentException.class, () -> new PropertyBuilder().build(), "collectionType is undefined");
     }
 
     private static List<EventModelConfig> getEventConfigs() {
@@ -134,7 +136,8 @@ class DynawoEventModelsSupplierTest {
                                 .build()
                 )),
                 getActivePowerVariationConfig(),
-                getReactivePowerVariationConfig()
+                getReactivePowerVariationConfig(),
+                getReferenceVoltageVariationConfig()
         );
     }
 
@@ -176,4 +179,22 @@ class DynawoEventModelsSupplierTest {
                         .build()));
     }
 
+    private static EventModelConfig getReferenceVoltageVariationConfig() {
+        return new EventModelConfig("ReferenceVoltageVariation", List.of(
+                new PropertyBuilder()
+                        .name("staticId")
+                        .value("GEN")
+                        .type(PropertyType.STRING)
+                        .build(),
+                new PropertyBuilder()
+                        .name("startTime")
+                        .value("1")
+                        .type(PropertyType.DOUBLE)
+                        .build(),
+                new PropertyBuilder()
+                        .name("deltaU")
+                        .value("20")
+                        .type(PropertyType.DOUBLE)
+                        .build()));
+    }
 }

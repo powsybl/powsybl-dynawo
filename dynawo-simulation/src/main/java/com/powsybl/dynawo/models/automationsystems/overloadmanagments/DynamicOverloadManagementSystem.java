@@ -13,6 +13,7 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
 import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.Branch;
+import com.powsybl.iidm.network.Terminal;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.Arrays;
@@ -43,6 +44,14 @@ public class DynamicOverloadManagementSystem extends AbstractPureDynamicBlackBox
     public void createMacroConnections(MacroConnectionsAdder adder) {
         adder.createMacroConnections(this, measuredBranch, BranchModel.class, this::getVarConnectionsWithMeasuredBranch, MEASURE_SUFFIX + SideUtils.getSideSuffix(measuredSide));
         adder.createMacroConnections(this, controlledBranch, BranchModel.class, this::getVarConnectionsWithControlledBranch, CONTROL_SUFFIX);
+    }
+
+    public Branch<?> getControlledBranch() {
+        return controlledBranch;
+    }
+
+    public Terminal getMeasuredTerminal() {
+        return measuredBranch.getTerminal(measuredSide);
     }
 
     private List<VarConnection> getVarConnectionsWithMeasuredBranch(BranchModel connected) {
