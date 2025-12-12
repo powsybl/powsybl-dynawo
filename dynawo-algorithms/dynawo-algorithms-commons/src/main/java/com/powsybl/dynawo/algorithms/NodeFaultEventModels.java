@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * @author Erwann Goasguen {@literal <erwann.goasguen at rte-france.com>}
  */
-public record NodeFaultEventModels(int index, List<NodeFaultEventData> nodeFaultsList, List<BlackBoxModel> eventModels,
+public record NodeFaultEventModels(int index, NodeFaultEventData nodeFaultEventData, List<BlackBoxModel> eventModels,
                                    Map<String, MacroConnector> macroConnectorsMap,
                                    List<MacroConnect> macroConnectList, List<ParametersSet> eventParameters) {
     public String getId() {

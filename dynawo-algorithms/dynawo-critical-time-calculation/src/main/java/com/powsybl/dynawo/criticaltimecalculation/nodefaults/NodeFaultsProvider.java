@@ -21,9 +21,9 @@ import java.util.Map;
  * @author Erwann GOASGUEN {@literal <erwann.goasguen at rte-france.com>}
  */
 public interface NodeFaultsProvider {
-    List<List<NodeFaultEventData>> getNodeFaults(Network network, ReportNode reportNode);
+    List<NodeFaultEventData> getNodeFaults(Network network, ReportNode reportNode);
 
-    default List<List<NodeFaultEventData>> getNodeFaults(Network network, Map<Class<?>, Object> contextObjects) {
+    default List<NodeFaultEventData> getNodeFaults(Network network, Map<Class<?>, Object> contextObjects) {
         return getNodeFaults(network, ReportNode.NO_OP);
     }
 
