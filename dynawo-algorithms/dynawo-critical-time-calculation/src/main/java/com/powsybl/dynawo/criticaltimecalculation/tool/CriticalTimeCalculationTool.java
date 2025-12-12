@@ -145,7 +145,7 @@ public class CriticalTimeCalculationTool implements Tool {
                 .setComputationManager(context.getShortTimeExecutionComputationManager())
                 .setReportNode(reportNode);
 
-        CriticalTimeCalculationResults result = runner.run(network, dynamicModelsSupplier, nodeFaultsProvider, runParameters);
+        CriticalTimeCalculationResults results = runner.run(network, dynamicModelsSupplier, nodeFaultsProvider, runParameters);
         //Results
         Path outputLogFile = line.hasOption(OUTPUT_LOG_FILE) ? context.getFileSystem().getPath(line.getOptionValue(OUTPUT_LOG_FILE)) : null;
         if (outputLogFile != null) {
@@ -155,9 +155,9 @@ public class CriticalTimeCalculationTool implements Tool {
         }
         Path outputFile = line.hasOption(OUTPUT_FILE) ? context.getFileSystem().getPath(line.getOptionValue(OUTPUT_FILE)) : null;
         if (outputFile != null) {
-            exportResult(result, context, outputFile);
+            exportResult(results, context, outputFile);
         } else {
-            printResult(result, context);
+            printResult(results, context);
         }
     }
 
@@ -172,15 +172,15 @@ public class CriticalTimeCalculationTool implements Tool {
         reportNode.print(outputLogFile);
     }
 
-    private void printResult(CriticalTimeCalculationResults result, ToolRunningContext context) {
+    private void printResult(CriticalTimeCalculationResults results, ToolRunningContext context) {
         Writer writer = new OutputStreamWriter(context.getOutputStream());
         AsciiTableFormatterFactory asciiTableFormatterFactory = new AsciiTableFormatterFactory();
-        printCriticalTimeCalculationResults(result, writer, asciiTableFormatterFactory, TableFormatterConfig.load());
+        printCriticalTimeCalculationResults(results, writer, asciiTableFormatterFactory, TableFormatterConfig.load());
     }
 
-    private void exportResult(CriticalTimeCalculationResults result, ToolRunningContext context, Path outputFile) {
+    private void exportResult(CriticalTimeCalculationResults results, ToolRunningContext context, Path outputFile) {
         context.getOutputStream().println("Writing results to '" + outputFile + "'");
-        CriticalTimeCalculationResultsSerializer.write(result, outputFile);
+        CriticalTimeCalculationResultsSerializer.write(results, outputFile);
     }
 
     private void printCriticalTimeCalculationResults(CriticalTimeCalculationResults results, Writer writer,

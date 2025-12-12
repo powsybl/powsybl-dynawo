@@ -38,7 +38,7 @@ public class CriticalTimeCalculationHandler extends AbstractDynawoAlgorithmsHand
         super.after(workingDir, report);
         context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
         Path resultsFile = workingDir.resolve(AGGREGATED_RESULTS);
-//        new XmlCriticalTimeCalculationResultsParser().parse(resultsFile);
+        new XmlCriticalTimeCalculationResultsParser().parse(resultsFile);
         return new CriticalTimeCalculationResults(new XmlCriticalTimeCalculationResultsParser().parse(resultsFile));
     }
 

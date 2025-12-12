@@ -24,15 +24,14 @@ public class CriticalTimeCalculationParametersTest {
 
     @ParameterizedTest(name = "{6}")
     @MethodSource("provideCriticalTimeCalculationTimes")
-    void testExceptions(double startTime, double stopTime, double minValue, double maxValue, double accuracy,
-                        String elementId, Mode mode, String message) {
+    void testExceptions(double startTime, double stopTime, double faultTimeMin, double faultTimeMax,
+                        double accuracy, Mode mode, String message) {
         CriticalTimeCalculationParameters.Builder builder = CriticalTimeCalculationParameters.builder()
                 .setStartTime(startTime)
                 .setStopTime(stopTime)
-                .setMinValue(minValue)
-                .setMaxValue(maxValue)
+                .setMinValue(faultTimeMin)
+                .setMaxValue(faultTimeMax)
                 .setAccuracy(accuracy)
-                .setElementId(elementId)
                 .setMode(mode);
         assertThatThrownBy(builder::build)
                 .isInstanceOf(IllegalStateException.class)
@@ -41,11 +40,11 @@ public class CriticalTimeCalculationParametersTest {
 
     private static Stream<Arguments> provideCriticalTimeCalculationTimes() {
         return Stream.of(
-                Arguments.of(-1, 200, 1, 3, 0.001, "ElementId", Mode.SIMPLE, "Start time (%.2f) should be zero or positive".formatted(-1f)),
-                Arguments.of(10, 5, 1, 3, 0.001, "ElementId", Mode.SIMPLE, "Stop time (%.2f) should be greater than start time (%.2f)".formatted(5f, 10f)),
-                Arguments.of(10, 200, 3, 1, 0.001, "ElementId", Mode.SIMPLE, "Gap between minValue (%.2f) and maxValue (%.2f) must be at least two times the accuracy with min < max".formatted(3f, 1f)),
-                Arguments.of(10, 200, 1, 2, 1, "ElementId", Mode.SIMPLE, "Gap between minValue (%.2f) and maxValue (%.2f) must be at least two times the accuracy with min < max".formatted(1f, 2f)),
-                Arguments.of(10, 200, 1, 3, -1, "ElementId", Mode.SIMPLE, "Accuracy should be a number above 0 (found : (%.2f))".formatted(-1f))
+                Arguments.of(-1, 200, 1, 3, 0.001, Mode.SIMPLE, "Start time (%.2f) should be zero or positive".formatted(-1f)),
+                Arguments.of(10, 5, 1, 3, 0.001, Mode.SIMPLE, "Stop time (%.2f) should be greater than start time (%.2f)".formatted(5f, 10f)),
+                Arguments.of(10, 200, 3, 1, 0.001, Mode.SIMPLE, "Gap between faultTimeMin (%.2f) and faultTimeMax (%.2f) must be at least two times the accuracy with min < max".formatted(3f, 1f)),
+                Arguments.of(10, 200, 1, 2, 1, Mode.SIMPLE, "Gap between faultTimeMin (%.2f) and faultTimeMax (%.2f) must be at least two times the accuracy with min < max".formatted(1f, 2f)),
+                Arguments.of(10, 200, 1, 3, -1, Mode.SIMPLE, "Accuracy should be a number above 0 (found : (%.2f))".formatted(-1f))
         );
     }
 }

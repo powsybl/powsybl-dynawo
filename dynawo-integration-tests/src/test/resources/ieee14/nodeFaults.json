@@ -1,0 +1,9 @@
+{
+  "nodeFaults" : [
+    {
+      "elementId" : "_GEN____2_SM",
+      "fault_rPu" : 0.001,
+      "fault_xPu" : 0.001
+    }
+  ]
+}

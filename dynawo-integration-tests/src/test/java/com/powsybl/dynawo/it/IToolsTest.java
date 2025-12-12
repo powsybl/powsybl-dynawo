@@ -10,6 +10,8 @@ package com.powsybl.dynawo.it;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.computation.ComputationManager;
+import com.powsybl.computation.local.LocalComputationManager;
+import com.powsybl.dynawo.criticaltimecalculation.tool.CriticalTimeCalculationTool;
 import com.powsybl.dynawo.margincalculation.tool.MarginCalculationTool;
 import com.powsybl.tools.CommandLineTools;
 import com.powsybl.tools.ToolInitializationContext;
@@ -50,7 +52,9 @@ class IToolsTest extends AbstractDynawoTest {
         Files.copy(getResourceAsStream("/ieee14/dynamicModels.groovy"), fileSystem.getPath("dynamicModels.groovy"));
         Files.copy(getResourceAsStream("/ieee14/contingencies.groovy"), fileSystem.getPath("contingencies.groovy"));
         Files.copy(getResourceAsStream("/ieee14/loadsVariations.json"), fileSystem.getPath("loadsVariations.json"));
+        Files.copy(getResourceAsStream("/ieee14/nodeFaults.json"), fileSystem.getPath("nodeFaults.json"));
         Files.copy(getResourceAsStream("/itools/MarginCalculationParameters.json"), fileSystem.getPath("MarginCalculationParameters.json"));
+        Files.copy(getResourceAsStream("/itools/CriticalTimeCalculationParameters.json"), fileSystem.getPath("CriticalTimeCalculationParameters.json"));
 
         bout = new ByteArrayOutputStream();
         berr = new ByteArrayOutputStream();
@@ -127,6 +131,23 @@ class IToolsTest extends AbstractDynawoTest {
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
         String expectedOutput = new String(getResourceAsStream("/itools/mc_out.txt").readAllBytes(), StandardCharsets.UTF_8);
+        assertEquals(expectedOutput, getOutput());
+        assertThat(getError()).isEmpty();
+    }
+
+    @Test
+    void testIeee14CTC() throws IOException {
+        computationManager = LocalComputationManager.getDefault();
+        TOOLS = new CommandLineTools(List.of(new CriticalTimeCalculationTool()));
+        String[] args = {"critical-time-calculation" , "--case-file", "IEEE14.iidm",
+            "--dynamic-models-file", "dynamicModels.groovy",
+            "--node-faults-file", "nodeFaults.json",
+            "--parameters-file", "CriticalTimeCalculationParameters.json"};
+
+        int status = TOOLS.run(args, toolContext);
+
+        assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
+        String expectedOutput = new String(getResourceAsStream("/itools/ctc_out.txt").readAllBytes(), StandardCharsets.UTF_8);
         assertEquals(expectedOutput, getOutput());
         assertThat(getError()).isEmpty();
     }

@@ -23,7 +23,6 @@ public final class CriticalTimeCalculationParameters {
     public static final double DEFAULT_STOP_TIME = 200;
     public static final double DEFAULT_MIN_VALUE = 0;
     public static final double DEFAULT_MAX_VALUE = 5;
-    public static String DEFAULT_ELEMENT_ID = "FAULT";
     public static String DEFAULT_PAR_NAME = "fault_tEnd";
     public static final double DEFAULT_ACCURACY = 0.001;
     public static final Mode DEFAULT_MODE = Mode.SIMPLE;
@@ -36,7 +35,6 @@ public final class CriticalTimeCalculationParameters {
 
         private double startTime = DEFAULT_START_TIME;
         private double stopTime = DEFAULT_STOP_TIME;
-        private String elementId = DEFAULT_ELEMENT_ID;
         private String parName = DEFAULT_PAR_NAME;
         private double minValue = DEFAULT_MIN_VALUE;
         private double maxValue = DEFAULT_MAX_VALUE;
@@ -79,14 +77,6 @@ public final class CriticalTimeCalculationParameters {
         }
 
         /**
-         * Set element ID for the critical time
-         */
-        public Builder setElementId(String elementId) {
-            this.elementId = elementId;
-            return this;
-        }
-
-        /**
          * Set par Name for the critical time
          */
         public Builder setParName(String parName) {
@@ -122,7 +112,7 @@ public final class CriticalTimeCalculationParameters {
                 throw new IllegalStateException("Stop time (%.2f) should be greater than start time (%.2f)".formatted(stopTime, startTime));
             }
             if (minValue > maxValue - 2 * accuracy) {
-                throw new IllegalStateException("Gap between minValue (%.2f) and maxValue (%.2f) must be at least two times the accuracy with min < max".formatted(minValue, maxValue));
+                throw new IllegalStateException("Gap between faultTimeMin (%.2f) and faultTimeMax (%.2f) must be at least two times the accuracy with min < max".formatted(minValue, maxValue));
             }
             if (accuracy < 0) {
                 throw new IllegalStateException("Accuracy should be a number above 0 (found : (%.2f))".formatted(accuracy));
@@ -158,11 +148,10 @@ public final class CriticalTimeCalculationParameters {
         config.ifPresent(c -> {
             c.getOptionalDoubleProperty("startTime").ifPresent(builder::setStartTime);
             c.getOptionalDoubleProperty("stopTime").ifPresent(builder::setStopTime);
-            c.getOptionalStringProperty("elementId").ifPresent(builder::setElementId);
             c.getOptionalStringProperty("parName").ifPresent(builder::setParName);
             c.getOptionalStringProperty("debugDir").ifPresent(builder::setDebugDir);
-            c.getOptionalDoubleProperty("minValue").ifPresent(builder::setMinValue);
-            c.getOptionalDoubleProperty("maxValue").ifPresent(builder::setMaxValue);
+            c.getOptionalDoubleProperty("faultTimeMin").ifPresent(builder::setMinValue);
+            c.getOptionalDoubleProperty("faultTimeMax").ifPresent(builder::setMaxValue);
             c.getOptionalEnumProperty("mode", Mode.class).ifPresent(builder::setMode);
             c.getOptionalIntProperty("accuracy").ifPresent(builder::setAccuracy);
             c.getOptionalStringProperty("debugDir").ifPresent(builder::setDebugDir);
@@ -173,7 +162,6 @@ public final class CriticalTimeCalculationParameters {
 
     private final double startTime;
     private final double stopTime;
-    private final String elementId;
     private final String parName;
     private final double minValue;
     private final double maxValue;
@@ -185,7 +173,6 @@ public final class CriticalTimeCalculationParameters {
     private CriticalTimeCalculationParameters(CriticalTimeCalculationParameters.Builder builder) {
         this.startTime = builder.startTime;
         this.stopTime = builder.stopTime;
-        this.elementId = builder.elementId;
         this.parName = builder.parName;
         this.minValue = builder.minValue;
         this.maxValue = builder.maxValue;
@@ -201,10 +188,6 @@ public final class CriticalTimeCalculationParameters {
 
     public double getStopTime() {
         return stopTime;
-    }
-
-    public String getElementId() {
-        return elementId;
     }
 
     public String getParName() {
