@@ -67,6 +67,12 @@ public final class NodeFaultEventData {
         }
 
         public NodeFaultEventData build() {
+            if (faultRPuValue < 0) {
+                throw new IllegalStateException("rPu (%.2f) should be zero or positive".formatted(faultRPuValue));
+            }
+            if (faultXPuValue < 0) {
+                throw new IllegalStateException("xPu (%.2f) should be zero or positive".formatted(faultXPuValue));
+            }
             if (faultStartTime < 0) {
                 throw new IllegalStateException("Start time (%.2f) should be zero or positive".formatted(faultStartTime));
             }

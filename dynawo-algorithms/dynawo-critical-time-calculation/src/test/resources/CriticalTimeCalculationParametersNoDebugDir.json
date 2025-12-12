@@ -2,10 +2,9 @@
   "startTime" : 0.0,
   "stopTime" : 200.0,
   "accuracy" : 0.001,
-  "elementId" : "FAULT",
   "parName" : "fault_tEnd",
-  "minValue" : 0.0,
-  "maxValue" : 5.0,
+  "faultTimeMin" : 0.0,
+  "faultTimeMax" : 5.0,
   "mode" : "SIMPLE",
   "dynawoParameters" : {
     "networkParameters" : {

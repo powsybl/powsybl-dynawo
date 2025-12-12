@@ -41,7 +41,7 @@ public final class MultipleJobsXml {
         CriticalTimeCalculationParameters parameters = context.getCriticalTimeCalculationParameters();
         writer.writeStartElement("criticalTimeCalculation");
         writer.writeAttribute("accuracy", Double.toString(parameters.getAccuracy()));
-        writer.writeAttribute("dydId", parameters.getElementId());
+        writer.writeAttribute("dydId", "ElementId");
         writer.writeAttribute("parName", parameters.getParName());
         writer.writeAttribute("minValue", Double.toString(parameters.getMinValue()));
         writer.writeAttribute("maxValue", Double.toString(parameters.getMaxValue()));

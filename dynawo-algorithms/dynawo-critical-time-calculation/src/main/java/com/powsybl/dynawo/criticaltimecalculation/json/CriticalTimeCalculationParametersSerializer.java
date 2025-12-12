@@ -32,10 +32,9 @@ public class CriticalTimeCalculationParametersSerializer extends StdSerializer<C
             jsonGenerator.writeStringField("debugDir", parameters.getDebugDir());
         }
         jsonGenerator.writeNumberField("accuracy", parameters.getAccuracy());
-        jsonGenerator.writeStringField("elementId", parameters.getElementId());
         jsonGenerator.writeStringField("parName", parameters.getParName());
-        jsonGenerator.writeNumberField("minValue", parameters.getMinValue());
-        jsonGenerator.writeNumberField("maxValue", parameters.getMaxValue());
+        jsonGenerator.writeNumberField("faultTimeMin", parameters.getMinValue());
+        jsonGenerator.writeNumberField("faultTimeMax", parameters.getMaxValue());
         jsonGenerator.writeStringField("mode", parameters.getMode().toString());
         jsonGenerator.writeFieldName("dynawoParameters");
         new DynawoSimulationParametersSerializer().serialize(parameters.getDynawoParameters(), jsonGenerator, serializerProvider);

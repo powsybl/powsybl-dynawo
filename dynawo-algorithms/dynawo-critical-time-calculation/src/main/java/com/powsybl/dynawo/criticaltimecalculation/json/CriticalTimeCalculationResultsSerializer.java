@@ -34,8 +34,8 @@ public class CriticalTimeCalculationResultsSerializer extends StdSerializer<Crit
         super(CriticalTimeCalculationResults.class);
     }
 
-    public static void write(CriticalTimeCalculationResults result, Path jsonFile) {
-        Objects.requireNonNull(result);
+    public static void write(CriticalTimeCalculationResults results, Path jsonFile) {
+        Objects.requireNonNull(results);
         Objects.requireNonNull(jsonFile);
         try {
             try (OutputStream os = Files.newOutputStream(jsonFile)) {
@@ -44,7 +44,7 @@ public class CriticalTimeCalculationResultsSerializer extends StdSerializer<Crit
                 module.addSerializer(CriticalTimeCalculationResults.class, new CriticalTimeCalculationResultsSerializer());
                 objectMapper.registerModule(module);
                 ObjectWriter writer = objectMapper.writerWithDefaultPrettyPrinter();
-                writer.writeValue(os, result);
+                writer.writeValue(os, results);
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -52,12 +52,12 @@ public class CriticalTimeCalculationResultsSerializer extends StdSerializer<Crit
     }
 
     @Override
-    public void serialize(CriticalTimeCalculationResults result, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(CriticalTimeCalculationResults results, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeStringField("version", VERSION);
         jsonGenerator.writeFieldName("scenarioResults");
         jsonGenerator.writeStartArray();
-        for (CriticalTimeCalculationResult scenarioResult : result.getCriticalTimeCalculationResults()) {
+        for (CriticalTimeCalculationResult scenarioResult : results.getCriticalTimeCalculationResults()) {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeStringField("id", scenarioResult.id());
             jsonGenerator.writeStringField("status", scenarioResult.status().toString());
