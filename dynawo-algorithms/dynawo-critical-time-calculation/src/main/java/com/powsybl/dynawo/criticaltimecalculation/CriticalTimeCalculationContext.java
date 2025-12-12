@@ -26,12 +26,12 @@ public final class CriticalTimeCalculationContext extends DynawoSimulationContex
 
     public static class Builder extends AbstractContextBuilder<Builder> {
 
-        private final List<List<NodeFaultEventData>> nodeFaultsList;
+        private final List<NodeFaultEventData> nodeFaultsList;
         private List<NodeFaultEventModels> nodeFaultEventModels;
         private CriticalTimeCalculationParameters parameters;
         private EventModelsSupplier eventModelsSupplier;
 
-        public Builder(Network network, List<BlackBoxModel> dynamicModels, List<List<NodeFaultEventData>> nodeFaultsList) {
+        public Builder(Network network, List<BlackBoxModel> dynamicModels, List<NodeFaultEventData> nodeFaultsList) {
             super(network, dynamicModels);
             this.nodeFaultsList = nodeFaultsList;
         }

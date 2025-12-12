@@ -19,7 +19,7 @@ public class NodeFaultsDeserializerJsonTest {
     void testNodeFaults() throws IOException {
         Network network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
         try (var is = getClass().getResourceAsStream("/CriticalTimeCalculationNodeFaults.json")) {
-            List<List<NodeFaultEventData>> nodeFaultsList = new SupplierJsonDeserializer<>(
+            List<NodeFaultEventData> nodeFaultsList = new SupplierJsonDeserializer<>(
                     new CriticalTimeCalculationNodeFaultsJsonDeserializer(() -> new NodeFaultsBuilder(network, ReportNode.NO_OP)))
                     .deserialize(is);
 
@@ -31,35 +31,35 @@ public class NodeFaultsDeserializerJsonTest {
 
     }
 
-    private static List<List<NodeFaultEventData>> getNodeFaultsListFromEventData() {
+    private static List<NodeFaultEventData> getNodeFaultsListFromEventData() {
         return List.of(
-                List.of(new NodeFaultEventData.Builder()
+                new NodeFaultEventData.Builder()
                         .setStaticId("NGEN")
                         .setFaultStartTime(1)
                         .setFaultStopTime(2)
                         .setFaultXPu(0.5)
                         .setFaultRPu(0.5)
-                        .build()),
-                List.of(new NodeFaultEventData.Builder()
+                        .build(),
+                new NodeFaultEventData.Builder()
                         .setStaticId("N1")
                         .setFaultStartTime(1)
                         .setFaultStopTime(2)
                         .setFaultXPu(0.001)
                         .setFaultRPu(0.001)
-                        .build())
+                        .build()
         );
     }
 
-    private static List<List<NodeFaultEventData>> getNodeFaultsListFromBuilder(Network network) {
+    private static List<NodeFaultEventData> getNodeFaultsListFromBuilder(Network network) {
         return List.of(
-                List.of(new NodeFaultsBuilder(network, ReportNode.NO_OP)
+                new NodeFaultsBuilder(network, ReportNode.NO_OP)
                         .elementId("GEN")
                         .faultXPu(0.5)
                         .faultRPu(0.5)
-                        .build()),
-                List.of(new NodeFaultsBuilder(network, ReportNode.NO_OP)
+                        .build(),
+                new NodeFaultsBuilder(network, ReportNode.NO_OP)
                         .elementId("GEN2")
-                        .build())
+                        .build()
         );
     }
 }

@@ -32,24 +32,24 @@ public class NodeFaultEventModelsTest {
                         .parameterSetId("gen")
                         .build()));
 
-        List<List<NodeFaultEventData>> nodeFaults = List.of(
-                List.of(new NodeFaultEventData.Builder()
+        List<NodeFaultEventData> nodeFaultsList = List.of(
+                new NodeFaultEventData.Builder()
                         .setStaticId("NGEN")
                         .setFaultStartTime(1)
                         .setFaultStopTime(5)
                         .setFaultXPu(0.001)
                         .setFaultRPu(0.001)
-                        .build()),
-                List.of(new NodeFaultEventData.Builder()
+                        .build(),
+                new NodeFaultEventData.Builder()
                         .setStaticId("VLGEN_0")
                         .setFaultStartTime(1)
                         .setFaultStopTime(5)
                         .setFaultXPu(0.001)
                         .setFaultRPu(0.001)
-                        .build())
+                        .build()
         );
 
-        List<NodeFaultEventModels> nodeFaultEventModels = NodeFaultEventModelsFactory.createFrom(nodeFaults,
+        List<NodeFaultEventModels> nodeFaultEventModels = NodeFaultEventModelsFactory.createFrom(nodeFaultsList,
                 network, bbmSupplier,
                 n -> n.equalsIgnoreCase("CTC_EventNodeFault"),
                 ReportNode.NO_OP);

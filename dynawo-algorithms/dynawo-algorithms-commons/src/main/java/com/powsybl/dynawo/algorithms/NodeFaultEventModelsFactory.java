@@ -33,7 +33,7 @@ public final class NodeFaultEventModelsFactory {
      * Creates NodeFaultEventModels from List<NodeFaultEventObject> list and context
      * The hasMacroConnector predicate is needed in order to verify if a macro connector used by a contingency is already defined in the base simulation model
      */
-    public static List<NodeFaultEventModels> createFrom(List<List<NodeFaultEventData>> nodeFaultsList,
+    public static List<NodeFaultEventModels> createFrom(List<NodeFaultEventData> nodeFaultsList,
                                                           Network network,
                                                           BlackBoxModelSupplier bbmSupplier,
                                                           Predicate<String> hasMacroConnector,
@@ -45,12 +45,12 @@ public final class NodeFaultEventModelsFactory {
                 .toList();
     }
 
-    public static NodeFaultEventModels createFrom(int index, List<NodeFaultEventData> nodeFaultsList,
+    public static NodeFaultEventModels createFrom(int index, NodeFaultEventData nodeFaultEventData,
                                                     Network network,
                                                     BlackBoxModelSupplier bbmSupplier,
                                                     Predicate<String> hasMacroConnector,
                                                     ReportNode reportNode) {
-        List<BlackBoxModel> eventModels = createContingencyEventModelList(nodeFaultsList, network, bbmSupplier, reportNode);
+        List<BlackBoxModel> eventModels = createContingencyEventModel(nodeFaultEventData, network, bbmSupplier, reportNode);
         if (eventModels.isEmpty()) {
             return null;
         }
@@ -70,38 +70,29 @@ public final class NodeFaultEventModelsFactory {
             em.createMacroConnections(macroConnectionsAdder);
             em.createDynamicModelParameters(eventParameters::add);
         });
-        return new NodeFaultEventModels(index, nodeFaultsList, eventModels, macroConnectorsMap, macroConnectList, eventParameters);
+        return new NodeFaultEventModels(index, nodeFaultEventData, eventModels, macroConnectorsMap, macroConnectList, eventParameters);
     }
 
-    private static List<BlackBoxModel> createContingencyEventModelList(List<NodeFaultEventData> nodeFaultsList,
-                                                                       Network network,
-                                                                       BlackBoxModelSupplier bbmSupplier,
-                                                                       ReportNode reportNode) {
-        return nodeFaultsList.stream()
-                .map(nf -> createContingencyEventModel(nf, network, bbmSupplier, reportNode))
-                .filter(Objects::nonNull)
-                .toList();
-    }
-
-    private static BlackBoxModel createContingencyEventModel(NodeFaultEventData nodeFault,
-                                                             Network network,
-                                                             BlackBoxModelSupplier bbmSupplier,
-                                                             ReportNode reportNode) {
+    private static List<BlackBoxModel> createContingencyEventModel(NodeFaultEventData nodeFaultEventData,
+                                                                   Network network,
+                                                                   BlackBoxModelSupplier bbmSupplier,
+                                                                   ReportNode reportNode) {
         NodeFaultEventBuilder builder = NodeFaultEventBuilder.of(network, reportNode)
-                .staticId(nodeFault.getStaticId())
-                .startTime(nodeFault.getStartTime())
-                .faultTime(nodeFault.getFaultTime())
-                .rPu(nodeFault.getRPu())
-                .xPu(nodeFault.getXPu());
+                .staticId(nodeFaultEventData.getStaticId())
+                .startTime(nodeFaultEventData.getStartTime())
+                .faultTime(nodeFaultEventData.getFaultTime())
+                .rPu(nodeFaultEventData.getRPu())
+                .xPu(nodeFaultEventData.getXPu());
 
         BlackBoxModel bbm = builder.build();
         if (bbm == null) {
             createFailedNodeFaultReportNode(reportNode);
+            return List.of();
         }
         if (bbm instanceof ContextDependentEvent cde) {
             cde.setEquipmentModelType(bbmSupplier.hasDynamicModel(cde.getEquipment()));
         }
-        return bbm;
+        return List.of(bbm);
     }
 
     private NodeFaultEventModelsFactory() {

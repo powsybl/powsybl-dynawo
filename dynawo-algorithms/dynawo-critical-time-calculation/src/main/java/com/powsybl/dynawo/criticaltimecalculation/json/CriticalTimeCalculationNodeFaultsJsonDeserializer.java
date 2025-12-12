@@ -15,7 +15,6 @@ import com.powsybl.dynawo.algorithms.NodeFaultEventData;
 import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultsBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -23,7 +22,7 @@ import java.util.function.Supplier;
 /**
  * @author Erwann Goasguen {@literal <erwann.goasguen at rte-france.com>}
  */
-public class CriticalTimeCalculationNodeFaultsJsonDeserializer extends StdDeserializer<List<List<NodeFaultEventData>>> {
+public class CriticalTimeCalculationNodeFaultsJsonDeserializer extends StdDeserializer<List<NodeFaultEventData>> {
 
     private final transient Supplier<NodeFaultsBuilder> builderConstructor;
 
@@ -33,7 +32,7 @@ public class CriticalTimeCalculationNodeFaultsJsonDeserializer extends StdDeseri
     }
 
     @Override
-    public List<List<NodeFaultEventData>> deserialize(JsonParser parser, DeserializationContext context) {
+    public List<NodeFaultEventData> deserialize(JsonParser parser, DeserializationContext context) {
         List<NodeFaultsBuilder> modelConfigList = new ArrayList<>();
         JsonUtil.parseObject(parser, name -> {
             if (name.equals("nodeFaults")) {
@@ -42,11 +41,10 @@ public class CriticalTimeCalculationNodeFaultsJsonDeserializer extends StdDeseri
             }
             return false;
         });
-        List<NodeFaultEventData> nodeFaultsList = modelConfigList.stream()
+        return modelConfigList.stream()
                 .map(NodeFaultsBuilder::build)
                 .filter(Objects::nonNull)
                 .toList();
-        return splitToUnitLists(nodeFaultsList);
     }
 
     private NodeFaultsBuilder parseNodeFaultsBuilder(JsonParser parser) {
@@ -73,11 +71,4 @@ public class CriticalTimeCalculationNodeFaultsJsonDeserializer extends StdDeseri
         });
         return builder;
     }
-
-    public static List<List<NodeFaultEventData>> splitToUnitLists(List<NodeFaultEventData> input) {
-        return input.stream()
-                .map(Collections::singletonList)
-                .toList();
-    }
-
 }
