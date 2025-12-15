@@ -2,6 +2,10 @@ dynamic-simulation-default-parameters:
   startTime: 1
   stopTime: 100
 
+dynaflow:
+  homeDir: /dynaflow-launcher
+  debug: false
+
 dynawo:
   homeDir: /dynaflow-launcher
   debug: false
@@ -9,6 +13,15 @@ dynawo:
 dynawo-algorithms:
   homeDir: /dynaflow-launcher
   debug: false
+
+load-flow:
+  default: DynaFlow
+
+security-analysis:
+  default-impl-name: DynaFlow
+
+dynamic-security-analysis:
+  default-impl-name: Dynawo
 
 dynawo-simulation-default-parameters:
   parametersFile: /work/unittests/models.par
@@ -20,3 +33,6 @@ dynawo-simulation-default-parameters:
 
 table-formatter:
   language: en-US
+
+componentDefaultConfig:
+  ContingenciesProviderFactory: com.powsybl.contingency.dsl.GroovyDslContingenciesProviderFactory

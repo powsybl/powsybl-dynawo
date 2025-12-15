@@ -1,0 +1,142 @@
+{
+  "BASE_GENERATOR": {
+    "libs": [
+      {
+        "lib": "BaseGenerator2",
+        "variablePrefix": [
+          {
+            "variable":"terminal",
+            "prefix":"generatorAlt"
+          },
+          {
+            "variable":"switchOffSignal",
+            "prefix":"generatorAlt"
+          }
+        ],
+        "macroStaticRef": [
+          {
+            "dynamicVar":"generator2_PGen2",
+            "staticVar":"p"
+          },
+          {
+            "dynamicVar":"generator2_QGen2",
+            "staticVar":"q"
+          },
+          {
+            "dynamicVar":"generator2_state",
+            "staticVar":"state"
+          }
+        ]
+      }
+    ]
+  },
+  "SYNCHRONIZED_GENERATOR": {
+    "libs": [
+      {
+        "lib": "SynchronizedGenerator2",
+        "variablePrefix": [
+          {
+            "variable":"terminal",
+            "prefix":"generatorAlt"
+          },
+          {
+            "variable":"switchOffSignal",
+            "prefix":"gen2"
+          },
+          {
+            "variable":"omegaRefPu",
+            "prefix":"gen2"
+          },
+          {
+            "variable":"running",
+            "prefix":"gen2"
+          }
+        ]
+      },
+      {
+        "lib": "SynchronizedGenerator3",
+        "properties": [
+          "CONTROLLABLE"
+        ],
+        "macroStaticRef": [
+          {
+            "dynamicVar":"generator3_PGen2",
+            "staticVar":"p"
+          },
+          {
+            "dynamicVar":"generator3_QGen2",
+            "staticVar":"q"
+          },
+          {
+            "dynamicVar":"generator3_state",
+            "staticVar":"state"
+          }
+        ],
+        "variablePrefix": [
+          {
+            "variable":"omegaRefPu",
+            "prefix":"generator3"
+          }
+        ]
+      }
+    ]
+  },
+  "SYNCHRONOUS_GENERATOR": {
+    "libs": [
+      {
+        "lib": "SynchronousGenerator2",
+        "properties": [
+          "TRANSFORMER"
+        ],
+        "variablePrefix": [
+          {
+            "variable":"terminal",
+            "prefix":"generatorAlt"
+          },
+          {
+            "variable":"switchOffSignal",
+            "prefix":"injector"
+          },
+          {
+            "variable":"omegaPu",
+            "prefix":"control"
+          },
+          {
+            "variable":"omegaRefPu",
+            "prefix":"control"
+          },
+          {
+            "variable":"running",
+            "prefix":"converter"
+          }
+        ]
+      },
+      {
+        "lib": "SynchronousGenerator3",
+        "properties": [
+          "CONTROLLABLE"
+        ],
+        "macroStaticRef": [
+          {
+            "dynamicVar":"generator3_PGen2",
+            "staticVar":"p"
+          },
+          {
+            "dynamicVar":"generator3_QGen2",
+            "staticVar":"q"
+          },
+          {
+            "dynamicVar":"generator3_state",
+            "staticVar":"state"
+          }
+        ],
+        "variablePrefix": [
+          {
+            "variable":"running",
+            "prefix":"converter"
+          }
+        ]
+      }
+    ]
+  }
+}

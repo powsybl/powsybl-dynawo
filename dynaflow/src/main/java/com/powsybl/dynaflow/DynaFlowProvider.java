@@ -18,11 +18,13 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.ExecutionEnvironmentUtils;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowProvider;
 import com.powsybl.loadflow.LoadFlowResult;
+import com.powsybl.loadflow.LoadFlowRunParameters;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -92,20 +94,24 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
-    public CompletableFuture<LoadFlowResult> run(Network network, ComputationManager computationManager, String workingStateId,
-                                                 LoadFlowParameters loadFlowParameters, ReportNode reportNode) {
+    public CompletableFuture<LoadFlowResult> run(Network network, String workingStateId, LoadFlowRunParameters loadFlowRunParameters) {
         Objects.requireNonNull(network);
-        Objects.requireNonNull(computationManager);
         Objects.requireNonNull(workingStateId);
-        Objects.requireNonNull(loadFlowParameters);
+        Objects.requireNonNull(loadFlowRunParameters);
+        ComputationManager computationManager = Objects.requireNonNull(loadFlowRunParameters.getComputationManager());
+        LoadFlowParameters loadFlowParameters = Objects.requireNonNull(loadFlowRunParameters.getLoadFlowParameters());
+        ReportNode reportNode = Objects.requireNonNull(loadFlowRunParameters.getReportNode());
 
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
         DynaFlowParameters.log(loadFlowParameters, dynaFlowParameters);
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
-        ExecutionEnvironment execEnv = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
+
+        ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX);
         Command versionCmd = getVersionCommand(config);
-        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, versionCmd, DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
-        return computationManager.execute(execEnv, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, getCommand(config), reportNode));
+        DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, computationManager, versionCmd, DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
+
+        ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX);
+        return computationManager.execute(execEnvSimulation, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, getCommand(config), reportNode));
     }
 
     @Override
@@ -143,7 +149,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
-    public List<Parameter> getSpecificParameters() {
+    public List<Parameter> getRawSpecificParameters() {
         return DynaFlowParameters.SPECIFIC_PARAMETERS;
     }
 

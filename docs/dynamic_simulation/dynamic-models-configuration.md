@@ -3,6 +3,8 @@ Dynamic model configuration creates dynamic models used by Dynawo.
 Most of the dynamic models are associated with a static equipment present in the network.
 If some equipments are not configured, Dynawo would use a default model and set of parameters.
 
+See the definition of all Dynawo models [here](dynamic-models-description.md).
+
 ## Implementation
 Powsybl-Dynawo handles two methods of configuration:
 - **Dynamic Models DSL**: a domain specific language written in groovy (used in iTools)
@@ -20,7 +22,7 @@ In the following examples the array will be omitted.
 - All the models share three attributes:
 - `modelName`: refers to the dynamic model library used in Dynawo (used as a keyword in Groovy script).
 - `dynamicModelId`: identifies the model (set explicitly or implicitly depending on the model type).
-- `parameterSetId`: refers to a set of parameters for this model in the model parameters file.
+- `parameterSetId`: refers to a set of parameters for this model in the model parameters file (optional and set to `dynamicModelId` by default).
 
 **Note**: In Json configuration file `parameterSetId` is replaced by the `group` attribute and can be customized with the `groupType` attribute taking one of the following value:
 - `FIXED`: the `parameterSetId` equals the `group` (default value)
@@ -148,8 +150,8 @@ TwoLevelOverloadManagementSystem {
     controlledBranch "LINE1"
     iMeasurement1 "TFO1"
     iMeasurement1Side TwoSides.TWO
-    iMeasurement1 "LINE2"
-    iMeasurement1Side TwoSides.ONE
+    iMeasurement2 "LINE2"
+    iMeasurement2Side TwoSides.ONE
 }
 ```
 **Json configuration:**

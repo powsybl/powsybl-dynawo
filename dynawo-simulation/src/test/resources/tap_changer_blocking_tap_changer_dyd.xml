@@ -48,7 +48,7 @@
     <dyn:macroConnector id="MC_TapChangerBlockingAutomaton-TapChangerAutomatonT">
         <dyn:connect var1="tapChangerBlocking_blockedT" var2="tapChanger_locked"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_TapChangerBlockingAutomatonMeasure1-DefaultActionConnectionPoint">
+    <dyn:macroConnector id="MC_TapChangerBlockingAutomatonMeasure-DefaultActionConnectionPoint">
         <dyn:connect var1="tapChangerBlocking_UMonitored" var2="@NAME@_U"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_LoadOneTransformer">
@@ -70,5 +70,5 @@
     <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton-TapChangerAutomaton" id1="BBM_TapChangerBlocking" id2="BBM_TC"/>
     <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton-TapChangerAutomatonD" id1="BBM_TapChangerBlocking" id2="BBM_TC2"/>
     <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton-TapChangerAutomatonT" id1="BBM_TapChangerBlocking" id2="BBM_TC3"/>
-    <dyn:macroConnect connector="MC_TapChangerBlockingAutomatonMeasure1-DefaultActionConnectionPoint" id1="BBM_TapChangerBlocking" id2="NETWORK" name2="NHV1"/>
+    <dyn:macroConnect connector="MC_TapChangerBlockingAutomatonMeasure-DefaultActionConnectionPoint" id1="BBM_TapChangerBlocking" id2="NETWORK" name2="NHV1"/>
 </dyn:dynamicModelsArchitecture>

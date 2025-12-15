@@ -94,10 +94,20 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         return Collections.emptyList();
     }
 
+    @Override
+    public boolean needMandatoryDynamicModels() {
+        return false;
+    }
+
     protected void writeDynamicAttributes(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         writer.writeAttribute("id", getDynamicModelId());
         writer.writeAttribute("lib", getLib());
         writer.writeAttribute("parFile", parFileName);
         writer.writeAttribute("parId", getParameterSetId());
+    }
+
+    @Override
+    public void createDynamicModelInfoExtension() {
+        // method empty by default to be redefined by specific models
     }
 }

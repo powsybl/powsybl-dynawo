@@ -37,7 +37,7 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
     public static WeccBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, WeccBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
             return null;
         }
         return new WeccBuilder(network, modelConfig, reportNode);
@@ -66,9 +66,9 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
     public WeccGen build() {
         if (isInstantiable()) {
             if (modelConfig.isSynchronized()) {
-                return new SynchronizedWeccGen(getEquipment(), parameterSetId, modelConfig, modelConfig.internalModelPrefix());
+                return new SynchronizedWeccGen(getEquipment(), parameterSetId, modelConfig);
             } else {
-                return new WeccGen(getEquipment(), parameterSetId, modelConfig, modelConfig.internalModelPrefix());
+                return new WeccGen(getEquipment(), parameterSetId, modelConfig);
             }
         }
         return null;
