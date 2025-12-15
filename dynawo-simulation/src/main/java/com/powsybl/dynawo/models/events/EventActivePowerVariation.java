@@ -7,10 +7,12 @@
  */
 package com.powsybl.dynawo.models.events;
 
+import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.parameters.ParametersSet;
+import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Injection;
 
 import java.util.List;
@@ -35,10 +37,10 @@ public class EventActivePowerVariation extends AbstractVariationEvent {
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this,
-                getEquipment(),
-                PControllableEquipmentModel.class,
-                this::getVarConnectionsWith);
+        boolean isSkipped = adder.createMacroConnectionsOrSkip(this, getEquipment(), PControllableEquipmentModel.class, this::getVarConnectionsWith);
+        if (isSkipped) {
+            DynawoSimulationReports.reportFailedDefaultModelHandling(adder.getReportNode(), getName(), getDynamicModelId(), IdentifiableType.GENERATOR.toString());
+        }
     }
 
     @Override

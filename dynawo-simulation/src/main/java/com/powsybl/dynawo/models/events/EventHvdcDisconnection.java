@@ -7,11 +7,13 @@
  */
 package com.powsybl.dynawo.models.events;
 
+import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.hvdc.HvdcModel;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.HvdcLine;
+import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
@@ -41,7 +43,10 @@ public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
         if (disconnectSide == null) {
-            adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModel);
+            boolean isSkipped = adder.createMacroConnectionsOrSkip(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModel);
+            if (isSkipped) {
+                DynawoSimulationReports.reportFailedDefaultModelHandling(adder.getReportNode(), getName(), getDynamicModelId(), IdentifiableType.HVDC_LINE.toString());
+            }
         } else {
             adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, disconnectSide);
         }
