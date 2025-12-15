@@ -6,12 +6,14 @@
  */
 package com.powsybl.dynawo.models.events;
 
+import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Branch;
+import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
@@ -38,7 +40,10 @@ public class EventBranchDisconnection extends AbstractEvent {
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this, getEquipment(), BranchModel.class, this::getVarConnectionsWith);
+        boolean isConnected = adder.createMacroConnectionsOrSkip(this, getEquipment(), BranchModel.class, this::getVarConnectionsWith);
+        if (!isConnected) {
+            DynawoSimulationReports.reportFailedDefaultModelHandling(adder.getReportNode(), getName(), getDynamicModelId(), IdentifiableType.LINE.toString());
+        }
     }
 
     @Override

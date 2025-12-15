@@ -21,7 +21,9 @@ Loading network 'IEEE14.iidm'
       + Groovy Event Models Supplier
          Model Disconnect Disconnect__BUS____1-BUS____5-1_AC instantiation OK
          Model Disconnect Disconnect__BUS____2-BUS____3-1_AC instantiation OK
-   Dynawo models processing
+   + Dynawo models processing
+      EventBranchDisconnection Disconnect__BUS____1-BUS____5-1_AC cannot handle connection with LINE default model, the model will be skipped
+      EventBranchDisconnection Disconnect__BUS____2-BUS____3-1_AC cannot handle connection with LINE default model, the model will be skipped
    + Dynawo Log
       DYNAWO VERSION  :     1.7.0
       DYNAWO REVISION :      HEAD-6211f2e
