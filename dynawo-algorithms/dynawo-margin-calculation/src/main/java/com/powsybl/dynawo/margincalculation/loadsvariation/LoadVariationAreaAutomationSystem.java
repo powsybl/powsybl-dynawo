@@ -54,12 +54,8 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
         int index = 0;
         for (LoadsVariation lv : loadsVariations) {
             for (Load load : lv.loads()) {
-                boolean isSkipped = adder.createMacroConnectionsOrSkip(this, load, DefaultControllableLoadModel.class, this::getVarConnectionsWith, MacroConnectAttribute.ofIndex1(index));
-                if (!isSkipped) {
-                    index++;
-                } else {
-                    DynawoSimulationReports.reportFailedDefaultModelHandling(adder.getReportNode(), getName(), getDynamicModelId(), IdentifiableType.LOAD.toString());
-                }
+                adder.createMacroConnections(this, load, DefaultControllableLoadModel.class, this::getVarConnectionsWith, MacroConnectAttribute.ofIndex1(index));
+                index++;
             }
         }
     }
