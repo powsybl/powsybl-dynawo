@@ -21,6 +21,7 @@ import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 public abstract class AbstractVariationEvent extends AbstractEvent implements ContextDependentEvent {
 
     protected static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
+    protected boolean isSkipped = false;
 
     protected enum EquipmentModelType {
         SPECIFIED(true),
