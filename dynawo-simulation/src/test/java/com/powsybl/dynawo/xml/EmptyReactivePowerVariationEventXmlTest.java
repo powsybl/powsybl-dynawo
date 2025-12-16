@@ -12,7 +12,8 @@ import java.io.IOException;
 /**
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public class EmptyReactivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest{
+
+class EmptyReactivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
     protected void setupNetwork() {
         network = EurostagTutorialExample1Factory.create();
     }
