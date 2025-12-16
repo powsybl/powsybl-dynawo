@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="GEN" lib="GeneratorPVFixed" parFile="models.par" parId="g" staticId="GEN">
+        <dyn:macroStaticRef id="MSR_GeneratorPVFixed"/>
+    </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="ReferenceVoltageVariation_GEN" lib="Step" parFile="sim1.par" parId="ReferenceVoltageVariation_GEN"/>
+    <dyn:macroConnector id="MC_GeneratorPVFixed-DefaultEquipmentConnectionPoint">
+        <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_GeneratorPVFixed">
+        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
+        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
+        <dyn:staticRef var="generator_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_GeneratorPVFixed-DefaultEquipmentConnectionPoint" id1="GEN" id2="NETWORK"/>
+</dyn:dynamicModelsArchitecture>

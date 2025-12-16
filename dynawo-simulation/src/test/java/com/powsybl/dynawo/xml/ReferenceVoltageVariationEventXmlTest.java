@@ -29,7 +29,7 @@ class ReferenceVoltageVariationEventXmlTest extends AbstractDynamicModelXmlTest 
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsProportionalRegulations")
+        dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFiveWindingsProportionalRegulations")
                 .staticId("GEN")
                 .parameterSetId("GSFWPR")
                 .build());
@@ -43,7 +43,7 @@ class ReferenceVoltageVariationEventXmlTest extends AbstractDynamicModelXmlTest 
                 .deltaU(1.1)
                 .build());
         eventModels.add(EventReferenceVoltageVariationBuilder.of(network)
-                .staticId("GEN")
+                .staticId("GN")
                 .startTime(1)
                 .deltaU(1.1)
                 .build());
