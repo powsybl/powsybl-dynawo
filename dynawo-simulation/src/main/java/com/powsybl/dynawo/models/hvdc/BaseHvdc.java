@@ -47,7 +47,7 @@ public class BaseHvdc extends AbstractEquipmentBlackBoxModel<HvdcLine> implement
 
     protected static final String TERMINAL_PREFIX = "hvdc_terminal";
 
-    protected final boolean isInverted;
+    protected boolean isInverted;
     private final HvdcVarNameHandler varNameHandler;
 
     protected BaseHvdc(HvdcLine hvdc, String parameterSetId, ModelConfig modelConfig, HvdcVarNameHandler varNameHandler) {

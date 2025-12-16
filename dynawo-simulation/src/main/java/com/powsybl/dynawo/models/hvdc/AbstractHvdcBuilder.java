@@ -61,7 +61,7 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
     public BaseHvdc build() {
         if (isInstantiable()) {
             if (modelConfig.isDangling()) {
-                return new HvdcDangling(getEquipment(), parameterSetId, modelConfig, varNameHandler, DEFAULT_DANGLING_SIDE);
+                return new HvdcDangling(getEquipment(), parameterSetId, modelConfig, varNameHandler, danglingSide);
             } else {
                 return new BaseHvdc(getEquipment(), parameterSetId, modelConfig, varNameHandler);
             }

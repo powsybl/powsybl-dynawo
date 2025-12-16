@@ -98,6 +98,10 @@ public class ParametersSet {
         return parameter.value();
     }
 
+    public Map<String, Map<String, PrefixParameter>> getPrefixParameters() {
+        return prefixParameters;
+    }
+
     public boolean hasParameter(String parameterName) {
         return parameters.containsKey(parameterName);
     }
