@@ -12,7 +12,8 @@ import java.io.IOException;
 /**
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public class EmptyReferenceVoltageVariationEventXmlTest extends AbstractDynamicModelXmlTest{
+
+class EmptyReferenceVoltageVariationEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
