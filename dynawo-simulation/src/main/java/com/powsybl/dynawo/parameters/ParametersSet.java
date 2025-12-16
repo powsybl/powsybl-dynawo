@@ -78,6 +78,10 @@ public class ParametersSet {
         return references;
     }
 
+    public Map<String, Map<String, PrefixParameter>> getPrefixParameters() {
+        return prefixParameters;
+    }
+
     public boolean getBool(String parameterName) {
         Parameter parameter = getParameter(parameterName, ParameterType.BOOL);
         return Boolean.parseBoolean(parameter.value());

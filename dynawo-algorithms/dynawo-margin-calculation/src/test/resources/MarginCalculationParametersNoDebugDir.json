@@ -12,7 +12,8 @@
     "networkParameters" : {
       "id" : "Network",
       "parameters" : { },
-      "references" : [ ]
+      "references" : [ ],
+      "prefixParameters" : { }
     },
     "solverParameters" : {
       "id" : "SIM",
@@ -28,7 +29,8 @@
           "value" : "1e-4"
         }
       },
-      "references" : [ ]
+      "references" : [ ],
+      "prefixParameters" : { }
     },
     "solverType" : "SIM",
     "mergeLoads" : false,
@@ -59,7 +61,8 @@
           "value" : "aString"
         }
       },
-      "references" : [ ]
+      "references" : [ ],
+      "prefixParameters" : { }
     } ]
   }
 }
