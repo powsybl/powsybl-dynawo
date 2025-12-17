@@ -20,10 +20,8 @@ import java.io.Reader;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_EXTENSIONS;
-import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_VERSION;
+import static com.powsybl.dynawo.commons.DynawoConstants.*;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -78,9 +76,11 @@ public final class DynawoUtil {
         }).join();
     }
 
-    public static String versionSanitizer(String version) {
-        Pattern pattern = Pattern.compile("\\b\\d+\\.\\d+\\.\\d+\\b");
-        Matcher matcher = pattern.matcher(version);
-        return matcher.find() ? matcher.group() : version;
+    static String versionSanitizer(String version) {
+        Matcher matcher = REGEX_VERSION.matcher(version);
+        if (!matcher.find()) {
+            throw new PowsyblException("parsing error");
+        }
+        return matcher.group();
     }
 }

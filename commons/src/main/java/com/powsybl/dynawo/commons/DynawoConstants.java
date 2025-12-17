@@ -11,6 +11,7 @@ import com.powsybl.iidm.serde.IidmVersion;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -52,4 +53,6 @@ public final class DynawoConstants {
     public static final String OUTPUT_IIDM_FILENAME_PATH = String.join(File.separator, OUTPUTS_FOLDER, FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
 
     public static final String EXEC_TMP_FILENAME = ".execTmp.txt";
+
+    public static final Pattern REGEX_VERSION = Pattern.compile("\\b\\d+\\.\\d+\\.\\d+\\b");
 }

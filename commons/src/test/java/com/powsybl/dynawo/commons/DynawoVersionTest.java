@@ -71,4 +71,25 @@ class DynawoVersionTest {
         assertEquals(1, DV_MIN.compareTo(dv2));
         assertEquals(1, DV_MIN.compareTo(null));
     }
+
+    @Test
+    void testVersionWithLeadingWarnings() {
+        String input =
+                "Ignoring PCI device with non-16bit domain. " +
+                        "Pass --enable-32bits-pci-domain to configure to support such devices " +
+                        "(warning: it would break the library ABI, don't enable unless really needed). " +
+                        "1.5.0 (rev:master-1d327db)";
+
+        assertEquals("1.5.0", DynawoUtil.versionSanitizer(input));
+    }
+
+    @Test
+    void testWithoutVersionWithLeadingWarnings() {
+        String input =
+            "Ignoring PCI device with non-16bit domain. " +
+                    "Pass --enable-32bits-pci-domain to configure to support such devices " +
+                    "(warning: it would break the library ABI, don't enable unless really needed). ";
+        PowsyblException e = assertThrows(PowsyblException.class, () -> DynawoUtil.versionSanitizer(input));
+        assertEquals("parsing error", e.getMessage());
+    }
 }
