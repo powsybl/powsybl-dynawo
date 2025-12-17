@@ -45,7 +45,7 @@ public class EventReactivePowerVariation extends AbstractVariationEvent {
 
     @Override
     public void createNetworkParameter(ParametersSet networkParameters) {
-        if (equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_LOAD) && !isSkipped) {
+        if (!isSkipped && equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_LOAD)) {
             networkParameters.addParameter(getEquipment().getId() + "_isQControllable", BOOL, Boolean.toString(true));
         }
     }
