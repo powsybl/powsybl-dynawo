@@ -8,6 +8,7 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.OutputVariable;
+import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
@@ -20,6 +21,7 @@ import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -36,6 +38,7 @@ import java.util.*;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -260,5 +263,16 @@ public class DynawoTestUtil extends AbstractSerDeTest {
             .setTargetQ(0.2)
             .add();
         return network;
+    }
+
+    @Test
+    void testVersionWithLeadingWarnings() {
+        String input =
+                "Ignoring PCI device with non-16bit domain. " +
+                        "Pass --enable-32bits-pci-domain to configure to support such devices " +
+                        "(warning: it would break the library ABI, don't enable unless really needed). " +
+                        "1.5.0 (rev:master-1d327db)";
+
+        assertEquals("1.5.0", DynawoUtil.versionSanitizer(input));
     }
 }

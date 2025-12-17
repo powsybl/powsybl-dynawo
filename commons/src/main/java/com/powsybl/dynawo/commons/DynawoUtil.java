@@ -19,6 +19,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_EXTENSIONS;
 import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_VERSION;
@@ -76,7 +78,9 @@ public final class DynawoUtil {
         }).join();
     }
 
-    private static String versionSanitizer(String version) {
-        return version.split(" ")[0];
+    public static String versionSanitizer(String version) {
+        Pattern pattern = Pattern.compile("\\b\\d+\\.\\d+\\.\\d+\\b");
+        Matcher matcher = pattern.matcher(version);
+        return matcher.find() ? matcher.group() : version;
     }
 }
