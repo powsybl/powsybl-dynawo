@@ -23,18 +23,6 @@ Margin calculation results:
 +------------+-------------+-----------------+----------------------+---------------+------------------+---------------------------+--------------------------------+
 | Load level | Status      | Failed criteria | Failed criteria time | Scenarios     | Scenarios Status | Scenarios failed criteria | Scenarios failed criteria time |
 +------------+-------------+-----------------+----------------------+---------------+------------------+---------------------------+--------------------------------+
-| 0.00000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
-|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
-| 50.0000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
-|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
-| 75.0000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
-|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
-| 88.0000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
-|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
-| 94.0000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
-|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
-| 97.0000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
-|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
-| 99.0000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
+| 100.000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
 |            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
 +------------+-------------+-----------------+----------------------+---------------+------------------+---------------------------+--------------------------------+

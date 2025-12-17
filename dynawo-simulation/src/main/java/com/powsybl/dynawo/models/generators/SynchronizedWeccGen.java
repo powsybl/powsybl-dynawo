@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronizedModel {
 
-    protected SynchronizedWeccGen(Generator generator, String parameterSetId, ModelConfig modelConfig, String weccPrefix) {
-        super(generator, parameterSetId, modelConfig, weccPrefix);
+    protected SynchronizedWeccGen(Generator generator, String parameterSetId, ModelConfig modelConfig) {
+        super(generator, parameterSetId, modelConfig);
     }
 
     @Override

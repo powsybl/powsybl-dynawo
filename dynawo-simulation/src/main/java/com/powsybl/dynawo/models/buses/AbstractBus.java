@@ -7,12 +7,10 @@
  */
 package com.powsybl.dynawo.models.buses;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
-import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.iidm.network.Bus;
 
 import java.util.ArrayList;
@@ -36,17 +34,7 @@ public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> im
     }
 
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        equipment.getConnectedTerminalStream().forEach(t -> {
-            if (!adder.checkMacroConnections(t.getConnectable(), EquipmentBlackBoxModel.class)) {
-                throw new PowsyblException(String.format("The equipment %s linked to the %s %s does not possess a dynamic model",
-                        t.getConnectable().getId(), this.getClass().getSimpleName(), getDynamicModelId()));
-            }
-        });
-    }
-
-    @Override
-    public String getName() {
-        return getLib();
+        // buses don't create macro connections
     }
 
     @Override
@@ -67,5 +55,10 @@ public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> im
     @Override
     public Optional<String> getStateValueVarName() {
         return Optional.empty();
+    }
+
+    @Override
+    public boolean needMandatoryDynamicModels() {
+        return true;
     }
 }

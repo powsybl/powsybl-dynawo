@@ -17,24 +17,27 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
-
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 abstract class AbstractDynawoCommonsTest extends AbstractSerDeTest {
 
-    protected void compare(String expectedIidmResource, Network actual) throws IOException {
-        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream(expectedIidmResource));
-        assertXmlEquals(expected, getInputStream(actual, tmpDir.resolve("actual.xiidm")));
+    protected static final String ACTUAL_NETWORK_NAME = "actual.xiidm";
+    protected static final String EXPECTED_NETWORK_NAME = "expected.xiidm";
+
+    protected InputStream getInputStream(String expectedIidmResource) {
+        return Objects.requireNonNull(getClass().getResourceAsStream(expectedIidmResource));
     }
 
-    protected void compare(Network expected, Network actual) throws IOException {
-        assertXmlEquals(getInputStream(expected, tmpDir.resolve("expected.xiidm")),
-                getInputStream(actual, tmpDir.resolve("actual.xiidm")));
+    protected InputStream getActualNetworkInputStream(Network n) throws IOException {
+        return getInputStream(n, tmpDir.resolve(ACTUAL_NETWORK_NAME));
     }
 
-    private InputStream getInputStream(Network n, Path path) throws IOException {
+    protected InputStream getExpectedNetworkInputStream(Network n) throws IOException {
+        return getInputStream(n, tmpDir.resolve(EXPECTED_NETWORK_NAME));
+    }
+
+    protected InputStream getInputStream(Network n, Path path) throws IOException {
         NetworkSerDe.write(n, path);
         return Files.newInputStream(path);
     }

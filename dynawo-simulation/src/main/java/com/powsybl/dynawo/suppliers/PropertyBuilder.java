@@ -26,7 +26,7 @@ public class PropertyBuilder {
     private List<String> values;
     private List<List<String>> arrays;
     private PropertyType type;
-    private CollectionType collectionType = CollectionType.SINGLE;
+    private CollectionType collectionType;
 
     private enum CollectionType {
         SINGLE,
@@ -35,6 +35,9 @@ public class PropertyBuilder {
     }
 
     public Property build() {
+        if (collectionType == null) {
+            return null;
+        }
         return switch (collectionType) {
             case SINGLE -> new Property(name, type.isConversionFree() ? value : type.convertValue(value), type.getPropertyClass());
             case LIST -> new Property(name, type.isConversionFree() ? values : values.stream().map(v -> type.convertValue(v)).toList(), Collection.class);

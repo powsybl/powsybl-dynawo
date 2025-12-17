@@ -3,21 +3,48 @@
     <dyn:blackBoxModel id="GEN" lib="GeneratorPQ" parFile="models.par" parId="pq" staticId="GEN">
         <dyn:macroStaticRef id="MSR_GeneratorPQ"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="NGEN_NHV1" lib="TransformerFixedRatio" parFile="models.par" parId="t" staticId="NGEN_NHV1">
-        <dyn:macroStaticRef id="MSR_TransformerFixedRatio"/>
-    </dyn:blackBoxModel>
     <dyn:blackBoxModel id="NGEN" lib="InfiniteBus" parFile="models.par" parId="ib" staticId="NGEN">
         <dyn:macroStaticRef id="MSR_InfiniteBus"/>
+    </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="NHV1_NHV2_1" lib="Line" parFile="models.par" parId="line" staticId="NHV1_NHV2_1">
+        <dyn:macroStaticRef id="MSR_Line"/>
+    </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="NHV1_NHV2_2" lib="Line" parFile="models.par" parId="line" staticId="NHV1_NHV2_2">
+        <dyn:macroStaticRef id="MSR_Line"/>
+    </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="NGEN_NHV1" lib="TransformerFixedRatio" parFile="models.par" parId="tf" staticId="NGEN_NHV1">
+        <dyn:macroStaticRef id="MSR_TransformerFixedRatio"/>
+    </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="NHV2_NLOAD" lib="TransformerFixedRatio" parFile="models.par" parId="tf" staticId="NHV2_NLOAD">
+        <dyn:macroStaticRef id="MSR_TransformerFixedRatio"/>
+    </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="NHV1" lib="Bus" staticId="NHV1">
+        <dyn:macroStaticRef id="MSR_Bus"/>
+    </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="NHV2" lib="Bus" staticId="NHV2">
+        <dyn:macroStaticRef id="MSR_Bus"/>
+    </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="NLOAD" lib="Bus" staticId="NLOAD">
+        <dyn:macroStaticRef id="MSR_Bus"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="FREQ_SYNC" lib="SetPoint" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
     <dyn:macroConnector id="MC_GeneratorPQ-InfiniteBus">
         <dyn:connect var1="generator_terminal" var2="infiniteBus_terminal"/>
     </dyn:macroConnector>
+    <dyn:macroConnector id="MC_LineSide1-Bus">
+        <dyn:connect var1="line_terminal1" var2="bus_terminal"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_LineSide2-Bus">
+        <dyn:connect var1="line_terminal2" var2="bus_terminal"/>
+    </dyn:macroConnector>
     <dyn:macroConnector id="MC_TransformerFixedRatioSide1-InfiniteBus">
         <dyn:connect var1="transformer_terminal1" var2="infiniteBus_terminal"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint">
-        <dyn:connect var1="transformer_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
+    <dyn:macroConnector id="MC_TransformerFixedRatioSide2-Bus">
+        <dyn:connect var1="transformer_terminal2" var2="bus_terminal"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_TransformerFixedRatioSide1-Bus">
+        <dyn:connect var1="transformer_terminal1" var2="bus_terminal"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_SetPoint-GeneratorPQ">
         <dyn:connect var1="setPoint_setPoint" var2="generator_omegaRefPu"/>
@@ -27,6 +54,17 @@
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
+    <dyn:macroStaticReference id="MSR_InfiniteBus">
+        <dyn:staticRef var="infiniteBus_UPuVar" staticVar="v"/>
+        <dyn:staticRef var="infiniteBus_UPhaseVar" staticVar="angle"/>
+    </dyn:macroStaticReference>
+    <dyn:macroStaticReference id="MSR_Line">
+        <dyn:staticRef var="line_P1Pu" staticVar="p1"/>
+        <dyn:staticRef var="line_Q1Pu" staticVar="q1"/>
+        <dyn:staticRef var="line_P2Pu" staticVar="p2"/>
+        <dyn:staticRef var="line_Q2Pu" staticVar="q2"/>
+        <dyn:staticRef var="line_state" staticVar="state"/>
+    </dyn:macroStaticReference>
     <dyn:macroStaticReference id="MSR_TransformerFixedRatio">
         <dyn:staticRef var="transformer_P1Pu" staticVar="p1"/>
         <dyn:staticRef var="transformer_Q1Pu" staticVar="q1"/>
@@ -34,12 +72,18 @@
         <dyn:staticRef var="transformer_Q2Pu" staticVar="q2"/>
         <dyn:staticRef var="transformer_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroStaticReference id="MSR_InfiniteBus">
-        <dyn:staticRef var="infiniteBus_UPuVar" staticVar="v"/>
-        <dyn:staticRef var="infiniteBus_UPhaseVar" staticVar="angle"/>
+    <dyn:macroStaticReference id="MSR_Bus">
+        <dyn:staticRef var="bus_UPu" staticVar="v"/>
+        <dyn:staticRef var="bus_UPhase" staticVar="angle"/>
     </dyn:macroStaticReference>
     <dyn:macroConnect connector="MC_GeneratorPQ-InfiniteBus" id1="GEN" id2="NGEN" name2="NGEN"/>
+    <dyn:macroConnect connector="MC_LineSide1-Bus" id1="NHV1_NHV2_1" id2="NHV1" name2="NHV1"/>
+    <dyn:macroConnect connector="MC_LineSide2-Bus" id1="NHV1_NHV2_1" id2="NHV2" name2="NHV2"/>
+    <dyn:macroConnect connector="MC_LineSide1-Bus" id1="NHV1_NHV2_2" id2="NHV1" name2="NHV1"/>
+    <dyn:macroConnect connector="MC_LineSide2-Bus" id1="NHV1_NHV2_2" id2="NHV2" name2="NHV2"/>
     <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-InfiniteBus" id1="NGEN_NHV1" id2="NGEN" name2="NGEN"/>
-    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint" id1="NGEN_NHV1" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-Bus" id1="NGEN_NHV1" id2="NHV1" name2="NHV1"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-Bus" id1="NHV2_NLOAD" id2="NHV2" name2="NHV2"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-Bus" id1="NHV2_NLOAD" id2="NLOAD" name2="NLOAD"/>
     <dyn:macroConnect connector="MC_SetPoint-GeneratorPQ" id1="FREQ_SYNC" id2="GEN"/>
 </dyn:dynamicModelsArchitecture>

@@ -13,6 +13,8 @@ import com.powsybl.commons.config.PlatformConfig;
 import org.apache.commons.lang3.SystemUtils;
 
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -51,6 +53,10 @@ public abstract class AbstractDynawoConfig {
 
     public boolean isDebug() {
         return debug;
+    }
+
+    public Map<String, String> createEnv() {
+        return Collections.emptyMap();
     }
 
     public abstract String getProgram();

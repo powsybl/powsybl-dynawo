@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--~
+  ~ Copyright (c) 2025, RTE (http://www.rte-france.com)
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.powsybl.org/schema/iidm/ext/synchronous_generator_properties/1_0"
+           xmlns:sgp="http://www.powsybl.org/schema/iidm/ext/synchronous_generator_properties/1_0"
+           elementFormDefault="qualified">
+
+    <xs:simpleType name="RpclType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="RPCL1"/>
+            <xs:enumeration value="RPCL2"/>
+            <xs:enumeration value="NONE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="synchronousGeneratorProperties">
+        <xs:complexType>
+            <xs:attribute name="numberOfWindings" use="required" type="xs:string"/>
+            <xs:attribute name="governor" type="xs:string"/>
+            <xs:attribute name="voltageRegulator" type="xs:string"/>
+            <xs:attribute name="pss" type="xs:string"/>
+            <xs:attribute name="auxiliaries" type="xs:boolean"/>
+            <xs:attribute name="internalTransformer" type="xs:boolean"/>
+            <xs:attribute name="rpcl" type="sgp:RpclType"/>
+            <xs:attribute name="uva" type="xs:string"/>
+            <xs:attribute name="aggregated" type="xs:boolean"/>
+            <xs:attribute name="qlim" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

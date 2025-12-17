@@ -7,38 +7,38 @@ The `margin-calculation-default-parameters` module defines the default values fo
 
 ### Optional parameters
 
-**startTime**  
+#### startTime
 `startTime` defines when the simulation begins, in seconds.
 The default value of this property is `0`.
 
-**stopTime**  
+#### stopTime
 `stopTime` defines when the simulation stops, in seconds.
 The default value of this property is `200`.
 
-**debugDir**
+#### debugDir
 This property specifies the directory path where debug files will be dumped. If `null`, no file will be dumped.
 
-**loadIncrease.startTime**  
+#### loadIncrease.startTime
 `loadIncrease.startTime` defines when the load variation starts, in seconds.
 This property value should be between start time and margin calculation start time.
 The default value of this property is `10`.
 
-**loadIncrease.stopTime**  
+#### loadIncrease.stopTime
 `loadIncrease.stopTime` defines when the load variation stops, in seconds.
 This property value should be between load increase start time and margin calculation start time.
 The default value of this property is `50`.
 
-**margin-calculation-start-time**  
+#### margin-calculation-start-time
 `margin-calculation-start-time` defines when the margin calculation starts, in seconds.
 This property value should be between start and stop time.
 The default value of this property is `100`.
 
-**contingencies-start-time**  
+#### contingencies-start-time
 `contingencies-start-time` defines when the contingencies start, in seconds.
 This property value should be between margin calculation start time and stop time.
 The default value of this property is `120`.
 
-**calculationType**  
+#### calculationType
 `calculationType` defines which maximum load variation is calculated.  
 The available `com.powsybl.dynawo.margincalculation.MarginCalculationParameters.CalculationType` values are:
 - `GLOBAL_MARGIN`: search for the maximum load variation for all events
@@ -46,11 +46,11 @@ The available `com.powsybl.dynawo.margincalculation.MarginCalculationParameters.
 
 The default value of this property is `GLOBAL_MARGIN`.
 
-**accuracy**  
+#### accuracy
 `accuracy` defines the maximum difference between the result obtained and the exact margin, in percent.
 The default value of this property is `2`.
 
-**load-models-rule**  
+#### load-models-rule
 `load-models-rule` defines which loads will be set with the default dynamic model in the first step of the simulation.  
 The available `com.powsybl.dynawo.margincalculation.MarginCalculationParameters.LoadModelsRule` values are:
 - `ALL_LOADS`: all loads will use the default model

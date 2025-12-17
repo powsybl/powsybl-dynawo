@@ -19,25 +19,25 @@ load-flow:
 ## Default parameters
 The `dynaflow-default-parameters` module defines the default values for all specific parameters of a load flow run with DynaFlow.
 
-## Optional parameters
+### Optional parameters
 
-**svcRegulationOn**  
+#### svcRegulationOn
 `svcRegulationOn` defines if SVCs (Static Var Compensator) take part in the voltage regulation.  
 The default value is `TRUE`.
 
-**shuntRegulationOn**  
+#### shuntRegulationOn
 `shuntRegulationOn` defines if Shunts take part in the voltage regulation.  
 The default value is `TRUE`.
 
-**automaticSlackBusOn**  
+#### automaticSlackBusOn
 `automaticSlackbusOn` defines if DynaFlow computes the slack bus (phase reference bus) by itself or if the slack bus is provided.  
 The default value is `TRUE`.
 
-**dsoVoltageLevel**  
+#### dsoVoltageLevel
 `dsoVoltageLevel` defines the minimum voltage of level of loads.  
 The default value is `45.0`.
 
-**activePowerCompensation**  
+#### activePowerCompensation
 `activePowerCompensation` determines whether the generators participate in the active power balancing proportionally to:
 - `P`
 - `TARGET_P`
@@ -45,21 +45,19 @@ The default value is `45.0`.
 
 The default value is `PMAX`.
 
-**startTime**  
+#### startTime
 `startTime` defines the simulation start time (in s).  
 The default value is `0`.
 
-**stopTime**  
+#### stopTime
 `stopTime` defines the simulation stop time (in s).  
 The default value is `100`.
 
-(timeStepDef)= 
-
-**timeStep**  
+#### timeStep
 `timeStep` defines the maximum time solver step value (in s).
 The default value is `10`.
 
-**chosenOutputs**  
+#### chosenOutputs
 `chosenOutputs` defines which outputs DynaFlow will produce  
 Available values:
 - `STEADYSTATE`: steady-state of the network
@@ -69,7 +67,7 @@ Available values:
 
 The default value is a list of all values.
 
-**startingPointMode**  
+#### startingPointMode
 `startingPointMode` indicates the starting point values considered in the simulation
 Available values:
 - `WARM`: starting point values for voltage, phase and injections are the ones in the network.
@@ -77,20 +75,20 @@ Available values:
 
 The default value is `WARM`.
 
-**precision**  
+#### precision
 `precision` defines the real number precision  
 The default value is `NaN`.
 
-**assemblingPath**  
+#### assemblingPath
 `assemblingPath` indicates the file which defines the models' association.  
 The default value is `null`.
 
-**settingPath**  
+#### settingPath
 `settingPath` indicates the file which defines the model settings values.  
 The default value is `null`.
 
-**mergeLoads**  
-`mergeLoads` indicates if loads connected to the same bus are merged.  
+#### mergeLoads
+`mergeLoads` indicates if loads connected to the same bus are merged (except fictitious load).  
 The default value is `TRUE`.
 
 ## Generic parameters
@@ -123,7 +121,7 @@ Alternatively, you can provide parameters as a JSON file where supported
 (for example when using `itools loadflow` command):
 ```json
 {
-  "version" : "1.9",
+  "version" : "1.10",
   "useReactiveLimits" : true,
   "extensions" : {
     "DynaflowParameters" : {

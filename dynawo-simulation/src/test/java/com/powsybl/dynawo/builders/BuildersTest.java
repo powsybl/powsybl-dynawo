@@ -17,9 +17,7 @@ import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAu
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.buses.StandardBusBuilder;
-import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
-import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
+import com.powsybl.dynawo.models.events.*;
 import com.powsybl.dynawo.models.generators.*;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
@@ -74,6 +72,7 @@ class BuildersTest {
         assertNotNull(BaseGeneratorBuilder.of(NETWORK));
         assertNotNull(SynchronizedGeneratorBuilder.of(NETWORK));
         assertNotNull(SynchronousGeneratorBuilder.of(NETWORK));
+        assertNotNull(InertialGridBuilder.of(NETWORK));
         assertNotNull(WeccBuilder.of(NETWORK));
         assertNotNull(GridFormingConverterBuilder.of(NETWORK));
         assertNotNull(SignalNGeneratorBuilder.of(NETWORK));
@@ -117,6 +116,7 @@ class BuildersTest {
         assertNotNull(BaseGeneratorBuilder.getDefaultModelInfo());
         assertNotNull(SynchronizedGeneratorBuilder.getDefaultModelInfo());
         assertNotNull(SynchronousGeneratorBuilder.getDefaultModelInfo());
+        assertNotNull(InertialGridBuilder.getDefaultModelInfo());
         assertNotNull(WeccBuilder.getDefaultModelInfo());
         assertNotNull(GridFormingConverterBuilder.getDefaultModelInfo());
         assertNotNull(SignalNGeneratorBuilder.getDefaultModelInfo());
@@ -148,6 +148,7 @@ class BuildersTest {
         assertNull(BaseGeneratorBuilder.of(NETWORK, WRONG_LIB));
         assertNull(SynchronizedGeneratorBuilder.of(NETWORK, WRONG_LIB));
         assertNull(SynchronousGeneratorBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(InertialGridBuilder.of(NETWORK, WRONG_LIB));
         assertNull(WeccBuilder.of(NETWORK, WRONG_LIB));
         assertNull(GridFormingConverterBuilder.of(NETWORK, WRONG_LIB));
         assertNull(SignalNGeneratorBuilder.of(NETWORK, WRONG_LIB));
@@ -190,6 +191,7 @@ class BuildersTest {
         assertNull(BaseGeneratorBuilder.of(NETWORK).build());
         assertNull(SynchronizedGeneratorBuilder.of(NETWORK).build());
         assertNull(SynchronousGeneratorBuilder.of(NETWORK).build());
+        assertNull(InertialGridBuilder.of(NETWORK).build());
         assertNull(WeccBuilder.of(NETWORK).build());
         assertNull(GridFormingConverterBuilder.of(NETWORK).build());
         assertNull(SignalNGeneratorBuilder.of(NETWORK).build());
@@ -218,5 +220,7 @@ class BuildersTest {
         assertNull(EventActivePowerVariationBuilder.of(NETWORK).build());
         assertNull(NodeFaultEventBuilder.of(NETWORK).build());
         assertNull(EventDisconnectionBuilder.of(NETWORK).build());
+        assertNull(EventReactivePowerVariationBuilder.of(NETWORK).build());
+        assertNull(EventReferenceVoltageVariationBuilder.of(NETWORK).build());
     }
 }

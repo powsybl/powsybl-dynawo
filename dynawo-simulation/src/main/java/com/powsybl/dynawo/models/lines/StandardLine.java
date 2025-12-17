@@ -72,4 +72,9 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
     public String getDeactivateCurrentLimitsVarName() {
         throw new UnsupportedOperationException("deactivateCurrentLimits variable not implemented in StandardLine dynawo's model");
     }
+
+    @Override
+    public boolean needMandatoryDynamicModels() {
+        return true;
+    }
 }

@@ -38,7 +38,7 @@ class DynawoDynamicModelGroovyExtension implements DynamicModelGroovyExtension {
 
     @Override
     List<String> getModelNames() {
-        builderConfigs.stream().flatMap { it -> it.modelInfos.stream()}.map { i -> i.formattedInfo()}.toList() as List<String>
+        builderConfigs.stream().flatMap { it -> it.modelInfos.stream()}.map { i -> i.formattedInfo()}.sorted{a,b -> a.compareToIgnoreCase(b)}.toList() as List<String>
     }
 
 

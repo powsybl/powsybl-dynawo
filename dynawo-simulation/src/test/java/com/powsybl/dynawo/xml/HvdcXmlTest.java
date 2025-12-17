@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
@@ -32,12 +33,15 @@ import java.util.stream.Stream;
 class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static final String HVDC_NAME = "L";
+    private static final DynawoVersion DYNAWO_VERSION = new DynawoVersion(1, 6, 0);
 
     @BeforeEach
     void setup(String dydName, HvdcLine.ConvertersMode convertersMode, Function< Network, BlackBoxModel> constructor) {
         setupNetwork(convertersMode);
         addDynamicModels(constructor);
-        setupDynawoContext();
+        context = setupDynawoContextBuilder()
+                .currentVersion(DYNAWO_VERSION)
+                .build();
     }
 
     protected void setupNetwork(HvdcLine.ConvertersMode convertersMode) {

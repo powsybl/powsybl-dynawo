@@ -1,7 +1,7 @@
 {
   "events":[
     {
-      "model":"Step",
+      "model":"ActivePowerVariation",
       "properties":[
         {
           "name":"staticId",
@@ -15,6 +15,46 @@
         },
         {
           "name":"deltaP",
+          "value":"20",
+          "type":"DOUBLE"
+        }
+      ]
+    },
+    {
+      "model":"ReactivePowerVariation",
+      "properties":[
+        {
+          "name":"staticId",
+          "value":"LOAD",
+          "type":"STRING"
+        },
+        {
+          "name":"startTime",
+          "value":"1",
+          "type":"DOUBLE"
+        },
+        {
+          "name":"deltaQ",
+          "value":"20",
+          "type":"DOUBLE"
+        }
+      ]
+    },
+    {
+      "model":"ReferenceVoltageVariation",
+      "properties":[
+        {
+          "name":"staticId",
+          "value":"GEN",
+          "type":"STRING"
+        },
+        {
+          "name":"startTime",
+          "value":"1",
+          "type":"DOUBLE"
+        },
+        {
+          "name":"deltaU",
           "value":"20",
           "type":"DOUBLE"
         }

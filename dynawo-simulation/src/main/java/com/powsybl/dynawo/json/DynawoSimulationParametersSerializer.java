@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.auto.service.AutoService;
@@ -71,5 +72,13 @@ public class DynawoSimulationParametersSerializer implements JsonDynamicSimulati
     public DynawoSimulationParameters deserialize(JsonParser parser, DeserializationContext arg1)
             throws IOException {
         return createMapper().readValue(parser, DynawoSimulationParameters.class);
+    }
+
+    @Override
+    public DynawoSimulationParameters deserializeAndUpdate(JsonParser parser, DeserializationContext context,
+                                                           DynawoSimulationParameters toUpdateParameters) throws IOException {
+        ObjectMapper objectMapper = createMapper();
+        ObjectReader objectReader = objectMapper.readerForUpdating(toUpdateParameters);
+        return objectReader.readValue(parser, DynawoSimulationParameters.class);
     }
 }

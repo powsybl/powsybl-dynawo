@@ -20,13 +20,13 @@ import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.commons.ExecutionEnvironmentUtils;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.dynawo.margincalculation.loadsvariation.supplier.LoadsVariationSupplier;
 import com.powsybl.dynawo.margincalculation.results.MarginCalculationResult;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -62,8 +62,10 @@ public class MarginCalculationProvider implements Versionable {
 
         ReportNode mcReportNode = MarginCalculationReports.createMarginCalculationReportNode(runParameters.getReportNode(), network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(), runParameters.getMarginCalculationParameters().getDebugDir());
-        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+        String dumpDir = runParameters.getMarginCalculationParameters().getDebugDir();
+        ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX, dumpDir);
+        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+
         MarginCalculationParameters parameters = runParameters.getMarginCalculationParameters();
         DynawoSimulationParameters dynawoParameters = parameters.getDynawoParameters();
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
@@ -79,7 +81,8 @@ public class MarginCalculationProvider implements Versionable {
                 .workingVariantId(workingVariantId)
                 .build();
 
-        return runParameters.getComputationManager().execute(execEnv,
+        ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX, dumpDir);
+        return runParameters.getComputationManager().execute(execEnvSimulation,
                 new MarginCalculationHandler(context, getCommand(config, "MC", "dynawo_dynamic_mc"), mcReportNode));
     }
 

@@ -13,6 +13,7 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
 import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.Branch;
+import com.powsybl.iidm.network.Terminal;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.Arrays;
@@ -41,6 +42,10 @@ public class DynamicTwoLevelOverloadManagementSystem extends DynamicOverloadMana
         adder.createMacroConnections(this, measuredBranch, BranchModel.class, this::getVarConnectionsWithFirstMeasuredBranch, FIRST_MEASURE_SUFFIX + SideUtils.getSideSuffix(measuredSide));
         adder.createMacroConnections(this, secondMeasuredBranch, BranchModel.class, this::getVarConnectionsWithSecondMeasuredBranch, SECOND_MEASURE_SUFFIX + SideUtils.getSideSuffix(secondMeasuredSide));
         adder.createMacroConnections(this, controlledBranch, BranchModel.class, this::getVarConnectionsWithControlledBranch, CONTROL_SUFFIX);
+    }
+
+    public Terminal getSecondMeasuredTerminal() {
+        return secondMeasuredBranch.getTerminal(secondMeasuredSide);
     }
 
     private List<VarConnection> getVarConnectionsWithFirstMeasuredBranch(BranchModel connected) {

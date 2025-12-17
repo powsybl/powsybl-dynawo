@@ -10,7 +10,7 @@ package dynamicModels
 
 import com.powsybl.iidm.network.TwoSides
 
-HvdcVscDanglingUdc {
+HvdcVscDanglingUDc {
     staticId "L"
     parameterSetId "HVDC"
     dangling TwoSides.TWO

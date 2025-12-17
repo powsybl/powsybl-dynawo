@@ -6,6 +6,9 @@
     <dyn:blackBoxModel id="B1" lib="Bus" staticId="B1">
         <dyn:macroStaticRef id="MSR_Bus"/>
     </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="B2" lib="Bus" staticId="B2">
+        <dyn:macroStaticRef id="MSR_Bus"/>
+    </dyn:blackBoxModel>
     <dyn:blackBoxModel id="L1" lib="Line" parFile="models.par" parId="line" staticId="L1">
         <dyn:macroStaticRef id="MSR_Line"/>
     </dyn:blackBoxModel>
@@ -15,8 +18,8 @@
     <dyn:macroConnector id="MC_LineSide1-Bus">
         <dyn:connect var1="line_terminal1" var2="bus_terminal"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_LineSide2-DefaultEquipmentConnectionPoint">
-        <dyn:connect var1="line_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
+    <dyn:macroConnector id="MC_LineSide2-Bus">
+        <dyn:connect var1="line_terminal2" var2="bus_terminal"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_GeneratorFictitious">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
@@ -36,5 +39,5 @@
     </dyn:macroStaticReference>
     <dyn:macroConnect connector="MC_GeneratorFictitious-Bus" id1="G1" id2="B1" name2="B1"/>
     <dyn:macroConnect connector="MC_LineSide1-Bus" id1="L1" id2="B1" name2="B1"/>
-    <dyn:macroConnect connector="MC_LineSide2-DefaultEquipmentConnectionPoint" id1="L1" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_LineSide2-Bus" id1="L1" id2="B2" name2="B2"/>
 </dyn:dynamicModelsArchitecture>

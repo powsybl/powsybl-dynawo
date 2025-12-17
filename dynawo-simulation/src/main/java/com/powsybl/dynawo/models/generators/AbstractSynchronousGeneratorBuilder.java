@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.generators;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
 import com.powsybl.iidm.network.Network;
@@ -21,26 +20,13 @@ public abstract class AbstractSynchronousGeneratorBuilder<R extends AbstractSync
         super(network, modelConfig, reportNode);
     }
 
-    protected EnumGeneratorComponent getGeneratorComponent() {
-        boolean aux = modelConfig.hasAuxiliary();
-        boolean transformer = modelConfig.hasTransformer();
-        if (aux && transformer) {
-            return EnumGeneratorComponent.AUXILIARY_TRANSFORMER;
-        } else if (transformer) {
-            return EnumGeneratorComponent.TRANSFORMER;
-        } else if (aux) {
-            throw new PowsyblException("Generator component auxiliary without transformer is not supported");
-        }
-        return EnumGeneratorComponent.NONE;
-    }
-
     @Override
     public SynchronousGenerator build() {
         if (isInstantiable()) {
             if (modelConfig.isControllable()) {
-                return new SynchronousGeneratorControllable(getEquipment(), parameterSetId, modelConfig, getGeneratorComponent());
+                return new SynchronousGeneratorControllable(getEquipment(), parameterSetId, modelConfig);
             } else {
-                return new SynchronousGenerator(getEquipment(), parameterSetId, modelConfig, getGeneratorComponent());
+                return new SynchronousGenerator(getEquipment(), parameterSetId, modelConfig);
             }
         }
         return null;

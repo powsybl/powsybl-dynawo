@@ -69,39 +69,16 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
 
     @ParameterizedTest
     @MethodSource("provideSimulationParameter")
-    void testIeee14DSA(String criteriaPath, List<Contingency> contingencies, EventModelsSupplier eventModelsSupplier, String resultsPath) throws IOException {
-        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+    void testIeee14DSA(String criteriaPath, List<Contingency> contingencies,
+                       EventModelsSupplier eventModelsSupplier, String resultsPath) throws IOException {
 
-        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/ieee14/dynamicModels.groovy"),
-                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+        SecurityAnalysisResult result = runDynawoSecurityAnalysis(criteriaPath, contingencies, eventModelsSupplier);
 
-        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
-                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
-                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2")
-                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
-                .setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass().getResource(criteriaPath)).getPath()));
-
-        ReportNode reportNode = ReportNode.newRootReportNode()
-                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
-                        PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
-                .withMessageTemplate("testIEEE14")
-                .build();
-
-        DynamicSecurityAnalysisRunParameters runParameters = new DynamicSecurityAnalysisRunParameters()
-                .setComputationManager(computationManager)
-                .setDynamicSecurityAnalysisParameters(parameters)
-                .setEventModelsSupplier(eventModelsSupplier)
-                .setReportNode(reportNode);
-
-        SecurityAnalysisResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
-                        dynamicModelsSupplier, n -> contingencies, runParameters)
-                .join()
-                .getResult();
+        testExecutionTempFile();
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
+
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream(resultsPath));
         ComparisonUtils.assertTxtEquals(expected, serializedResult.toString());
     }
@@ -135,5 +112,39 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                                         .build()),
                         "/ieee14/dynamic-security-analysis/convergence/results.json")
         );
+    }
+
+    private SecurityAnalysisResult runDynawoSecurityAnalysis(String criteriaPath,
+                                                       List<Contingency> contingencies,
+                                                       EventModelsSupplier eventModelsSupplier) {
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/ieee14/dynamicModels.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
+                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2")
+                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
+                .setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass().getResource(criteriaPath)).getPath()));
+
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
+                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testIEEE14")
+                .build();
+
+        DynamicSecurityAnalysisRunParameters runParameters = new DynamicSecurityAnalysisRunParameters()
+                .setComputationManager(computationManager)
+                .setDynamicSecurityAnalysisParameters(parameters)
+                .setEventModelsSupplier(eventModelsSupplier)
+                .setReportNode(reportNode);
+
+        return provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                        dynamicModelsSupplier, n -> contingencies, runParameters)
+                .join()
+                .getResult();
     }
 }

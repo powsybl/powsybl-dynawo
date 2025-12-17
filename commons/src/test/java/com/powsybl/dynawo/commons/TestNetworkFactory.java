@@ -10,7 +10,9 @@ package com.powsybl.dynawo.commons;
 import com.powsybl.iidm.network.*;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
@@ -68,7 +70,7 @@ public final class TestNetworkFactory {
      * @param loadStates the list of states corresponding to the loads to create
      * @return the test network generated
      */
-    static Network createMultiLoadsBusesNetwork(List<LoadState> loadStates) {
+    static Network createMultiLoadsBusesNetwork(List<LoadState> loadStates, Set<Integer> fictitiousLoadPosition) {
         Network network = Network.create("multiLoads", "test")
                 .setCaseDate(ZonedDateTime.parse("2023-02-17T05:41:11.194+01:00"));
         Substation s = network.newSubstation().setId("substation").add();
@@ -79,8 +81,14 @@ public final class TestNetworkFactory {
         for (int i = 0; i < loadStates.size(); i++) {
             LoadState loadState = loadStates.get(i);
             vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(i + 1).setId("d" + (i + 1)).add();
-            vl1.newLoad().setId("load" + (i + 1)).setNode(i + 1).setP0(loadState.p0()).setQ0(loadState.q0()).add()
-                    .getTerminal().setP(loadState.p()).setQ(loadState.q());
+            vl1.newLoad().setId("load" + (i + 1))
+                    .setNode(i + 1)
+                    .setP0(loadState.p0())
+                    .setQ0(loadState.q0())
+                    .setFictitious(fictitiousLoadPosition.contains(i))
+                    .add().getTerminal()
+                        .setP(loadState.p())
+                        .setQ(loadState.q());
         }
         vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(loadStates.size() + 1).setId("d" + (loadStates.size() + 1)).add();
 
@@ -93,13 +101,23 @@ public final class TestNetworkFactory {
 
         for (int i = 0; i < loadStates.size(); i++) {
             LoadState loadState = loadStates.get(i);
-            vl2.newLoad().setId("load" + (loadStates.size() + i + 1)).setBus(b2.getId()).setP0(loadState.p0()).setQ0(loadState.q0()).add()
-                    .getTerminal().setP(loadState.p()).setQ(loadState.q());
+            vl2.newLoad().setId("load" + (loadStates.size() + i + 1))
+                    .setBus(b2.getId())
+                    .setP0(loadState.p0())
+                    .setQ0(loadState.q0())
+                    .setFictitious(fictitiousLoadPosition.contains(i))
+                    .add().getTerminal()
+                        .setP(loadState.p())
+                        .setQ(loadState.q());
         }
 
         // Line between the two voltage levels
         network.newLine().setId("l1").setVoltageLevel1(vl1.getId()).setNode1(loadStates.size() + 1).setVoltageLevel2(vl2.getId()).setBus2(b1.getId())
                 .setR(1).setX(3).setG1(0).setG2(0).setB1(0).setB2(0).add();
         return network;
+    }
+
+    static Network createMultiLoadsBusesNetwork(List<LoadState> loadStates) {
+        return createMultiLoadsBusesNetwork(loadStates, Collections.emptySet());
     }
 }

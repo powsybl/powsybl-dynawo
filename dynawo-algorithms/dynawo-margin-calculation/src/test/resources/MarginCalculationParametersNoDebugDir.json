@@ -10,12 +10,12 @@
   "loadModelsRule" : "ALL_LOADS",
   "dynawoParameters" : {
     "networkParameters" : {
-      "id" : "1",
+      "id" : "Network",
       "parameters" : { },
       "references" : [ ]
     },
     "solverParameters" : {
-      "id" : "1",
+      "id" : "SIM",
       "parameters" : {
         "order" : {
           "name" : "order",
@@ -32,7 +32,7 @@
     },
     "solverType" : "SIM",
     "mergeLoads" : false,
-    "useModelSimplifiers" : false,
+    "modelSimplifiers" : [ ],
     "dumpFileParameters" : {
       "exportDumpFile" : false,
       "useDumpFile" : false,
@@ -40,7 +40,7 @@
       "dumpFile" : null
     },
     "precision" : 1.0E-6,
-    "timelineExportMode" : "TXT",
+    "timelineExportMode" : "XML",
     "logLevelFilter" : "INFO",
     "specificLogs" : [ ],
     "criteriaFilePath" : null,

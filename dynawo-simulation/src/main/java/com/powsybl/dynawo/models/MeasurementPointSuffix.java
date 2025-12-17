@@ -24,11 +24,15 @@ public final class MeasurementPointSuffix implements MacroConnectionSuffix {
         this.connectionSuffix = connectionSuffix;
     }
 
+    public static MeasurementPointSuffix of() {
+        return new MeasurementPointSuffix(MEASURE_PREFIX, "");
+    }
+
     public static MeasurementPointSuffix of(int i) {
         if (i < 1) {
             throw new IllegalArgumentException();
         }
-        return new MeasurementPointSuffix(MEASURE_PREFIX + i, i != 1 ? String.valueOf(i) : "");
+        return new MeasurementPointSuffix(MEASURE_PREFIX + i, String.valueOf(i));
     }
 
     public String getIdSuffix() {

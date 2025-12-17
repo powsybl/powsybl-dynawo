@@ -15,27 +15,34 @@ import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ * @author Olivier Perrin {@literal <olivier.perrin at rte-france.com>}
  */
 public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements SpecifiedGeneratorModel {
 
-    protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
-            new VarMapping("generator_PGenPu", "p"),
-            new VarMapping("generator_QGenPu", "q"),
-            new VarMapping("generator_state", "state"));
+    private static final ComponentDescription DEFAULT_COMPONENT_DESCRIPTION = new Description();
+    private final ComponentDescription componentDescription;
 
     protected BaseGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
-        super(generator, parameterSetId, modelConfig);
+        this(generator, parameterSetId, modelConfig,
+                isGeneratorCustom(modelConfig) ? CustomGeneratorComponent.fromModelConfig(modelConfig) : DEFAULT_COMPONENT_DESCRIPTION);
     }
 
-    @Override
-    public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
+    protected BaseGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig, ComponentDescription componentDescription) {
+        super(generator, parameterSetId, modelConfig);
+        this.componentDescription = componentDescription;
+    }
+
+    protected static boolean isGeneratorCustom(ModelConfig modelConfig) {
+        return !modelConfig.varPrefix().isEmpty() || !modelConfig.varMapping().isEmpty();
+    }
+
+    protected ComponentDescription getComponentDescription() {
+        return componentDescription;
     }
 
     @Override
@@ -52,33 +59,59 @@ public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> imp
         return varConnections;
     }
 
+    @Override
+    public List<VarMapping> getVarsMapping() {
+        return getComponentDescription().varMapping();
+    }
+
     public String getTerminalVarName() {
-        return "generator_terminal";
+        return getComponentDescription().terminal();
     }
 
     public String getSwitchOffSignalNodeVarName() {
-        return "generator_switchOffSignal1";
+        return getComponentDescription().switchOffSignalNode();
     }
 
     @Override
     public String getSwitchOffSignalEventVarName() {
-        return "generator_switchOffSignal2";
+        return getComponentDescription().switchOffSignalEvent();
     }
 
+    @Override
     public String getSwitchOffSignalAutomatonVarName() {
-        return "generator_switchOffSignal3";
-    }
-
-    public String getRunningVarName() {
-        return "generator_running";
-    }
-
-    public String getQStatorPuVarName() {
-        return "generator_QStatorPu";
+        return getComponentDescription().switchOffSignalAutomaton();
     }
 
     @Override
     public String getUPuVarName() {
         return "generator_UPu";
+    }
+
+    static class Description implements ComponentDescription {
+
+        @Override
+        public List<VarMapping> varMapping() {
+            return EnumGeneratorComponent.NONE.getVarMapping();
+        }
+
+        @Override
+        public String terminal() {
+            return EnumGeneratorComponent.NONE.getTerminalVarName();
+        }
+
+        @Override
+        public String switchOffSignalNode() {
+            return "generator_switchOffSignal1";
+        }
+
+        @Override
+        public String switchOffSignalEvent() {
+            return "generator_switchOffSignal2";
+        }
+
+        @Override
+        public String switchOffSignalAutomaton() {
+            return "generator_switchOffSignal3";
+        }
     }
 }

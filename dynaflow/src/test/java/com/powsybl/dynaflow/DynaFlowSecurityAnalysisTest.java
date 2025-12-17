@@ -76,7 +76,7 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         @Override
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
-                if (args.get(0).equals("--version")) {
+                if (args.getFirst().equals("--version")) {
                     copyFile(stdOutFileRef, errFile);
                 } else {
                     assertEquals("--network %s --config %s --contingencies %s".formatted(NETWORK_FILENAME, CONFIG_FILENAME, CONTINGENCIES_FILENAME),
@@ -173,10 +173,10 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         line.getTerminal2().setP(560.0).setQ(550.0);
 
         // Adding strong current limits to have some post-contingencies current limit violations
-        line.newCurrentLimits1().setPermanentLimit(40.0).add();
-        line.newCurrentLimits2()
-                .beginTemporaryLimit().setName("10'").setAcceptableDuration(10 * 60).setValue(450.0).endTemporaryLimit()
+        line.getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits().setPermanentLimit(40.0).add();
+        line.getOrCreateSelectedOperationalLimitsGroup2().newCurrentLimits()
                 .setPermanentLimit(1000)
+                .beginTemporaryLimit().setName("10'").setAcceptableDuration(10 * 60).setValue(1200.0).endTemporaryLimit()
                 .add();
 
         // Adding a node breaker voltage level to the network
@@ -189,7 +189,7 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         vlNb.newGenerator().setId("NB_GEN").setNode(1).setTargetP(8).setTargetV(390).setMinP(0).setMaxP(11).setVoltageRegulatorOn(true).add();
         Line lineNbBb = network.newLine().setId("NB_NGEN").setVoltageLevel1(vlNb.getId()).setNode1(2).setVoltageLevel2("VLGEN").setBus2("NGEN")
                 .setR(3.0).setX(33.0).setB1(193E-6).setB2(193E-6).add();
-        lineNbBb.newCurrentLimits1().setPermanentLimit(41).add();
+        lineNbBb.getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits().setPermanentLimit(41).add();
 
         return network;
     }
