@@ -75,9 +75,8 @@ class DynawoVersionTest {
     @Test
     void testVersionWithLeadingWarnings() {
         String input =
-                "Ignoring PCI device with non-16bit domain. " +
-                        "Pass --enable-32bits-pci-domain to configure to support such devices " +
-                        "(warning: it would break the library ABI, don't enable unless really needed). " +
+                "WARNING: Dynawo started with non-default settings. " +
+                        "Some optional components are disabled. " +
                         "1.5.0 (rev:master-1d327db)";
 
         assertEquals("1.5.0", DynawoUtil.versionSanitizer(input));
@@ -86,10 +85,18 @@ class DynawoVersionTest {
     @Test
     void testWithoutVersionWithLeadingWarnings() {
         String input =
-            "Ignoring PCI device with non-16bit domain. " +
-                    "Pass --enable-32bits-pci-domain to configure to support such devices " +
-                    "(warning: it would break the library ABI, don't enable unless really needed). ";
-        PowsyblException e = assertThrows(PowsyblException.class, () -> DynawoUtil.versionSanitizer(input));
-        assertEquals("parsing error", e.getMessage());
+                "WARNING: Dynawo started with non-default settings. " +
+                        "Some optional components are disabled. ";
+
+        PowsyblException e = assertThrows(
+                PowsyblException.class,
+                () -> DynawoUtil.versionSanitizer(input)
+        );
+
+        assertEquals(
+                "Dynawo version parsing error: 'WARNING: Dynawo started with non-default settings. Some optional components are disabled. ' cannot be parsed",
+                e.getMessage()
+        );
     }
+
 }
