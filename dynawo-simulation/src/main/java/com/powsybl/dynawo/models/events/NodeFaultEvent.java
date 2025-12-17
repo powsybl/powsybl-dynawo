@@ -7,14 +7,12 @@
  */
 package com.powsybl.dynawo.models.events;
 
-import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.ActionConnectionPoint;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.IdentifiableType;
 
 import java.util.List;
 
@@ -39,10 +37,7 @@ public class NodeFaultEvent extends AbstractEvent {
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        boolean isSkipped = adder.createMacroConnectionsOrSkip(this, getEquipment(), ActionConnectionPoint.class, this::getVarConnectionsWith);
-        if (isSkipped) {
-            DynawoSimulationReports.reportFailedDefaultModelHandling(adder.getReportNode(), getName(), getDynamicModelId(), IdentifiableType.DC_NODE.toString());
-        }
+        adder.createMacroConnections(this, getEquipment(), ActionConnectionPoint.class, this::getVarConnectionsWith);
     }
 
     private List<VarConnection> getVarConnectionsWith(ActionConnectionPoint connected) {

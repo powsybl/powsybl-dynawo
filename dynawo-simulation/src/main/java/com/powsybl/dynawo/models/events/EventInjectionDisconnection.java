@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawo.models.events;
 
-import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.InjectionModel;
@@ -31,9 +30,6 @@ public class EventInjectionDisconnection extends AbstractDynamicLibEventDisconne
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        boolean isSkipped = adder.createMacroConnectionsOrSkip(this, getEquipment(), InjectionModel.class, this::getVarConnectionsWith);
-        if (isSkipped) {
-            DynawoSimulationReports.reportFailedDefaultModelHandling(adder.getReportNode(), getName(), getDynamicModelId(), getEquipment().getNameOrId());
-        }
+        adder.createMacroConnections(this, getEquipment(), InjectionModel.class, this::getVarConnectionsWith);
     }
 }

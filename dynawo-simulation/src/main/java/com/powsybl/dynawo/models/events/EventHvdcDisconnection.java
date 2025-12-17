@@ -8,9 +8,9 @@
 package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynawo.builders.EventModelInfo;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.hvdc.HvdcModel;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.TwoSides;
 
