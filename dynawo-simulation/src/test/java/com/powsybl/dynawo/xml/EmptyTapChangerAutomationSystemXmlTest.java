@@ -47,6 +47,7 @@ class EmptyTapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
+                      Model for 'LOAD' can't be found because the class of the equipment 'LOAD' does not implement the required 'LoadWithTransformers' interface
                       TapChangerAutomaton BBM_TC equipment LOAD is not a LoadWithTransformers, the automation system will be skipped
                 """);
     }

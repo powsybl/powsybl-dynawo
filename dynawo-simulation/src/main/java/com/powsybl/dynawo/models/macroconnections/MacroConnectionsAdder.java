@@ -229,7 +229,11 @@ public final class MacroConnectionsAdder {
             if (throwException) {
                 throw new PowsyblException("Pure dynamic model " + dynamicId + " not found");
             } else {
-                reportNode.newReportNode().withMessageTemplate("Pure dynamic model " + dynamicId + " not found");
+                reportNode.newReportNode()
+                        .withMessageTemplate("dynawo.dynasim.pureDynamicModelNotFound")
+                        .withUntypedValue("connectableClass", connectableClass.getSimpleName())
+                        .withUntypedValue("dynamicId", dynamicId)
+                        .add();
                 return null;
             }
         }
@@ -243,7 +247,11 @@ public final class MacroConnectionsAdder {
         if (throwException) {
             throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, id, connectableClass.getSimpleName()));
         } else {
-            reportNode.newReportNode().withMessageTemplate("Model " + id + " not found");
+            reportNode.newReportNode()
+                    .withMessageTemplate("dynawo.dynasim.handleModelNotFound")
+                    .withUntypedValue("id", id)
+                    .withUntypedValue("connectableClass", connectableClass.getSimpleName())
+                    .add();
             return null;
         }
     }
