@@ -34,6 +34,14 @@ class NodeFaultEventXmlTest extends AbstractDynamicModelXmlTest {
                 .rPu(0)
                 .xPu(0.01)
                 .build());
+
+        eventModels.add(NodeFaultEventBuilder.of(network)
+                .staticId("GEN")
+                .startTime(10)
+                .faultTime(0.1)
+                .rPu(0)
+                .xPu(0.01)
+                .build());
     }
 
     @Test
