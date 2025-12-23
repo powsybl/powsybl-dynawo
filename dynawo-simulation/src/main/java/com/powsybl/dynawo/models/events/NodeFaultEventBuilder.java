@@ -12,14 +12,12 @@ import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.builders.ModelInfo;
 import com.powsybl.dynawo.commons.DynawoVersion;
-import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.IdentifiableType;
-import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFaultEventBuilder> {
+public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Identifiable<?>, NodeFaultEventBuilder> {
 
     private static final EventModelInfo MODEL_INFO = new EventModelInfo("NodeFault", "Node fault with configurable resistance, reactance and duration");
 
@@ -47,7 +45,7 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
     }
 
     NodeFaultEventBuilder(Network network, ReportNode reportNode) {
-        super(network, IdentifiableType.BUS.toString(), reportNode);
+        super(network, "BUS/GENERATOR", reportNode);
     }
 
     public NodeFaultEventBuilder faultTime(double faultTime) {
@@ -66,7 +64,23 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
     }
 
     protected Bus findEquipment(String staticId) {
-        return network.getBusBreakerView().getBus(staticId);
+        Bus bus = network.getBusBreakerView().getBus(staticId);
+        if (bus != null) {
+            return bus;
+        }
+
+        Generator generator = network.getGenerator(staticId);
+        return generator != null
+                ? generator.getTerminal().getBusBreakerView().getBus()
+                : null;
+    }
+
+    @Override
+    public NodeFaultEventBuilder staticId(String staticId) {
+        String equipmentType = network.getGenerator(staticId) != null ? IdentifiableType.GENERATOR.toString() : IdentifiableType.BUS.toString();
+        builderEquipment.addEquipment(staticId, this::findEquipment);
+        eventId = getModelName() + "_" + equipmentType + "_" + staticId;
+        return self();
     }
 
     @Override

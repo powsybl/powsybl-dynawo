@@ -9,7 +9,7 @@
 package eventWarnings
 
 NodeFault {
-    staticId "GEN"
+    staticId "GEN2"
     startTime 1
     faultTime 0.1
     rPu 0
