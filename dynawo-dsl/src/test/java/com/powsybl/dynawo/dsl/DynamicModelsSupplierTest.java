@@ -233,7 +233,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                                  'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' field value 'Wrong_ID' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' list is empty
-                                 'uMeasurements' field is not set
+                                 'uMeasurements' field is set but LOAD does not possess this option
+                                 'uMeasurements' field is set but Wrong_ID does not possess this option
                         """),
                 Arguments.of("/warnings/tapChangerMissingBusList.groovy", EurostagTutorialExample1Factory.create(),
                         """
@@ -244,7 +245,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                                  'uMeasurements' field value 'NGEN' should be energized and in main component
                                  None of '[NGEN_NHV1, NGEN]' values from 'uMeasurements' field where found for energized and in main component equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' list is empty
-                                 'uMeasurements' field is not set
+                                 'uMeasurements' field is set but [LOAD, Wrong_ID] does not possess this option
+                                 'uMeasurements' field is set but [NGEN_NHV1, NGEN] does not possess this option
                         """),
                 Arguments.of("/warnings/tapChangerCompatible.groovy", EurostagTutorialExample1Factory.create(),
                         """
@@ -253,7 +255,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                               + Model TapChangerBlockingAutomaton ZAB instantiation KO
                                  'uMeasurements' field value 'GEN' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'transformers' field value 'GEN' not found for equipment type(s) TWO_WINDINGS_TRANSFORMER/LOAD, id will be used as pure dynamic model id
-                                 'uMeasurements' field is not set
+                                 'uMeasurements' field is set but GEN does not possess this option
                         """),
                 Arguments.of("/warnings/hvdcVscWrongStaticType.groovy", HvdcTestNetwork.createLcc(),
                         """
