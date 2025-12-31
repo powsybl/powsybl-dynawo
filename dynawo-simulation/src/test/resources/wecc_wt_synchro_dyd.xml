@@ -6,6 +6,7 @@
     <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
     <dyn:macroConnector id="MC_WTG4BWeccCurrentSource-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="WTG4B_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="WTG4B_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_DYNModelOmegaRef-WTG4BWeccCurrentSource">
         <dyn:connect var1="omegaRef_grp_@INDEX@_value" var2="WTG4B_omegaRefPu"/>
