@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsReports.*;
+import static com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationReports.createFailedNodeFaultReportNode;
 
 /**
  * @author Erwann Goasguen {@literal <erwann.goasguen at rte-france.com>}

@@ -7,9 +7,9 @@ All node faults should be written in a `nodeFaults` array. Each node fault will 
 
 ## Node Fault model
 The node fault model has three attributes:
-- `elementId`: the node fault will be applied on this element.
-- `fault_rPu`: r pu variation (must be >= 0). The default value is `0.001`.
-- `fault_xPu`: x pu variation (must be >= 0). The default value is `0.001`.
+- `generatorId`: the node fault will be applied on this generator.
+- `fault_rPu`: r pu variation (must be >= 0).
+- `fault_xPu`: x pu variation (must be >= 0).
 
 
 **Json configuration:**
@@ -17,12 +17,14 @@ The node fault model has three attributes:
 {
   "nodeFaults" : [
     {
-      "elementId" : "GEN",
+      "generatorId" : "GEN",
       "fault_rPu" : 0.001,
       "fault_xPu" : 0.001
     },
     {
-      "elementId" : "GEN2"
+      "generatorId" : "GEN2",
+      "fault_rPu" : 0.002,
+      "fault_xPu" : 0.002
     }
   ]
 }

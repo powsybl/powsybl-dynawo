@@ -8,10 +8,10 @@
 package com.powsybl.dynawo.criticaltimecalculation.tool;
 
 import com.powsybl.commons.test.ComparisonUtils;
-import com.powsybl.dynawo.contingency.results.Status;
 import com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationProvider;
 import com.powsybl.dynawo.criticaltimecalculation.results.CriticalTimeCalculationResult;
 import com.powsybl.dynawo.criticaltimecalculation.results.CriticalTimeCalculationResults;
+import com.powsybl.dynawo.criticaltimecalculation.results.Status;
 import com.powsybl.tools.Command;
 import com.powsybl.tools.CommandLineTools;
 import com.powsybl.tools.Tool;
@@ -94,7 +94,7 @@ public class CriticalTimeCalculationToolTest extends AbstractToolTest {
                     +-------------+--------------------+---------------+
                     | Id          | Status             | Critical Time |
                     +-------------+--------------------+---------------+
-                    | NodeFault_0 | RESULT_FOUND       | 1,00000       |
+                    | NodeFault_0 | RESULT_FOUND       | 1.00000       |
                     | NodeFault_1 | CT_BELOW_MIN_BOUND | inv           |
                     | NodeFault_2 | CT_ABOVE_MAX_BOUND | inv           |
                     +-------------+--------------------+---------------+
@@ -136,7 +136,7 @@ public class CriticalTimeCalculationToolTest extends AbstractToolTest {
                     +-------------+--------------------+---------------+
                     | Id          | Status             | Critical Time |
                     +-------------+--------------------+---------------+
-                    | NodeFault_0 | RESULT_FOUND       | 1,00000       |
+                    | NodeFault_0 | RESULT_FOUND       | 1.00000       |
                     | NodeFault_1 | CT_BELOW_MIN_BOUND | inv           |
                     | NodeFault_2 | CT_ABOVE_MAX_BOUND | inv           |
                     +-------------+--------------------+---------------+

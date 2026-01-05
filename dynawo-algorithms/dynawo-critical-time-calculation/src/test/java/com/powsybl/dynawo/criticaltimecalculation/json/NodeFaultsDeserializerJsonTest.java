@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) 2025, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 package com.powsybl.dynawo.criticaltimecalculation.json;
 
 import com.powsybl.commons.report.ReportNode;
@@ -13,6 +21,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * @author Erwann Goasguen {@literal <erwann.goasguen at rte-france.com>}
+ */
 public class NodeFaultsDeserializerJsonTest {
 
     @Test
@@ -53,12 +64,14 @@ public class NodeFaultsDeserializerJsonTest {
     private static List<NodeFaultEventData> getNodeFaultsListFromBuilder(Network network) {
         return List.of(
                 new NodeFaultsBuilder(network, ReportNode.NO_OP)
-                        .elementId("GEN")
+                        .generatorId("GEN")
                         .faultXPu(0.5)
                         .faultRPu(0.5)
                         .build(),
                 new NodeFaultsBuilder(network, ReportNode.NO_OP)
-                        .elementId("GEN2")
+                        .generatorId("GEN2")
+                        .faultXPu(0.001)
+                        .faultRPu(0.001)
                         .build()
         );
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-    Copyright (c) 2015-2021, RTE (http://www.rte-france.com)
+    Copyright (c) 2025, RTE (http://www.rte-france.com)
     See AUTHORS.txt
     All rights reserved.
     This Source Code Form is subject to the terms of the Mozilla Public
@@ -12,11 +12,10 @@
     of simulation tools for power systems.
 -->
 <xs:schema xmlns:dyn="http://www.rte-france.com/dynawo" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.rte-france.com/dynawo" version="1.0">
-    <xs:element name="multipleJobs" maxOccurs="1">
+    <xs:element name="multipleJobs">
         <xs:complexType>
             <xs:choice minOccurs="0">
                 <xs:element name="scenarios" type="dyn:Scenarios"/>
-                <xs:element name="marginCalculation" type="dyn:MarginCalculation"/>
                 <xs:element name="criticalTimeCalculation" type="dyn:CriticalTimeCalculation"/>
             </xs:choice>
         </xs:complexType>
@@ -25,7 +24,7 @@
     <xs:complexType name="Scenario">
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="dydFile" type="xs:string" use="optional"/>
-        <xs:attribute name="criteriaFile" type="xs:string" use="optional"/>
+        <xs:attribute name="dydId" type="xs:string" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="LoadIncrease">
@@ -33,27 +32,11 @@
         <xs:attribute name="jobsFile" type="xs:string" use="required"/>
     </xs:complexType>
 
-    <xs:simpleType name="CalculationType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="GLOBAL_MARGIN"/>
-            <xs:enumeration value="LOCAL_MARGIN"/>
-        </xs:restriction>
-    </xs:simpleType>
-
     <xs:complexType name="Scenarios">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="scenario" type="dyn:Scenario"/>
         </xs:sequence>
         <xs:attribute name="jobsFile" type="xs:string" use="required"/>
-    </xs:complexType>
-
-    <xs:complexType name="MarginCalculation">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="scenarios" type="dyn:Scenarios"/>
-            <xs:element name="loadIncrease" type="dyn:LoadIncrease"/>
-        </xs:sequence>
-        <xs:attribute name="calculationType" type="dyn:CalculationType" use="required"/>
-        <xs:attribute name="accuracy" type="xs:integer" use="optional"/>
     </xs:complexType>
 
     <xs:simpleType name="Mode">

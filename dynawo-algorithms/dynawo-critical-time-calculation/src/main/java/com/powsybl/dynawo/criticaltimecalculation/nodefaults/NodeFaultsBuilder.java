@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2024, RTE (http://www.rte-france.com/)
+ * Copyright (c) 2025, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -22,17 +22,13 @@ import java.util.Objects;
  * @author Erwann GOASGUEN {@literal <erwann.goasguen at rte-france.com>}
  */
 public class NodeFaultsBuilder {
-
-    public static final double DEFAULT_FAULT_RPU = 0.001;
-    public static final double DEFAULT_FAULT_XPU = 0.001;
-
     private final Network network;
     private final ReportNode reportNode;
     private boolean isInstantiable = true;
 
     private final BuilderEquipment<Generator> generator;
-    private double faultRPu = DEFAULT_FAULT_RPU;
-    private double faultXPu = DEFAULT_FAULT_XPU;
+    private double faultRPu = Double.NaN;
+    private double faultXPu = Double.NaN;
 
     public NodeFaultsBuilder(Network network, ReportNode reportNode) {
         this.network = Objects.requireNonNull(network);
@@ -43,22 +39,22 @@ public class NodeFaultsBuilder {
     protected void checkData() {
         isInstantiable = generator.checkEquipmentData();
         if (Double.isNaN(faultRPu)) {
-            BuilderReports.reportFieldNotSet(reportNode, "fault_RPuValue");
+            BuilderReports.reportFieldNotSet(reportNode, "fault_rPu");
             isInstantiable = false;
         }
         if (Double.isNaN(faultXPu)) {
-            BuilderReports.reportFieldNotSet(reportNode, "fault_XPuValue");
+            BuilderReports.reportFieldNotSet(reportNode, "fault_xPu");
             isInstantiable = false;
         }
     }
 
-    private Generator getConnectedGenerator(String elementId) {
-        Generator gen = network.getGenerator(elementId);
+    private Generator getConnectedGenerator(String generatorId) {
+        Generator gen = network.getGenerator(generatorId);
         return gen != null && gen.getTerminal().isConnected() ? gen : null;
     }
 
-    public NodeFaultsBuilder elementId(String elementId) {
-        generator.addEquipment(elementId, this::getConnectedGenerator);
+    public NodeFaultsBuilder generatorId(String generatorId) {
+        generator.addEquipment(generatorId, this::getConnectedGenerator);
         return this;
     }
 

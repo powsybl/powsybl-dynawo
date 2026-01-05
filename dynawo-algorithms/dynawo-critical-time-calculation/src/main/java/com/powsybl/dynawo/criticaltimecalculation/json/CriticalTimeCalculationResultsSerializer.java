@@ -57,7 +57,7 @@ public class CriticalTimeCalculationResultsSerializer extends StdSerializer<Crit
         jsonGenerator.writeStringField("version", VERSION);
         jsonGenerator.writeFieldName("scenarioResults");
         jsonGenerator.writeStartArray();
-        for (CriticalTimeCalculationResult scenarioResult : results.getCriticalTimeCalculationResults()) {
+        for (CriticalTimeCalculationResult scenarioResult : results.criticalTimeCalculationResults()) {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeStringField("id", scenarioResult.id());
             jsonGenerator.writeStringField("status", scenarioResult.status().toString());

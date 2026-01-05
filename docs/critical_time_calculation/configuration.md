@@ -30,10 +30,6 @@ The default value of this property is `0`.
 `faultTimeMax` defines the maximum time limit for the dichotomy calculation.
 The default value of this property is `5`.
 
-**parName**  
-`parName` defines the name of the double that handles the fault end in the par file.
-The default value of this property is `fault_tEnd`.
-
 **mode**  
 `mode` defines how the dichotomy will occur.
 The available `com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationParameters.Mode` values are:
@@ -54,7 +50,6 @@ critical-time-calculation-default-parameters:
   accuracy: 0.001
   minValue: 0
   maxValue: 5
-  parName: fault_tEnd
   mode: SIMPLE
   debugDir: "/tmp/debugDir"
 ```
@@ -67,7 +62,6 @@ critical-time-calculation-default-parameters:
     <accuracy>0.001</accuracy>
     <minValue>0</minValue>
     <maxValue>5</maxValue>
-    <parName>fault_tEnd</parName>
     <stopTime>200</stopTime>
     <mode>SIMPLE</mode>
     <debugDir>/tmp/debugDir</debugDir>

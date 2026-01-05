@@ -10,7 +10,6 @@ package com.powsybl.dynawo.it;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.computation.ComputationManager;
-import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.tool.DynamicSimulationTool;
 import com.powsybl.dynamicsimulation.tool.ListDynamicSimulationModelsTool;
 import com.powsybl.dynawo.criticaltimecalculation.tool.CriticalTimeCalculationTool;
@@ -52,7 +51,8 @@ class IToolsTest extends AbstractDynawoTest {
                 new DynamicSimulationTool(),
                 new ListDynamicSimulationModelsTool(),
                 new DynamicSecurityAnalysisTool(),
-                new MarginCalculationTool()));
+                new MarginCalculationTool(),
+                new CriticalTimeCalculationTool()));
     }
 
     @BeforeEach
@@ -236,14 +236,11 @@ class IToolsTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testIeee14CTC() throws IOException {
-        computationManager = LocalComputationManager.getDefault();
-        TOOLS = new CommandLineTools(List.of(new CriticalTimeCalculationTool()));
-        String[] args = {"critical-time-calculation" , "--case-file", "IEEE14.iidm",
+    void testCTC() throws IOException {
+        String[] args = {"critical-time-calculation", "--case-file", "IEEE14.iidm",
             "--dynamic-models-file", "dynamicModels.groovy",
             "--node-faults-file", "nodeFaults.json",
             "--parameters-file", "CriticalTimeCalculationParameters.json"};
-
         int status = TOOLS.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);

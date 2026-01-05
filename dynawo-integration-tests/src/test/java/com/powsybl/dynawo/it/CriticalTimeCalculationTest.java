@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2025, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -19,13 +19,13 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
-import com.powsybl.dynawo.contingency.results.Status;
 import com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationParameters;
 import com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationProvider;
 import com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationRunParameters;
 import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultsBuilder;
 import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultsProvider;
 import com.powsybl.dynawo.criticaltimecalculation.results.CriticalTimeCalculationResult;
+import com.powsybl.dynawo.criticaltimecalculation.results.Status;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.network.Network;
@@ -104,17 +104,17 @@ class CriticalTimeCalculationTest extends AbstractDynawoTest {
                 .setReportNode(reportNode);
 
         NodeFaultsProvider nodeFaultsProvider = (n, r) ->
-                GENERATORS.stream().map(gen -> List.of(new NodeFaultsBuilder(n, r)
-                                .elementId(gen)
+                GENERATORS.stream().map(gen -> new NodeFaultsBuilder(n, r)
+                                .generatorId(gen)
                                 .faultRPu(0.001)
                                 .faultXPu(0.001)
-                                .build()))
+                                .build())
                         .toList();
 
         List<CriticalTimeCalculationResult> results = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
                         dynamicModelsSupplier, nodeFaultsProvider, runParameters)
                 .join()
-                .getCriticalTimeCalculationResults();
+                .criticalTimeCalculationResults();
 
         assertThat(results).containsExactlyElementsOf(EXPECTED_RESULTS);
     }

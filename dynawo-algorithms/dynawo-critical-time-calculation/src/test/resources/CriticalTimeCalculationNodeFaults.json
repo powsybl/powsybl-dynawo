@@ -1,12 +1,14 @@
 {
   "nodeFaults" : [
     {
-      "elementId" : "GEN",
+      "generatorId" : "GEN",
       "fault_rPu" : 0.5,
       "fault_xPu" : 0.5
     },
     {
-      "elementId" : "GEN2"
+      "generatorId" : "GEN2",
+      "fault_rPu" : 0.001,
+      "fault_xPu" : 0.001
     }
   ]
 }

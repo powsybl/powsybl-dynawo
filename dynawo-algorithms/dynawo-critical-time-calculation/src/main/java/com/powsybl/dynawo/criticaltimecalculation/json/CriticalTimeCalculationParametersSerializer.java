@@ -32,7 +32,6 @@ public class CriticalTimeCalculationParametersSerializer extends StdSerializer<C
             jsonGenerator.writeStringField("debugDir", parameters.getDebugDir());
         }
         jsonGenerator.writeNumberField("accuracy", parameters.getAccuracy());
-        jsonGenerator.writeStringField("parName", parameters.getParName());
         jsonGenerator.writeNumberField("faultTimeMin", parameters.getMinValue());
         jsonGenerator.writeNumberField("faultTimeMax", parameters.getMaxValue());
         jsonGenerator.writeStringField("mode", parameters.getMode().toString());

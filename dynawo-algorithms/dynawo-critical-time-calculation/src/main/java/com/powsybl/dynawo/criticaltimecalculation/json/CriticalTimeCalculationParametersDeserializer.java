@@ -34,7 +34,6 @@ public class CriticalTimeCalculationParametersDeserializer extends StdDeserializ
                 case "version" -> parser.nextToken();
                 case "startTime" -> builder.setStartTime(parser.getValueAsDouble());
                 case "stopTime" -> builder.setStopTime(parser.getValueAsDouble());
-                case "parName" -> builder.setParName(parser.getValueAsString());
                 case "faultTimeMin" -> builder.setMinValue(parser.getValueAsDouble());
                 case "faultTimeMax" -> builder.setMaxValue(parser.getValueAsDouble());
                 case "debugDir" -> builder.setDebugDir(parser.getValueAsString());

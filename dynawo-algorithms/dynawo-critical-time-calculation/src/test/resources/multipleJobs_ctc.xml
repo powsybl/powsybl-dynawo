@@ -1,22 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
-<!--
-    Copyright (c) 2015-2021, RTE (http://www.rte-france.com)
-    See AUTHORS.txt
-    All rights reserved.
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, you can obtain one at http://mozilla.org/MPL/2.0/.
-    SPDX-License-Identifier: MPL-2.0
-
-    This file is part of Dynawo, an hybrid C++/Modelica open source suite
-    of simulation tools for power systems.
--->
+<?xml version="1.0" encoding="UTF-8"?>
 <multipleJobs xmlns="http://www.rte-france.com/dynawo">
-    <marginCalculation calculationType="GLOBAL_MARGIN" accuracy="2">
-        <scenarios jobsFile="IEEE14_tFin.jobs">
-            <scenario id="DisconnectLine" dydFile="IEEE14_DisconnectLine.dyd"/>
-            <scenario id="DisconnectGroup" dydFile="IEEE14_DisconnectGroup.dyd"/>
+    <criticalTimeCalculation accuracy="0.001" dydId="ElementId" parName="fault_tEnd" minValue="0.0" maxValue="5.0" mode="SIMPLE">
+        <scenarios jobsFile="powsybl_dynawo.jobs">
+            <scenario id="NodeFault_0" dydFile="NodeFault_0.dyd" dydId="NodeFault_NGEN"/>
+            <scenario id="NodeFault_1" dydFile="NodeFault_1.dyd" dydId="NodeFault_NLOAD"/>
         </scenarios>
-        <loadIncrease id="loadIncrease" jobsFile="IEEE14.jobs"/>
-    </marginCalculation>
+    </criticalTimeCalculation>
 </multipleJobs>

@@ -5,6 +5,7 @@ In the end, the results will be exported to files.
 
 ## Usage
 ```
+$> itools critical-time-calculation --help
 usage: itools [OPTIONS] critical-time-calculation --case-file <FILE>
        --dynamic-models-file <FILE> [--help] [-I <property=value>]
        [--import-parameters <IMPORT_PARAMETERS>] --node-faults-file <FILE>

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2025, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -23,7 +23,6 @@ public final class CriticalTimeCalculationParameters {
     public static final double DEFAULT_STOP_TIME = 200;
     public static final double DEFAULT_MIN_VALUE = 0;
     public static final double DEFAULT_MAX_VALUE = 5;
-    public static String DEFAULT_PAR_NAME = "fault_tEnd";
     public static final double DEFAULT_ACCURACY = 0.001;
     public static final Mode DEFAULT_MODE = Mode.SIMPLE;
 
@@ -35,7 +34,6 @@ public final class CriticalTimeCalculationParameters {
 
         private double startTime = DEFAULT_START_TIME;
         private double stopTime = DEFAULT_STOP_TIME;
-        private String parName = DEFAULT_PAR_NAME;
         private double minValue = DEFAULT_MIN_VALUE;
         private double maxValue = DEFAULT_MAX_VALUE;
         private double accuracy = DEFAULT_ACCURACY;
@@ -73,14 +71,6 @@ public final class CriticalTimeCalculationParameters {
          */
         public Builder setMaxValue(double maxValue) {
             this.maxValue = maxValue;
-            return this;
-        }
-
-        /**
-         * Set par Name for the critical time
-         */
-        public Builder setParName(String parName) {
-            this.parName = parName;
             return this;
         }
 
@@ -148,7 +138,6 @@ public final class CriticalTimeCalculationParameters {
         config.ifPresent(c -> {
             c.getOptionalDoubleProperty("startTime").ifPresent(builder::setStartTime);
             c.getOptionalDoubleProperty("stopTime").ifPresent(builder::setStopTime);
-            c.getOptionalStringProperty("parName").ifPresent(builder::setParName);
             c.getOptionalStringProperty("debugDir").ifPresent(builder::setDebugDir);
             c.getOptionalDoubleProperty("faultTimeMin").ifPresent(builder::setMinValue);
             c.getOptionalDoubleProperty("faultTimeMax").ifPresent(builder::setMaxValue);
@@ -162,7 +151,6 @@ public final class CriticalTimeCalculationParameters {
 
     private final double startTime;
     private final double stopTime;
-    private final String parName;
     private final double minValue;
     private final double maxValue;
     private final Mode mode;
@@ -173,7 +161,6 @@ public final class CriticalTimeCalculationParameters {
     private CriticalTimeCalculationParameters(CriticalTimeCalculationParameters.Builder builder) {
         this.startTime = builder.startTime;
         this.stopTime = builder.stopTime;
-        this.parName = builder.parName;
         this.minValue = builder.minValue;
         this.maxValue = builder.maxValue;
         this.mode = builder.mode;
@@ -188,10 +175,6 @@ public final class CriticalTimeCalculationParameters {
 
     public double getStopTime() {
         return stopTime;
-    }
-
-    public String getParName() {
-        return parName;
     }
 
     public double getMinValue() {

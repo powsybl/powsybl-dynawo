@@ -5,13 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
+
 package com.powsybl.dynawo.criticaltimecalculation.results;
 
 /**
  * @author Erwann GOASGUEN {@literal <erwann.goasguen at rte-france.com>}
  */
-public record CriticalTimeCalculationResult(String id, Status status, double criticalTime) {
-    public CriticalTimeCalculationResult(String id, Status status) {
-        this(id, status, Double.NaN);
-    }
+public enum Status {
+    RESULT_FOUND,
+    CT_BELOW_MIN_BOUND,
+    CT_ABOVE_MAX_BOUND
 }

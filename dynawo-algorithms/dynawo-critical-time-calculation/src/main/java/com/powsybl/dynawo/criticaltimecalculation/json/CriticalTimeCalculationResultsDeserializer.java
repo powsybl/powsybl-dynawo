@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.powsybl.commons.json.JsonUtil;
-import com.powsybl.dynawo.contingency.results.Status;
+import com.powsybl.dynawo.criticaltimecalculation.results.Status;
 import com.powsybl.dynawo.criticaltimecalculation.results.CriticalTimeCalculationResult;
 import com.powsybl.dynawo.criticaltimecalculation.results.CriticalTimeCalculationResults;
 

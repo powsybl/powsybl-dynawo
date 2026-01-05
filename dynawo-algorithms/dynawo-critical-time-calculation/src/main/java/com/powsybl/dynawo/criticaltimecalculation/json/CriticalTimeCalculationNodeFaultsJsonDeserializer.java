@@ -52,9 +52,9 @@ public class CriticalTimeCalculationNodeFaultsJsonDeserializer extends StdDeseri
         JsonUtil.parseObject(parser, name -> {
             boolean handled = true;
             switch (name) {
-                case "elementId" -> {
+                case "generatorId" -> {
                     parser.nextToken();
-                    builder.elementId(parser.getValueAsString());
+                    builder.generatorId(parser.getValueAsString());
                 }
                 case "fault_rPu" -> {
                     parser.nextToken();

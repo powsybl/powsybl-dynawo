@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2025, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -42,7 +42,7 @@ public final class MultipleJobsXml {
         writer.writeStartElement("criticalTimeCalculation");
         writer.writeAttribute("accuracy", Double.toString(parameters.getAccuracy()));
         writer.writeAttribute("dydId", "ElementId");
-        writer.writeAttribute("parName", parameters.getParName());
+        writer.writeAttribute("parName", "fault_tEnd");
         writer.writeAttribute("minValue", Double.toString(parameters.getMinValue()));
         writer.writeAttribute("maxValue", Double.toString(parameters.getMaxValue()));
         writer.writeAttribute("mode", parameters.getMode().toString());

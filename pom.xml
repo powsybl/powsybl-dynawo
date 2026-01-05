@@ -197,6 +197,11 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>powsybl-dynawo-critical-time-calculation</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>powsybl-dynawo-integration-tests</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -190,7 +190,7 @@ public class CriticalTimeCalculationTool implements Tool {
                 "Critical Time Calculation results",
                 formatterConfig,
                 getColumns())) {
-            for (CriticalTimeCalculationResult result : results.getCriticalTimeCalculationResults()) {
+            for (CriticalTimeCalculationResult result : results.criticalTimeCalculationResults()) {
                 formatter.writeCell(result.id());
                 formatter.writeCell(result.status().toString());
                 formatter.writeCell(result.criticalTime());

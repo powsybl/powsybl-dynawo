@@ -31,10 +31,4 @@ public final class DynawoAlgorithmsReports {
                 .withUntypedValue("contingencyType", contingencyType)
                 .add();
     }
-
-    public static ReportNode createFailedNodeFaultReportNode(ReportNode reportNode) {
-        return reportNode.newReportNode()
-                .withMessageTemplate("dynawo.algorithms.failedNodeFault")
-                .add();
-    }
 }
