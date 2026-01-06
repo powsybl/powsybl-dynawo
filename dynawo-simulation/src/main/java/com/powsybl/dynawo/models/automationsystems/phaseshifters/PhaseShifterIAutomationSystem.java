@@ -8,10 +8,12 @@
 package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.models.ParameterUpdater;
+import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.ConnectionStatefulModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.transformers.TransformerModel;
+import com.powsybl.dynawo.parameters.ParameterType;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 import java.util.Arrays;
@@ -65,4 +67,10 @@ public class PhaseShifterIAutomationSystem extends AbstractPhaseShifterAutomatio
     public String getLockedVarName() {
         return "phaseShifter_locked";
     }
+
+    @Override
+    public void updateDynamicModelParameters(ParameterUpdater parameterUpdater) {
+        parameterUpdater.addParameter(getParameterSetId(), "componentId", ParameterType.STRING, transformer.getNameOrId());
+    }
 }
+
