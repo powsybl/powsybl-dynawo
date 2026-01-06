@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawo.criticaltimecalculation.xml;
 
-import com.powsybl.dynawo.algorithms.NodeFaultEventData;
+import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultEventData;
 import com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationContext;
 import com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationParameters;
 import com.powsybl.dynawo.xml.AbstractDynamicModelXmlTest;
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
-import static com.powsybl.iidm.network.test.EurostagTutorialExample1Factory.NGEN;
 
 /**
  * @author Erwann GOASGUEN {@literal <erwann.goasguen at rte-france.com>}
@@ -41,14 +40,14 @@ class MultiplesJobsXmlTest extends AbstractDynamicModelXmlTest {
     protected void setupDynawoContext() {
         CriticalTimeCalculationParameters parameters = CriticalTimeCalculationParameters.load();
         List<NodeFaultEventData> nodeFaultsList = List.of(
-                new NodeFaultEventData.Builder()
+                new NodeFaultEventData.Builder(network)
                         .setStaticId("NGEN")
                         .setFaultStartTime(1)
                         .setFaultStopTime(5)
                         .setFaultXPu(0.001)
                         .setFaultRPu(0.001)
                         .build(),
-                new NodeFaultEventData.Builder()
+                new NodeFaultEventData.Builder(network)
                         .setStaticId("NLOAD")
                         .setFaultStartTime(1)
                         .setFaultStopTime(5)

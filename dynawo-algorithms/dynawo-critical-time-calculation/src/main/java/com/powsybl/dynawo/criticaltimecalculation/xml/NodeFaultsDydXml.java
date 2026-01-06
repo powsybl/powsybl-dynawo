@@ -5,9 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.algorithms.xml;
+package com.powsybl.dynawo.criticaltimecalculation.xml;
 
-import com.powsybl.dynawo.algorithms.NodeFaultEventModels;
+import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultEventModels;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
@@ -30,7 +30,7 @@ public final class NodeFaultsDydXml {
         Objects.requireNonNull(workingDir);
         for (NodeFaultEventModels model : eventModels) {
             Path file = workingDir.resolve(createDydFileName(model));
-            XmlUtil.write(file, "dynamicModelsArchitecture", NodeFaultsDydXml::writeEvent, model);
+            NodeFaultXmlUtil.write(file, "dynamicModelsArchitecture", NodeFaultsDydXml::writeEvent, model);
         }
     }
 

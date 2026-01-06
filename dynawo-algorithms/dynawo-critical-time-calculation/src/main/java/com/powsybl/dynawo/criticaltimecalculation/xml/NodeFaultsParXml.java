@@ -5,9 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.algorithms.xml;
+package com.powsybl.dynawo.criticaltimecalculation.xml;
 
-import com.powsybl.dynawo.algorithms.NodeFaultEventModels;
+import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultEventModels;
 import com.powsybl.dynawo.xml.ParametersXml;
 
 import java.nio.file.Path;

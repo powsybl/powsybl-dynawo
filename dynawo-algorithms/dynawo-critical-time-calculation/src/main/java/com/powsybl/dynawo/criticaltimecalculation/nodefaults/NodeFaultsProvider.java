@@ -8,7 +8,6 @@
 package com.powsybl.dynawo.criticaltimecalculation.nodefaults;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawo.algorithms.NodeFaultEventData;
 import com.powsybl.dynawo.criticaltimecalculation.json.CriticalTimeCalculationNodeFaultsJsonDeserializer;
 import com.powsybl.dynawo.suppliers.SupplierJsonDeserializer;
 import com.powsybl.iidm.network.Network;
@@ -33,7 +32,7 @@ public interface NodeFaultsProvider {
 
     static NodeFaultsProvider getNodeFaultsProviderForJson(Path nodeFaultsPath) {
         return (n, r) -> new SupplierJsonDeserializer<>(
-                new CriticalTimeCalculationNodeFaultsJsonDeserializer(() -> new NodeFaultsBuilder(n, r)))
+                new CriticalTimeCalculationNodeFaultsJsonDeserializer(() -> new NodeFaultEventData.Builder(n, r)))
                 .deserialize(nodeFaultsPath);
     }
 

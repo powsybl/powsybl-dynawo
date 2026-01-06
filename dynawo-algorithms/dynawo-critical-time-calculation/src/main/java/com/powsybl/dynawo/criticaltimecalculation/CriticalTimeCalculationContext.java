@@ -9,9 +9,9 @@ package com.powsybl.dynawo.criticaltimecalculation;
 
 import com.powsybl.dynamicsimulation.EventModelsSupplier;
 import com.powsybl.dynawo.*;
-import com.powsybl.dynawo.algorithms.NodeFaultEventModels;
-import com.powsybl.dynawo.algorithms.NodeFaultEventData;
-import com.powsybl.dynawo.algorithms.NodeFaultEventModelsFactory;
+import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultEventModels;
+import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultEventData;
+import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultEventModelsFactory;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
 

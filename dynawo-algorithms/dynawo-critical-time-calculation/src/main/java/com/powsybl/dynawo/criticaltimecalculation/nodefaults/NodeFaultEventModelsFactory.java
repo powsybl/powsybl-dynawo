@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.algorithms;
+package com.powsybl.dynawo.criticaltimecalculation.nodefaults;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.BlackBoxModelSupplier;

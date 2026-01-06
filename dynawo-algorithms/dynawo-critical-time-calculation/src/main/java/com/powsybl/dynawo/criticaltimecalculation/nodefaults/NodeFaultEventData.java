@@ -5,32 +5,58 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.algorithms;
+package com.powsybl.dynawo.criticaltimecalculation.nodefaults;
+
+import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.builders.BuilderEquipment;
+import com.powsybl.iidm.network.*;
+
+import java.util.Objects;
 
 /**
  * @author Erwann Goasguen {@literal <erwann.goasguen at rte-france.com>}
  */
 public final class NodeFaultEventData {
 
-    public static final String DEFAULT_STATIC_ID = null;
-    public static final double DEFAULT_FAULT_START_TIME = 1;
-    public static final double DEFAULT_FAULT_STOP_TIME = 2;
-    public static final double DEFAULT_FAULT_RPU = 0.001;
-    public static final double DEFAULT_FAULT_XPU = 0.001;
-
     public static class Builder {
 
-        private String staticId = DEFAULT_STATIC_ID;
-        private double faultStartTime = DEFAULT_FAULT_START_TIME;
-        private double faultStopTime = DEFAULT_FAULT_STOP_TIME;
-        private double faultRPuValue = DEFAULT_FAULT_RPU;
-        private double faultXPuValue = DEFAULT_FAULT_XPU;
+        private final Network network;
+        private final ReportNode reportNode;
+
+        private final BuilderEquipment<Bus> bus;
+        private String staticId = null;
+        private double faultStartTime = 1;
+        private double faultStopTime = 2;
+        private double faultRPu = Double.NaN;
+        private double faultXPu = Double.NaN;
+
+        public Builder(Network network, ReportNode reportNode) {
+            this.network = Objects.requireNonNull(network);
+            this.reportNode = Objects.requireNonNull(reportNode);
+            this.bus = new BuilderEquipment<>(IdentifiableType.BUS.toString(), this.reportNode);
+
+        }
+
+        public Builder(Network network) {
+            this.network = Objects.requireNonNull(network);
+            this.reportNode = ReportNode.NO_OP;
+            this.bus = new BuilderEquipment<>(IdentifiableType.BUS.toString(), this.reportNode);
+
+        }
+
+        public Builder() {
+            this.network = null;
+            this.reportNode = ReportNode.NO_OP;
+            this.bus = new BuilderEquipment<>(IdentifiableType.BUS.toString(), this.reportNode);
+
+        }
 
         /**
          * Set static ID for the critical time
          */
         public Builder setStaticId(String staticId) {
-            this.staticId = staticId;
+            bus.addEquipment(staticId, this::getBus);
+            this.staticId = bus.getEquipment() != null ? bus.getEquipment().getId() : null;
             return this;
         }
 
@@ -54,7 +80,7 @@ public final class NodeFaultEventData {
          * Set node fault rPu
          */
         public Builder setFaultRPu(double rPu) {
-            this.faultRPuValue = rPu;
+            this.faultRPu = rPu;
             return this;
         }
 
@@ -62,16 +88,31 @@ public final class NodeFaultEventData {
          * Set node fault xPu
          */
         public Builder setFaultXPu(double xPu) {
-            this.faultXPuValue = xPu;
+            this.faultXPu = xPu;
             return this;
         }
 
-        public NodeFaultEventData build() {
-            if (faultRPuValue < 0) {
-                throw new IllegalStateException("rPu (%.2f) should be zero or positive".formatted(faultRPuValue));
+        private Bus getBus(String staticId) {
+            Bus bus = network.getBusBreakerView().getBus(staticId);
+            if (bus != null) {
+                return bus;
             }
-            if (faultXPuValue < 0) {
-                throw new IllegalStateException("xPu (%.2f) should be zero or positive".formatted(faultXPuValue));
+
+            Generator generator = network.getGenerator(staticId);
+            return generator != null
+                    ? generator.getTerminal().getBusBreakerView().getBus()
+                    : null;
+        }
+
+        public NodeFaultEventData build() {
+            if (bus.getEquipment() == null) {
+                throw new IllegalStateException("Static Id '%s' was not found.".formatted(staticId));
+            }
+            if (faultRPu < 0) {
+                throw new IllegalStateException("rPu (%.2f) should be zero or positive".formatted(faultRPu));
+            }
+            if (faultXPu < 0) {
+                throw new IllegalStateException("xPu (%.2f) should be zero or positive".formatted(faultXPu));
             }
             if (faultStartTime < 0) {
                 throw new IllegalStateException("Start time (%.2f) should be zero or positive".formatted(faultStartTime));
@@ -86,6 +127,14 @@ public final class NodeFaultEventData {
     /**
      * Creates a builder for CriticalTimeCalculationNodeFaults with default values
      */
+    public static NodeFaultEventData.Builder builder(Network network, ReportNode reportNode) {
+        return new NodeFaultEventData.Builder(network, reportNode);
+    }
+
+    public static NodeFaultEventData.Builder builder(Network network) {
+        return new NodeFaultEventData.Builder(network);
+    }
+
     public static NodeFaultEventData.Builder builder() {
         return new NodeFaultEventData.Builder();
     }
@@ -100,8 +149,8 @@ public final class NodeFaultEventData {
         this.staticId = builder.staticId;
         this.startTime = builder.faultStartTime;
         this.faultTime = builder.faultStopTime;
-        this.rPu = builder.faultRPuValue;
-        this.xPu = builder.faultXPuValue;
+        this.rPu = builder.faultRPu;
+        this.xPu = builder.faultXPu;
     }
 
     public String getStaticId() {

@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.algorithms.xml;
 
-import com.powsybl.dynawo.algorithms.NodeFaultEventModels;
 import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 import com.powsybl.dynawo.xml.XmlStreamWriterFactory;
 
@@ -26,7 +25,7 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class XmlUtil {
+public class XmlUtil {
 
     @FunctionalInterface
     public interface XmlDynawoEventWriter {
@@ -34,16 +33,11 @@ public final class XmlUtil {
     }
 
     @FunctionalInterface
-    public interface XmlNodeFaultEventWriter {
-        void writeEvent(XMLStreamWriter writer, NodeFaultEventModels model) throws XMLStreamException;
-    }
-
-    @FunctionalInterface
     public interface XmlJobWriter {
         void writeJob(XMLStreamWriter writer) throws XMLStreamException;
     }
 
-    private XmlUtil() {
+    protected XmlUtil() {
     }
 
     public static void write(Path file, String elementName, XmlDynawoEventWriter xmlDynawoEventWriter, ContingencyEventModels model) throws IOException, XMLStreamException {
@@ -60,29 +54,6 @@ public final class XmlUtil {
                 xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
 
                 xmlDynawoEventWriter.writeEvent(xmlWriter, model);
-
-                xmlWriter.writeEndElement();
-                xmlWriter.writeEndDocument();
-            } finally {
-                xmlWriter.close();
-            }
-        }
-    }
-
-    public static void write(Path file, String elementName, XmlNodeFaultEventWriter xmlNodeFaultEventWriter, NodeFaultEventModels model) throws IOException, XMLStreamException {
-        Objects.requireNonNull(file);
-        Objects.requireNonNull(elementName);
-        Objects.requireNonNull(xmlNodeFaultEventWriter);
-
-        try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
-            XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
-            try {
-                xmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-                xmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
-                xmlWriter.writeStartElement(DYN_URI, elementName);
-                xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
-
-                xmlNodeFaultEventWriter.writeEvent(xmlWriter, model);
 
                 xmlWriter.writeEndElement();
                 xmlWriter.writeEndDocument();

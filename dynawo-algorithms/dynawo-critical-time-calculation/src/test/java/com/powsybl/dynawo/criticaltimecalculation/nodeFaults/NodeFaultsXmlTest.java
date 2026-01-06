@@ -5,13 +5,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.algorithms;
+package com.powsybl.dynawo.criticaltimecalculation.nodeFaults;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.BlackBoxModelSupplier;
-import com.powsybl.dynawo.algorithms.xml.NodeFaultsDydXml;
-import com.powsybl.dynawo.algorithms.xml.NodeFaultsParXml;
+import com.powsybl.dynawo.criticaltimecalculation.xml.NodeFaultsDydXml;
+import com.powsybl.dynawo.criticaltimecalculation.xml.NodeFaultsParXml;
+import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultEventData;
+import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultEventModels;
+import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultEventModelsFactory;
 import com.powsybl.dynawo.xml.DynawoTestUtil;
+import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -26,16 +31,16 @@ public class NodeFaultsXmlTest extends DynawoTestUtil {
 
     @Test
     void writeDyds() throws SAXException, IOException, XMLStreamException {
-
+        Network network = EurostagTutorialExample1Factory.create();
         List<NodeFaultEventData> nodeFaultsList = List.of(
-                new NodeFaultEventData.Builder()
+                new NodeFaultEventData.Builder(network)
                         .setStaticId("NGEN")
                         .setFaultStartTime(1)
                         .setFaultStopTime(5)
                         .setFaultXPu(0.001)
                         .setFaultRPu(0.001)
                         .build(),
-                new NodeFaultEventData.Builder()
+                new NodeFaultEventData.Builder(network)
                         .setStaticId("NLOAD")
                         .setFaultStartTime(1)
                         .setFaultStopTime(2)

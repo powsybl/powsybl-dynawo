@@ -22,7 +22,7 @@ import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationParameters;
 import com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationProvider;
 import com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationRunParameters;
-import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultsBuilder;
+import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultEventData;
 import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultsProvider;
 import com.powsybl.dynawo.criticaltimecalculation.results.CriticalTimeCalculationResult;
 import com.powsybl.dynawo.criticaltimecalculation.results.Status;
@@ -104,10 +104,10 @@ class CriticalTimeCalculationTest extends AbstractDynawoTest {
                 .setReportNode(reportNode);
 
         NodeFaultsProvider nodeFaultsProvider = (n, r) ->
-                GENERATORS.stream().map(gen -> new NodeFaultsBuilder(n, r)
-                                .generatorId(gen)
-                                .faultRPu(0.001)
-                                .faultXPu(0.001)
+                GENERATORS.stream().map(gen -> new NodeFaultEventData.Builder(n, r)
+                                .setStaticId(gen)
+                                .setFaultRPu(0.001)
+                                .setFaultXPu(0.001)
                                 .build())
                         .toList();
 

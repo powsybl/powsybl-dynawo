@@ -9,8 +9,7 @@
 package com.powsybl.dynawo.criticaltimecalculation.json;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawo.algorithms.NodeFaultEventData;
-import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultsBuilder;
+import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultEventData;
 import com.powsybl.dynawo.suppliers.SupplierJsonDeserializer;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -31,47 +30,30 @@ public class NodeFaultsDeserializerJsonTest {
         Network network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
         try (var is = getClass().getResourceAsStream("/CriticalTimeCalculationNodeFaults.json")) {
             List<NodeFaultEventData> nodeFaultsList = new SupplierJsonDeserializer<>(
-                    new CriticalTimeCalculationNodeFaultsJsonDeserializer(() -> new NodeFaultsBuilder(network, ReportNode.NO_OP)))
+                    new CriticalTimeCalculationNodeFaultsJsonDeserializer(() -> new NodeFaultEventData.Builder(network, ReportNode.NO_OP)))
                     .deserialize(is);
 
             assertThat(nodeFaultsList).usingRecursiveFieldByFieldElementComparatorOnFields()
-                    .containsExactlyInAnyOrderElementsOf(getNodeFaultsListFromEventData());
-            assertThat(nodeFaultsList).usingRecursiveFieldByFieldElementComparatorOnFields()
-                    .containsExactlyInAnyOrderElementsOf(getNodeFaultsListFromBuilder(network));
+                    .containsExactlyInAnyOrderElementsOf(getNodeFaultsListFromEventData(network));
         }
 
     }
 
-    private static List<NodeFaultEventData> getNodeFaultsListFromEventData() {
+    private static List<NodeFaultEventData> getNodeFaultsListFromEventData(Network network) {
         return List.of(
-                new NodeFaultEventData.Builder()
+                new NodeFaultEventData.Builder(network)
                         .setStaticId("NGEN")
                         .setFaultStartTime(1)
                         .setFaultStopTime(2)
                         .setFaultXPu(0.5)
                         .setFaultRPu(0.5)
                         .build(),
-                new NodeFaultEventData.Builder()
+                new NodeFaultEventData.Builder(network)
                         .setStaticId("N1")
                         .setFaultStartTime(1)
                         .setFaultStopTime(2)
                         .setFaultXPu(0.001)
                         .setFaultRPu(0.001)
-                        .build()
-        );
-    }
-
-    private static List<NodeFaultEventData> getNodeFaultsListFromBuilder(Network network) {
-        return List.of(
-                new NodeFaultsBuilder(network, ReportNode.NO_OP)
-                        .generatorId("GEN")
-                        .faultXPu(0.5)
-                        .faultRPu(0.5)
-                        .build(),
-                new NodeFaultsBuilder(network, ReportNode.NO_OP)
-                        .generatorId("GEN2")
-                        .faultXPu(0.001)
-                        .faultRPu(0.001)
                         .build()
         );
     }

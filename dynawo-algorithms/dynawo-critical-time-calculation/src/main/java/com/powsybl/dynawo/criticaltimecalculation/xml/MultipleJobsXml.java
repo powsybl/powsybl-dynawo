@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawo.criticaltimecalculation.xml;
 
-import com.powsybl.dynawo.algorithms.NodeFaultEventModels;
+import com.powsybl.dynawo.criticaltimecalculation.nodefaults.NodeFaultEventModels;
 import com.powsybl.dynawo.algorithms.xml.XmlUtil;
 import com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationContext;
 import com.powsybl.dynawo.criticaltimecalculation.CriticalTimeCalculationParameters;
