@@ -9,6 +9,7 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynamicModelsConfigUtils;
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
@@ -36,10 +37,18 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     private static final String DYN_NAME = "BBM_" + PHASE_SHIFTER_NAME;
 
     @BeforeEach
-    void setup(String dydName, Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) {
+    void setup(String dydName, String parName, Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) {
         setupNetwork();
         addDynamicModels(phaseShifterConstructor, dynamicTransformer);
+        setupDynawoSimulationParameters();
         setupDynawoContext();
+    }
+
+    protected void setupDynawoSimulationParameters() {
+        dynawoParameters = DynawoSimulationParameters.load()
+                .setModelsParameters(
+                        getClass().getResourceAsStream("/phaseShifterConfigModels.par")
+                );
     }
 
     protected void setupNetwork() {
@@ -59,23 +68,28 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("providePhaseShifter")
-    void writeLoadModel(String dydName, Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) throws SAXException, IOException {
+    void writeLoadModel(String dydName, String parName, Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) throws SAXException, IOException {
         DydXml.write(tmpDir, context.getSimulationDydData());
+        ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        if (parName != null) {
+            validate("parameters.xsd", parName, tmpDir.resolve("models.par"));
+        }
+
     }
 
     private static Stream<Arguments> providePhaseShifter() {
         return Stream.of(
-                Arguments.of("phase_shifter_i_dyd.xml", (Function<Network, BlackBoxModel>) n ->
+                Arguments.of("phase_shifter_i_dyd.xml", "phase_shifter_i_par.xml", (Function<Network, BlackBoxModel>) n ->
                         PhaseShifterIAutomationSystemBuilder.of(n)
                                 .dynamicModelId(DYN_NAME)
-                                .parameterSetId("ps")
+                                .parameterSetId("phase_shifter_i_par")
                                 .transformer("NGEN_NHV1")
                                 .build(), true),
-                Arguments.of("phase_shifter_p_dyd.xml", (Function<Network, BlackBoxModel>) n ->
+                Arguments.of("phase_shifter_p_dyd.xml", "phase_shifter_p_par.xml", (Function<Network, BlackBoxModel>) n ->
                         PhaseShifterPAutomationSystemBuilder.of(n)
                                 .dynamicModelId(DYN_NAME)
-                                .parameterSetId("ps")
+                                .parameterSetId("phase_shifter_p_par")
                                 .transformer("NGEN_NHV1")
                                 .build(), false));
     }
