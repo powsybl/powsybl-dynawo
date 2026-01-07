@@ -16,6 +16,7 @@ import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.loads.AbstractLoad;
 import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 import com.powsybl.dynawo.algorithms.ContingencyEventModelsFactory;
+import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DynawoData;
 import com.powsybl.iidm.modification.scalable.Scalable;
 import com.powsybl.iidm.modification.scalable.ScalingParameters;
@@ -34,6 +35,7 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
     private final MarginCalculationParameters marginCalculationParameters;
     private final List<ContingencyEventModels> contingencyEventModels;
     private final LoadVariationModels loadVariationModels;
+    private final ParametersSet finalStepNetworkParameters;
 
     public static class Builder extends AbstractContextBuilder<Builder> {
 
@@ -42,6 +44,7 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
         private MarginCalculationParameters parameters;
         private LoadVariationModels loadVariationModels;
         private List<ContingencyEventModels> contingencyEventModels;
+        private ParametersSet finalStepNetworkParameters;
 
         public Builder(Network network, List<BlackBoxModel> dynamicModels, List<Contingency> contingencies,
                        List<LoadsVariation> loadsVariations) {
@@ -62,6 +65,12 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
             }
             finalStepConfig = configureFinalStep(parameters, loadsVariations);
             super.setupData();
+            setupFinalStepNetwork();
+        }
+
+        protected void setupFinalStepNetwork() {
+            ParametersSet networkParameters = dynawoParameters.getNetworkParameters();
+            finalStepNetworkParameters = new ParametersSet(networkParameters.getId() + "_finalStep", networkParameters);
         }
 
         @Override
@@ -130,6 +139,7 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
         this.marginCalculationParameters = builder.parameters;
         this.contingencyEventModels = builder.contingencyEventModels;
         this.loadVariationModels = builder.loadVariationModels;
+        this.finalStepNetworkParameters = builder.finalStepNetworkParameters;
     }
 
     public MarginCalculationParameters getMarginCalculationParameters() {
@@ -142,5 +152,15 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
 
     public DynawoData getLoadVariationAreaDydData() {
         return loadVariationModels;
+    }
+
+    @Override
+    public List<ParametersSet> getNetworkParameters() {
+        return List.of(getDynawoSimulationParameters().getNetworkParameters(), finalStepNetworkParameters);
+    }
+
+    @Override
+    public String getNetworkParametersId(boolean isFinalStep) {
+        return isFinalStep ? finalStepNetworkParameters.getId() : getDynawoSimulationParameters().getNetworkParameters().getId();
     }
 }

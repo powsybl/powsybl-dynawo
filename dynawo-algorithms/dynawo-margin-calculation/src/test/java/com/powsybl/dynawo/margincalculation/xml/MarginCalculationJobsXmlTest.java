@@ -8,10 +8,14 @@
 package com.powsybl.dynawo.margincalculation.xml;
 
 import com.powsybl.contingency.Contingency;
+import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.margincalculation.MarginCalculationContext;
 import com.powsybl.dynawo.margincalculation.MarginCalculationParameters;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.dynawo.xml.AbstractDynamicModelXmlTest;
+import com.powsybl.dynawo.xml.JobsXml;
+import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -19,6 +23,7 @@ import org.xml.sax.SAXException;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
 import static com.powsybl.iidm.network.test.EurostagTutorialExample1Factory.NGEN;
@@ -27,7 +32,7 @@ import static com.powsybl.iidm.network.test.EurostagTutorialExample1Factory.NHV1
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class MultiplesJobsXmlTest extends AbstractDynamicModelXmlTest {
+class MarginCalculationJobsXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -44,6 +49,12 @@ class MultiplesJobsXmlTest extends AbstractDynamicModelXmlTest {
         network.getBusBreakerView().getBus("NLOAD")
                 .setV(147.57861328125)
                 .setAngle(-9.614486694335938);
+    }
+
+    @Override
+    protected void setupDynawoSimulationParameters() {
+        dynawoParameters = DynawoSimulationParameters.load()
+                .setNetworkParameters(Objects.requireNonNull(getClass().getResourceAsStream("/parametersSet/network.par")), "networkParametersId");
     }
 
     @Override
@@ -64,12 +75,17 @@ class MultiplesJobsXmlTest extends AbstractDynamicModelXmlTest {
                 new LoadsVariation(List.of(network.getLoad("LOAD"), network.getLoad("LOAD2")), 10));
         context = new MarginCalculationContext.Builder(network, dynamicModels, contingencies, loadsVariationList)
                 .marginCalculationParameters(parameters)
+                .dynawoParameters(dynawoParameters)
                 .build();
     }
 
     @Test
-    void writeMultiplesJobs() throws SAXException, IOException, XMLStreamException {
+    void writeJobs() throws SAXException, IOException, XMLStreamException {
         MultipleJobsXml.write(tmpDir, (MarginCalculationContext) context);
+        JobsXml.writeFinalStep(tmpDir, context);
+        ParametersXml.write(tmpDir, context);
         validate("multipleJobs.xsd", "multipleJobs_mc.xml", tmpDir.resolve(MULTIPLE_JOBS_FILENAME));
+        validate("jobs.xsd", "finalStep_job.xml", tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME), true);
+        validate("parameters.xsd", "finaStepNetworkParameters_par.xml", tmpDir.resolve(DynawoSimulationConstants.NETWORK_PARAMETERS_FILENAME));
     }
 }
