@@ -88,7 +88,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
         Source xsd = new StreamSource(getClass().getResourceAsStream("/" + schemaDefinition));
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
-        //validator.validate(xml);
+        validator.validate(xml);
         if (ignoreComment) {
             assertXmlEquals(expected, actual);
         } else {
