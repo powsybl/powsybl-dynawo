@@ -28,7 +28,10 @@ public class DynawoOutputVariablesBuilder {
 
     private final ReportNode reportNode;
     private boolean isInstantiable = true;
+    private String id;
+    @Deprecated
     private String dynamicModelId;
+    @Deprecated
     private String staticId;
     private List<String> variables;
     private OutputVariable.OutputType type = OutputVariable.OutputType.CURVE;
@@ -48,6 +51,11 @@ public class DynawoOutputVariablesBuilder {
 
     public DynawoOutputVariablesBuilder staticId(String staticId) {
         this.staticId = staticId;
+        return this;
+    }
+
+    public DynawoOutputVariablesBuilder id(String id) {
+        this.id = id;
         return this;
     }
 
@@ -76,13 +84,23 @@ public class DynawoOutputVariablesBuilder {
     }
 
     private String getId() {
+        if (id != null) {
+            return id;
+        }
         return dynamicModelId != null ? dynamicModelId : staticId;
     }
 
     private void checkData() {
-        if (staticId != null && dynamicModelId != null) {
-            BuilderReports.reportFieldConflict(reportNode, "dynamicModelId", "staticId");
+        if (id == null) {
+            if (staticId == null && dynamicModelId == null) {
+                BuilderReports.reportFieldNotSet(reportNode, "id");
+                isInstantiable = false;
+            }
+            if (staticId != null && dynamicModelId != null) {
+                BuilderReports.reportFieldConflict(reportNode, "dynamicModelId", "staticId");
+            }
         }
+
         if (variables == null) {
             BuilderReports.reportFieldNotSet(reportNode, VARIABLES_FIELD);
             isInstantiable = false;
@@ -101,12 +119,32 @@ public class DynawoOutputVariablesBuilder {
     }
 
     public void add(Consumer<OutputVariable> outputVariableConsumer) {
-        if (isInstantiable()) {
-            boolean hasDynamicModelId = dynamicModelId != null;
-            String id = hasDynamicModelId ? dynamicModelId : DEFAULT_DYNAMIC_MODEL_ID;
-            variables.forEach(v ->
-                    outputVariableConsumer.accept(new DynawoOutputVariable(id, hasDynamicModelId ? v : staticId + "_" + v, type)));
+        if (!isInstantiable()) {
+            return;
         }
+
+        if (id != null) {
+            // Use the explicit id as-is, unresolved variables
+
+            variables.forEach(v -> {
+                DynawoOutputVariable ov = new DynawoOutputVariable(id, v, type);
+                ov.isUnresolved = true;
+                outputVariableConsumer.accept(ov);
+            });
+            return; // skip legacy path
+        }
+
+        // Legacy behavior (unchanged)
+        boolean hasDynamicModelId = dynamicModelId != null;
+        String resolvedId = hasDynamicModelId ? dynamicModelId : DEFAULT_DYNAMIC_MODEL_ID;
+
+        variables.forEach(v ->
+                outputVariableConsumer.accept(
+                        new DynawoOutputVariable(
+                                resolvedId,
+                                hasDynamicModelId ? v : staticId + "_" + v,
+                                type
+                        )));
     }
 
     public List<OutputVariable> build() {
