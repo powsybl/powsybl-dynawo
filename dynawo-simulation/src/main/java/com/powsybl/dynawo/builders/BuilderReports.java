@@ -158,15 +158,6 @@ public final class BuilderReports {
                 .add();
     }
 
-    public static void reportFieldOptionNotImplemented(ReportNode reportNode, String fieldName, String defaultValue) {
-        reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynasim.fieldOptionNotImplemented")
-                .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue("defaultValue", defaultValue)
-                .withSeverity(TypedValue.WARN_SEVERITY)
-                .add();
-    }
-
     public static void reportFieldConflict(ReportNode reportNode, String firstFieldName, String secondFieldName) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.fieldConflict")

@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -44,9 +43,19 @@ class HvdcTest {
     void testDanglingConnectedStation() {
         Network network = HvdcTestNetwork.createVsc();
         HvdcLine line = network.getHvdcLine("L");
+
+        BaseHvdc hvdcPDangling = HvdcPBuilder.of(network, "HvdcPVDangling")
+                .staticId("L")
+                .parameterSetId("HVDC")
+                .dangling(TwoSides.ONE)
+                .build();
+        assertEquals(1, hvdcPDangling.getConnectedStations().size());
+        assertEquals(line.getConverterStation2(), hvdcPDangling.getConnectedStations().getFirst());
+
         BaseHvdc hvdcVscDangling = HvdcVscBuilder.of(network, "HvdcVSCDanglingP")
                 .staticId("L")
                 .parameterSetId("HVDC")
+                .dangling(TwoSides.TWO)
                 .build();
         assertEquals(1, hvdcVscDangling.getConnectedStations().size());
         assertEquals(line.getConverterStation1(), hvdcVscDangling.getConnectedStations().getFirst());
@@ -71,21 +80,13 @@ class HvdcTest {
         Network network = HvdcTestNetwork.createVsc();
         HvdcLine line = network.getHvdcLine("L");
 
-        // dangling side ONE replaced by side TWO
+        // Missing dangling side replaced by side TWO
         BaseHvdc hvdcPDangling = Objects.requireNonNull(
                 HvdcPBuilder.of(network, "HvdcPVDangling", reportNode))
                     .staticId("L")
                     .parameterSetId("HVDC")
-                    .dangling(TwoSides.ONE)
                     .build();
         assertEquals(1, hvdcPDangling.getConnectedStations().size());
         assertEquals(line.getConverterStation1(), hvdcPDangling.getConnectedStations().getFirst());
-        assertThat(reportNode.getChildren().getFirst().getChildren().stream()
-                .filter(r -> r.getMessageKey().equalsIgnoreCase("dynawo.dynasim.fieldOptionNotImplemented"))
-                .findFirst())
-                .isNotEmpty()
-                .get()
-                .hasFieldOrPropertyWithValue("message",
-                        "'dangling' field is set but this option is not implemented yet, default value TWO will be used");
     }
 }

@@ -49,8 +49,8 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
     protected void checkData() {
         super.checkData();
         boolean isDangling = modelConfig.isDangling();
-        if (isDangling && danglingSide != null) {
-            BuilderReports.reportFieldOptionNotImplemented(reportNode, "dangling", DEFAULT_DANGLING_SIDE.toString());
+        if (isDangling && danglingSide == null) {
+            danglingSide = DEFAULT_DANGLING_SIDE;
         } else if (!isDangling && danglingSide != null) {
             BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "dangling", modelConfig.lib());
             isInstantiable = false;
@@ -61,7 +61,7 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
     public BaseHvdc build() {
         if (isInstantiable()) {
             if (modelConfig.isDangling()) {
-                return new HvdcDangling(getEquipment(), parameterSetId, modelConfig, varNameHandler, DEFAULT_DANGLING_SIDE);
+                return new HvdcDangling(getEquipment(), parameterSetId, modelConfig, varNameHandler, danglingSide);
             } else {
                 return new BaseHvdc(getEquipment(), parameterSetId, modelConfig, varNameHandler);
             }
