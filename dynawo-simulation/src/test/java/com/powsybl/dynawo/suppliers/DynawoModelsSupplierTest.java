@@ -172,7 +172,7 @@ class DynawoModelsSupplierTest {
     }
 
     private static DynamicModelConfig getTcbConfig() {
-        return new DynamicModelConfig("TapChangerBlockingAutomaton", "tcb_par", SetGroupType.FIXED, List.of(
+        return new DynamicModelConfig("TapChangerBlockingAutomationSystem", "tcb_par", SetGroupType.FIXED, List.of(
                 new PropertyBuilder()
                         .name("dynamicModelId")
                         .value("TCB1")
@@ -192,7 +192,7 @@ class DynawoModelsSupplierTest {
     }
 
     private static DynamicModelConfig getSimpleTcbConfig() {
-        return new DynamicModelConfig("TapChangerBlockingAutomaton", "tcb_par", SetGroupType.FIXED, List.of(
+        return new DynamicModelConfig("TapChangerBlockingAutomationSystem", "tcb_par", SetGroupType.FIXED, List.of(
                 new PropertyBuilder()
                         .name("dynamicModelId")
                         .value("TCB2")

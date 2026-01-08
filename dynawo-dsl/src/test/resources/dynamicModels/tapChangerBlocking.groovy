@@ -10,7 +10,7 @@ package dynamicModels
 
 List[] measurements = [["OldId", "NGEN", "NHV1"], ["NHV1", "OldId"], ["NHV2"]]
 
-TapChangerBlockingAutomaton {
+TapChangerBlockingAutomationSystem {
     dynamicModelId "ZAB"
     parameterSetId "ZAB"
     uMeasurements measurements

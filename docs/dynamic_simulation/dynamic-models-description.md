@@ -512,7 +512,7 @@ Phase-shifter which monitors a given active power. When the active power goes ab
 Tap changer.
 
 ### Tap changer blocking automaton
-- `TapChangerBlockingAutomaton`:
+- `TapChangerBlockingAutomationSystem`:
 Blocks tap changers when one of the monitored voltages goes below a threshold.
 
 ### Under voltage
