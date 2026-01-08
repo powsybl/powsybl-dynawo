@@ -341,7 +341,7 @@ With specific attributes:
 ```groovy
 import com.powsybl.dynawo.models.TransformerSide
 
-TapChangerAutomaton {
+TapChangerAutomationSystem {
     dynamicModelId "TC"
     parameterSetId "TC"
     staticId "LOAD"
@@ -351,7 +351,7 @@ TapChangerAutomaton {
 **Json configuration:**
 ```json
 {
-  "model":"TapChangerAutomaton",
+  "model":"TapChangerAutomationSystem",
   "group": "TC",
   "properties":[
     {

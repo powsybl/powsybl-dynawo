@@ -508,7 +508,7 @@ Blocks phase shifter I when the monitored intensity goes below a threshold.
 Phase-shifter which monitors a given active power. When the active power goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated.
 
 ### Tap changer automaton
-- `TapChangerAutomaton`:
+- `TapChangerAutomationSystem`:
 Tap changer.
 
 ### Tap changer blocking automaton

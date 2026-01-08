@@ -853,10 +853,11 @@
     ]
   },
   "TAP_CHANGER": {
-    "defaultLib": "TapChangerAutomaton",
+    "defaultLib": "TapChangerAutomationSystem",
     "libs": [
       {
         "lib": "TapChangerAutomaton",
+        "alias":"TapChangerAutomationSystem",
         "doc": "Tap changer"
       }
     ]

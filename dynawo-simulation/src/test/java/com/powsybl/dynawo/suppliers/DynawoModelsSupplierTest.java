@@ -141,7 +141,7 @@ class DynawoModelsSupplierTest {
                                 .value("GEN")
                                 .type(PropertyType.STRING)
                                 .build())),
-                new DynamicModelConfig("TapChangerAutomaton", "tc_par", SetGroupType.FIXED, List.of(
+                new DynamicModelConfig("TapChangerAutomationSystem", "tc_par", SetGroupType.FIXED, List.of(
                         new PropertyBuilder()
                                 .name("dynamicModelId")
                                 .value("TC")
