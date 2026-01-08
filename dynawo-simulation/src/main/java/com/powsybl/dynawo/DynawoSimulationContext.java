@@ -169,7 +169,11 @@ public class DynawoSimulationContext {
         return List.of(getDynawoSimulationParameters().getNetworkParameters());
     }
 
-    public String getNetworkParametersId(boolean isFinalStep) {
+    public String getNetworkParameterSetId() {
         return dynawoSimulationParameters.getNetworkParameters().getId();
+    }
+
+    public String getFinalStepNetworkParameterSetId() {
+        return getNetworkParameterSetId();
     }
 }

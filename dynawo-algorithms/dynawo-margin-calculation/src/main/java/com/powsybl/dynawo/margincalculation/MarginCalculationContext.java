@@ -160,7 +160,7 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
     }
 
     @Override
-    public String getNetworkParametersId(boolean isFinalStep) {
-        return isFinalStep ? finalStepNetworkParameters.getId() : getDynawoSimulationParameters().getNetworkParameters().getId();
+    public String getFinalStepNetworkParameterSetId() {
+        return finalStepNetworkParameters.getId();
     }
 }
