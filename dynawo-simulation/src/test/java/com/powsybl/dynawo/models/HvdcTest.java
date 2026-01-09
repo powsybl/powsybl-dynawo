@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -88,5 +89,12 @@ class HvdcTest {
                     .build();
         assertEquals(1, hvdcPDangling.getConnectedStations().size());
         assertEquals(line.getConverterStation1(), hvdcPDangling.getConnectedStations().getFirst());
+        assertThat(reportNode.getChildren().getFirst().getChildren().stream()
+                .filter(r -> r.getMessageKey().equalsIgnoreCase("dynawo.dynasim.fieldNotSetDefaultValue"))
+                .findFirst())
+                .isNotEmpty()
+                .get()
+                .hasFieldOrPropertyWithValue("message",
+                        "'dangling' field is not set, default value TWO will be used");
     }
 }

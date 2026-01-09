@@ -77,6 +77,15 @@ public final class BuilderReports {
                 .add();
     }
 
+    public static void reportFieldNotSetDefaultValue(ReportNode reportNode, String fieldName, String defaultValue) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.fieldNotSetDefaultValue")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue("defaultValue", defaultValue)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
     public static void reportFieldReplacement(ReportNode reportNode, String fieldName, String replacementName, String replacement) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.fieldReplacement")

@@ -50,6 +50,7 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
         super.checkData();
         boolean isDangling = modelConfig.isDangling();
         if (isDangling && danglingSide == null) {
+            BuilderReports.reportFieldNotSetDefaultValue(reportNode, "dangling", DEFAULT_DANGLING_SIDE.toString());
             danglingSide = DEFAULT_DANGLING_SIDE;
         } else if (!isDangling && danglingSide != null) {
             BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "dangling", modelConfig.lib());
