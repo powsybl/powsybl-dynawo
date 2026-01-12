@@ -95,6 +95,10 @@ class JobsXmlTest extends DynawoTestUtil {
                 tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME), true);
     }
 
+    /**
+     * Test final step job creation without final step dyd
+     * by setting FinalStepConfig predicate to always false removing all dynamic models from the final step
+     */
     @Test
     void writeEmptyFinalStepJob() throws SAXException, IOException {
         DynawoSimulationContext context = new DynawoSimulationContext
