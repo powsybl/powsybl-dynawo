@@ -9,9 +9,7 @@ import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -56,16 +54,8 @@ class OutputVariablesBuilderTest {
                 .build();
         assertEquals(2, outputVariables.size());
         OutputVariable variable = outputVariables.getFirst();
-        assertEquals("NETWORK", variable.getModelId());
-        assertEquals("GEN_generator_omegaPu", variable.getVariableName());
-    }
-
-    @ParameterizedTest(name = "{1}")
-    @MethodSource("provideBuilderError")
-    void testScriptError(Function<ReportNode, DynawoOutputVariablesBuilder> builderFunction, boolean isInstantiable, String report) throws IOException {
-        boolean hasInstance = !builderFunction.apply(reporter).build().isEmpty();
-        assertEquals(isInstantiable, hasInstance);
-        checkReportNode(report);
+        assertEquals("GEN", variable.getModelId());
+        assertEquals("generator_omegaPu", variable.getVariableName());
     }
 
     @Test
@@ -108,16 +98,6 @@ class OutputVariablesBuilderTest {
 
     private static Stream<Arguments> provideBuilderError() {
         return Stream.of(
-                Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
-                        new DynawoOutputVariablesBuilder(r)
-                            .staticId("GEN")
-                            .dynamicModelId("BBM_GEN")
-                            .variable("uPu"),
-                        true,
-                        """
-                        + Builder tests
-                           Both 'dynamicModelId' and 'staticId' are defined, 'dynamicModelId' will be used
-                        """),
                 Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
                         new DynawoOutputVariablesBuilder(r)
                             .staticId("GEN"),

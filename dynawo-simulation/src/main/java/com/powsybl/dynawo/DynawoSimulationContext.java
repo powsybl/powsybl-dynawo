@@ -38,6 +38,7 @@ public class DynawoSimulationContext {
     private final SimulationTime simulationTime;
     private final SimulationTime finalStepTime;
     protected final DynawoVersion dynawoVersion;
+    private static final String DEFAULT_DYNAMIC_MODEL_ID = "NETWORK";
 
     public static class Builder extends AbstractContextBuilder<Builder> {
 
@@ -93,31 +94,33 @@ public class DynawoSimulationContext {
         }
 
         public void resolveOutputVariablesIds() {
-            // Late determine if the outputVariable is static or dynamic if the flag unresolvedId is set to true but can only be done with DynawoOutputVariables
             outputVariables = outputVariables.entrySet().stream()
                 .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     entry -> entry.getValue().stream()
                             .map(outputVariable -> {
-
-                                if (!(outputVariable instanceof DynawoOutputVariable)) {
-                                    return outputVariable;
-                                } else if (!((DynawoOutputVariable) outputVariable).isUnresolved()) {
+                                if (!(outputVariable instanceof DynawoOutputVariable dynawoOv)) {
                                     return outputVariable;
                                 }
 
-                                String modelId = outputVariable.getModelId();
-                                boolean isDynamic = blackBoxModelSupplier.hasDynamicModel(network.getIdentifiable(modelId));
+                                String dynamicModelId = dynawoOv.getModelId();
+
+                                boolean isDynamic =
+                                        dynamicModelId != null
+                                                && network.getIdentifiable(dynamicModelId) != null
+                                                && blackBoxModelSupplier.hasDynamicModel(
+                                                network.getIdentifiable(dynamicModelId)
+                                        );
 
                                 if (isDynamic) {
-                                    return outputVariable;
+                                    return dynawoOv;
                                 }
 
-                                // default case
+                                // static case
                                 return new DynawoOutputVariable(
-                                        "NETWORK",
-                                        modelId + "_" + outputVariable.getVariableName(),
-                                        outputVariable.getOutputType()
+                                        DEFAULT_DYNAMIC_MODEL_ID,
+                                        dynamicModelId + "_" + dynawoOv.getVariableName(),
+                                        dynawoOv.getOutputType()
                                 );
                             })
                             .toList()

@@ -11,7 +11,9 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.builders.BuilderReports;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -23,16 +25,11 @@ import java.util.stream.Stream;
  */
 public class DynawoOutputVariablesBuilder {
 
-    private static final String DEFAULT_DYNAMIC_MODEL_ID = "NETWORK";
     private static final String VARIABLES_FIELD = "variables";
 
     private final ReportNode reportNode;
     private boolean isInstantiable = true;
     private String id;
-    @Deprecated
-    private String dynamicModelId;
-    @Deprecated
-    private String staticId;
     private List<String> variables;
     private OutputVariable.OutputType type = OutputVariable.OutputType.CURVE;
 
@@ -45,12 +42,12 @@ public class DynawoOutputVariablesBuilder {
     }
 
     public DynawoOutputVariablesBuilder dynamicModelId(String dynamicModelId) {
-        this.dynamicModelId = dynamicModelId;
+        this.id = dynamicModelId;
         return this;
     }
 
     public DynawoOutputVariablesBuilder staticId(String staticId) {
-        this.staticId = staticId;
+        this.id = staticId;
         return this;
     }
 
@@ -84,21 +81,13 @@ public class DynawoOutputVariablesBuilder {
     }
 
     private String getId() {
-        if (id != null) {
-            return id;
-        }
-        return dynamicModelId != null ? dynamicModelId : staticId;
+        return id;
     }
 
     private void checkData() {
         if (id == null) {
-            if (staticId == null && dynamicModelId == null) {
-                BuilderReports.reportFieldNotSet(reportNode, "id");
-                isInstantiable = false;
-            }
-            if (staticId != null && dynamicModelId != null) {
-                BuilderReports.reportFieldConflict(reportNode, "dynamicModelId", "staticId");
-            }
+            BuilderReports.reportFieldNotSet(reportNode, "id");
+            isInstantiable = false;
         }
 
         if (variables == null) {
@@ -119,32 +108,12 @@ public class DynawoOutputVariablesBuilder {
     }
 
     public void add(Consumer<OutputVariable> outputVariableConsumer) {
-        if (!isInstantiable()) {
-            return;
-        }
-
-        if (id != null) {
-            // Use the explicit id as-is, unresolved variables
-
+        if (isInstantiable()) {
             variables.forEach(v -> {
                 DynawoOutputVariable ov = new DynawoOutputVariable(id, v, type);
-                ov.isUnresolved = true;
                 outputVariableConsumer.accept(ov);
             });
-            return; // skip legacy path
         }
-
-        // Legacy behavior (unchanged)
-        boolean hasDynamicModelId = dynamicModelId != null;
-        String resolvedId = hasDynamicModelId ? dynamicModelId : DEFAULT_DYNAMIC_MODEL_ID;
-
-        variables.forEach(v ->
-                outputVariableConsumer.accept(
-                        new DynawoOutputVariable(
-                                resolvedId,
-                                hasDynamicModelId ? v : staticId + "_" + v,
-                                type
-                        )));
     }
 
     public List<OutputVariable> build() {
