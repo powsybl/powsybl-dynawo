@@ -3,36 +3,18 @@ package com.powsybl.dynawo.builders;
 import com.powsybl.commons.report.PowsyblCoreReportResourceBundle;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
-import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.provider.Arguments;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OutputVariablesBuilderTest {
-
-    private ReportNode reporter;
-
-    @BeforeEach
-    void setup() {
-        reporter = ReportNode.newRootReportNode()
-                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
-                .withMessageTemplate("testBuilder")
-                .build();
-    }
 
     @Test
     void buildFromDynamicId() {
@@ -94,35 +76,5 @@ class OutputVariablesBuilderTest {
         assertTrue(outputVariables.isEmpty());
         assertEquals(Collections.emptyList(), outputVariables);
         assertTrue(reportNode.getChildren().stream().anyMatch(child -> "dynawo.dynasim.emptyList".equals(child.getMessageKey())));
-    }
-
-    private static Stream<Arguments> provideBuilderError() {
-        return Stream.of(
-                Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
-                        new DynawoOutputVariablesBuilder(r)
-                            .staticId("GEN"),
-                        false,
-                        """
-                        + Builder tests
-                           'variables' field is not set
-                           Output variable GEN cannot be instantiated
-                        """),
-                Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
-                        new DynawoOutputVariablesBuilder(r)
-                            .staticId("GEN")
-                            .variables(),
-                        false,
-                        """
-                        + Builder tests
-                           'variables' list is empty
-                           Output variable GEN cannot be instantiated
-                        """)
-        );
-    }
-
-    private void checkReportNode(String report) throws IOException {
-        StringWriter sw = new StringWriter();
-        reporter.print(sw);
-        assertEquals(report, TestUtil.normalizeLineSeparator(sw.toString()));
     }
 }
