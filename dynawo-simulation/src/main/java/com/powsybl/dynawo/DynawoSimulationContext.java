@@ -11,7 +11,7 @@ import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
-import com.powsybl.dynawo.outputvariables.DynawoOutputVariable;
+import com.powsybl.dynawo.outputvariables.DynawoOutputVariableResolver;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DynawoData;
 import com.powsybl.iidm.network.Network;
@@ -38,7 +38,6 @@ public class DynawoSimulationContext {
     private final SimulationTime simulationTime;
     private final SimulationTime finalStepTime;
     protected final DynawoVersion dynawoVersion;
-    private static final String DEFAULT_DYNAMIC_MODEL_ID = "NETWORK";
 
     public static class Builder extends AbstractContextBuilder<Builder> {
 
@@ -79,6 +78,10 @@ public class DynawoSimulationContext {
                     .filter(ContextDependentEvent.class::isInstance)
                     .map(ContextDependentEvent.class::cast)
                     .forEach(e -> e.setEquipmentModelType(blackBoxModelSupplier.hasDynamicModel(e.getEquipment())));
+
+            //Late resolve on Output variables
+            DynawoOutputVariableResolver resolver = new DynawoOutputVariableResolver(network, blackBoxModelSupplier);
+            this.outputVariables = resolver.resolveOutputVariables(outputVariables);
         }
 
         @Override
@@ -89,42 +92,7 @@ public class DynawoSimulationContext {
         @Override
         public DynawoSimulationContext build() {
             setup();
-            resolveOutputVariablesIds();
             return new DynawoSimulationContext(this);
-        }
-
-        public void resolveOutputVariablesIds() {
-            outputVariables = outputVariables.entrySet().stream()
-                .collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    entry -> entry.getValue().stream()
-                            .map(outputVariable -> {
-                                if (!(outputVariable instanceof DynawoOutputVariable dynawoOv)) {
-                                    return outputVariable;
-                                }
-
-                                String dynamicModelId = dynawoOv.getModelId();
-
-                                boolean isDynamic =
-                                        dynamicModelId != null
-                                                && network.getIdentifiable(dynamicModelId) != null
-                                                && blackBoxModelSupplier.hasDynamicModel(
-                                                network.getIdentifiable(dynamicModelId)
-                                        );
-
-                                if (isDynamic) {
-                                    return dynawoOv;
-                                }
-
-                                // static case
-                                return new DynawoOutputVariable(
-                                        DEFAULT_DYNAMIC_MODEL_ID,
-                                        dynamicModelId + "_" + dynawoOv.getVariableName(),
-                                        dynawoOv.getOutputType()
-                                );
-                            })
-                            .toList()
-            ));
         }
     }
 

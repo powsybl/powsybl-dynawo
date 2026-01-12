@@ -110,4 +110,9 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     public void createDynamicModelInfoExtension() {
         // method empty by default to be redefined by specific models
     }
+
+    @Override
+    public boolean isConnected() {
+        return true;
+    }
 }

@@ -41,11 +41,13 @@ public class DynawoOutputVariablesBuilder {
         this(ReportNode.NO_OP);
     }
 
+    @Deprecated(since = "3.2.0-SNAPSHOT")
     public DynawoOutputVariablesBuilder dynamicModelId(String dynamicModelId) {
         this.id = dynamicModelId;
         return this;
     }
 
+    @Deprecated(since = "3.2.0-SNAPSHOT")
     public DynawoOutputVariablesBuilder staticId(String staticId) {
         this.id = staticId;
         return this;

@@ -111,4 +111,9 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
             super.write(writer, parFileName);
         }
     }
+
+    @Override
+    public boolean isConnected() {
+        return isConnected;
+    }
 }
