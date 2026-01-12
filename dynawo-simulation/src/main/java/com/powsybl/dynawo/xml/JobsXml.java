@@ -56,7 +56,8 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
     }
 
     public static void writeFinalStep(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml(FINAL_STEP_JOBS_FILENAME, context::getFinalStepSimulationTime, FINAL_STEP_DYD_FILENAME)
+        new JobsXml(FINAL_STEP_JOBS_FILENAME, context::getFinalStepSimulationTime,
+                context.getFinalStepDydData().isPresent() ? FINAL_STEP_DYD_FILENAME : null)
                 .createXmlFileFromDataSupplier(workingDir, context);
     }
 
