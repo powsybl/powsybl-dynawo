@@ -59,7 +59,7 @@
 
     <properties>
         <java.version>21</java.version>
-        <powsybl-core.version>7.1.0</powsybl-core.version>
+        <powsybl-core.version>7.1.1</powsybl-core.version>
         <groovy.version>4.0.26</groovy.version> <!-- used for groovy-json but also for groovydoc (dynawo-dsl) -->
         <asciitable.version>0.3.2</asciitable.version>
         <jackson.version>2.17.1</jackson.version>
