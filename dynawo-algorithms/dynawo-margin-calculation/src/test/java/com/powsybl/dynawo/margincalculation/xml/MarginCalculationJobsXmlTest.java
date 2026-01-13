@@ -86,6 +86,6 @@ class MarginCalculationJobsXmlTest extends AbstractDynamicModelXmlTest {
         ParametersXml.write(tmpDir, context);
         validate("multipleJobs.xsd", "multipleJobs_mc.xml", tmpDir.resolve(MULTIPLE_JOBS_FILENAME));
         validate("jobs.xsd", "finalStep_job.xml", tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME), true);
-        validate("parameters.xsd", "finaStepNetworkParameters_par.xml", tmpDir.resolve(DynawoSimulationConstants.NETWORK_PARAMETERS_FILENAME));
+        validate("parameters.xsd", "finalStepNetworkParameters_par.xml", tmpDir.resolve(DynawoSimulationConstants.NETWORK_PARAMETERS_FILENAME));
     }
 }

@@ -18,6 +18,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.*;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
@@ -30,29 +31,29 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimulationContext> {
 
     private static final String EXPORT_MODE = "exportMode";
-    private final SimulationTime simulationTime;
+    private final Supplier<SimulationTime> simulationTimeSupplier;
     private final String additionalDydFile;
     private final String networkParameterSetId;
 
-    private JobsXml(String xmlFileName, SimulationTime simulationTime, String additionalDydFile, String networkParameterSetId) {
+    private JobsXml(String xmlFileName, Supplier<SimulationTime> simulationTimeSupplier, String additionalDydFile, String networkParameterSetId) {
         super(xmlFileName, "jobs");
-        this.simulationTime = simulationTime;
+        this.simulationTimeSupplier = simulationTimeSupplier;
         this.additionalDydFile = additionalDydFile;
         this.networkParameterSetId = networkParameterSetId;
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml(JOBS_FILENAME, context.getSimulationTime(), null, context.getNetworkParameterSetId())
+        new JobsXml(JOBS_FILENAME, context::getSimulationTime, null, context.getNetworkParameterSetId())
                 .createXmlFileFromDataSupplier(workingDir, context);
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context, String additionalDydFile) throws IOException {
-        new JobsXml(JOBS_FILENAME, context.getSimulationTime(), additionalDydFile, context.getNetworkParameterSetId())
+        new JobsXml(JOBS_FILENAME, context::getSimulationTime, additionalDydFile, context.getNetworkParameterSetId())
                 .createXmlFileFromDataSupplier(workingDir, context);
     }
 
     public static void writeFinalStep(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml(FINAL_STEP_JOBS_FILENAME, context.getFinalStepSimulationTime(),
+        new JobsXml(FINAL_STEP_JOBS_FILENAME, context::getFinalStepSimulationTime,
                 context.getFinalStepDydData().isPresent() ? FINAL_STEP_DYD_FILENAME : null,
                 context.getFinalStepNetworkParameterSetId())
                 .createXmlFileFromDataSupplier(workingDir, context);
@@ -73,7 +74,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("name", context.getNetwork().getNameOrId());
         writeSolver(writer, parameters);
         writeModeler(writer, parameters, additionalDydFile, networkParameterSetId);
-        writeSimulation(writer, parameters, simulationTime);
+        writeSimulation(writer, parameters, simulationTimeSupplier.get());
         writeOutput(writer, context);
         writer.writeEndElement();
     }
