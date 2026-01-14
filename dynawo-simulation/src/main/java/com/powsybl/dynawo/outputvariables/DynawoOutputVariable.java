@@ -20,7 +20,7 @@ public class DynawoOutputVariable implements OutputVariable {
     private String variable;
     private final OutputType outputType;
 
-    public DynawoOutputVariable(String dynamicModelId, String variable, OutputType outputType) {
+    DynawoOutputVariable(String dynamicModelId, String variable, OutputType outputType) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.variable = Objects.requireNonNull(variable);
         this.outputType = Objects.requireNonNull(outputType);

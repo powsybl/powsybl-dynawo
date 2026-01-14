@@ -47,9 +47,9 @@ public class DynawoOutputVariablesBuilder {
      * @param dynamicModelId the ID of the dynamic model
      * @return the builder instance
      *
-     * @deprecated since 3.2.0-SNAPSHOT. Use {@link #id(String)} instead.
+     * @deprecated since 3.1.0. Use {@link #id(String)} instead.
      */
-    @Deprecated(since = "3.2.0-SNAPSHOT")
+    @Deprecated(since = "3.1.0")
     public DynawoOutputVariablesBuilder dynamicModelId(String dynamicModelId) {
         this.id = dynamicModelId;
         return this;
@@ -61,14 +61,20 @@ public class DynawoOutputVariablesBuilder {
      * @param staticId the ID of the static model
      * @return the builder instance
      *
-     * @deprecated since 3.2.0-SNAPSHOT. Use {@link #id(String)} instead.
+     * @deprecated since 3.1.0. Use {@link #id(String)} instead.
      */
-    @Deprecated(since = "3.2.0-SNAPSHOT")
+    @Deprecated(since = "3.1.0")
     public DynawoOutputVariablesBuilder staticId(String staticId) {
         this.id = staticId;
         return this;
     }
 
+    /**
+     * Sets the identifier for the output variable being built.
+     *
+     * @param id the unique ID of the output variable whether static or dynamic
+     * @return this builder instance for method chaining
+     */
     public DynawoOutputVariablesBuilder id(String id) {
         this.id = id;
         return this;
@@ -98,10 +104,6 @@ public class DynawoOutputVariablesBuilder {
         return this;
     }
 
-    private String getId() {
-        return id;
-    }
-
     private void checkData() {
         if (variables == null) {
             BuilderReports.reportFieldNotSet(reportNode, VARIABLES_FIELD);
@@ -115,7 +117,7 @@ public class DynawoOutputVariablesBuilder {
     private boolean isInstantiable() {
         checkData();
         if (!isInstantiable) {
-            BuilderReports.reportOutputVariableInstantiationFailure(reportNode, getId());
+            BuilderReports.reportOutputVariableInstantiationFailure(reportNode, id);
         }
         return isInstantiable;
     }

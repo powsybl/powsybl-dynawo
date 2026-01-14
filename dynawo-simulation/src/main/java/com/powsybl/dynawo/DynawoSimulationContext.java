@@ -66,6 +66,12 @@ public class DynawoSimulationContext {
             return self();
         }
 
+        private void resolveDynawoOutputVariables() {
+            //Late resolve on Output variables
+            DynawoOutputVariableResolver resolver = new DynawoOutputVariableResolver(network, blackBoxModelSupplier);
+            this.outputVariables = resolver.resolveOutputVariables(outputVariables);
+        }
+
         @Override
         protected void setupData() {
             super.setupData();
@@ -78,10 +84,12 @@ public class DynawoSimulationContext {
                     .filter(ContextDependentEvent.class::isInstance)
                     .map(ContextDependentEvent.class::cast)
                     .forEach(e -> e.setEquipmentModelType(blackBoxModelSupplier.hasDynamicModel(e.getEquipment())));
+        }
 
-            //Late resolve on Output variables
-            DynawoOutputVariableResolver resolver = new DynawoOutputVariableResolver(network, blackBoxModelSupplier);
-            this.outputVariables = resolver.resolveOutputVariables(outputVariables);
+        @Override
+        protected void setup() {
+            super.setup();
+            resolveDynawoOutputVariables();
         }
 
         @Override

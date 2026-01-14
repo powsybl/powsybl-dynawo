@@ -39,7 +39,7 @@ class OutputVariablesBuilderTest {
     @Test
     void buildFromDynamicId() {
         List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
-                .dynamicModelId("BBM_GEN")
+                .id("BBM_GEN")
                 .variable("generator_omegaPu")
                 .build();
         assertEquals(1, outputVariables.size());
@@ -51,7 +51,7 @@ class OutputVariablesBuilderTest {
     @Test
     void buildFromStaticId() {
         List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
-                .staticId("GEN")
+                .id("GEN")
                 .variables("generator_omegaPu", "generator_PGen")
                 .build();
         assertEquals(2, outputVariables.size());
@@ -90,7 +90,7 @@ class OutputVariablesBuilderTest {
                 .build();
 
         List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder(reportNode)
-                .staticId("GEN")
+                .id("GEN")
                 .variables("", "")
                 .build();
 
@@ -109,7 +109,7 @@ class OutputVariablesBuilderTest {
                 .build();
 
         List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder(reportNode)
-                .staticId("GEN")
+                .id("GEN")
                 .variables(Collections.emptyList())
                 .build();
 
@@ -122,7 +122,7 @@ class OutputVariablesBuilderTest {
         return Stream.of(
                 Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
                                 new DynawoOutputVariablesBuilder(r)
-                                        .staticId("GEN"),
+                                        .id("GEN"),
                         false,
                         """
                         + Builder tests
@@ -131,7 +131,7 @@ class OutputVariablesBuilderTest {
                         """),
                 Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
                                 new DynawoOutputVariablesBuilder(r)
-                                        .staticId("GEN")
+                                        .id("GEN")
                                         .variables(),
                         false,
                         """
