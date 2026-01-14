@@ -30,7 +30,9 @@ public final class DynawoOutputVariableResolver {
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> entry.getValue().stream()
-                                .map(this::resolveVariable)
+                                .map(ov -> ov instanceof DynawoOutputVariable
+                                        ? resolveVariable((DynawoOutputVariable) ov)
+                                        : null)
                                 .filter(Objects::nonNull)
                                 .collect(Collectors.toList())
                 ));
@@ -39,11 +41,7 @@ public final class DynawoOutputVariableResolver {
     /**
      * Resolves a single output variable
      */
-    private OutputVariable resolveVariable(OutputVariable outputVariable) {
-        if (!(outputVariable instanceof DynawoOutputVariable dynawoOv)) {
-            return outputVariable;
-        }
-
+    private DynawoOutputVariable resolveVariable(DynawoOutputVariable dynawoOv) {
         String dynamicModelId = dynawoOv.getModelId();
 
         boolean isDynamic = blackBoxModelSupplier.hasDynamicModel(dynamicModelId);
