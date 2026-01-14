@@ -87,11 +87,6 @@ public class DynawoOutputVariablesBuilder {
     }
 
     private void checkData() {
-        if (id == null) {
-            BuilderReports.reportFieldNotSet(reportNode, "id");
-            isInstantiable = false;
-        }
-
         if (variables == null) {
             BuilderReports.reportFieldNotSet(reportNode, VARIABLES_FIELD);
             isInstantiable = false;
