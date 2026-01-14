@@ -55,7 +55,6 @@ public class DynawoOutputVariablesBuilder {
         return this;
     }
 
-
     /**
      * Sets the static model ID.
      *
@@ -69,7 +68,6 @@ public class DynawoOutputVariablesBuilder {
         this.id = staticId;
         return this;
     }
-
 
     public DynawoOutputVariablesBuilder id(String id) {
         this.id = id;
