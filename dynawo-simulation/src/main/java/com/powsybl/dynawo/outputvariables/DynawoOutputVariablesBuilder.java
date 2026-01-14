@@ -41,17 +41,35 @@ public class DynawoOutputVariablesBuilder {
         this(ReportNode.NO_OP);
     }
 
+    /**
+     * Sets the dynamic model ID.
+     *
+     * @param dynamicModelId the ID of the dynamic model
+     * @return the builder instance
+     *
+     * @deprecated since 3.2.0-SNAPSHOT. Use {@link #id(String)} instead.
+     */
     @Deprecated(since = "3.2.0-SNAPSHOT")
     public DynawoOutputVariablesBuilder dynamicModelId(String dynamicModelId) {
         this.id = dynamicModelId;
         return this;
     }
 
+
+    /**
+     * Sets the static model ID.
+     *
+     * @param staticId the ID of the static model
+     * @return the builder instance
+     *
+     * @deprecated since 3.2.0-SNAPSHOT. Use {@link #id(String)} instead.
+     */
     @Deprecated(since = "3.2.0-SNAPSHOT")
     public DynawoOutputVariablesBuilder staticId(String staticId) {
         this.id = staticId;
         return this;
     }
+
 
     public DynawoOutputVariablesBuilder id(String id) {
         this.id = id;

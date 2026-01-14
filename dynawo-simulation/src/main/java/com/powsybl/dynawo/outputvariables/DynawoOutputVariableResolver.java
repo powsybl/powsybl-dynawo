@@ -30,12 +30,13 @@ public final class DynawoOutputVariableResolver {
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> entry.getValue().stream()
-                                .map(ov -> ov instanceof DynawoOutputVariable
-                                        ? resolveVariable((DynawoOutputVariable) ov)
+                                .map(ov -> ov instanceof DynawoOutputVariable dynawoOutputVariable
+                                        ? resolveVariable(dynawoOutputVariable)
                                         : null)
                                 .filter(Objects::nonNull)
                                 .collect(Collectors.toList())
                 ));
+
     }
 
     /**
