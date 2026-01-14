@@ -2,7 +2,6 @@ package com.powsybl.dynawo.outputvariables;
 
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.BlackBoxModelSupplier;
-import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
 
 import java.util.List;
@@ -32,6 +31,7 @@ public final class DynawoOutputVariableResolver {
                         Map.Entry::getKey,
                         entry -> entry.getValue().stream()
                                 .map(this::resolveVariable)
+                                .filter(Objects::nonNull)
                                 .collect(Collectors.toList())
                 ));
     }
@@ -47,23 +47,13 @@ public final class DynawoOutputVariableResolver {
         String dynamicModelId = dynawoOv.getModelId();
 
         boolean isDynamic = blackBoxModelSupplier.hasDynamicModel(dynamicModelId);
+        boolean isConnected = blackBoxModelSupplier.dynamicModelIsConnected(dynamicModelId);
 
-        BlackBoxModel bbm;
-        if (blackBoxModelSupplier.getEquipmentDynamicModel(dynamicModelId) != null) {
-            bbm = blackBoxModelSupplier.getEquipmentDynamicModel(dynamicModelId);
-        } else if (blackBoxModelSupplier.getPureDynamicModel(dynamicModelId) != null) {
-            bbm = blackBoxModelSupplier.getPureDynamicModel(dynamicModelId);
-        } else {
-            bbm = null;
-        }
-
-        boolean isConnected = bbm != null && bbm.isConnected();
-
-        if (!isDynamic || !isConnected) {
+        if (!isDynamic) {
             dynawoOv.setDynamicModelId(DEFAULT_DYNAMIC_MODEL_ID);
             dynawoOv.setVariable(dynamicModelId + "_" + dynawoOv.getVariableName());
         }
 
-        return dynawoOv;
+        return isConnected ? dynawoOv : null;
     }
 }
