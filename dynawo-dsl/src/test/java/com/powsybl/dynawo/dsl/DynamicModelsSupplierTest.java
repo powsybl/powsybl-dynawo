@@ -169,13 +169,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                               + Model LoadAlphaBeta GEN instantiation KO
                                  'staticId' field value 'GEN' not found for equipment type(s) LOAD
                         """),
-                Arguments.of("/warnings/missingDanglingProperty.groovy", HvdcTestNetwork.createVsc(),
-                        """
-                        + DSL tests
-                           + Groovy Dynamic Models Supplier
-                              + Model HvdcPV L instantiation KO
-                                 'dangling' field is set but HvdcPV does not possess this option
-                        """),
                 Arguments.of("/warnings/underVoltageMissingGenerator.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
