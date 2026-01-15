@@ -48,8 +48,8 @@ class EmptyTapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      TapChangerAutomaton BBM_TC requires a connection with a LoadWithTransformers but dynamic model LoadAlphaBeta LOAD does not implement it
-                      TapChangerAutomaton BBM_TC connections cannot be created, the model will be skipped
+                      TapChangerAutomationSystem BBM_TC requires a connection with a LoadWithTransformers but dynamic model LoadAlphaBeta LOAD does not implement it
+                      TapChangerAutomationSystem BBM_TC connections cannot be created, the model will be skipped
                 """);
     }
 }
