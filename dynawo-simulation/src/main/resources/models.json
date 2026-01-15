@@ -853,19 +853,21 @@
     ]
   },
   "TAP_CHANGER": {
-    "defaultLib": "TapChangerAutomaton",
+    "defaultLib": "TapChangerAutomationSystem",
     "libs": [
       {
         "lib": "TapChangerAutomaton",
+        "alias":"TapChangerAutomationSystem",
         "doc": "Tap changer"
       }
     ]
   },
   "TAP_CHANGER_BLOCKING": {
-    "defaultLib": "TapChangerBlockingAutomaton",
+    "defaultLib": "TapChangerBlockingAutomationSystem",
     "libs": [
       {
         "lib": "TapChangerBlockingAutomaton",
+        "alias":"TapChangerBlockingAutomationSystem",
         "doc": "Blocks tap changers when one of the monitored voltages goes below a threshold"
       }
     ]
