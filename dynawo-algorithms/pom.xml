@@ -20,6 +20,7 @@
     <description>Dynawo algorithms integration module for powsybl</description>
     <modules>
         <module>dynawo-algorithms-commons</module>
+        <module>dynawo-critical-time-calculation</module>
         <module>dynawo-margin-calculation</module>
         <module>dynawo-security-analysis</module>
     </modules>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<multipleJobs xmlns="http://www.rte-france.com/dynawo">
+    <criticalTimeCalculation accuracy="0.001" dydId="ElementId" parName="fault_tEnd" minValue="0.0" maxValue="5.0" mode="SIMPLE">
+        <scenarios jobsFile="powsybl_dynawo.jobs">
+            <scenario id="NodeFault_0" dydFile="NodeFault_0.dyd" dydId="NodeFault_NGEN"/>
+            <scenario id="NodeFault_1" dydFile="NodeFault_1.dyd" dydId="NodeFault_NLOAD"/>
+        </scenarios>
+    </criticalTimeCalculation>
+</multipleJobs>

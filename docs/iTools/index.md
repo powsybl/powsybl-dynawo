@@ -8,5 +8,6 @@ General information about iTools and its commands can be found [here](inv:powsyb
 maxdepth: 1
 ---
 margin-calculation.md
+critical-time-calculation.md
 ```
 

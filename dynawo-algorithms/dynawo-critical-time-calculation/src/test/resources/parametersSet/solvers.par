@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+    <set id="solverParametersId">
+        <par type="INT" name="order" value="1"/>
+        <par type="DOUBLE" name="absAccuracy" value="1e-4"/>
+    </set>
+    <set id="SIM">
+        <par type="INT" name="order" value="1"/>
+        <par type="DOUBLE" name="absAccuracy" value="1e-4"/>
+    </set>
+</parametersSet>

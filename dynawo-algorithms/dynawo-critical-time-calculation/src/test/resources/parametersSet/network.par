@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+    <set id="networkParametersId">
+        <par type="DOUBLE" name="load_Tp" value="90"/>
+        <par type="BOOL" name="load_isControllable" value="false"/>
+    </set>
+    <set id="Network">
+    </set>
+</parametersSet>

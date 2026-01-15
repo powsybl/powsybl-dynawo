@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawo.algorithms.xml;
 
-import com.powsybl.dynawo.xml.XmlStreamWriterFactory;
 import com.powsybl.dynawo.algorithms.ContingencyEventModels;
+import com.powsybl.dynawo.xml.XmlStreamWriterFactory;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -25,7 +25,7 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class XmlUtil {
+public class XmlUtil {
 
     @FunctionalInterface
     public interface XmlDynawoEventWriter {
@@ -37,7 +37,7 @@ public final class XmlUtil {
         void writeJob(XMLStreamWriter writer) throws XMLStreamException;
     }
 
-    private XmlUtil() {
+    protected XmlUtil() {
     }
 
     public static void write(Path file, String elementName, XmlDynawoEventWriter xmlDynawoEventWriter, ContingencyEventModels model) throws IOException, XMLStreamException {
