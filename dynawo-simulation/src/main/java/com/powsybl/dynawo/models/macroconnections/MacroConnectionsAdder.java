@@ -20,6 +20,7 @@ import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.*;
@@ -52,7 +53,7 @@ public final class MacroConnectionsAdder {
      */
     public <T extends Model> void createMacroConnections(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier) {
         T connectedModel = getDynamicModel(originModel, equipment, modelClass, true);
-        String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getName(), connectedModel.getName());
+        String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getMacroConnectName(), getModelName(connectedModel));
         MacroConnect mc = new MacroConnect(macroConnectorId, originModel.getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
         addMacroConnections(connectedModel, macroConnectorId, mc, varConnectionsSupplier);
     }
@@ -64,7 +65,7 @@ public final class MacroConnectionsAdder {
     public <T extends Model> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier) {
         T connectedModel = getDynamicModel(originModel, equipment, modelClass, false);
         if (connectedModel != null) {
-            String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getName(), connectedModel.getName());
+            String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getMacroConnectName(), getModelName(connectedModel));
             MacroConnect mc = new MacroConnect(macroConnectorId, originModel.getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
             addMacroConnections(connectedModel, macroConnectorId, mc, varConnectionsSupplier);
             return false;
@@ -76,7 +77,7 @@ public final class MacroConnectionsAdder {
      * Creates macro connection from model classes
      */
     public <T extends Model> void createMacroConnections(BlackBoxModel originModel, T connectedModel, List<VarConnection> varConnections, MacroConnectAttribute... connectFromAttributes) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getName(), connectedModel.getName());
+        String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getMacroConnectName(), getModelName(connectedModel));
         List<MacroConnectAttribute> fromAttributes = Stream.concat(originModel.getMacroConnectFromAttributes().stream(), Arrays.stream(connectFromAttributes)).collect(Collectors.toList());
         MacroConnect mc = new MacroConnect(macroConnectorId, fromAttributes, connectedModel.getMacroConnectToAttributes());
         macroConnectAdder.accept(mc);
@@ -113,7 +114,7 @@ public final class MacroConnectionsAdder {
      */
     public <T extends Model> void createMacroConnections(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, BiFunction<T, TwoSides, List<VarConnection>> varConnectionsSupplier, TwoSides side) {
         T connectedModel = getDynamicModel(originModel, equipment, modelClass, true);
-        String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getName(), connectedModel.getName(), side);
+        String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getMacroConnectName(), getModelName(connectedModel), side);
         MacroConnect mc = new MacroConnect(macroConnectorId, originModel.getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
         macroConnectAdder.accept(mc);
         macroConnectorAdder.accept(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnectionsSupplier.apply(connectedModel, side)));
@@ -125,7 +126,7 @@ public final class MacroConnectionsAdder {
      */
     public <T extends Model> void createMacroConnections(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, String parametrizedName) {
         T connectedModel = getDynamicModel(originModel, equipment, modelClass, true);
-        String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getName(), connectedModel.getName(), parametrizedName);
+        String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getMacroConnectName(), getModelName(connectedModel), parametrizedName);
         MacroConnect mc = new MacroConnect(macroConnectorId, originModel.getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
         addMacroConnections(connectedModel, macroConnectorId, mc, varConnectionsSupplier);
     }
@@ -136,7 +137,7 @@ public final class MacroConnectionsAdder {
      */
     public <T extends Model> void createMacroConnections(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, BiFunction<T, String, List<VarConnection>> varConnectionsSupplier, MacroConnectionSuffix suffix) {
         T connectedModel = getDynamicModel(originModel, equipment, modelClass, true);
-        String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getName(), connectedModel.getName(), suffix.getIdSuffix());
+        String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getMacroConnectName(), getModelName(connectedModel), suffix.getIdSuffix());
         MacroConnect mc = new MacroConnect(macroConnectorId, originModel.getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
         addMacroConnections(connectedModel, macroConnectorId, mc, varConnectionsSupplier, suffix.getConnectionSuffix());
     }
@@ -148,7 +149,7 @@ public final class MacroConnectionsAdder {
      */
     public <T extends Model> void createMacroConnections(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, BiFunction<T, String, List<VarConnection>> varConnectionsSupplier, String parametrizedName, MacroConnectAttribute... connectFromAttributes) {
         T connectedModel = getDynamicModel(originModel, equipment, modelClass, true);
-        String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getName(), connectedModel.getName(), parametrizedName);
+        String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getMacroConnectName(), getModelName(connectedModel), parametrizedName);
         List<MacroConnectAttribute> fromAttributes = Stream.concat(originModel.getMacroConnectFromAttributes().stream(), Arrays.stream(connectFromAttributes)).collect(Collectors.toList());
         MacroConnect mc = new MacroConnect(macroConnectorId, fromAttributes, connectedModel.getMacroConnectToAttributes());
         addMacroConnections(connectedModel, macroConnectorId, mc, varConnectionsSupplier, parametrizedName);
@@ -186,7 +187,7 @@ public final class MacroConnectionsAdder {
     public <T extends Model & ConnectionStatefulModel> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, String dynamicModelId, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier) {
         T connectedModel = getPureDynamicModel(originModel, dynamicModelId, modelClass);
         if (connectedModel != null && connectedModel.connect(this)) {
-            String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getName(), connectedModel.getName());
+            String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getMacroConnectName(), getModelName(connectedModel));
             MacroConnect mc = new MacroConnect(macroConnectorId, originModel.getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
             macroConnectAdder.accept(mc);
             macroConnectorAdder.accept(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnectionsSupplier.apply(connectedModel)));
@@ -241,6 +242,16 @@ public final class MacroConnectionsAdder {
         } else {
             DynawoSimulationReports.reportConnectedModelNotImplemented(reportNode, originModel.getName(),
                     originModel.getDynamicModelId(), connectableClassName, id, actualModelName);
+        }
+    }
+
+    private String getModelName(Model model) {
+        try {
+            return (String) model.getClass()
+                    .getMethod("getMacroConnectName")
+                    .invoke(model);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            return model.getName();
         }
     }
 }
