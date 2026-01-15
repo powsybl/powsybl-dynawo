@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public class DynawoOutputVariableResolverTest extends DynawoTestUtil {
+class DynawoOutputVariableResolverTest extends DynawoTestUtil {
     private BlackBoxModelSupplier blackBoxModelSupplier;
 
     @BeforeEach

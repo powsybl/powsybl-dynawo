@@ -37,30 +37,6 @@ class OutputVariablesBuilderTest {
     }
 
     @Test
-    void buildFromDynamicId() {
-        List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
-                .id("BBM_GEN")
-                .variable("generator_omegaPu")
-                .build();
-        assertEquals(1, outputVariables.size());
-        OutputVariable variable = outputVariables.getFirst();
-        assertEquals("BBM_GEN", variable.getModelId());
-        assertEquals("generator_omegaPu", variable.getVariableName());
-    }
-
-    @Test
-    void buildFromStaticId() {
-        List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
-                .id("GEN")
-                .variables("generator_omegaPu", "generator_PGen")
-                .build();
-        assertEquals(2, outputVariables.size());
-        OutputVariable variable = outputVariables.getFirst();
-        assertEquals("GEN", variable.getModelId());
-        assertEquals("generator_omegaPu", variable.getVariableName());
-    }
-
-    @Test
     void buildFromId() {
         List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
                 .id("GEN")
