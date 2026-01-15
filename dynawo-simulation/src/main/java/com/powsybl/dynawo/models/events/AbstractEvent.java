@@ -51,6 +51,11 @@ public abstract class AbstractEvent extends AbstractBlackBoxModel implements Eve
     }
 
     @Override
+    public String getMacroConnectName() {
+        return this.getClass().getSimpleName();
+    }
+
+    @Override
     public VersionInterval getVersionInterval() {
         return eventModelInfo.version();
     }
