@@ -62,11 +62,6 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     }
 
     @Override
-    public String getName() {
-        return this.getClass().getSimpleName();
-    }
-
-    @Override
     protected void createEventSpecificParameters(ParametersSet paramSet) {
         paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
         paramSet.addParameter(equipmentModelType.getValue().getParameterName(), BOOL, Boolean.toString(disconnect));

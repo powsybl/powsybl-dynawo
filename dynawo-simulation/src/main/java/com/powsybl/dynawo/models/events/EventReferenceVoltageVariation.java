@@ -42,11 +42,6 @@ public class EventReferenceVoltageVariation extends AbstractEvent {
     }
 
     @Override
-    public String getName() {
-        return EventReferenceVoltageVariation.class.getSimpleName();
-    }
-
-    @Override
     protected void createEventSpecificParameters(ParametersSet paramSet) {
         paramSet.addParameter("step_Value0", DOUBLE, "0.0");
         paramSet.addParameter("step_tStep", DOUBLE, Double.toString(getStartTime()));
