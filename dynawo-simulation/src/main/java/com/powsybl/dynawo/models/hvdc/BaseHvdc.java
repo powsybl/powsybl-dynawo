@@ -72,6 +72,11 @@ public class BaseHvdc extends AbstractEquipmentBlackBoxModel<HvdcLine> implement
         return isInverted ? getLib() + "Inverted" : getLib();
     }
 
+    @Override
+    public String getMacroConnectName() {
+        return this.getName();
+    }
+
     protected TwoSides getConnectionPointSide(TwoSides hvdcSide) {
         return isInverted ? SideUtils.getOppositeSide(hvdcSide) : hvdcSide;
     }

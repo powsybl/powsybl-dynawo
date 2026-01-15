@@ -36,6 +36,11 @@ public class NodeFaultEvent extends AbstractEvent {
     }
 
     @Override
+    public String getMacroConnectName() {
+        return this.getName();
+    }
+
+    @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
         adder.createMacroConnections(this, getEquipment(), ActionConnectionPoint.class, this::getVarConnectionsWith);
     }

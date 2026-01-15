@@ -62,6 +62,11 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
     }
 
     @Override
+    public String getMacroConnectName() {
+        return super.getLib();
+    }
+
+    @Override
     public String getLib() {
         return super.getLib() + uMeasurements.size();
     }
