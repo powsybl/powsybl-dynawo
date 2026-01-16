@@ -18,5 +18,7 @@ public interface Model extends DynamicModel {
 
     String getName();
 
+    String getMacroConnectName();
+
     List<MacroConnectAttribute> getMacroConnectToAttributes();
 }

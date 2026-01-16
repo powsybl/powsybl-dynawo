@@ -27,8 +27,6 @@ public interface BlackBoxModel extends Model {
 
     String getLib();
 
-    String getMacroConnectName();
-
     VersionInterval getVersionInterval();
 
     List<VarMapping> getVarsMapping();
