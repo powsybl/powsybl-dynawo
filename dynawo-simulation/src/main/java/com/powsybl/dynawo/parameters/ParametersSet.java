@@ -48,7 +48,9 @@ public class ParametersSet {
     }
 
     public void addReference(String name, ParameterType type, String origData, String origName, String componentId) {
-        references.add(new Reference(name, type, origData, origName, componentId));
+        if (!parameters.containsKey(name) && references.stream().noneMatch(ref -> ref.name().equals(name))) {
+            references.add(new Reference(name, type, origData, origName, componentId));
+        }
     }
 
     public void addReference(String name, ParameterType type, String origData, String origName) {

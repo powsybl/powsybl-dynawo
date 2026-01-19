@@ -12,8 +12,10 @@ import com.powsybl.dynawo.parameters.ParameterType;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-@FunctionalInterface
+
 public interface ParameterUpdater {
 
     void addParameter(String parameterSetId, String name, ParameterType type, String value);
+
+    void addReference(String parameterSetId, String name, ParameterType type, String origData, String origName, String componentId);
 }
