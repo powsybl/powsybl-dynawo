@@ -22,6 +22,7 @@ import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
+import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
@@ -517,6 +518,11 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         .controlledBranch(EurostagTutorialExample1Factory.NGEN_NHV1)
                         .build(),
                 PhaseShifterIAutomationSystemBuilder.of(n, r)
+                        .dynamicModelId("PS")
+                        .parameterSetId("PS")
+                        .transformer(EurostagTutorialExample1Factory.NHV2_NLOAD)
+                        .build(),
+                PhaseShifterPAutomationSystemBuilder.of(n, r)
                         .dynamicModelId("PS")
                         .parameterSetId("PS")
                         .transformer(EurostagTutorialExample1Factory.NHV2_NLOAD)

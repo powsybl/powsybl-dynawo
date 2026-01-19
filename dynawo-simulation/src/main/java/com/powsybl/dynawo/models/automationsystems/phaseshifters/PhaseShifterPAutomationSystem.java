@@ -69,14 +69,7 @@ public class PhaseShifterPAutomationSystem extends AbstractPhaseShifterAutomatio
 
     @Override
     public void updateDynamicModelParameters(ParameterUpdater updater) {
-        String psId = getParameterSetId(); // par exemple "phase_shifter_p_par"
-        String tfoId = transformer.getNameOrId();
-
-        updater.addReference(psId, "phaseShifter_P0", ParameterType.DOUBLE, "IIDM", "p1", tfoId);
-        updater.addReference(psId, "phaseShifter_increasePhase", ParameterType.INT, "IIDM", "increasePhase", tfoId);
-        updater.addReference(psId, "phaseShifter_regulating0", ParameterType.BOOL, "IIDM", "regulating", tfoId);
-        updater.addReference(psId, "phaseShifter_tap0", ParameterType.INT, "IIDM", "tapPosition", tfoId);
-        updater.addReference(psId, "phaseShifter_tapMax", ParameterType.INT, "IIDM", "highTapPosition", tfoId);
-        updater.addReference(psId, "phaseShifter_tapMin", ParameterType.INT, "IIDM", "lowTapPosition", tfoId);
+        updater.addReference(getParameterSetId(), "phaseShifter_P0", ParameterType.DOUBLE, "IIDM", "p1", transformer.getNameOrId());
+        super.updateDynamicModelParameters(updater);
     }
 }
