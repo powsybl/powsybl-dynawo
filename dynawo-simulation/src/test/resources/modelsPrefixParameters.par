@@ -5,5 +5,8 @@
         <par type="STRING" name="string" value="aString"/>
         <prefixPar name="Par1" componentId="GEN" type="DOUBLE" value="10"/>
         <prefixPar name="Par1" componentId="GEN2" type="DOUBLE" value="12"/>
+        <prefixPar name="Par1" componentId="GEN3" type="DOUBLE" value="13"/>
+        <prefixPar name="Par2" componentId="LOAD" type="INT" value="4"/>
+        <prefixPar name="Par2" componentId="LOAD2" type="INT" value="4"/>
     </set>
 </parametersSet>

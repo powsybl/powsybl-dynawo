@@ -66,6 +66,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
                 ModelConfigsHandler.getInstance().addModels(new AdditionalModelConfigLoader(additionalModelPath)));
         addDynamicModels();
+        setupDynawoSimulationParameters();
         setupDynawoContext();
     }
 
