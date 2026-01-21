@@ -21,6 +21,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static com.powsybl.dynaflow.DynaFlowConstants.convertOrDefault;
+
 /**
  * Serializes parameters from {@link DynaFlowParameters} used by Dynawo.
  * Some parameters are directly used by powsybl-dynawo and thus not serialized.
@@ -53,8 +55,7 @@ public final class DynaFlowConfigSerializer {
         try {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart("dfl-config");
-            serialize(lfParameters, jsonGenerator);
-            serialize(dynaFlowParameters, jsonGenerator);
+            serialize(lfParameters, dynaFlowParameters, jsonGenerator);
             if (saParameters != null) {
                 serialize(saParameters, jsonGenerator);
             }
@@ -66,14 +67,15 @@ public final class DynaFlowConfigSerializer {
         }
     }
 
-    private static void serialize(DynaFlowParameters dynaFlowParameters, JsonGenerator jsonGenerator) throws IOException {
+    private static void serialize(LoadFlowParameters lfParameters, DynaFlowParameters dynaFlowParameters, JsonGenerator jsonGenerator) throws IOException {
+        writeNonNullField(jsonGenerator, "InfiniteReactiveLimits", !lfParameters.isUseReactiveLimits());
         writeNonNullField(jsonGenerator, "SVCRegulationOn", dynaFlowParameters.getSvcRegulationOn());
-        writeNonNullField(jsonGenerator, "ShuntRegulationOn", dynaFlowParameters.getShuntRegulationOn());
-        writeNonNullField(jsonGenerator, "AutomaticSlackBusOn", dynaFlowParameters.getAutomaticSlackBusOn());
+        writeNonNullField(jsonGenerator, "ShuntRegulationOn", lfParameters.isShuntCompensatorVoltageControlOn());
+        writeNonNullField(jsonGenerator, "AutomaticSlackBusOn", lfParameters.isReadSlackBus());
         writeNonNullField(jsonGenerator, "DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
 
         if (dynaFlowParameters.getActivePowerCompensation() != null) {
-            jsonGenerator.writeStringField("ActivePowerCompensation", dynaFlowParameters.getActivePowerCompensation().getDynaflowName());
+            jsonGenerator.writeStringField("ActivePowerCompensation", convertOrDefault(lfParameters.getBalanceType()).getDynaflowName());
         }
         writeNonNullField(jsonGenerator, "SettingPath", dynaFlowParameters.getSettingPath());
         writeNonNullField(jsonGenerator, "AssemblingPath", dynaFlowParameters.getAssemblingPath());
@@ -94,10 +96,6 @@ public final class DynaFlowConfigSerializer {
         if (dynaFlowParameters.getStartingPointMode() != null) {
             jsonGenerator.writeStringField("StartingPointMode", dynaFlowParameters.getStartingPointMode().getName());
         }
-    }
-
-    private static void serialize(LoadFlowParameters lfParameters, JsonGenerator jsonGenerator) throws IOException {
-        jsonGenerator.writeBooleanField("InfiniteReactiveLimits", !lfParameters.isUseReactiveLimits());
     }
 
     private static void serialize(DynaFlowSecurityAnalysisParameters saParameters, JsonGenerator jsonGenerator) throws IOException {

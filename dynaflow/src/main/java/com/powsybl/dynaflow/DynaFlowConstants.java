@@ -8,6 +8,7 @@ package com.powsybl.dynaflow;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.powsybl.loadflow.LoadFlowParameters;
 
 /**
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
@@ -17,6 +18,7 @@ public final class DynaFlowConstants {
     public static final String DYNAFLOW_NAME = "DynaFlow";
     public static final String CONFIG_FILENAME = "config.json";
     public static final String OUTPUT_RESULTS_FILENAME = "results.json";
+    public static final ActivePowerCompensation DEFAULT_ACTIVE_POWER_COMPENSATION = ActivePowerCompensation.PMAX;
 
     public enum OutputTypes {
         STEADYSTATE,
@@ -59,4 +61,12 @@ public final class DynaFlowConstants {
     private DynaFlowConstants() {
     }
 
+    public static ActivePowerCompensation convertOrDefault(LoadFlowParameters.BalanceType balanceType) {
+        return switch (balanceType) {
+            case PROPORTIONAL_TO_GENERATION_P -> ActivePowerCompensation.P;
+            case PROPORTIONAL_TO_GENERATION_P_MAX -> ActivePowerCompensation.PMAX;
+            case PROPORTIONAL_TO_GENERATION_REMAINING_MARGIN -> ActivePowerCompensation.TARGET_P;
+            default -> DEFAULT_ACTIVE_POWER_COMPENSATION;
+        };
+    }
 }
