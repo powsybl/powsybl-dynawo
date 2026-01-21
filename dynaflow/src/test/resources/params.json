@@ -2,8 +2,8 @@
   "dfl-config" : {
     "InfiniteReactiveLimits" : true,
     "SVCRegulationOn" : true,
-    "ShuntRegulationOn" : false,
-    "AutomaticSlackBusOn" : true,
+    "ShuntRegulationOn" : true,
+    "AutomaticSlackBusOn" : false,
     "DsoVoltageLevel" : 32.4,
     "ActivePowerCompensation" : "P",
     "SettingPath" : "path/to/settingFile",

@@ -44,10 +44,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         assertNotNull(dynaFlowParameters);
 
         assertTrue(dynaFlowParameters.getSvcRegulationOn());
-        assertFalse(dynaFlowParameters.getShuntRegulationOn());
-        assertTrue(dynaFlowParameters.getAutomaticSlackBusOn());
         assertEquals(expectedDsoVoltageLevelValue, dynaFlowParameters.getDsoVoltageLevel(), 0);
-        assertEquals(DynaFlowConstants.ActivePowerCompensation.P, dynaFlowParameters.getActivePowerCompensation());
         assertEquals(expectedSettingPath, dynaFlowParameters.getSettingPath());
         assertEquals(expectedAssemblingPath, dynaFlowParameters.getAssemblingPath());
         assertEquals(expectedStartTime, dynaFlowParameters.getStartTime(), 0.1d);
@@ -72,10 +69,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
 
         DynaFlowParameters params = new DynaFlowParameters()
             .setSvcRegulationOn(true)
-            .setShuntRegulationOn(false)
-            .setAutomaticSlackBusOn(true)
             .setDsoVoltageLevel(54.23)
-            .setActivePowerCompensation(DynaFlowConstants.ActivePowerCompensation.P)
             .setSettingPath("path/to/settingFile")
             .setAssemblingPath("path/to/assemblingFile")
             .setStartTime(0.)
@@ -110,10 +104,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         assertNotNull(dynaFlowParameters);
         //set false in config.yml
         assertFalse(dynaFlowParameters.getSvcRegulationOn());
-        assertFalse(dynaFlowParameters.getShuntRegulationOn());
-        assertTrue(dynaFlowParameters.getAutomaticSlackBusOn());
         assertEquals(45d, dynaFlowParameters.getDsoVoltageLevel(), 0);
-        assertEquals(DynaFlowConstants.ActivePowerCompensation.P, dynaFlowParameters.getActivePowerCompensation());
         assertEquals("path/to/settingFile", dynaFlowParameters.getSettingPath());
         assertNull(dynaFlowParameters.getAssemblingPath());
         assertEquals(0d, dynaFlowParameters.getStartTime(), 0.1d);
