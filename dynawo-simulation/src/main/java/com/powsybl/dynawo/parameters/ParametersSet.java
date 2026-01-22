@@ -20,19 +20,20 @@ import java.util.*;
 public class ParametersSet {
 
     private final Map<String, Parameter> parameters;
-    private final List<Reference> references;
+    private final Map<String, Reference> references;
     private final String id;
+    private static final String originData = "IIDM";
 
     public ParametersSet(@JsonProperty("id") String id) {
         this.id = id;
         this.parameters = new LinkedHashMap<>();
-        this.references = new ArrayList<>();
+        this.references = new LinkedHashMap<>();
     }
 
     public ParametersSet(String id, ParametersSet parametersSet) {
         this.id = id;
         this.parameters = new LinkedHashMap<>(parametersSet.parameters);
-        this.references = new ArrayList<>(parametersSet.references);
+        this.references = new LinkedHashMap<>(parametersSet.references);
     }
 
     public void addParameter(String name, ParameterType type, String value) {
@@ -55,16 +56,15 @@ public class ParametersSet {
 
         parameters.remove(name);
 
-        for (Reference ref : references) {
-            if (ref.name().equals(name)) {
-                return;
-            }
+        if (references.containsKey(name)) {
+            return;
         }
 
-        String originData = "IIDM";
-        references.add(
-                new Reference(name, type, originData, origName, componentId)
-        );
+        references.put(name,new Reference(name, type, originData, origName, componentId));
+    }
+
+    public void addReference(String name, ParameterType type, String origName) {
+        references.put(name, new Reference(name, type, originData, origName, null));
     }
 
     public String getId() {
@@ -76,7 +76,7 @@ public class ParametersSet {
     }
 
     public List<Reference> getReferences() {
-        return references;
+        return new ArrayList<>(references.values());
     }
 
     public boolean getBool(String parameterName) {

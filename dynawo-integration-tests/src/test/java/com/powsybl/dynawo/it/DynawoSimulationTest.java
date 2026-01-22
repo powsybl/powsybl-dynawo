@@ -165,7 +165,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testHvdc() {
+    void   testHvdc() {
         Network network = Network.read(new ResourceDataSource("HvdcPowerTransfer", new ResourceSet("/hvdc", "HvdcPowerTransfer.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
@@ -193,7 +193,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(22, timeLine.size());
-        checkTimeLineEvent(timeLine.get(6), 39.999992, "PhaseShifterI", "Tap position change (increment)");
+        checkTimeLineEvent(timeLine.getFirst(), 0.0, "PhaseShifterI", "Phase-shifter : above maximum allowed value");
     }
 
     @Test
