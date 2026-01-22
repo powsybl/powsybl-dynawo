@@ -104,6 +104,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
         DynaFlowParameters.log(loadFlowParameters, dynaFlowParameters);
+        UnsupportedParametersHandler.checkParameters(loadFlowParameters);
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
 
         ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX);
