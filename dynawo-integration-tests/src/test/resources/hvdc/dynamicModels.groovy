@@ -32,14 +32,14 @@ HvdcPV {
 }
 
 PhaseShifterI {
-    dynamicModelId "PS_NGEN_NHV1"
-    parameterSetId "PS"
+    dynamicModelId "PhaseShifterI"
+    parameterSetId "PSI"
     transformer "_BUS____5-BUS____6-1_PS"
 }
 
 PhaseShifterP {
-    dynamicModelId "PS_NGEN_NHV1"
-    parameterSetId "PS"
+    dynamicModelId "PhaseShifterP"
+    parameterSetId "PSP"
     transformer "_BUS____5-BUS____6-1_PS"
 }
 

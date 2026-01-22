@@ -192,8 +192,8 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(result.getStatusText().isEmpty());
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
-        assertEquals(5, timeLine.size());
-        checkTimeLineEvent(timeLine.get(1), 39.999992, "PS_NGEN_NHV1", "Tap position change (increment)");
+        assertEquals(22, timeLine.size());
+        checkTimeLineEvent(timeLine.get(6), 39.999992, "PhaseShifterI", "Tap position change (increment)");
     }
 
     @Test

@@ -11,7 +11,6 @@ import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.ParameterUpdater;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.transformers.TransformerModel;
-import com.powsybl.dynawo.parameters.ParameterType;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 import java.util.Arrays;
@@ -36,7 +35,6 @@ public class PhaseShifterPAutomationSystem extends AbstractPhaseShifterAutomatio
 
     @Override
     public void updateDynamicModelParameters(ParameterUpdater updater) {
-        updater.addReference(getParameterSetId(), "phaseShifter_P0", ParameterType.DOUBLE, "p1", transformer.getId());
         super.updateDynamicModelParameters(updater);
     }
 }
