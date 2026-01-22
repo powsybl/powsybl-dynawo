@@ -72,10 +72,7 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
-        if (parName != null) {
-            validate("parameters.xsd", parName, tmpDir.resolve("models.par"));
-        }
-
+        validate("parameters.xsd", parName, tmpDir.resolve("models.par"));
     }
 
     private static Stream<Arguments> providePhaseShifter() {

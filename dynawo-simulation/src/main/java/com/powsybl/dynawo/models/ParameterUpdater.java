@@ -17,5 +17,5 @@ public interface ParameterUpdater {
 
     void addParameter(String parameterSetId, String name, ParameterType type, String value);
 
-    void addReference(String parameterSetId, String name, ParameterType type, String origData, String origName, String componentId);
+    void addReference(String parameterSetId, String name, ParameterType type, String origName, String componentId);
 }

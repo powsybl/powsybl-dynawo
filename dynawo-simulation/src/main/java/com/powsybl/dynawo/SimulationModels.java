@@ -50,10 +50,8 @@ public final class SimulationModels implements DynawoData {
             }
 
             @Override
-            public void addReference(String parameterSetId, String name, ParameterType type,
-                                     String origData, String origName, String componentId) {
-                dynawoParameters.getModelParameters(parameterSetId)
-                        .addReference(name, type, origData, origName, componentId);
+            public void addReference(String parameterSetId, String name, ParameterType type, String origName, String componentId) {
+                dynawoParameters.getModelParameters(parameterSetId).addReference(name, type, origName, componentId);
             }
         };
 

@@ -140,11 +140,10 @@ public final class ParametersXml {
                         parametersSet.addParameter(name, type, value);
                     }
                     case "reference" -> {
-                        String origData = xmlReader.getAttributeValue(null, "origData");
                         String origName = xmlReader.getAttributeValue(null, "origName");
                         String componentId = xmlReader.getAttributeValue(null, "componentId");
                         XmlUtil.readEndElementOrThrow(xmlReader);
-                        parametersSet.addReference(name, type, origData, origName, componentId);
+                        parametersSet.addReference(name, type, origName, componentId);
                     }
                     default -> closeAndThrowException(xmlReader, xmlReader.getLocalName());
                 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <parametersSet xmlns="http://www.rte-france.com/dynawo">
     <set id="phase_shifter_i_par">
-        <par type="STRING" name="componentId" value="NGEN_NHV1"/>
+        <par type="BOOL" name="phaseShifter_regulating0" value="true"/>
         <par type="DOUBLE" name="phaseShifter_P0" value="0.0"/>
     </set>
     <set id="phase_shifter_p_par">
-            <par type="STRING" name="componentId" value="NGEN_NHV1"/>
-            <par type="DOUBLE" name="phaseShifter_I0" value="0.0"/>
-        </set>
+        <par type="BOOL" name="phaseShifter_regulating0" value="true"/>
+        <par type="DOUBLE" name="phaseShifter_I0" value="0.0"/>
+    </set>
 </parametersSet>

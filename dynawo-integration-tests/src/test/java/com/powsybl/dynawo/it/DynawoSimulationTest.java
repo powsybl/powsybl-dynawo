@@ -21,8 +21,6 @@ import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
-import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
-import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
@@ -53,7 +51,8 @@ import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.commons.report.ReportNode.newRootReportNode;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -193,8 +192,8 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(result.getStatusText().isEmpty());
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
-        assertEquals(7, timeLine.size());
-        checkTimeLineEvent(timeLine.getFirst(), 30.0, "_BUS____5-BUS____6-1_PS", "Tap position change (increment)");
+        assertEquals(5, timeLine.size());
+        checkTimeLineEvent(timeLine.get(1), 39.999992, "PS_NGEN_NHV1", "Tap position change (increment)");
     }
 
     @Test
@@ -516,16 +515,6 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         .iMeasurement(EurostagTutorialExample1Factory.NGEN_NHV1)
                         .iMeasurementSide(TwoSides.TWO)
                         .controlledBranch(EurostagTutorialExample1Factory.NGEN_NHV1)
-                        .build(),
-                PhaseShifterIAutomationSystemBuilder.of(n, r)
-                        .dynamicModelId("PS")
-                        .parameterSetId("PS")
-                        .transformer(EurostagTutorialExample1Factory.NHV2_NLOAD)
-                        .build(),
-                PhaseShifterPAutomationSystemBuilder.of(n, r)
-                        .dynamicModelId("PS")
-                        .parameterSetId("PS")
-                        .transformer(EurostagTutorialExample1Factory.NHV2_NLOAD)
                         .build(),
                 TapChangerBlockingAutomationSystemBuilder.of(n, r)
                         .dynamicModelId("TCB")

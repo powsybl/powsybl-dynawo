@@ -41,12 +41,12 @@ public abstract class AbstractPhaseShifterAutomationSystem extends AbstractPureD
     @Override
     public void updateDynamicModelParameters(ParameterUpdater updater) {
         String psId = getParameterSetId();
-        String tfoId = transformer.getNameOrId();
+        String tfoId = transformer.getId();
 
-        updater.addReference(psId, "phaseShifter_increasePhase", ParameterType.INT, "IIDM", "increasePhase", tfoId);
-        updater.addReference(psId, "phaseShifter_regulating0", ParameterType.BOOL, "IIDM", "regulating", tfoId);
-        updater.addReference(psId, "phaseShifter_tap0", ParameterType.INT, "IIDM", "tapPosition", tfoId);
-        updater.addReference(psId, "phaseShifter_tapMax", ParameterType.INT, "IIDM", "highTapPosition", tfoId);
-        updater.addReference(psId, "phaseShifter_tapMin", ParameterType.INT, "IIDM", "lowTapPosition", tfoId);
+        updater.addReference(psId, "phaseShifter_increasePhase", ParameterType.INT, "increasePhase", tfoId);
+        updater.addReference(psId, "phaseShifter_regulating0", ParameterType.BOOL, "regulating", tfoId);
+        updater.addReference(psId, "phaseShifter_tap0", ParameterType.INT, "tapPosition", tfoId);
+        updater.addReference(psId, "phaseShifter_tapMax", ParameterType.INT, "highTapPosition", tfoId);
+        updater.addReference(psId, "phaseShifter_tapMin", ParameterType.INT, "lowTapPosition", tfoId);
     }
 }

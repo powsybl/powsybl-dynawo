@@ -47,14 +47,24 @@ public class ParametersSet {
         parameters.replace(parameterName, new Parameter(parameterName, type, value));
     }
 
-    public void addReference(String name, ParameterType type, String origData, String origName, String componentId) {
-        if (!parameters.containsKey(name) && references.stream().noneMatch(ref -> ref.name().equals(name))) {
-            references.add(new Reference(name, type, origData, origName, componentId));
-        }
-    }
+    public void addReference(String name, ParameterType type, String origName, String componentId) {
 
-    public void addReference(String name, ParameterType type, String origData, String origName) {
-        references.add(new Reference(name, type, origData, origName, null));
+        if (name == null || name.isEmpty()) {
+            return;
+        }
+
+        parameters.remove(name);
+
+        for (Reference ref : references) {
+            if (ref.name().equals(name)) {
+                return;
+            }
+        }
+
+        String originData = "IIDM";
+        references.add(
+                new Reference(name, type, originData, origName, componentId)
+        );
     }
 
     public String getId() {
