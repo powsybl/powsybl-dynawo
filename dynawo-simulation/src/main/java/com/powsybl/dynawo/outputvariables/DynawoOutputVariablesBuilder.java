@@ -47,9 +47,9 @@ public class DynawoOutputVariablesBuilder {
      * @param dynamicModelId the ID of the dynamic model
      * @return the builder instance
      *
-     * @deprecated since 3.1.0. Use {@link #id(String)} instead.
+     * @deprecated since 3.2.0. Use {@link #id(String)} instead.
      */
-    @Deprecated(since = "3.1.0")
+    @Deprecated(since = "3.2.0")
     public DynawoOutputVariablesBuilder dynamicModelId(String dynamicModelId) {
         this.id = dynamicModelId;
         return this;
@@ -61,9 +61,9 @@ public class DynawoOutputVariablesBuilder {
      * @param staticId the ID of the static model
      * @return the builder instance
      *
-     * @deprecated since 3.1.0. Use {@link #id(String)} instead.
+     * @deprecated since 3.2.0. Use {@link #id(String)} instead.
      */
-    @Deprecated(since = "3.1.0")
+    @Deprecated(since = "3.2.0")
     public DynawoOutputVariablesBuilder staticId(String staticId) {
         this.id = staticId;
         return this;
