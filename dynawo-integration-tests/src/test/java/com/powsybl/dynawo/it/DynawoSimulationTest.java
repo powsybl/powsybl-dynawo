@@ -165,7 +165,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
     }
 
     @Test
-    void   testHvdc() {
+    void testHvdc() {
         Network network = Network.read(new ResourceDataSource("HvdcPowerTransfer", new ResourceSet("/hvdc", "HvdcPowerTransfer.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(

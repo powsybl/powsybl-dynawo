@@ -22,7 +22,7 @@ public class ParametersSet {
     private final Map<String, Parameter> parameters;
     private final Map<String, Reference> references;
     private final String id;
-    private static final String originData = "IIDM";
+    private static final String ORIGIN_DATA = "IIDM";
 
     public ParametersSet(@JsonProperty("id") String id) {
         this.id = id;
@@ -60,11 +60,11 @@ public class ParametersSet {
             return;
         }
 
-        references.put(name,new Reference(name, type, originData, origName, componentId));
+        references.put(name, new Reference(name, type, ORIGIN_DATA, origName, componentId));
     }
 
     public void addReference(String name, ParameterType type, String origName) {
-        references.put(name, new Reference(name, type, originData, origName, null));
+        references.put(name, new Reference(name, type, ORIGIN_DATA, origName, null));
     }
 
     public String getId() {
@@ -75,8 +75,8 @@ public class ParametersSet {
         return parameters;
     }
 
-    public List<Reference> getReferences() {
-        return new ArrayList<>(references.values());
+    public Map<String, Reference> getReferences() {
+        return references;
     }
 
     public boolean getBool(String parameterName) {

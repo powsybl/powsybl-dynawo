@@ -218,7 +218,7 @@ public final class ParametersXml {
         for (Parameter par : parametersSet.getParameters().values()) {
             ParametersXml.writeParameter(xmlWriter, par.type(), par.name(), par.value());
         }
-        for (Reference par : parametersSet.getReferences()) {
+        for (Reference par : parametersSet.getReferences().values()) {
             ParametersXml.writeReference(xmlWriter, par.type(), par.name(), par.origData(), par.origName(), par.componentId());
         }
         xmlWriter.writeEndElement();
