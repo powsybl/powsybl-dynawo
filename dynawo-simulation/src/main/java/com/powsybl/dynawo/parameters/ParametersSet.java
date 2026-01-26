@@ -64,7 +64,7 @@ public class ParametersSet {
     }
 
     public void addReference(String name, ParameterType type, String origName) {
-        references.put(name, new Reference(name, type, ORIGIN_DATA, origName, null));
+        addReference(origName, type, name, null);
     }
 
     public String getId() {

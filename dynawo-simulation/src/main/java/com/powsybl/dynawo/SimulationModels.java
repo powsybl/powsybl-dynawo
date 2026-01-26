@@ -45,8 +45,7 @@ public final class SimulationModels implements DynawoData {
 
             @Override
             public void addParameter(String id, String name, ParameterType type, String value) {
-                dynawoParameters.getModelParameters(id)
-                        .addParameter(name, type, value);
+                dynawoParameters.getModelParameters(id).addParameter(name, type, value);
             }
 
             @Override

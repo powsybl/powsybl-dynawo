@@ -43,7 +43,7 @@ public abstract class AbstractPhaseShifterAutomationSystem extends AbstractPureD
         String psId = getParameterSetId();
         String tfoId = transformer.getId();
 
-        updater.addReference(getParameterSetId(), "phaseShifter_P0", ParameterType.DOUBLE, "p1", transformer.getId());
+        updater.addReference(psId, "phaseShifter_P0", ParameterType.DOUBLE, "p1", transformer.getId());
         updater.addReference(psId, "phaseShifter_increasePhase", ParameterType.INT, "increasePhase", tfoId);
         updater.addReference(psId, "phaseShifter_regulating0", ParameterType.BOOL, "regulating", tfoId);
         updater.addReference(psId, "phaseShifter_tap0", ParameterType.INT, "tapPosition", tfoId);
