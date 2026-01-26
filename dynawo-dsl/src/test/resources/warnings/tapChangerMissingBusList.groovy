@@ -9,7 +9,7 @@ package warnings
 
 List[] measurementPoints = [["LOAD", "Wrong_ID"], ["NGEN_NHV1", "NGEN"]]
 
-TapChangerBlockingAutomaton {
+TapChangerBlockingAutomationSystem {
     dynamicModelId "ZAB"
     parameterSetId "ZAB"
     uMeasurements measurementPoints
