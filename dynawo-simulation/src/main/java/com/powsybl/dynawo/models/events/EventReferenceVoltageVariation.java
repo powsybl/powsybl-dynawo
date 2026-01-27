@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.events;
 
+import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
@@ -35,10 +36,10 @@ public class EventReferenceVoltageVariation extends AbstractEvent {
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this,
-                getEquipment(),
-                UControllableEquipmentModel.class,
-                this::getVarConnectionsWith);
+        boolean isSkipped = adder.createMacroConnectionsOrSkip(this, getEquipment(), UControllableEquipmentModel.class, this::getVarConnectionsWith);
+        if (isSkipped) {
+            DynawoSimulationReports.reportFailedDynamicModelHandling(adder.getReportNode(), getName(), getDynamicModelId(), getEquipment().getType().toString());
+        }
     }
 
     @Override
