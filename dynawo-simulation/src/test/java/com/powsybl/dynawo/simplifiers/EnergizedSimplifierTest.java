@@ -122,7 +122,7 @@ class EnergizedSimplifierTest {
                         """
                         + Simplifier test
                            + Energized model filter
-                              Equipment NHV1_NHV2_1 terminal is not connected, model CurrentLimitAutomaton OMS will be skipped
+                              Equipment NHV1_NHV2_1 terminal is not connected, model OverloadManagementSystem OMS will be skipped
                         """),
                 Arguments.of(EurostagTutorialExample1Factory.create(),
                         (Consumer<Network>) n -> n.getBusBreakerView().getBus("NGEN").setV(1.0),
@@ -136,7 +136,7 @@ class EnergizedSimplifierTest {
                         """
                         + Simplifier test
                            + Energized model filter
-                              Bus NHV1 is not energized, model CurrentLimitAutomaton OMS will be skipped
+                              Bus NHV1 is not energized, model OverloadManagementSystem OMS will be skipped
                         """),
                 Arguments.of(EurostagTutorialExample1Factory.create(),
                         (Consumer<Network>) n -> n.getBusBreakerView().getBus("NGEN").setV(1.0),
@@ -152,7 +152,7 @@ class EnergizedSimplifierTest {
                         """
                         + Simplifier test
                            + Energized model filter
-                              Bus NHV1 is not energized, model CurrentLimitAutomatonTwoLevels OMSTL will be skipped
+                              Bus NHV1 is not energized, model TwoLevelOverloadManagementSystem OMSTL will be skipped
                         """)
         );
     }

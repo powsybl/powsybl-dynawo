@@ -41,6 +41,11 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<T>> 
     }
 
     @Override
+    public String getName() {
+        return modelConfig.name();
+    }
+
+    @Override
     public VersionInterval getVersionInterval() {
         return modelConfig.version();
     }
