@@ -19,6 +19,7 @@ import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,7 +43,12 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
     }
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
-        return List.of(new VarConnection("converter_terminal", connected.getTerminalVarName()));
+        List<VarConnection> varConnections = new ArrayList<>();
+        varConnections.add(new VarConnection("converter_terminal", connected.getTerminalVarName()));
+        connected.getSwitchOffSignalVarName()
+                .map(switchOff -> new VarConnection(switchOffSignalNode(), switchOff))
+                .ifPresent(varConnections::add);
+        return varConnections;
     }
 
     protected String getOmegaPuVarName() {
@@ -57,6 +63,18 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
     @Override
     public String getRunningVarName() {
         return "converter_running";
+    }
+
+    private String switchOffSignalNode() {
+        return "converter_switchOffSignal1";
+    }
+
+    private String switchOffSignalEvent() {
+        return "converter_switchOffSignal2";
+    }
+
+    private String switchOffSignalAutomaton() {
+        return "converter_switchOffSignal3";
     }
 
     @Override

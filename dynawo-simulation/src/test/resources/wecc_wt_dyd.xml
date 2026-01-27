@@ -5,6 +5,7 @@
     </dyn:blackBoxModel>
     <dyn:macroConnector id="MC_WT4AWeccCurrentSource-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="WT4A_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="WT4A_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_WT4AWeccCurrentSource">
         <dyn:staticRef var="WT4A_measurements_PPuSnRef" staticVar="p"/>

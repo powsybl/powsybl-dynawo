@@ -15,6 +15,7 @@ import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.Generator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,13 +36,30 @@ public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> {
                 new VarMapping(weccPrefix + "_injector_state", "state"));
     }
 
+    private String switchOffSignalNode() {
+        return weccPrefix + "_switchOffSignal1";
+    }
+
+    private String switchOffSignalEvent() {
+        return weccPrefix + "_switchOffSignal2";
+    }
+
+    private String switchOffSignalAutomaton() {
+        return weccPrefix + "_switchOffSignal3";
+    }
+
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
         adder.createTerminalMacroConnections(this, equipment.getTerminal(), this::getVarConnectionsWith);
     }
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
-        return List.of(new VarConnection(weccPrefix + "_terminal", connected.getTerminalVarName()));
+        List<VarConnection> varConnections = new ArrayList<>();
+        varConnections.add(new VarConnection(weccPrefix + "_terminal", connected.getTerminalVarName()));
+        connected.getSwitchOffSignalVarName()
+                .map(switchOff -> new VarConnection(switchOffSignalNode(), switchOff))
+                .ifPresent(varConnections::add);
+        return varConnections;
     }
 
     @Override
