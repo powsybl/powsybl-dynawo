@@ -1,8 +1,8 @@
 {
   "dfl-config" : {
-    "InfiniteReactiveLimits" : true,
+    "InfiniteReactiveLimits" : false,
     "SVCRegulationOn" : true,
-    "ShuntRegulationOn" : true,
+    "ShuntRegulationOn" : false,
     "AutomaticSlackBusOn" : true,
     "DsoVoltageLevel" : 45.0,
     "ActivePowerCompensation" : "PMax",
