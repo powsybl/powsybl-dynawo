@@ -9,9 +9,11 @@ package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
+import com.powsybl.dynawo.models.ParameterUpdater;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.transformers.TransformerModel;
+import com.powsybl.dynawo.parameters.ParameterType;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 import java.util.List;
@@ -35,4 +37,17 @@ public abstract class AbstractPhaseShifterAutomationSystem extends AbstractPureD
     }
 
     protected abstract List<VarConnection> getVarConnectionsWith(TransformerModel connected);
+
+    @Override
+    public void updateDynamicModelParameters(ParameterUpdater updater) {
+        String psId = getParameterSetId();
+        String tfoId = transformer.getId();
+
+        updater.addReference(psId, "phaseShifter_P0", ParameterType.DOUBLE, "p1", tfoId);
+        updater.addReference(psId, "phaseShifter_increasePhase", ParameterType.INT, "increasePhase", tfoId);
+        updater.addReference(psId, "phaseShifter_regulating0", ParameterType.BOOL, "regulating", tfoId);
+        updater.addReference(psId, "phaseShifter_tap0", ParameterType.INT, "tapPosition", tfoId);
+        updater.addReference(psId, "phaseShifter_tapMax", ParameterType.INT, "highTapPosition", tfoId);
+        updater.addReference(psId, "phaseShifter_tapMin", ParameterType.INT, "lowTapPosition", tfoId);
+    }
 }
