@@ -19,8 +19,9 @@ public class DynawoOutputVariable implements OutputVariable {
     private final String dynamicModelId;
     private final String variable;
     private final OutputType outputType;
+    boolean isUnresolved = false;
 
-    DynawoOutputVariable(String dynamicModelId, String variable, OutputType outputType) {
+    public DynawoOutputVariable(String dynamicModelId, String variable, OutputType outputType) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.variable = Objects.requireNonNull(variable);
         this.outputType = Objects.requireNonNull(outputType);
@@ -39,5 +40,9 @@ public class DynawoOutputVariable implements OutputVariable {
     @Override
     public OutputType getOutputType() {
         return outputType;
+    }
+
+    public boolean isUnresolved() {
+        return isUnresolved;
     }
 }

@@ -18,12 +18,25 @@ import java.io.IOException;
  */
 class OutputVariablesXmlTest extends DynawoTestUtil {
 
-    @Test
+    @Deprecated
     void writeOutputVariables() throws SAXException, IOException {
         DynawoSimulationContext context = new DynawoSimulationContext
                 .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
+                .build();
+        OutputVariablesXml.writeCurve(tmpDir, context);
+        validate("curvesInput.xsd", "curvesInput.xml", tmpDir.resolve(DynawoSimulationConstants.CRV_FILENAME));
+        OutputVariablesXml.writeFsv(tmpDir, context);
+        validate("fsvInput.xsd", "fsvInput.xml", tmpDir.resolve(DynawoSimulationConstants.FSV_FILENAME));
+    }
+
+    @Test
+    void writeOutputVariablesWWithUnresolvedIds() throws SAXException, IOException {
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariablesBuiltWithUnresolvedIds)
                 .build();
         OutputVariablesXml.writeCurve(tmpDir, context);
         validate("curvesInput.xsd", "curvesInput.xml", tmpDir.resolve(DynawoSimulationConstants.CRV_FILENAME));
