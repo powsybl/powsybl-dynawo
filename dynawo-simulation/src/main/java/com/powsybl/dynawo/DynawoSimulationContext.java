@@ -11,11 +11,15 @@ import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
+import com.powsybl.dynawo.outputvariables.DynawoOutputVariableResolver;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DynawoData;
 import com.powsybl.iidm.network.Network;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -62,6 +66,12 @@ public class DynawoSimulationContext {
             return self();
         }
 
+        private void resolveDynawoOutputVariables() {
+            //Late resolve on Output variables
+            DynawoOutputVariableResolver resolver = new DynawoOutputVariableResolver(network, blackBoxModelSupplier);
+            this.outputVariables = resolver.resolveOutputVariables(outputVariables);
+        }
+
         @Override
         protected void setupData() {
             super.setupData();
@@ -74,6 +84,12 @@ public class DynawoSimulationContext {
                     .filter(ContextDependentEvent.class::isInstance)
                     .map(ContextDependentEvent.class::cast)
                     .forEach(e -> e.setEquipmentModelType(blackBoxModelSupplier.hasDynamicModel(e.getEquipment())));
+        }
+
+        @Override
+        protected void setup() {
+            super.setup();
+            resolveDynawoOutputVariables();
         }
 
         @Override

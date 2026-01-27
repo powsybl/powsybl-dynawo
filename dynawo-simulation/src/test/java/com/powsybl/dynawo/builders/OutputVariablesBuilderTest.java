@@ -37,27 +37,15 @@ class OutputVariablesBuilderTest {
     }
 
     @Test
-    void buildFromDynamicId() {
+    void buildFromId() {
         List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
-                .dynamicModelId("BBM_GEN")
-                .variable("generator_omegaPu")
-                .build();
-        assertEquals(1, outputVariables.size());
-        OutputVariable variable = outputVariables.getFirst();
-        assertEquals("BBM_GEN", variable.getModelId());
-        assertEquals("generator_omegaPu", variable.getVariableName());
-    }
-
-    @Test
-    void buildFromStaticId() {
-        List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
-                .staticId("GEN")
+                .id("GEN")
                 .variables("generator_omegaPu", "generator_PGen")
                 .build();
         assertEquals(2, outputVariables.size());
         OutputVariable variable = outputVariables.getFirst();
-        assertEquals("NETWORK", variable.getModelId());
-        assertEquals("GEN_generator_omegaPu", variable.getVariableName());
+        assertEquals("GEN", variable.getModelId());
+        assertEquals("generator_omegaPu", variable.getVariableName());
     }
 
     @ParameterizedTest(name = "{1}")
@@ -78,7 +66,7 @@ class OutputVariablesBuilderTest {
                 .build();
 
         List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder(reportNode)
-                .staticId("GEN")
+                .id("GEN")
                 .variables("", "")
                 .build();
 
@@ -97,7 +85,7 @@ class OutputVariablesBuilderTest {
                 .build();
 
         List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder(reportNode)
-                .staticId("GEN")
+                .id("GEN")
                 .variables(Collections.emptyList())
                 .build();
 
@@ -109,18 +97,8 @@ class OutputVariablesBuilderTest {
     private static Stream<Arguments> provideBuilderError() {
         return Stream.of(
                 Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
-                        new DynawoOutputVariablesBuilder(r)
-                            .staticId("GEN")
-                            .dynamicModelId("BBM_GEN")
-                            .variable("uPu"),
-                        true,
-                        """
-                        + Builder tests
-                           Both 'dynamicModelId' and 'staticId' are defined, 'dynamicModelId' will be used
-                        """),
-                Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
-                        new DynawoOutputVariablesBuilder(r)
-                            .staticId("GEN"),
+                                new DynawoOutputVariablesBuilder(r)
+                                        .id("GEN"),
                         false,
                         """
                         + Builder tests
@@ -128,9 +106,9 @@ class OutputVariablesBuilderTest {
                            Output variable GEN cannot be instantiated
                         """),
                 Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
-                        new DynawoOutputVariablesBuilder(r)
-                            .staticId("GEN")
-                            .variables(),
+                                new DynawoOutputVariablesBuilder(r)
+                                        .id("GEN")
+                                        .variables(),
                         false,
                         """
                         + Builder tests

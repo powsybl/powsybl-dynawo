@@ -16,8 +16,8 @@ import java.util.Objects;
  */
 public class DynawoOutputVariable implements OutputVariable {
 
-    private final String dynamicModelId;
-    private final String variable;
+    private String dynamicModelId;
+    private String variable;
     private final OutputType outputType;
 
     DynawoOutputVariable(String dynamicModelId, String variable, OutputType outputType) {
@@ -39,5 +39,13 @@ public class DynawoOutputVariable implements OutputVariable {
     @Override
     public OutputType getOutputType() {
         return outputType;
+    }
+
+    public void setVariable(String variable) {
+        this.variable = Objects.requireNonNull(variable);
+    }
+
+    public void setDynamicModelId(String dynamicModelId) {
+        this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
     }
 }
