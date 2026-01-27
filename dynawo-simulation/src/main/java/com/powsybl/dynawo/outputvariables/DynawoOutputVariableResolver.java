@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 public final class DynawoOutputVariableResolver {
 
     private final BlackBoxModelSupplier blackBoxModelSupplier;
-    private static final String DEFAULT_DYNAMIC_MODEL_ID = "NETWORK";
 
     public DynawoOutputVariableResolver(Network network,
                                         BlackBoxModelSupplier blackBoxModelSupplier) {
@@ -49,8 +48,8 @@ public final class DynawoOutputVariableResolver {
         boolean isConnected = blackBoxModelSupplier.dynamicModelIsConnected(dynamicModelId);
 
         if (!isDynamic) {
-            dynawoOv.setDynamicModelId(DEFAULT_DYNAMIC_MODEL_ID);
-            dynawoOv.setVariable(dynamicModelId + "_" + dynawoOv.getVariableName());
+            dynawoOv.isDefault();
+            return dynawoOv;
         }
 
         return isConnected ? dynawoOv : null;
