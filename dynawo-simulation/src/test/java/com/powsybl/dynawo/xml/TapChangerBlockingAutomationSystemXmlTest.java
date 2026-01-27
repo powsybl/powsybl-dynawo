@@ -9,6 +9,7 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystem;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerTapChangerBuilder;
 import com.powsybl.dynawo.models.loads.LoadTwoTransformersTapChangersBuilder;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
@@ -17,9 +18,9 @@ import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -72,5 +73,42 @@ class TapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlT
                 .uMeasurements("NHV1", "NHV1", "NHV1", "NHV1", "NHV1", "NHV1");
         Exception e = assertThrows(PowsyblException.class, builder::build);
         assertEquals("Tap changer blocking automation system can only handle 5 measurement points at the same time", e.getMessage());
+    }
+
+    @Test
+    void testWrongMeasurements() {
+        List<String> staticIds = List.of("wrongValue", "NHV1", "NHV1", "NHV1", "NHV1", "NHV1");
+
+        TapChangerBlockingAutomationSystem wrongAutomateWithOneStaticId = TapChangerBlockingAutomationSystemBuilder.of(network)
+                .dynamicModelId("TapChanger1")
+                .parameterSetId("TapChangerPar")
+                .transformers("NGEN_NHV1")
+                .uMeasurements("wrongValue")
+                .build();
+
+        TapChangerBlockingAutomationSystem wrongAutomateWithMultipleIds = TapChangerBlockingAutomationSystemBuilder.of(network)
+                .dynamicModelId("TapChanger1")
+                .parameterSetId("TapChangerPar")
+                .transformers("NGEN_NHV1")
+                .uMeasurements("wrongValue", "NHV1", "NHV1", "NHV1", "NHV1", "NHV1")
+                .build();
+
+        TapChangerBlockingAutomationSystem wrongAutomateWithCollection = TapChangerBlockingAutomationSystemBuilder.of(network)
+                .dynamicModelId("TapChanger1")
+                .parameterSetId("TapChangerPar")
+                .transformers("NGEN_NHV1")
+                .uMeasurements(staticIds)
+                .build();
+
+        TapChangerBlockingAutomationSystem wrongAutomateWithNoMeasurements = TapChangerBlockingAutomationSystemBuilder.of(network)
+                .dynamicModelId("TapChanger1")
+                .parameterSetId("TapChangerPar")
+                .transformers("NGEN_NHV1")
+                .build();
+
+        assertNull(wrongAutomateWithOneStaticId);
+        assertNull(wrongAutomateWithMultipleIds);
+        assertNull(wrongAutomateWithCollection);
+        assertNull(wrongAutomateWithNoMeasurements);
     }
 }
