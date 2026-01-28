@@ -8,12 +8,16 @@
 package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynawo.builders.EventModelInfo;
+import com.powsybl.dynawo.models.GeneratorModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.ActionConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Identifiable;
+import com.powsybl.iidm.network.IdentifiableType;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 
 import static com.powsybl.dynawo.parameters.ParameterType.BOOL;
@@ -27,9 +31,11 @@ public class NodeFaultEvent extends AbstractEvent {
     private final double faultTime;
     private final double rPu;
     private final double xPu;
+    private final IdentifiableType identifiableType;
 
-    protected NodeFaultEvent(String eventId, Identifiable<?> equipment, EventModelInfo eventModelInfo, double startTime, double faultTime, double rPu, double xPu) {
+    protected NodeFaultEvent(String eventId, Identifiable<?> equipment, IdentifiableType identifiableType, EventModelInfo eventModelInfo, double startTime, double faultTime, double rPu, double xPu) {
         super(eventId, equipment, eventModelInfo, startTime);
+        this.identifiableType = identifiableType;
         this.faultTime = faultTime;
         this.rPu = rPu;
         this.xPu = xPu;
@@ -37,10 +43,18 @@ public class NodeFaultEvent extends AbstractEvent {
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this, getEquipment(), ActionConnectionPoint.class, this::getVarConnectionsWith);
+        if (identifiableType == IdentifiableType.BUS) {
+            adder.createMacroConnections(this, getEquipment(), ActionConnectionPoint.class, this::getVarConnectionsWithActionConnectionPointPointModel);
+        } else {
+            adder.createMacroConnections(this, getEquipment(), GeneratorModel.class, this::getVarConnectionsWithGeneratorModel);
+        }
     }
 
-    private List<VarConnection> getVarConnectionsWith(ActionConnectionPoint connected) {
+    private List<VarConnection> getVarConnectionsWithActionConnectionPointPointModel(ActionConnectionPoint connected) {
+        return List.of(new VarConnection("fault_terminal", connected.getTerminalVarName()));
+    }
+
+    private List<VarConnection> getVarConnectionsWithGeneratorModel(GeneratorModel connected) {
         return List.of(new VarConnection("fault_terminal", connected.getTerminalVarName()));
     }
 
@@ -55,5 +69,13 @@ public class NodeFaultEvent extends AbstractEvent {
     @Override
     public void createNetworkParameter(ParametersSet networkParameters) {
         networkParameters.addParameter(getEquipment().getId() + "_hasShortCircuitCapabilities", BOOL, Boolean.toString(true));
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
+        super.write(writer, parFileName);
+        if (identifiableType == IdentifiableType.GENERATOR) {
+            writer.writeAttribute("staticId", getEquipment().getId());
+        }
     }
 }

@@ -22,21 +22,21 @@ class NodeFaultEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
+
         network = EurostagTutorialExample1Factory.create();
     }
 
     @Override
     protected void addDynamicModels() {
         eventModels.add(NodeFaultEventBuilder.of(network)
-                .staticId("NGEN")
+                .staticId("GEN")
                 .startTime(10)
                 .faultTime(0.1)
                 .rPu(0)
                 .xPu(0.01)
                 .build());
-
         eventModels.add(NodeFaultEventBuilder.of(network)
-                .staticId("GEN")
+                .staticId("NGEN")
                 .startTime(10)
                 .faultTime(0.1)
                 .rPu(0)

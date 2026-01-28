@@ -9,7 +9,7 @@
 package eventModels
 
 NodeFault {
-    staticId "NGEN"
+    staticId "GEN"
     startTime 1
     faultTime 0.1
     rPu 0

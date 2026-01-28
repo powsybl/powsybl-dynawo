@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <parametersSet xmlns="http://www.rte-france.com/dynawo">
     <set id="1">
+        <par type="BOOL" name="GEN_hasShortCircuitCapabilities" value="true"/>
         <par type="BOOL" name="NGEN_hasShortCircuitCapabilities" value="true"/>
     </set>
 </parametersSet>

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="NodeFault_GENERATOR_GEN" lib="NodeFault" parFile="sim1.par" parId="NodeFault_GENERATOR_GEN" staticId="GEN"/>
     <dyn:blackBoxModel id="NodeFault_BUS_NGEN" lib="NodeFault" parFile="sim1.par" parId="NodeFault_BUS_NGEN"/>
-    <dyn:blackBoxModel id="NodeFault_GENERATOR_GEN" lib="NodeFault" parFile="sim1.par" parId="NodeFault_GENERATOR_GEN"/>
+    <dyn:macroConnector id="MC_NodeFault-DefaultGenerator">
+        <dyn:connect var1="fault_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+    </dyn:macroConnector>
     <dyn:macroConnector id="MC_NodeFault-DefaultActionConnectionPoint">
         <dyn:connect var1="fault_terminal" var2="@NAME@_ACPIN"/>
     </dyn:macroConnector>
+    <dyn:macroConnect connector="MC_NodeFault-DefaultGenerator" id1="NodeFault_GENERATOR_GEN" id2="NETWORK" name2="GEN"/>
     <dyn:macroConnect connector="MC_NodeFault-DefaultActionConnectionPoint" id1="NodeFault_BUS_NGEN" id2="NETWORK" name2="NGEN"/>
-    <dyn:macroConnect connector="MC_NodeFault-DefaultActionConnectionPoint" id1="NodeFault_GENERATOR_GEN" id2="NETWORK" name2="NGEN"/>
 </dyn:dynamicModelsArchitecture>

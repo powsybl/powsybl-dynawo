@@ -54,7 +54,7 @@ abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends Ab
 
     protected abstract T findEquipment(String staticId);
 
-    protected String generateEventId(String staticId) {
+    private String generateEventId(String staticId) {
         return getModelName() + "_" + staticId;
     }
 

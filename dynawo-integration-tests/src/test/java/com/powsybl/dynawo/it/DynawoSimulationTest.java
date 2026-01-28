@@ -52,7 +52,8 @@ import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.commons.report.ReportNode.newRootReportNode;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -466,7 +467,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         .startTime(5)
                         .build(),
                 NodeFaultEventBuilder.of(n, r)
-                        .staticId(EurostagTutorialExample1Factory.NGEN)
+                        .staticId("GEN")
                         .startTime(10)
                         .faultTime(15)
                         .build()

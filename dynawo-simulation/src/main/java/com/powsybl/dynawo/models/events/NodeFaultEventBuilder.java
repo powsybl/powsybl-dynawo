@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.events;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
@@ -24,6 +25,7 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Identifiabl
     protected double faultTime;
     protected double rPu;
     protected double xPu;
+    private IdentifiableType identifiableType;
 
     public static NodeFaultEventBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
@@ -45,7 +47,7 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Identifiabl
     }
 
     NodeFaultEventBuilder(Network network, ReportNode reportNode) {
-        super(network, "BUS/GENERATOR", reportNode);
+        super(network, "GENERATOR/BUS", reportNode);
     }
 
     public NodeFaultEventBuilder faultTime(double faultTime) {
@@ -63,24 +65,41 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Identifiabl
         return self();
     }
 
-    protected Bus findEquipment(String staticId) {
-        Bus bus = network.getBusBreakerView().getBus(staticId);
-        if (bus != null) {
-            return bus;
-        }
-
-        Generator generator = network.getGenerator(staticId);
-        return generator != null
-                ? generator.getTerminal().getBusBreakerView().getBus()
-                : null;
+    @Override
+    protected Identifiable<?> findEquipment(String staticId) {
+        Identifiable<?> equipment = network.getGenerator(staticId);
+        return equipment != null ? equipment : network.getBusBreakerView().getBus(staticId);
     }
 
     @Override
     public NodeFaultEventBuilder staticId(String staticId) {
-        String equipmentType = network.getGenerator(staticId) != null ? IdentifiableType.GENERATOR.toString() : IdentifiableType.BUS.toString();
-        builderEquipment.addEquipment(staticId, this::findEquipment);
-        eventId = getModelName() + "_" + equipmentType + "_" + staticId;
+        Identifiable<?> eq = findEquipment(staticId);
+
+        if (eq == null) {
+            isInstantiable = false;
+            return self();
+        }
+
+        builderEquipment.addEquipment(staticId, id -> eq);
+
+        this.identifiableType = typeOf(eq);
+
+        eventId = generateEventId(staticId, identifiableType);
         return self();
+    }
+
+    private IdentifiableType typeOf(Identifiable<?> eq) {
+        if (eq instanceof Generator) {
+            return IdentifiableType.GENERATOR;
+        }
+        if (eq instanceof Bus) {
+            return IdentifiableType.BUS;
+        }
+        throw new PowsyblException("Unsupported equipment type for NodeFaultEvent: " + eq.getClass().getSimpleName());
+    }
+
+    public String generateEventId(String staticId, IdentifiableType identifiableType) {
+        return getModelName() + "_" + identifiableType.toString() + "_" + staticId;
     }
 
     @Override
@@ -107,7 +126,7 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Identifiabl
 
     @Override
     public NodeFaultEvent build() {
-        return isInstantiable() ? new NodeFaultEvent(eventId, builderEquipment.getEquipment(), MODEL_INFO, startTime, faultTime, rPu, xPu) : null;
+        return isInstantiable() ? new NodeFaultEvent(eventId, builderEquipment.getEquipment(), identifiableType, MODEL_INFO, startTime, faultTime, rPu, xPu) : null;
     }
 
     protected NodeFaultEventBuilder self() {
