@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2025, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.powsybl.dynawo.outputvariables;
 
 import com.powsybl.dynamicsimulation.OutputVariable;
@@ -8,10 +14,12 @@ import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
@@ -34,7 +42,6 @@ class DynawoOutputVariableResolverTest extends DynawoTestUtil {
 
     @Test
     void resolveShouldRejectOutputVariableWhenTcbIsNotConnected() {
-        // Given
         OutputVariable tcbVar = new DynawoOutputVariablesBuilder()
                 .id("BBM_TC_LOAD2")
                 .variables("tapPosition")
@@ -42,8 +49,8 @@ class DynawoOutputVariableResolverTest extends DynawoTestUtil {
                 .build()
                 .get(0);
 
-        Map<OutputVariable.OutputType, List<OutputVariable>> input =
-                Map.of(OutputVariable.OutputType.CURVE, List.of(tcbVar));
+        Map<OutputVariable.OutputType, List<OutputVariable>> input = new HashMap<>();
+        input.put(OutputVariable.OutputType.CURVE, new ArrayList<>(List.of(tcbVar)));
 
         DynawoOutputVariableResolver resolver =
                 new DynawoOutputVariableResolver(network, blackBoxModelSupplier);
@@ -51,6 +58,6 @@ class DynawoOutputVariableResolverTest extends DynawoTestUtil {
         Map<OutputVariable.OutputType, List<OutputVariable>> result =
                 resolver.resolveOutputVariables(input);
 
-        assertEquals(0, result.get(OutputVariable.OutputType.CURVE).size());
+        assertTrue(result.get(OutputVariable.OutputType.CURVE).isEmpty());
     }
 }

@@ -16,8 +16,8 @@ import java.util.Objects;
  */
 public class DynawoOutputVariable implements OutputVariable {
 
-    private String dynamicModelId;
-    private String variable;
+    private final String dynamicModelId;
+    private final String variable;
     private final OutputType outputType;
     private boolean isDefault = false;
     private static final String DEFAULT_DYNAMIC_MODEL_ID = "NETWORK";
@@ -49,7 +49,7 @@ public class DynawoOutputVariable implements OutputVariable {
         return outputType;
     }
 
-    public void isDefault() {
+    public void setDefault() {
         isDefault = true;
     }
 }

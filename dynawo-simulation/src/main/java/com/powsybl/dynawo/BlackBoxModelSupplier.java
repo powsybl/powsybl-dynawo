@@ -63,10 +63,8 @@ public final class BlackBoxModelSupplier {
         return dynamicModelMap.containsKey(id) || pureDynamicModelMap.containsKey(id);
     }
 
-    public boolean dynamicModelIsConnected(String id) {
-        BlackBoxModel model =
-                pureDynamicModelMap.getOrDefault(id, dynamicModelMap.get(id));
-        return model != null && model.isConnected();
+    public BlackBoxModel getDynamicModel(String id) {
+        return pureDynamicModelMap.getOrDefault(id, dynamicModelMap.get(id));
     }
 
 }
