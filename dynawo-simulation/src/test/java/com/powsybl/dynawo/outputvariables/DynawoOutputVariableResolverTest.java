@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +49,7 @@ class DynawoOutputVariableResolverTest extends DynawoTestUtil {
                 .build()
                 .get(0);
 
-        Map<OutputVariable.OutputType, List<OutputVariable>> input = new HashMap<>();
+        Map<OutputVariable.OutputType, List<OutputVariable>> input = new EnumMap<>(OutputVariable.OutputType.class);
         input.put(OutputVariable.OutputType.CURVE, new ArrayList<>(List.of(tcbVar)));
 
         DynawoOutputVariableResolver resolver =
