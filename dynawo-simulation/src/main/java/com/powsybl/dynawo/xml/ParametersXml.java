@@ -193,7 +193,7 @@ public final class ParametersXml {
         write(context.getDynamicModelsParameters(), context.getSimulationParFile(), workingDir, DYN_PREFIX);
         DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
         write(parameters.getModelParameters(), MODELS_PARAMETERS_FILENAME, workingDir, "");
-        write(List.of(parameters.getNetworkParameters()), NETWORK_PARAMETERS_FILENAME, workingDir, "");
+        write(context.getNetworkParameters(), NETWORK_PARAMETERS_FILENAME, workingDir, "");
         write(List.of(parameters.getSolverParameters()), SOLVER_PARAMETERS_FILENAME, workingDir, "");
     }
 

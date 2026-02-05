@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
+import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -77,6 +78,10 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
+        validate(schemaDefinition, expectedResourceName, xmlFile, false);
+    }
+
+    public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile, boolean ignoreComment) throws SAXException, IOException {
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/" + expectedResourceName));
         InputStream actual = Files.newInputStream(xmlFile);
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -85,7 +90,11 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        assertTxtEquals(expected, actual);
+        if (ignoreComment) {
+            assertXmlEquals(expected, actual);
+        } else {
+            assertTxtEquals(expected, actual);
+        }
     }
 
     protected void setupDynawoSimulationParameters() {

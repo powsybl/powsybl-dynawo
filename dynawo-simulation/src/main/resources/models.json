@@ -4,10 +4,11 @@
     "libs": [
       {
         "lib": "GeneratorFictitious",
-        "doc": "Fictitious generator (behaves in a similar way as an alpha-beta load)"
+        "doc": "Simplified generator model with voltage-dependent active and reactive power."
       },
       {
-        "lib": "GeneratorPVFixed"
+        "lib": "GeneratorPVFixed",
+        "doc": "Simplified generator model with fixed active and reactive power."
       }
     ]
   },
@@ -16,173 +17,211 @@
     "libs": [
       {
         "lib": "GeneratorSynchronousFourWindings",
-        "doc": "Four windings synchronous generator"
+        "doc": "Four windings synchronous generator."
       },
       {
         "lib": "GeneratorSynchronousFourWindingsGoverPropVRPropInt",
+        "doc": "Four-winding synchronous generator with simplified proportional control for governor and simplified proportional integral (PI) control for voltage regulator.",
         "properties": [
           "CONTROLLABLE"
         ]
       },
       {
         "lib": "GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4B",
+        "doc": "Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE).",
         "maxVersion": "1.6.0",
         "endCause": "Renamed GeneratorSynchronousFourWindingsGovSteam1St4b"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4BPssIEEE2B",
+        "doc": "Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE) and power system stabilizer PSS2B (IEEE).",
         "maxVersion": "1.6.0",
         "endCause": "Renamed GeneratorSynchronousFourWindingsGovSteam1St4bPss2b"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstVRNordic"
+        "lib": "GeneratorSynchronousFourWindingsPmConstVRNordic",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system)."
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstVRNordicTfo",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system) and generator transformer.",
         "properties": [
           "TRANSFORMER"
         ]
       },
       {
         "lib": "GeneratorSynchronousFourWindingsProportionalRegulations",
+        "doc": "Four-winding synchronous generator with simplified proportional control for governor and simplified proportional control for voltage regulator.",
         "properties": [
           "CONTROLLABLE"
         ]
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsTGov1Sexs"
+        "lib": "GeneratorSynchronousFourWindingsTGov1Sexs",
+        "doc": "Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator SEXS."
       },
       {
         "lib": "GeneratorSynchronousFourWindingsTGov1SexsPss2A",
+        "doc": "Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator SEXS and power system stabilizer PSS2A (IEEE).",
         "maxVersion": "1.6.0",
         "endCause": "Renamed GeneratorSynchronousFourWindingsTGov1SexsPss2a"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsVRKundur"
+        "lib": "GeneratorSynchronousFourWindingsVRKundur",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator VRKundur (Kundur)."
       },
       {
         "lib": "GeneratorSynchronousFourWindingsVRKundurPssKundur",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator VRKundur (Kundur) and power system stabilizer VRKundur (Kundur).",
         "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousProportionalRegulationsInternalParameters"
+        "lib": "GeneratorSynchronousProportionalRegulationsInternalParameters",
+        "doc": "Synchronous generator, initialized with internal parameters with proportional control for governor and proportional control for voltage regulator."
       },
       {
         "lib": "GeneratorSynchronousThreeWindings",
-        "doc": "Three windings synchronous generator"
+        "doc": "Three windings synchronous generator."
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsGoverNordicVRNordic"
+        "lib": "GeneratorSynchronousThreeWindingsGoverNordicVRNordic",
+        "doc": "Three-winding synchronous generator with governor GoverNordic and voltage regulator VRNordic (for Nordic 32-bus test system)."
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsGoverNordicVRNordicTfo",
+        "doc": "Three-winding synchronous generator with governor GoverNordic and voltage regulator VRNordic (for Nordic 32-bus test system) and generator transformer.",
         "properties": [
           "TRANSFORMER"
         ]
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsGoverPropVRPropInt",
+        "doc": "Three-winding synchronous generator with simplified proportional control for governor and simplified proportional integral (PI) control for voltage regulator.",
         "properties": [
           "CONTROLLABLE"
         ]
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsPmConstVRNordic"
+        "lib": "GeneratorSynchronousThreeWindingsPmConstVRNordic",
+        "doc": "Three-winding synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system)."
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstVRNordicTfo",
+        "doc": "Three-winding synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system) and generator transformer.",
         "properties": [
           "TRANSFORMER"
         ]
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsProportionalRegulations",
+        "doc": "Three-winding synchronous generator with simplified proportional control for governor and simplified proportional control for voltage regulator.",
         "properties": [
           "CONTROLLABLE"
         ]
       },
       {
         "lib": "GeneratorSynchronousFourWindingsIEEEG1Ac1a",
+        "doc": "Four-winding synchronous generator with governor IEEEG1 regulation and voltage regulator AC1A (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsIEEEG1Dc1a",
+        "doc": "Four-winding synchronous generator with governor IEEEG1 regulation and voltage regulator DC1A (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsIEEEG1IEEX2A",
+        "doc": "Four-winding synchronous generator with governor IEEEG1 regulation and voltage regulator IEEX2A.",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstAc6aPss3b",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator AC6A (IEEE) and power system stabilizer PSS3B (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstAc7bPss3b",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator AC7B (IEEE) and power system stabilizer PSS3B (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstAc7cPss2c",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator AC7C (IEEE) and power system stabilizer PSS2C (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstAc8b",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator AC8B (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstAc8bPss3b",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator AC8B (IEEE) and power system stabilizer PSS3B (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstDc1a",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator DC1A (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstIEEX2A",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator IEEX2A (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt5bPss2b",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST5B (IEEE) and power system stabilizer PSS2B (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt6bPss3b",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST6B (IEEE) and power system stabilizer PSS3B (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt6cPss6c",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt7bPss2a",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST7B (IEEE) and power system stabilizer PSS2A (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt9cPss2c",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST9C (IEEE) and power system stabilizer PSS2C (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsTGov1Dc1a",
+        "doc": "Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator DC1A (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsTGov3IEEX2A",
+        "doc": "Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator IEEX2A.",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsHyGovBbSex1",
+        "doc": "Three-winding synchronous generator with governor HYGOV and Brown Boveri Static Exciter BBSEX1 (IEC).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsHyGovScrx",
+        "doc": "Three-winding synchronous generator with governor HYGOV and exciter SCRX (IEC).",
         "minVersion": "1.6.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIeeeG1IeeeT1",
+        "doc": "Three-winding synchronous generator with governor IEEEG1 and exciter IEEET1.",
         "minVersion": "1.6.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIeeeG1IeeeT1Tfo",
+        "doc": "Three-winding synchronous generator with governor IEEEG1 and exciter IEEET1 and generator transformer.",
         "minVersion": "1.6.0",
         "properties": [
           "TRANSFORMER"
@@ -190,10 +229,12 @@
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIeeeG1Scrx",
+        "doc": "Three-winding synchronous generator with governor IEEEG1 and exciter SCRX (IEC).",
         "minVersion": "1.6.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIeeeG1ScrxTfo",
+        "doc": "Three-winding synchronous generator with governor IEEEG1 and exciter SCRX (IEC) and generator transformer.",
         "minVersion": "1.6.0",
         "properties": [
           "TRANSFORMER"
@@ -201,26 +242,31 @@
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIEEEG2BbSex1",
+        "doc": "Three-winding synchronous generator with governor IEEEG2 and Brown Boveri Static Exciter BBSEX1 (IEC).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a",
+        "doc": "Three-winding synchronous generator with constant mechanical power and exciter EXAC1 (IEEE).",
         "minVersion": "1.6.0",
         "maxVersion": "1.6.0",
         "endCause": "Renamed GeneratorSynchronousThreeWindingsPmConstExAc1"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1aTfo",
+        "doc": "Three-winding synchronous generator with constant mechanical power and exciter EXAC1 (IEEE) and generator transformer.",
         "minVersion": "1.6.0",
         "maxVersion": "1.6.0",
         "endCause": "Renamed GeneratorSynchronousThreeWindingsPmConstExAc1Tfo"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstScrx",
+        "doc": "Three-winding synchronous generator with constant mechanical power and exciter SCRX (IEC).",
         "minVersion": "1.6.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstScrxTfo",
+        "doc": "Three-winding synchronous generator with constant mechanical power and exciter SCRX (IEC) and generator transformer.",
         "minVersion": "1.6.0",
         "properties": [
           "TRANSFORMER"
@@ -228,26 +274,32 @@
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsGovHydro4St4b",
+        "doc": "Three-winding synchronous generator with governor GovHydro4 (IEC) and voltage regulator ST4B (IEEE).",
         "minVersion": "1.8.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstExAc1",
+        "doc": "Three-winding synchronous generator with constant mechanical power and exciter EXAC1 (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl1c",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST5B (IEEE) and power system stabilizer PSS2B (IEEE) and stator current limiter SCL1C (IEEE).",
         "minVersion": "1.8.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsGovSteam1St4b",
+        "doc": "Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel2c",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE) and over excitation limiter OEL2C (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstExAc1Tfo",
+        "doc": "Three-winding synchronous generator with constant mechanical power and exciter EXAC1 (IEEE) and generator transformer.",
         "minVersion": "1.7.0",
         "properties": [
           "TRANSFORMER"
@@ -255,46 +307,57 @@
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel5c",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE) and over excitation limiter OEL5C (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt7bPss2aUel2c",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST7B (IEEE) and power system stabilizer PSS2A (IEEE) and under excitation limiter UEL2C (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsTGov1SexsPss2a",
+        "doc": "Four-winding synchronous generator with governor TGOV1 (IEC) and voltage regulator SEXS and power system stabilizer PSS2A (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsGovSteam1St4bPss2b",
+        "doc": "Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE) and power system stabilizer PSS2B (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel4c",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE) and over excitation limiter OEL4C (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsGovCt2St4b",
+        "doc": "Four-winding synchronous generator with governor GOVCT2 regulation and voltage regulator ST4B (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt6cPss6cOel3c",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST6C (IEEE) and power system stabilizer PSS6C (IEEE) and over excitation limiter OEL3C (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsGovSteamEuSt4b",
+        "doc": "Four-winding synchronous generator with governor GOVSteamEU (IEEE) and voltage regulator ST4B (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt7bPss2aUel1",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST7B (IEEE) and power system stabilizer PSS2A (IEEE) and under excitation limiter UEL1 (IEEE).",
         "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl2c",
+        "doc": "Four-winding synchronous generator with constant mechanical power and voltage regulator ST5C (IEEE) and power system stabilizer PSS2B (IEEE) and stator current limiter SCL2C (IEEE).",
         "minVersion": "1.8.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsHyGovScrxTfo",
+        "doc": "Three-winding synchronous generator with governor HYGOV and exciter SCRX (IEC) and generator transformer.",
         "minVersion": "1.7.0",
         "properties": [
           "TRANSFORMER"
@@ -314,10 +377,11 @@
         "properties": [
           "CONTROLLABLE"
         ],
-        "doc": "Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation"
+        "doc": "Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation."
       },
       {
-        "lib": "GeneratorPVDiagramPQ"
+        "lib": "GeneratorPVDiagramPQ",
+        "doc": "Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation. Active and reactive power are within the diagram PQ."
       }
     ]
   },
@@ -325,31 +389,40 @@
     "defaultLib": "GeneratorPVSignalN",
     "libs": [
       {
-        "lib": "GeneratorPVSignalN"
+        "lib": "GeneratorPVSignalN",
+        "doc": "Simplified generator PV based on SignalN for the frequency handling and voltage following the voltage target URef."
       },
       {
-        "lib": "GeneratorPQPropSignalN"
+        "lib": "GeneratorPQPropSignalN",
+        "doc": "Simplified generator PQ based on SignalN for the frequency handling and with a proportional reactive power regulation."
       },
       {
-        "lib": "GeneratorPQPropDiagramPQSignalN"
+        "lib": "GeneratorPQPropDiagramPQSignalN",
+        "doc": "Simplified generator PQ with a PQ diagram, based on SignalN for the frequency handling and with a proportional reactive power regulation."
       },
       {
-        "lib": "GeneratorPVPropSignalN"
+        "lib": "GeneratorPVPropSignalN",
+        "doc": "Simplified generator PV based on SignalN for the frequency handling and with a proportional voltage regulation."
       },
       {
-        "lib": "GeneratorPVDiagramPQSignalN"
+        "lib": "GeneratorPVDiagramPQSignalN",
+        "doc": "Simplified generator PV based on SignalN for the frequency handling with an N points PQ diagram."
       },
       {
-        "lib": "GeneratorPVRemoteDiagramPQSignalN"
+        "lib": "GeneratorPVRemoteDiagramPQSignalN",
+        "doc": "Simplified generator PV with a PQ diagram, based on SignalN for the frequency handling and a remote voltage regulation."
       },
       {
-        "lib": "GeneratorPVTfoDiagramPQSignalN"
+        "lib": "GeneratorPVTfoDiagramPQSignalN",
+        "doc": "Simplified generator PV based on SignalN for the frequency handling, with a simplified transformer, a voltage regulation at stator and with an N points PQ diagram."
       },
       {
-        "lib": "GeneratorPVTfoSignalN"
+        "lib": "GeneratorPVTfoSignalN",
+        "doc": "Simplified generator PV based on SignalN for the frequency handling, with a simplified transformer and a voltage regulation at stator."
       },
       {
-        "lib": "GeneratorPVRemoteSignalN"
+        "lib": "GeneratorPVRemoteSignalN",
+        "doc": "Simplified generator PV based on SignalN for the frequency handling and a remote voltage regulation."
       }
     ]
   },
@@ -357,88 +430,110 @@
     "defaultLib": "HvdcPV",
     "libs": [
       {
-        "lib": "HvdcPV"
+        "lib": "HvdcPV",
+        "doc": "PV HVDC link. Each terminal can regulate the voltage or the reactive power, depending on the user's choice."
       },
       {
-        "lib": "HvdcPVEmulation"
+        "lib": "HvdcPVEmulation",
+        "doc": "PV HVDC link with AC Emulation control for active power. Each terminal can regulate the voltage or the reactive power, depending on the user's choice."
       },
       {
-        "lib": "HvdcPVEmulationSet"
+        "lib": "HvdcPVEmulationSet",
+        "doc": "PV HVDC link with AC Emulation control for active power (initialization with PRefSet0Pu set by user). Each terminal can regulate the voltage or the reactive power, depending on the user's choice."
       },
       {
-        "lib": "HvdcPVDiagramPQ"
+        "lib": "HvdcPVDiagramPQ",
+        "doc": "PV HVDC link with a PQ diagram. Each terminal can regulate the voltage or the reactive power, depending on the user's choice."
       },
       {
-        "lib": "HvdcPVDiagramPQEmulation"
+        "lib": "HvdcPVDiagramPQEmulation",
+        "doc": "PV HVDC link with AC Emulation control for active power and a PQ diagram. Each terminal can regulate the voltage or the reactive power, depending on the user's choice."
       },
       {
-        "lib": "HvdcPVDiagramPQEmulationSet"
+        "lib": "HvdcPVDiagramPQEmulationSet",
+        "doc": "PV HVDC link with AC Emulation control for active power (initialization with PRefSet0Pu set by user) and a PQ diagram. Each terminal can regulate the voltage or the reactive power, depending on the user's choice."
       },
       {
-        "lib": "HvdcPTanPhi"
+        "lib": "HvdcPTanPhi",
+        "doc": "HVDC link with P and Q=tan(Phi)*P regulation."
       },
       {
-        "lib": "HvdcPTanPhiDiagramPQ"
+        "lib": "HvdcPTanPhiDiagramPQ",
+        "doc": "HVDC link with P and Q=tan(Phi)*P regulation and a PQ diagram."
       },
       {
         "lib": "HvdcPVDangling",
+        "doc": "PV HVDC link with terminal2 connected to a switched-off bus.",
         "properties": [
           "DANGLING"
         ]
       },
       {
         "lib": "HvdcPVDanglingDiagramPQ",
+        "doc": "PV HVDC link with a PQ diagram and terminal2 connected to a switched-off bus.",
         "properties": [
           "DANGLING"
         ]
       },
       {
         "lib": "HvdcPTanPhiDangling",
+        "doc": "HVDC link with P and Q=tan(Phi)*P regulation with terminal2 connected to a switched-off bus.",
         "properties": [
           "DANGLING"
         ]
       },
       {
         "lib": "HvdcPTanPhiDanglingDiagramPQ",
+        "doc": "HVDC link with P and Q=tan(Phi)*P regulation, a PQ diagram and with terminal2 connected to a switched-off bus.",
         "properties": [
           "DANGLING"
         ]
       },
       {
-        "lib": "HvdcPQProp"
+        "lib": "HvdcPQProp",
+        "doc": "HVDC link with a proportional reactive power control. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice."
       },
       {
         "lib": "HvdcPQPropDangling",
+        "doc": "HVDC link with a proportional reactive power control. terminal1 can inject a fixed reactive power or use the proportional control, depending on the user's choice. terminal2 is connected to a switched-off bus.",
         "properties": [
           "DANGLING"
         ]
       },
       {
         "lib": "HvdcPQPropDanglingDiagramPQ",
+        "doc": "HVDC link with a proportional reactive power control and a PQ diagram. terminal1 can inject a fixed reactive power or use the proportional control, depending on the user's choice. terminal2 is connected to a switched-off bus.",
         "properties": [
           "DANGLING"
         ]
       },
       {
-        "lib": "HvdcPQPropDiagramPQ"
+        "lib": "HvdcPQPropDiagramPQ",
+        "doc": "HVDC link with a proportional reactive power control and a PQ diagram. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice."
       },
       {
-        "lib": "HvdcPQPropDiagramPQEmulation"
+        "lib": "HvdcPQPropDiagramPQEmulation",
+        "doc": "HVDC link with AC Emulation control for active power and a proportional reactive power control and a PQ diagram. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice."
       },
       {
-        "lib": "HvdcPQPropDiagramPQEmulationSet"
+        "lib": "HvdcPQPropDiagramPQEmulationSet",
+        "doc": "HVDC link with AC Emulation control for active power (initialization with PRefSet0Pu set by user) and a proportional reactive power control and a PQ diagram. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice."
       },
       {
-        "lib": "HvdcPQPropDiagramPQEmulationVariableK"
+        "lib": "HvdcPQPropDiagramPQEmulationVariableK",
+        "doc": "HVDC link with AC Emulation control for active power (initialization with a variable KACEmulation) and a proportional reactive power control and a PQ diagram. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice."
       },
       {
-        "lib": "HvdcPQPropEmulation"
+        "lib": "HvdcPQPropEmulation",
+        "doc": "HVDC link with AC Emulation control for active power and a proportional reactive power control. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice."
       },
       {
-        "lib": "HvdcPQPropEmulationSet"
+        "lib": "HvdcPQPropEmulationSet",
+        "doc": "HVDC link with AC Emulation control for active power (initialization with PRefSet0Pu set by user) and a proportional reactive power control. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice."
       },
       {
-        "lib": "HvdcPQPropEmulationVariableK"
+        "lib": "HvdcPQPropEmulationVariableK",
+        "doc": "HVDC link with AC Emulation control for active power (initialization with a variable KACEmulation) and a proportional reactive power control. Each terminal can inject a fixed reactive power or use the proportional control, depending on the user's choice."
       }
     ]
   },
@@ -447,12 +542,12 @@
     "libs": [
       {
         "lib": "HvdcVsc",
-        "doc": "Standard dynamic model for Hvdc-Vsc link",
+        "doc": "Standard dynamic model for Hvdc-Vsc link.",
         "minVersion": "1.6.0"
       },
       {
         "lib": "HvdcVscEmulation",
-        "doc": "Standard dynamic model for Hvdc-Vsc link with AC emulation",
+        "doc": "Standard dynamic model for Hvdc-Vsc link with AC emulation.",
         "minVersion": "1.6.0"
       },
       {
@@ -460,7 +555,7 @@
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)",
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one).",
         "minVersion": "1.6.0"
       },
       {
@@ -468,18 +563,18 @@
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (DC voltage control on the main one)",
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (DC voltage control on the main one).",
         "minVersion": "1.6.0"
       },
       {
         "lib": "HvdcVSC",
-        "doc": "Standard dynamic model for Hvdc-VSC link",
+        "doc": "Standard dynamic model for Hvdc-VSC link.",
         "maxVersion": "1.5.0",
         "endCause": "Renamed HvdcVsc"
       },
       {
         "lib": "HvdcVSCEmulation",
-        "doc": "Standard dynamic model for Hvdc-VSC link with AC emulation",
+        "doc": "Standard dynamic model for Hvdc-VSC link with AC emulation.",
         "maxVersion": "1.5.0",
         "endCause": "Renamed HvdcVscEmulation"
       },
@@ -488,7 +583,7 @@
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)",
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one).",
         "maxVersion": "1.5.0",
         "endCause": "Renamed HvdcVscDanglingP"
       },
@@ -497,7 +592,7 @@
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (DC voltage control on the main one)",
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (DC voltage control on the main one).",
         "maxVersion": "1.5.0",
         "endCause": "Renamed HvdcVscDanglingUDc"
       }
@@ -508,7 +603,7 @@
     "libs": [
       {
         "lib": "Bus",
-        "doc": "Standard bus"
+        "doc": "Standard bus."
       }
     ]
   },
@@ -516,13 +611,16 @@
     "defaultLib": "InfiniteBus",
     "libs": [
       {
-        "lib": "InfiniteBus"
+        "lib": "InfiniteBus",
+        "doc": "Infinite bus."
       },
       {
-        "lib": "InfiniteBusWithImpedance"
+        "lib": "InfiniteBusWithImpedance",
+        "doc": "Infinite bus connected to an impedance."
       },
       {
-        "lib": "InfiniteBusWithVariations"
+        "lib": "InfiniteBusWithVariations",
+        "doc": "Infinite bus with configurable variations on the voltage module and on the frequency."
       }
     ]
   },
@@ -534,17 +632,19 @@
         "properties": [
           "CONTROLLABLE"
         ],
-        "doc": "Voltage-dependent load"
+        "doc": "Voltage-dependent load."
       },
       {
         "lib": "LoadAlphaBetaRestorative",
-        "doc": "Restorative load model with a voltage-dependent behavior when the voltage hits the limits"
+        "doc": "Restorative load model with a voltage-dependent behavior when the voltage hits the limits."
       },
       {
-        "lib": "LoadAlphaBetaRestorativeLimitsRecalc"
+        "lib": "LoadAlphaBetaRestorativeLimitsRecalc",
+        "doc": "Restorative load model with a voltage-dependent behavior when the voltage hits the limits, with limits recalculation at initialization."
       },
       {
         "lib": "LoadAlphaBetaMotor",
+        "doc": "Alpha-beta load in parallel with a simple motor model.",
         "maxVersion": "1.6.0",
         "endCause": "Replaced LoadAlphaBetaMotorSimplified and LoadAlphaBetaMotorFifthOrder",
         "properties": [
@@ -557,14 +657,17 @@
       },
       {
         "lib": "LoadAlphaBetaRestorativeNetwork",
+        "doc": "Restorative load model with a voltage-dependent behavior when the voltage hits the limits, same model as in the Network.",
         "minVersion": "1.7.0"
       },
       {
         "lib": "ElectronicLoad",
+        "doc": "Constant power load with disconnection and reconnections depending on the voltage.",
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaMotorFifthOrder",
+        "doc": "Alpha-beta load in parallel with a fifth-order motor model.",
         "properties": [
           "SYNCHRONIZED"
         ],
@@ -572,6 +675,7 @@
       },
       {
         "lib": "LoadAlphaBetaMotorSimplified",
+        "doc": "Alpha-beta load in parallel with a simple motor model.",
         "properties": [
           "SYNCHRONIZED"
         ],
@@ -579,6 +683,7 @@
       },
       {
         "lib": "LoadAlphaBetaThreeMotorFifthOrder",
+        "doc": "Alpha-beta load in parallel with three fifth-order motor models.",
         "properties": [
           "SYNCHRONIZED"
         ],
@@ -586,6 +691,7 @@
       },
       {
         "lib": "LoadAlphaBetaTwoMotorFifthOrder",
+        "doc": "Alpha-beta load in parallel with two fifth-order motor models.",
         "properties": [
           "SYNCHRONIZED"
         ],
@@ -593,13 +699,15 @@
       },
       {
         "lib": "LoadAlphaBetaTwoMotorSimplified",
+        "doc": "Alpha-beta load in parallel with two simplified motor models.",
         "properties": [
           "SYNCHRONIZED"
         ],
         "minVersion": "1.7.0"
       },
       {
-        "lib": "LoadZIP"
+        "lib": "LoadZIP",
+        "doc": "ZIP coefficients load model."
       }
     ]
   },
@@ -608,7 +716,7 @@
     "libs": [
       {
         "lib": "LoadOneTransformer",
-        "doc": "Load behind one transformer"
+        "doc": "Load behind one transformer."
       }
     ]
   },
@@ -617,7 +725,7 @@
     "libs": [
       {
         "lib": "LoadOneTransformerTapChanger",
-        "doc": "Load behind one transformer with a tap changer"
+        "doc": "Load behind one transformer with a tap changer."
       }
     ]
   },
@@ -626,7 +734,7 @@
     "libs": [
       {
         "lib": "LoadTwoTransformers",
-        "doc": "Load behind two transformers"
+        "doc": "Load behind two transformers."
       }
     ]
   },
@@ -635,7 +743,7 @@
     "libs": [
       {
         "lib": "LoadTwoTransformersTapChangers",
-        "doc": "Load behind two transformers with tap changers"
+        "doc": "Load behind two transformers with tap changers."
       }
     ]
   },
@@ -644,7 +752,7 @@
     "libs": [
       {
         "lib": "Line",
-        "doc": "Standard line"
+        "doc": "Standard line."
       }
     ]
   },
@@ -652,10 +760,12 @@
     "defaultLib": "ShuntB",
     "libs": [
       {
-        "lib": "ShuntB"
+        "lib": "ShuntB",
+        "doc": "Shunt element with constant susceptance, reactive power depends on voltage."
       },
       {
-        "lib": "ShuntBWithSections"
+        "lib": "ShuntBWithSections",
+        "doc": "Shunt element with voltage-dependent reactive power and a variable susceptance given by a table and a section."
       }
     ]
   },
@@ -664,31 +774,39 @@
     "libs": [
       {
         "lib": "StaticVarCompensator",
-        "doc": "Standard static var compensator"
+        "doc": "Standard static var compensator."
       },
       {
-        "lib": "StaticVarCompensatorPV"
+        "lib": "StaticVarCompensatorPV",
+        "doc": "PV static var compensator model without mode handling."
       },
       {
-        "lib": "StaticVarCompensatorPVModeHandling"
+        "lib": "StaticVarCompensatorPVModeHandling",
+        "doc": "PV static var compensator model with mode handling."
       },
       {
-        "lib": "StaticVarCompensatorPVRemote"
+        "lib": "StaticVarCompensatorPVRemote",
+        "doc": "PV static var compensator model with remote voltage regulation without mode handling."
       },
       {
-        "lib": "StaticVarCompensatorPVRemoteModeHandling"
+        "lib": "StaticVarCompensatorPVRemoteModeHandling",
+        "doc": "PV static var compensator model with remote voltage regulation, slope and mode handling."
       },
       {
-        "lib": "StaticVarCompensatorPVProp"
+        "lib": "StaticVarCompensatorPVProp",
+        "doc": "PV static var compensator model with slope without mode handling."
       },
       {
-        "lib": "StaticVarCompensatorPVPropModeHandling"
+        "lib": "StaticVarCompensatorPVPropModeHandling",
+        "doc": "PV static var compensator model with slope and mode handling."
       },
       {
-        "lib": "StaticVarCompensatorPVPropRemote"
+        "lib": "StaticVarCompensatorPVPropRemote",
+        "doc": "PV static var compensator model with remote voltage regulation, slope and without mode handling."
       },
       {
-        "lib": "StaticVarCompensatorPVPropRemoteModeHandling"
+        "lib": "StaticVarCompensatorPVPropRemoteModeHandling",
+        "doc": "PV static var compensator model with remote voltage regulation, slope and mode handling."
       }
     ]
   },
@@ -696,10 +814,12 @@
     "defaultLib": "TransformerFixedRatio",
     "libs": [
       {
-        "lib": "TransformerFixedRatio"
+        "lib": "TransformerFixedRatio",
+        "doc": "Two-winding transformer with a fixed ratio."
       },
       {
         "lib": "NetworkTransformer",
+        "doc": "Two-winding transformer with a fixed ratio, same model as the Network one.",
         "minVersion": "1.7.0"
       }
     ]
@@ -709,6 +829,7 @@
     "libs": [
       {
         "lib": "InertialGrid",
+        "doc": "Generation system with average frequency response.",
         "minVersion": "1.7.0"
       }
     ]
@@ -718,6 +839,7 @@
     "libs": [
       {
         "lib": "WTG4AWeccCurrentSource",
+        "doc": "WECC Wind Turbine model with a simplified drive train model WTGTA, current control REECA, and generator/converter REGCB with a current source as interface with the grid.",
         "internalModelPrefix": "WTG4A",
         "properties": [
           "SYNCHRONIZED"
@@ -725,6 +847,7 @@
       },
       {
         "lib": "WTG4BWeccCurrentSource",
+        "doc": "WECC Wind Turbine model with a simplified drive train model WTGTB, current control REECA, and generator/converter REGCB with a current source as interface with the grid.",
         "internalModelPrefix": "WTG4B",
         "properties": [
           "SYNCHRONIZED"
@@ -732,14 +855,17 @@
       },
       {
         "lib": "WT4AWeccCurrentSource",
+        "doc": "WECC Wind Turbine model with a simplified drive train model WTGT A, without the plant controller, with current control REECA, and generator/convertor REGCB with a current source as interface with the grid.",
         "internalModelPrefix": "WT4A"
       },
       {
         "lib": "WT4BWeccCurrentSource",
+        "doc": "WECC Wind Turbine model without plant controller, with current control REECA, and generator/converter REGCB with a current source as interface with the grid.",
         "internalModelPrefix": "WT4B"
       },
       {
         "lib": "PhotovoltaicsWeccCurrentSource",
+        "doc": "WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a current source as interface with the grid.",
         "internalModelPrefix": "photovoltaics",
         "maxVersion": "1.6.0",
         "endCause": "Renamed PhotovoltaicsWeccCurrentSourceB",
@@ -749,6 +875,7 @@
       },
       {
         "lib": "PhotovoltaicsWeccCurrentSourceB",
+        "doc": "WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a current source as interface with the grid.",
         "internalModelPrefix": "photovoltaics",
         "minVersion": "1.7.0",
         "properties": [
@@ -757,6 +884,7 @@
       },
       {
         "lib": "PhotovoltaicsWeccVoltageSource",
+        "doc": "WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a voltage source as interface with the grid.",
         "internalModelPrefix": "photovoltaics",
         "maxVersion": "1.6.0",
         "endCause": "Renamed PhotovoltaicsWeccVoltageSourceB",
@@ -766,6 +894,7 @@
       },
       {
         "lib": "PhotovoltaicsWeccVoltageSourceA",
+        "doc": "WECC Photovoltaics grid following model with plant control REPCA, current control REECA, generator/converter REGCB with a voltage source as interface with the grid.",
         "internalModelPrefix": "photovoltaics",
         "minVersion": "1.7.0",
         "properties": [
@@ -774,6 +903,7 @@
       },
       {
         "lib": "PhotovoltaicsWeccVoltageSourceB",
+        "doc": "WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a voltage source as interface with the grid.",
         "internalModelPrefix": "photovoltaics",
         "minVersion": "1.7.0",
         "properties": [
@@ -787,18 +917,21 @@
     "libs": [
       {
         "lib": "GridFormingConverterDroopControl",
+        "doc": "Grid forming converter model with droop control.",
         "properties": [
           "SYNCHRONIZED"
         ]
       },
       {
         "lib": "GridFormingConverterMatchingControl",
+        "doc": "Grid forming converter model with matching control.",
         "properties": [
           "SYNCHRONIZED"
         ]
       },
       {
         "lib": "GridFormingConverterDispatchableVirtualOscillatorControl",
+        "doc": "Grid forming converter model with Dispatchable Virtual Oscillator (DVO) control.",
         "properties": [
           "SYNCHRONIZED"
         ]
@@ -811,7 +944,7 @@
       {
         "lib": "CurrentLimitAutomaton",
         "alias": "OverloadManagementSystem",
-        "doc": "Automation system which emits a specific order when the current on the monitored line exceeds a given threshold for a given duration"
+        "doc": "Automation system which emits a specific order when the current on the monitored line exceeds a given threshold for a given duration."
       }
     ]
   },
@@ -821,7 +954,7 @@
       {
         "lib": "CurrentLimitAutomatonTwoLevels",
         "alias": "TwoLevelOverloadManagementSystem",
-        "doc": "Automation system which emits a specific order when the current on two monitored lines exceeds a given threshold for a given duration"
+        "doc": "Automation system which emits a specific order when the current on two monitored lines exceeds a given threshold for a given duration."
       }
     ]
   },
@@ -830,7 +963,7 @@
     "libs": [
       {
         "lib": "PhaseShifterI",
-        "doc": "Phase-shifter which monitors a given current. When the current goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated"
+        "doc": "Phase-shifter which monitors a given current. When the current goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated."
       }
     ]
   },
@@ -839,7 +972,7 @@
     "libs": [
       {
         "lib": "PhaseShifterP",
-        "doc": "Phase-shifter which monitors a given active power. When the active power goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated"
+        "doc": "Phase-shifter which monitors a given active power. When the active power goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated."
       }
     ]
   },
@@ -848,25 +981,27 @@
     "libs": [
       {
         "lib": "PhaseShifterBlockingI",
-        "doc": "Blocks phase shifter I when the monitored intensity goes below a threshold"
+        "doc": "Blocks phase shifter I when the monitored intensity goes below a threshold."
       }
     ]
   },
   "TAP_CHANGER": {
-    "defaultLib": "TapChangerAutomaton",
+    "defaultLib": "TapChangerAutomationSystem",
     "libs": [
       {
         "lib": "TapChangerAutomaton",
-        "doc": "Tap changer"
+        "alias":"TapChangerAutomationSystem",
+        "doc": "Tap changer."
       }
     ]
   },
   "TAP_CHANGER_BLOCKING": {
-    "defaultLib": "TapChangerBlockingAutomaton",
+    "defaultLib": "TapChangerBlockingAutomationSystem",
     "libs": [
       {
         "lib": "TapChangerBlockingAutomaton",
-        "doc": "Blocks tap changers when one of the monitored voltages goes below a threshold"
+        "alias":"TapChangerBlockingAutomationSystem",
+        "doc": "Blocks tap changers when one of the monitored voltages goes below a threshold."
       }
     ]
   },
@@ -876,7 +1011,7 @@
       {
         "lib": "UnderVoltageAutomaton",
         "alias": "UnderVoltage",
-        "doc": "Sends switch-off signal to the monitored generator when the voltage goes below a threshold"
+        "doc": "Sends switch-off signal to the monitored generator when the voltage goes below a threshold."
       }
     ]
   }
