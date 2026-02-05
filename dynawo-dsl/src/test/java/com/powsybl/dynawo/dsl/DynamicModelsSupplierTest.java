@@ -32,10 +32,7 @@ import com.powsybl.dynawo.models.loads.*;
 import com.powsybl.dynawo.models.svarcs.BaseStaticVarCompensator;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
-import com.powsybl.iidm.network.test.HvdcTestNetwork;
-import com.powsybl.iidm.network.test.SvcTestCaseFactory;
+import com.powsybl.iidm.network.test.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -74,20 +71,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideAutomationSystemModelData")
     void testAutomationSystemDynamicModels(String groovyScriptName, Class<? extends BlackBoxModel> modelClass, Network network, String dynamicId, String parameterId, String lib) {
-        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
-        List<DynamicModel> dynamicModels = supplier.get(network);
-        assertEquals(1, dynamicModels.size());
-        assertTrue(modelClass.isInstance(dynamicModels.getFirst()));
-        assertPureDynamicBlackBoxModel(modelClass.cast(dynamicModels.getFirst()), dynamicId, parameterId, lib);
-    }
-
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("providePhaseShifterModelData")
-    void testPhaseShifterDynamicModels(String groovyScriptName, Class<? extends BlackBoxModel> modelClass, Network network, String dynamicId, String parameterId, String lib) {
-        network.getTwoWindingsTransformer("NGEN_NHV1").newPhaseTapChanger()
-                .setTapPosition(0)
-                .beginStep().setR(1.0).setX(2.0).setG(3.0).setB(4.0).setAlpha(5.0).setRho(6.0).endStep()
-                .add();
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network);
         assertEquals(1, dynamicModels.size());
@@ -161,15 +144,10 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/tapChanger.groovy", TapChangerAutomationSystem.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
                 Arguments.of("/dynamicModels/tapChangerBlockingBusBar.groovy", TapChangerBlockingAutomationSystem.class, FourSubstationsNodeBreakerFactory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton2"),
                 Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomationSystem.class, EurostagTutorialExample1Factory.createWithLFResults(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
+                Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomationSystem.class, PhaseShifterTestCaseFactory.create(), "PS_PS1", "ps", "PhaseShifterI"),
+                Arguments.of("/dynamicModels/phaseShifterP.groovy", PhaseShifterPAutomationSystem.class, PhaseShifterTestCaseFactory.create(), "PS_PS1", "ps", "PhaseShifterP"),
                 Arguments.of("/dynamicModels/underVoltage.groovy", UnderVoltageAutomationSystem.class, EurostagTutorialExample1Factory.create(), "UV_GEN", "uv", "UnderVoltageAutomaton")
         );
-    }
-
-    private static Stream<Arguments> providePhaseShifterModelData() {
-        return Stream.of(
-                Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomationSystem.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterI"),
-                Arguments.of("/dynamicModels/phaseShifterP.groovy", PhaseShifterPAutomationSystem.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterP")
-                );
     }
 
     private static Stream<Arguments> provideWarningsModel() {
