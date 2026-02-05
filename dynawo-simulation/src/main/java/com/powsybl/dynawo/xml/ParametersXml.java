@@ -40,6 +40,8 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 public final class ParametersXml {
 
     public static final String PARAMETERS_SET_ELEMENT_NAME = "parametersSet";
+    private static final String COMPONENT_ID_ATTRIBUTE = "componentId";
+    private static final String VALUE_ATTRIBUTE = "value";
 
     private ParametersXml() {
     }
@@ -135,16 +137,22 @@ public final class ParametersXml {
                 ParameterType type = ParameterType.valueOf(xmlReader.getAttributeValue(null, "type"));
                 switch (elementName) {
                     case "par" -> {
-                        String value = xmlReader.getAttributeValue(null, "value");
+                        String value = xmlReader.getAttributeValue(null, VALUE_ATTRIBUTE);
                         XmlUtil.readEndElementOrThrow(xmlReader);
                         parametersSet.addParameter(name, type, value);
                     }
                     case "reference" -> {
                         String origData = xmlReader.getAttributeValue(null, "origData");
                         String origName = xmlReader.getAttributeValue(null, "origName");
-                        String componentId = xmlReader.getAttributeValue(null, "componentId");
+                        String componentId = xmlReader.getAttributeValue(null, COMPONENT_ID_ATTRIBUTE);
                         XmlUtil.readEndElementOrThrow(xmlReader);
                         parametersSet.addReference(name, type, origData, origName, componentId);
+                    }
+                    case "prefixPar" -> {
+                        String componentId = xmlReader.getAttributeValue(null, COMPONENT_ID_ATTRIBUTE);
+                        String value = xmlReader.getAttributeValue(null, VALUE_ATTRIBUTE);
+                        XmlUtil.readEndElementOrThrow(xmlReader);
+                        parametersSet.addPrefixParameter(name, componentId, type, value);
                     }
                     default -> closeAndThrowException(xmlReader, xmlReader.getLocalName());
                 }
@@ -229,7 +237,7 @@ public final class ParametersXml {
         writer.writeEmptyElement(DYN_URI, "par");
         writer.writeAttribute("type", type.toString());
         writer.writeAttribute("name", name);
-        writer.writeAttribute("value", value);
+        writer.writeAttribute(VALUE_ATTRIBUTE, value);
     }
 
     public static void writeReference(XMLStreamWriter writer, ParameterType type, String name, String origData, String origName, String componentId) throws XMLStreamException {
@@ -239,7 +247,7 @@ public final class ParametersXml {
         writer.writeAttribute("origData", origData);
         writer.writeAttribute("origName", origName);
         if (componentId != null) {
-            writer.writeAttribute("componentId", componentId);
+            writer.writeAttribute(COMPONENT_ID_ATTRIBUTE, componentId);
         }
     }
 }

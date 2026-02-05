@@ -9,11 +9,14 @@ package com.powsybl.dynawo.models;
 
 import com.powsybl.dynawo.parameters.ParameterType;
 
+import java.util.List;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-@FunctionalInterface
 public interface ParameterUpdater {
 
     void addParameter(String parameterSetId, String name, ParameterType type, String value);
+
+    void generateParametersFromPrefix(String parameterSetId, String name, List<String> componentIds);
 }

@@ -18,7 +18,8 @@
             "value" : "false"
           }
         },
-        "references" : [ ]
+        "references" : [ ],
+        "prefixParameters" : { }
       },
       "solverParameters" : {
         "id" : "solverParametersId",
@@ -34,7 +35,8 @@
             "value" : "1e-4"
           }
         },
-        "references" : [ ]
+        "references" : [ ],
+        "prefixParameters" : { }
       },
       "solverType" : "IDA",
       "mergeLoads" : false,
@@ -65,7 +67,23 @@
             "value" : "aString"
           }
         },
-        "references" : [ ]
+        "references" : [ ],
+        "prefixParameters" : {
+          "Par1" : {
+            "GEN" : {
+              "name" : "Par1",
+              "componentId" : "GEN",
+              "type" : "DOUBLE",
+              "value" : "10"
+            },
+            "GEN2" : {
+              "name" : "Par1",
+              "componentId" : "GEN2",
+              "type" : "DOUBLE",
+              "value" : "12"
+            }
+          }
+        }
       } ]
     }
   }
