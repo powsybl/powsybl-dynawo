@@ -74,6 +74,10 @@ class BuilderEquipmentSetterTest {
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testBuilder")
                 .build();
+        network.getTwoWindingsTransformer("NHV2_NLOAD").newPhaseTapChanger()
+                .setTapPosition(0)
+                .beginStep().setR(1.0).setX(2.0).setG(3.0).setB(4.0).setAlpha(5.0).setRho(6.0).endStep()
+                .add();
         BlackBoxModel gen = BaseGeneratorBuilder.of(network, "GeneratorFictitious", reportNode)
                 .staticId("GEN")
                 .build();

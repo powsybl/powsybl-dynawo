@@ -28,6 +28,10 @@ class PhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
+        network.getTwoWindingsTransformer("NGEN_NHV1").newPhaseTapChanger()
+                .setTapPosition(0)
+                .beginStep().setR(1.0).setX(2.0).setG(3.0).setB(4.0).setAlpha(5.0).setRho(6.0).endStep()
+                .add();
         dynamicModels.add(PhaseShifterIAutomationSystemBuilder.of(network)
                 .dynamicModelId("BBM_PS")
                 .parameterSetId("ps")
