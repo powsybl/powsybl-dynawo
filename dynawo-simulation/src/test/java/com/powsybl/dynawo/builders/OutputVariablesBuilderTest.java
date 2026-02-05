@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -38,14 +39,36 @@ class OutputVariablesBuilderTest {
 
     @Test
     void buildFromId() {
-        List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
-                .id("GEN")
-                .variables("generator_omegaPu", "generator_PGen")
-                .build();
-        assertEquals(2, outputVariables.size());
-        OutputVariable variable = outputVariables.getFirst();
-        assertEquals("GEN", variable.getModelId());
-        assertEquals("generator_omegaPu", variable.getVariableName());
+        List<OutputVariable> outputVariables = new ArrayList<>();
+
+        outputVariables.addAll(
+                new DynawoOutputVariablesBuilder()
+                        .id("BBM_GEN")
+                        .variable("generator_omegaPu")
+                        .build()
+        );
+        outputVariables.addAll(
+                new DynawoOutputVariablesBuilder()
+                        .id("GEN")
+                        .variables("generator_omegaPu", "generator_PGen")
+                        .build()
+        );
+
+        assertEquals(3, outputVariables.size());
+
+        // Dynamic ID assertions
+        OutputVariable dynamicVar = outputVariables.getFirst();
+        assertEquals("BBM_GEN", dynamicVar.getModelId());
+        assertEquals("generator_omegaPu", dynamicVar.getVariableName());
+
+        // Static ID assertions
+        OutputVariable staticVar1 = outputVariables.get(1);
+        assertEquals("GEN", staticVar1.getModelId());
+        assertEquals("generator_omegaPu", staticVar1.getVariableName());
+
+        OutputVariable staticVar2 = outputVariables.get(2);
+        assertEquals("GEN", staticVar2.getModelId());
+        assertEquals("generator_PGen", staticVar2.getVariableName());
     }
 
     @ParameterizedTest(name = "{1}")

@@ -11,7 +11,7 @@ import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
-import com.powsybl.dynawo.outputvariables.DynawoOutputVariableResolver;
+import com.powsybl.dynawo.outputvariables.DynawoOutputVariable;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DynawoData;
 import com.powsybl.iidm.network.Network;
@@ -40,6 +40,7 @@ public class DynawoSimulationContext {
     protected final DynawoVersion dynawoVersion;
 
     public static class Builder extends AbstractContextBuilder<Builder> {
+        private List<OutputVariable> outputVariablesList = List.of();
 
         public Builder(Network network, List<BlackBoxModel> dynamicModels) {
             super(network, dynamicModels);
@@ -56,8 +57,7 @@ public class DynawoSimulationContext {
         }
 
         public Builder outputVariables(List<OutputVariable> outputVariables) {
-            this.outputVariables = Objects.requireNonNull(outputVariables).stream()
-                    .collect(Collectors.groupingBy(OutputVariable::getOutputType));
+            this.outputVariablesList = Objects.requireNonNull(outputVariables);
             return self();
         }
 
@@ -66,10 +66,26 @@ public class DynawoSimulationContext {
             return self();
         }
 
-        private void resolveDynawoOutputVariables() {
-            //Late resolve on Output variables
-            DynawoOutputVariableResolver resolver = new DynawoOutputVariableResolver(network, blackBoxModelSupplier);
-            this.outputVariables = resolver.resolveOutputVariables(outputVariables);
+        private Map<OutputVariable.OutputType, List<OutputVariable>> resolveAndGroupOutputVariables(
+                List<OutputVariable> outputVariables) {
+
+            return outputVariables.stream()
+                    .map(ov -> {
+                        if (!(ov instanceof DynawoOutputVariable dynawoOv)) {
+                            return ov;
+                        }
+
+                        BlackBoxModel model = blackBoxModelSupplier.getDynamicModel(dynawoOv.getModelId());
+
+                        if (model == null) {
+                            dynawoOv.setDefault();
+                            return dynawoOv;
+                        }
+
+                        return model.isConnected() ? dynawoOv : null;
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.groupingBy(OutputVariable::getOutputType));
         }
 
         @Override
@@ -89,7 +105,7 @@ public class DynawoSimulationContext {
         @Override
         protected void setup() {
             super.setup();
-            resolveDynawoOutputVariables();
+            this.outputVariables = resolveAndGroupOutputVariables(this.outputVariablesList);
         }
 
         @Override
