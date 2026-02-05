@@ -11,6 +11,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 import java.util.Collection;
 
@@ -21,6 +22,13 @@ public class PhaseShifterPAutomationSystemBuilder extends AbstractPhaseShifterMo
 
     public static final String CATEGORY = "PHASE_SHIFTER_P";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
+    private static final EquipmentChecker<TwoWindingsTransformer> HAS_TAP_CHANGER = (eq, f, r) -> {
+        if (!eq.hasPhaseTapChanger()) {
+            BuilderReports.reportMissingPhaseTapChanger(r, f, eq.getId());
+            return false;
+        }
+        return true;
+    };
 
     public static PhaseShifterPAutomationSystemBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
@@ -60,6 +68,12 @@ public class PhaseShifterPAutomationSystemBuilder extends AbstractPhaseShifterMo
 
     protected PhaseShifterPAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
         super(network, modelConfig, parentReportNode);
+    }
+
+    @Override
+    public PhaseShifterPAutomationSystemBuilder transformer(String staticId) {
+        transformer.addEquipment(staticId, network::getTwoWindingsTransformer, HAS_TAP_CHANGER);
+        return self();
     }
 
     @Override
