@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:parametersSet xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:set id="NodeFault_NGEN">
+    <dyn:set id="NodeFault_GENERATOR_GEN">
+        <dyn:par type="DOUBLE" name="fault_RPu" value="0.0"/>
+        <dyn:par type="DOUBLE" name="fault_XPu" value="0.01"/>
+        <dyn:par type="DOUBLE" name="fault_tBegin" value="10.0"/>
+        <dyn:par type="DOUBLE" name="fault_tEnd" value="10.1"/>
+    </dyn:set>
+    <dyn:set id="NodeFault_BUS_NGEN">
         <dyn:par type="DOUBLE" name="fault_RPu" value="0.0"/>
         <dyn:par type="DOUBLE" name="fault_XPu" value="0.01"/>
         <dyn:par type="DOUBLE" name="fault_tBegin" value="10.0"/>
