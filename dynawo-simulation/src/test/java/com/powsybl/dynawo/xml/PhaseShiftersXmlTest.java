@@ -14,7 +14,7 @@ import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAu
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import com.powsybl.iidm.network.test.PhaseShifterTestCaseFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -43,18 +43,18 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     }
 
     protected void setupNetwork() {
-        network = EurostagTutorialExample1Factory.create();
+        network = PhaseShifterTestCaseFactory.create();
     }
 
     protected void addDynamicModels(Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) {
-        dynamicModels.add(phaseShifterConstructor.apply(network));
         if (dynamicTransformer) {
             dynamicModels.add(TransformerFixedRatioBuilder.of(network)
-                    .staticId("NGEN_NHV1")
+                    .staticId("PS1")
                     .parameterSetId("tt")
                     .build());
             DynamicModelsConfigUtils.mandatoryModelsAdder(network, dynamicModels);
         }
+        dynamicModels.add(phaseShifterConstructor.apply(network));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -70,13 +70,13 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
                         PhaseShifterIAutomationSystemBuilder.of(n)
                                 .dynamicModelId(DYN_NAME)
                                 .parameterSetId("ps")
-                                .transformer("NGEN_NHV1")
+                                .transformer("PS1")
                                 .build(), true),
                 Arguments.of("phase_shifter_p_dyd.xml", (Function<Network, BlackBoxModel>) n ->
                         PhaseShifterPAutomationSystemBuilder.of(n)
                                 .dynamicModelId(DYN_NAME)
                                 .parameterSetId("ps")
-                                .transformer("NGEN_NHV1")
+                                .transformer("PS1")
                                 .build(), false));
     }
 }
