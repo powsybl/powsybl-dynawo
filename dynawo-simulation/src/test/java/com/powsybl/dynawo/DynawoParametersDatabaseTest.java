@@ -104,4 +104,18 @@ class DynawoParametersDatabaseTest {
         ParametersSet set1 = new ParametersSet("copy", set0);
         assertEquals(2, set1.getInt("param"));
     }
+
+    @Test
+    void addReferenceWithNullNameToAParameterSet() {
+        ParametersSet p = new ParametersSet("ps1");
+        p.addReference(null, null, "origName", "componentId");
+        assertTrue(p.getReferences().isEmpty());
+    }
+
+    @Test
+    void addReferenceWithEmptyNameToAParameterSet() {
+        ParametersSet p = new ParametersSet("ps1");
+        p.addReference("", null, "origName", "componentId");
+        assertTrue(p.getReferences().isEmpty());
+    }
 }
