@@ -71,18 +71,18 @@ public class DynawoSimulationContext {
 
             return outputVariables.stream()
                     .map(ov -> {
-                        if (!(ov instanceof DynawoOutputVariable dynawoOv)) {
-                            return ov;
+                        if (ov instanceof DynawoOutputVariable dynawoOv) {
+                            BlackBoxModel model =
+                                    blackBoxModelSupplier.getDynamicModel(dynawoOv.getModelId());
+
+                            if (model == null) {
+                                dynawoOv.setDefault();
+                                return dynawoOv;
+                            }
+
+                            return model.isConnected() ? dynawoOv : null;
                         }
-
-                        BlackBoxModel model = blackBoxModelSupplier.getDynamicModel(dynawoOv.getModelId());
-
-                        if (model == null) {
-                            dynawoOv.setDefault();
-                            return dynawoOv;
-                        }
-
-                        return model.isConnected() ? dynawoOv : null;
+                        return ov;
                     })
                     .filter(Objects::nonNull)
                     .collect(Collectors.groupingBy(OutputVariable::getOutputType));
