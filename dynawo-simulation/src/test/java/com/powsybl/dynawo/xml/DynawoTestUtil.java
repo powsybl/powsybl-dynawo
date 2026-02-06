@@ -46,6 +46,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
     protected List<BlackBoxModel> dynamicModels;
     protected List<BlackBoxModel> eventModels;
     protected List<OutputVariable> outputVariables;
+    protected List<OutputVariable> outputVariablesBuiltWithUnresolvedIds;
 
     @BeforeEach
     void setup() {
@@ -53,6 +54,27 @@ public class DynawoTestUtil extends AbstractSerDeTest {
         network = createEurostagTutorialExample1WithMoreLoads();
 
         outputVariables = new ArrayList<>();
+
+        outputVariablesBuiltWithUnresolvedIds = new ArrayList<>();
+
+        //Reproducing the exact same pattern without specifying if it's a dynamic or static id in the output variables buildr
+        network.getLoadStream().forEach(b -> new DynawoOutputVariablesBuilder()
+                .id(b.getId())
+                .variables("load_PPu", "load_QPu")
+                .outputType(OutputVariable.OutputType.FINAL_STATE)
+                .add(outputVariablesBuiltWithUnresolvedIds::add));
+
+        network.getBusBreakerView().getBusStream().forEach(b -> new DynawoOutputVariablesBuilder()
+                .id(b.getId())
+                .variables("Upu_value")
+                .outputType(OutputVariable.OutputType.CURVE)
+                .add(outputVariablesBuiltWithUnresolvedIds::add));
+
+        network.getGeneratorStream().forEach(g -> new DynawoOutputVariablesBuilder()
+                .id(g.getId())
+                .variables("generator_omegaPu", "generator_PGen", "generator_UStatorPu", "voltageRegulator_UcEfdP", "voltageRegulator_EfdPu")
+                .outputType(OutputVariable.OutputType.CURVE)
+                .add(outputVariablesBuiltWithUnresolvedIds::add));
 
         network.getLoadStream().forEach(b -> new DynawoOutputVariablesBuilder()
                 .staticId(b.getId())
