@@ -44,7 +44,7 @@ public final class SimulationModels implements DynawoData {
         ParametersSet networkParameters = dynawoParameters.getNetworkParameters();
         // Write macro connection
         for (BlackBoxModel bbm : dynamicModels) {
-            macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
+            macroStaticReferences.computeIfAbsent(bbm.getMacroConnectName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             bbm.createMacroConnections(adder);
             bbm.createDynamicModelParameters(parametersAdder);
             bbm.updateDynamicModelParameters(parameterUpdater);
@@ -97,7 +97,7 @@ public final class SimulationModels implements DynawoData {
     }
 
     public boolean hasMacroStaticReference(BlackBoxModel bbm) {
-        return macroStaticReferences.containsKey(bbm.getName());
+        return macroStaticReferences.containsKey(bbm.getMacroConnectName());
     }
 
     @Override

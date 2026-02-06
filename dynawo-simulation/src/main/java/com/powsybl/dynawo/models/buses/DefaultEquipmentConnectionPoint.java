@@ -37,6 +37,11 @@ public final class DefaultEquipmentConnectionPoint implements EquipmentConnectio
     }
 
     @Override
+    public String getMacroConnectName() {
+        return this.getName();
+    }
+
+    @Override
     public String getTerminalVarName() {
         return "@STATIC_ID@@NODE@_ACPIN";
     }
