@@ -221,8 +221,6 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
         moduleConfig.setStringProperty("svcRegulationOn", Boolean.TRUE.toString());
-        moduleConfig.setStringProperty("shuntRegulationOn", Boolean.TRUE.toString());
-        moduleConfig.setStringProperty("automaticSlackBusOn", Boolean.FALSE.toString());
         moduleConfig.setStringProperty("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
         moduleConfig.setStringListProperty("chosenOutputs", chosenOutputs);
         moduleConfig.setStringProperty("timeStep", Double.toString(timeStep));
@@ -232,8 +230,6 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         provider.updateSpecificParameters(dynaParams, platformConfig);
 
         assertTrue(dynaParams.getSvcRegulationOn());
-        assertTrue(dynaParams.getShuntRegulationOn());
-        assertFalse(dynaParams.getAutomaticSlackBusOn());
         assertEquals(dsoVoltageLevel, dynaParams.getDsoVoltageLevel(), 0.1d);
         assertThat(dynaParams.getChosenOutputs()).containsExactlyInAnyOrder(OutputTypes.STEADYSTATE, OutputTypes.CONSTRAINTS);
         assertEquals(timeStep, dynaParams.getTimeStep(), 0.1d);
@@ -243,8 +239,6 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
     void testUpdateSpecificParametersFromProperties() {
         Map<String, String> properties = Map.of(
                 "svcRegulationOn", "true",
-                "shuntRegulationOn", "true",
-                "automaticSlackBusOn", "false",
                 "dsoVoltageLevel", "2.0",
                 "chosenOutputs", "STEADYSTATE, CONSTRAINTS",
                 "timeStep", "0");
@@ -254,8 +248,6 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         provider.updateSpecificParameters(dynaParams, properties);
 
         assertTrue(dynaParams.getSvcRegulationOn());
-        assertTrue(dynaParams.getShuntRegulationOn());
-        assertFalse(dynaParams.getAutomaticSlackBusOn());
         assertEquals(2, dynaParams.getDsoVoltageLevel(), 0.1d);
         assertThat(dynaParams.getChosenOutputs()).containsExactlyInAnyOrder(OutputTypes.STEADYSTATE, OutputTypes.CONSTRAINTS);
         assertEquals(0, dynaParams.getTimeStep(), 0.1d);
@@ -266,13 +258,10 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         Map<String, String> expectedProperties = Map.ofEntries(
                 Map.entry("svcRegulationOn", "true"),
                 Map.entry("dsoVoltageLevel", "45.0"),
-                Map.entry("shuntRegulationOn", "true"),
-                Map.entry("automaticSlackBusOn", "true"),
                 Map.entry("timeStep", "10.0"),
                 Map.entry("startingPointMode", "WARM"),
                 Map.entry("startTime", "0.0"),
                 Map.entry("stopTime", "100.0"),
-                Map.entry("activePowerCompensation", "PMAX"),
                 Map.entry("chosenOutputs", "TIMELINE"),
                 Map.entry("mergeLoads", "true"));
 

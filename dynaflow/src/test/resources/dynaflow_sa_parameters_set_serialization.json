@@ -29,10 +29,7 @@
     "extensions" : {
       "DynaFlowParameters" : {
         "svcRegulationOn" : true,
-        "shuntRegulationOn" : true,
-        "automaticSlackBusOn" : true,
         "dsoVoltageLevel" : 45.0,
-        "activePowerCompensation" : "PMAX",
         "startTime" : 0.0,
         "stopTime" : 100.0,
         "chosenOutputs" : [ "TIMELINE" ],
