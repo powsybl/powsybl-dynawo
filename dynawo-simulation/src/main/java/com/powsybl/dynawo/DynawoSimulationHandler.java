@@ -208,7 +208,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     }
 
     private void writeInputFiles(Path workingDir) throws IOException {
-        DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
+        DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME), context.getCurrentDynawoVersion());
         JobsXml.write(workingDir, context);
         DynawoFilesUtils.writeInputFiles(workingDir, context);
     }

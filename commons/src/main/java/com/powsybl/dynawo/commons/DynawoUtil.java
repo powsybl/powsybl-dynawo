@@ -12,6 +12,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.computation.*;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.AbstractTreeDataExporter;
+import com.powsybl.iidm.serde.IidmVersion;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,12 +22,15 @@ import java.nio.file.Path;
 import java.util.*;
 
 import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_EXTENSIONS;
-import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_VERSION;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
  */
 public final class DynawoUtil {
+
+    private static final String IIDM_VERSION_1_4 = IidmVersion.V_1_4.toString(".");
+    private static final String IIDM_VERSION_1_5 = IidmVersion.V_1_5.toString(".");
+    private static final DynawoVersion IIDM_1_5_MIN_DYNAWO_VERSION = new DynawoVersion(1, 7, 0);
 
     private DynawoUtil() {
     }
@@ -35,11 +39,13 @@ public final class DynawoUtil {
         return Collections.singletonList(new CommandExecution(command, 1, 0));
     }
 
-    public static void writeIidm(Network network, Path file) {
+    public static void writeIidm(Network network, Path file, DynawoVersion version) throws IOException {
         Objects.requireNonNull(network);
         Objects.requireNonNull(file);
+        Objects.requireNonNull(version);
         Properties params = new Properties();
-        params.setProperty(AbstractTreeDataExporter.VERSION, IIDM_VERSION);
+        params.setProperty(AbstractTreeDataExporter.VERSION,
+                version.compareTo(IIDM_1_5_MIN_DYNAWO_VERSION) >= 0 ? IIDM_VERSION_1_5 : IIDM_VERSION_1_4);
         params.setProperty(AbstractTreeDataExporter.EXTENSIONS_INCLUDED_LIST, String.join(",", IIDM_EXTENSIONS));
         network.write("XIIDM", params, file);
     }

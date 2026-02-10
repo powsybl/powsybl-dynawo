@@ -59,7 +59,7 @@ public abstract class AbstractDynawoAlgorithmsHandler<R, S extends DynawoSimulat
 
     private void writeInputFiles(Path workingDir) {
         try {
-            DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
+            DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME), context.getCurrentDynawoVersion());
             DynawoFilesUtils.writeInputFiles(workingDir, context);
             writeMultipleJobs(workingDir);
         } catch (IOException e) {
