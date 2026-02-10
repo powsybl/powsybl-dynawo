@@ -54,9 +54,7 @@ public class ParametersSet {
             return;
         }
 
-        parameters.remove(name);
-
-        if (references.containsKey(name)) {
+        if (parameters.containsKey(name) || references.containsKey(name)) {
             return;
         }
 
