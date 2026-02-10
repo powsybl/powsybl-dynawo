@@ -25,21 +25,19 @@ import java.util.function.Consumer;
  */
 public final class NetworkExporter {
 
-    /**
-     * write the network to XIIDM v1.4 because currently Dynawo does not support versions above
-     */
-    private static final String IIDM_VERSION = IidmVersion.V_1_4.toString(".");
-
+    private static final String IIDM_VERSION_1_4 = IidmVersion.V_1_4.toString(".");
+    private static final String IIDM_VERSION_1_5 = IidmVersion.V_1_5.toString(".");
+    private static final DynawoVersion IIDM_1_5_MIN_DYNAWO_VERSION = new DynawoVersion(1, 7, 0);
     private static final ExportConfigurationHandler CONFIGURATION_HANDLER = new ExportConfigurationHandler();
 
     private NetworkExporter() {
     }
 
-    public static void writeIidm(Network network, Path file) {
-        writeIidm(network, file, false);
+    public static void writeIidm(Network network, Path file, DynawoVersion version) {
+        writeIidm(network, file, version, false);
     }
 
-    public static void writeIidm(Network network, Path file, boolean isMergeLoads) {
+    public static void writeIidm(Network network, Path file, DynawoVersion version, boolean isMergeLoads) {
         Objects.requireNonNull(network);
         Objects.requireNonNull(file);
         List<Consumer<Network>> networkModifiers = CONFIGURATION_HANDLER.getNetworkModifiers();
@@ -52,7 +50,8 @@ public final class NetworkExporter {
             networkModifiers.forEach(m -> m.accept(dynawoInput));
         }
         Properties params = new Properties();
-        params.setProperty(AbstractTreeDataExporter.VERSION, IIDM_VERSION);
+        params.setProperty(AbstractTreeDataExporter.VERSION,
+                version.compareTo(IIDM_1_5_MIN_DYNAWO_VERSION) >= 0 ? IIDM_VERSION_1_5 : IIDM_VERSION_1_4);
         params.setProperty(AbstractTreeDataExporter.EXTENSIONS_INCLUDED_LIST,
                 String.join(",", CONFIGURATION_HANDLER.getExtensionNames()));
         dynawoInput.write("XIIDM", params, file);

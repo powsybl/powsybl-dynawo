@@ -203,7 +203,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
 
     private void writeInputFiles(Path workingDir) throws IOException {
         NetworkExporter.writeIidm(context.getNetwork(), workingDir.resolve(NETWORK_FILENAME),
-                context.getDynawoSimulationParameters().isMergeLoads());
+                context.getCurrentDynawoVersion(), context.getDynawoSimulationParameters().isMergeLoads());
         JobsXml.write(workingDir, context);
         DynawoFilesUtils.writeInputFiles(workingDir, context);
     }
