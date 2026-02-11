@@ -10,6 +10,7 @@ package com.powsybl.dynawo.commons;
 import com.google.common.io.CharStreams;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.computation.*;
+import com.powsybl.dynawo.commons.exportedextensions.ExportedIidmExtensionsHandler;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.AbstractTreeDataExporter;
 
@@ -20,7 +21,6 @@ import java.io.Reader;
 import java.nio.file.Path;
 import java.util.*;
 
-import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_EXTENSIONS;
 import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_VERSION;
 
 /**
@@ -40,7 +40,8 @@ public final class DynawoUtil {
         Objects.requireNonNull(file);
         Properties params = new Properties();
         params.setProperty(AbstractTreeDataExporter.VERSION, IIDM_VERSION);
-        params.setProperty(AbstractTreeDataExporter.EXTENSIONS_INCLUDED_LIST, String.join(",", IIDM_EXTENSIONS));
+        params.setProperty(AbstractTreeDataExporter.EXTENSIONS_INCLUDED_LIST,
+                String.join(",", new ExportedIidmExtensionsHandler().getExtensionNames()));
         network.write("XIIDM", params, file);
     }
 
