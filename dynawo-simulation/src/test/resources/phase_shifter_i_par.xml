@@ -3,8 +3,8 @@
     <set id="phase_shifter_i_par">
         <par type="BOOL" name="phaseShifter_regulating0" value="true"/>
         <par type="DOUBLE" name="phaseShifter_P0" value="0.0"/>
-        <reference type="DOUBLE" name="phaseShifter_I0" origData="IIDM" origName="i1" componentId="NGEN_NHV1"/>
         <reference type="INT" name="phaseShifter_increasePhase" origData="IIDM" origName="increasePhase" componentId="NGEN_NHV1"/>
+        <reference type="DOUBLE" name="phaseShifter_I0" origData="IIDM" origName="i1" componentId="NGEN_NHV1"/>
         <reference type="INT" name="phaseShifter_tap0" origData="IIDM" origName="tapPosition" componentId="NGEN_NHV1"/>
         <reference type="INT" name="phaseShifter_tapMax" origData="IIDM" origName="highTapPosition" componentId="NGEN_NHV1"/>
         <reference type="INT" name="phaseShifter_tapMin" origData="IIDM" origName="lowTapPosition" componentId="NGEN_NHV1"/>
@@ -12,5 +12,6 @@
     <set id="phase_shifter_p_par">
         <par type="BOOL" name="phaseShifter_regulating0" value="true"/>
         <par type="DOUBLE" name="phaseShifter_I0" value="0.0"/>
+        <reference type="INT" name="phaseShifter_increasePhase" origData="IIDM" origName="increasePhase" componentId="NGEN_NHV1"/>
     </set>
 </parametersSet>
