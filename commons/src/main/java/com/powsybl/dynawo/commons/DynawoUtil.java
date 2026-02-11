@@ -39,7 +39,7 @@ public final class DynawoUtil {
         return Collections.singletonList(new CommandExecution(command, 1, 0));
     }
 
-    public static void writeIidm(Network network, Path file, DynawoVersion version) throws IOException {
+    public static void writeIidm(Network network, Path file, DynawoVersion version) {
         Objects.requireNonNull(network);
         Objects.requireNonNull(file);
         Objects.requireNonNull(version);
