@@ -14,10 +14,7 @@ import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
-import com.powsybl.dynawo.commons.CommonReports;
-import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.commons.ExportMode;
-import com.powsybl.dynawo.commons.NetworkResultsUpdater;
+import com.powsybl.dynawo.commons.*;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
@@ -55,22 +52,25 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
     private final DynaFlowParameters dynaFlowParameters;
     private final LoadFlowParameters loadFlowParameters;
     private final Command command;
+    private final DynawoVersion dynawoVersion;
     private final ReportNode reportNode;
 
-    public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters, LoadFlowParameters loadFlowParameters, Command command, ReportNode reportNode) {
+    public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters,
+                           LoadFlowParameters loadFlowParameters, Command command, DynawoVersion dynawoVersion, ReportNode reportNode) {
         this.network = network;
         this.workingStateId = workingStateId;
         this.dynaFlowParameters = dynaFlowParameters;
         this.loadFlowParameters = loadFlowParameters;
         this.command = command;
         this.dynawoInput = this.dynaFlowParameters.isMergeLoads() ? LoadsMerger.mergeLoads(this.network) : this.network;
+        this.dynawoVersion = dynawoVersion;
         this.reportNode = reportNode;
     }
 
     @Override
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(workingStateId);
-        DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
+        DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME), dynawoVersion);
         DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
 
         Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(EXEC_TMP_FILENAME);

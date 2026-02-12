@@ -23,6 +23,7 @@ import com.powsybl.contingency.list.DefaultContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.contingency.ContingencyResultsUtils;
 import com.powsybl.iidm.network.Network;
@@ -57,17 +58,19 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     private final SecurityAnalysisParameters securityAnalysisParameters;
     private final List<Contingency> contingencies;
     private final LimitViolationFilter violationFilter;
+    private final DynawoVersion dynawoVersion;
     private final ReportNode reportNode;
 
     public DynaFlowSecurityAnalysisHandler(Network network, String workingVariantId, Command command,
                                            SecurityAnalysisParameters securityAnalysisParameters, List<Contingency> contingencies,
-                                           LimitViolationFilter violationFilter, ReportNode reportNode) {
+                                           LimitViolationFilter violationFilter, DynawoVersion dynawoVersion, ReportNode reportNode) {
         this.network = network;
         this.workingVariantId = workingVariantId;
         this.command = command;
         this.securityAnalysisParameters = securityAnalysisParameters;
         this.contingencies = contingencies;
         this.violationFilter = violationFilter;
+        this.dynawoVersion = dynawoVersion;
         this.reportNode = reportNode;
     }
 
@@ -75,7 +78,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(workingVariantId);
 
-        DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
+        DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME), dynawoVersion);
         writeParameters(securityAnalysisParameters, workingDir);
         writeContingencies(contingencies, workingDir);
 

@@ -161,8 +161,8 @@ public class DynawoSimulationContext {
         return Optional.ofNullable(finalStepModels);
     }
 
-    public String getCurrentDynawoVersion() {
-        return dynawoVersion.toString();
+    public DynawoVersion getCurrentDynawoVersion() {
+        return dynawoVersion;
     }
 
     public List<ParametersSet> getNetworkParameters() {
