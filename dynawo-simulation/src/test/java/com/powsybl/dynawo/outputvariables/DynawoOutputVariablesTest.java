@@ -7,7 +7,6 @@
 package com.powsybl.dynawo.outputvariables;
 
 import com.powsybl.dynamicsimulation.OutputVariable;
-import com.powsybl.dynawo.BlackBoxModelSupplier;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
@@ -42,8 +41,6 @@ class DynawoOutputVariablesTest extends DynawoTestUtil {
                 .equipment(network.getGenerator("GEN2"))
                 .parameterSetId("GSFWPR")
                 .build());
-
-        BlackBoxModelSupplier blackBoxModelSupplier = BlackBoxModelSupplier.createFrom(dynamicModels);
     }
 
     @Test
