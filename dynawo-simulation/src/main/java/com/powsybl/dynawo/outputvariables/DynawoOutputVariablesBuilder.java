@@ -11,7 +11,9 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.builders.BuilderReports;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -23,13 +25,11 @@ import java.util.stream.Stream;
  */
 public class DynawoOutputVariablesBuilder {
 
-    private static final String DEFAULT_DYNAMIC_MODEL_ID = "NETWORK";
     private static final String VARIABLES_FIELD = "variables";
 
     private final ReportNode reportNode;
     private boolean isInstantiable = true;
-    private String dynamicModelId;
-    private String staticId;
+    private String id;
     private List<String> variables;
     private OutputVariable.OutputType type = OutputVariable.OutputType.CURVE;
 
@@ -41,13 +41,42 @@ public class DynawoOutputVariablesBuilder {
         this(ReportNode.NO_OP);
     }
 
+    /**
+     * Sets the dynamic model ID.
+     *
+     * @param dynamicModelId the ID of the dynamic model
+     * @return the builder instance
+     *
+     * @deprecated since 3.2.0. Use {@link #id(String)} instead.
+     */
+    @Deprecated(since = "3.2.0")
     public DynawoOutputVariablesBuilder dynamicModelId(String dynamicModelId) {
-        this.dynamicModelId = dynamicModelId;
+        this.id = dynamicModelId;
         return this;
     }
 
+    /**
+     * Sets the static model ID.
+     *
+     * @param staticId the ID of the static model
+     * @return the builder instance
+     *
+     * @deprecated since 3.2.0. Use {@link #id(String)} instead.
+     */
+    @Deprecated(since = "3.2.0")
     public DynawoOutputVariablesBuilder staticId(String staticId) {
-        this.staticId = staticId;
+        this.id = staticId;
+        return this;
+    }
+
+    /**
+     * Sets the identifier for the output variable being built.
+     *
+     * @param id the unique ID of the output variable whether static or dynamic
+     * @return this builder instance for method chaining
+     */
+    public DynawoOutputVariablesBuilder id(String id) {
+        this.id = id;
         return this;
     }
 
@@ -75,14 +104,7 @@ public class DynawoOutputVariablesBuilder {
         return this;
     }
 
-    private String getId() {
-        return dynamicModelId != null ? dynamicModelId : staticId;
-    }
-
     private void checkData() {
-        if (staticId != null && dynamicModelId != null) {
-            BuilderReports.reportFieldConflict(reportNode, "dynamicModelId", "staticId");
-        }
         if (variables == null) {
             BuilderReports.reportFieldNotSet(reportNode, VARIABLES_FIELD);
             isInstantiable = false;
@@ -95,17 +117,17 @@ public class DynawoOutputVariablesBuilder {
     private boolean isInstantiable() {
         checkData();
         if (!isInstantiable) {
-            BuilderReports.reportOutputVariableInstantiationFailure(reportNode, getId());
+            BuilderReports.reportOutputVariableInstantiationFailure(reportNode, id);
         }
         return isInstantiable;
     }
 
     public void add(Consumer<OutputVariable> outputVariableConsumer) {
         if (isInstantiable()) {
-            boolean hasDynamicModelId = dynamicModelId != null;
-            String id = hasDynamicModelId ? dynamicModelId : DEFAULT_DYNAMIC_MODEL_ID;
-            variables.forEach(v ->
-                    outputVariableConsumer.accept(new DynawoOutputVariable(id, hasDynamicModelId ? v : staticId + "_" + v, type)));
+            variables.forEach(v -> {
+                DynawoOutputVariable ov = new DynawoOutputVariable(id, v, type);
+                outputVariableConsumer.accept(ov);
+            });
         }
     }
 
