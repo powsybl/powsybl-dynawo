@@ -71,10 +71,11 @@ public class DynawoSimulationContext {
 
             return outputVariables.stream()
                     .map(ov -> {
-                        DynawoOutputVariable dynawoOv = (DynawoOutputVariable) ov;
+                        if (!(ov instanceof DynawoOutputVariable dynawoOv)) {
+                            return ov;
+                        }
 
-                        BlackBoxModel model =
-                                blackBoxModelSupplier.getDynamicModel(dynawoOv.getModelId());
+                        BlackBoxModel model = blackBoxModelSupplier.getDynamicModel(dynawoOv.getModelId());
 
                         if (model == null) {
                             dynawoOv.setDefault();
