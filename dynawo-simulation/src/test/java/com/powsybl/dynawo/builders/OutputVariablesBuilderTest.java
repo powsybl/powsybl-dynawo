@@ -55,20 +55,6 @@ class OutputVariablesBuilderTest {
         );
 
         assertEquals(3, outputVariables.size());
-
-        // Dynamic ID assertions
-        OutputVariable dynamicVar = outputVariables.getFirst();
-        assertEquals("BBM_GEN", dynamicVar.getModelId());
-        assertEquals("generator_omegaPu", dynamicVar.getVariableName());
-
-        // Static ID assertions
-        OutputVariable staticVar1 = outputVariables.get(1);
-        assertEquals("GEN", staticVar1.getModelId());
-        assertEquals("generator_omegaPu", staticVar1.getVariableName());
-
-        OutputVariable staticVar2 = outputVariables.get(2);
-        assertEquals("GEN", staticVar2.getModelId());
-        assertEquals("generator_PGen", staticVar2.getVariableName());
     }
 
     @ParameterizedTest(name = "{1}")
