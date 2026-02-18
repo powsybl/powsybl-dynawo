@@ -10,6 +10,7 @@ package com.powsybl.dynawo.commons;
 import com.powsybl.dynawo.commons.exportconfiguration.ExportConfigurationHandler;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.TopologyLevel;
 import com.powsybl.iidm.serde.AbstractTreeDataExporter;
 import com.powsybl.iidm.serde.IidmVersion;
 import com.powsybl.iidm.serde.NetworkSerDe;
@@ -55,6 +56,9 @@ public final class NetworkExporter {
         params.setProperty(AbstractTreeDataExporter.VERSION, IIDM_VERSION);
         params.setProperty(AbstractTreeDataExporter.EXTENSIONS_INCLUDED_LIST,
                 String.join(",", CONFIGURATION_HANDLER.getExtensionNames()));
+        params.setProperty(AbstractTreeDataExporter.THROW_EXCEPTION_IF_EXTENSION_NOT_FOUND, "true");
+        params.setProperty(AbstractTreeDataExporter.TOPOLOGY_LEVEL, TopologyLevel.BUS_BRANCH.toString());
+        params.setProperty(AbstractTreeDataExporter.BUS_BRANCH_VOLTAGE_LEVEL_INCOMPATIBILITY_BEHAVIOR, "KEEP_ORIGINAL_TOPOLOGY");
         dynawoInput.write("XIIDM", params, file);
     }
 }
