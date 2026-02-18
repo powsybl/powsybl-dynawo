@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.commons.exportedextensions;
+package com.powsybl.dynawo.commons.exportconfiguration;
 
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ class ExportedIidmExtensionsTest {
 
     @Test
     void loadExtensionNames() {
-        List<String> extensionNames = new ExportedIidmExtensionsHandler().getExtensionNames();
+        List<String> extensionNames = new ExportConfigurationHandler().getExtensionNames();
         assertThat(extensionNames).containsExactly(
                 "activePowerControl",
                 "slackTerminal",

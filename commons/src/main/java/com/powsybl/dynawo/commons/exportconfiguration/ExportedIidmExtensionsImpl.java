@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.commons.exportedextensions;
+package com.powsybl.dynawo.commons.exportconfiguration;
 
 import com.google.auto.service.AutoService;
 

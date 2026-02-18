@@ -5,14 +5,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.commons.exportedextensions;
+package com.powsybl.dynawo.commons.exportconfiguration;
 
 import java.util.List;
 
 /**
+ * IIDM export configuration
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface ExportedIidmExtensions {
 
+    /**
+     * List the name of extensions to include in the export
+     */
     List<String> getIidmExtensionNames();
 }

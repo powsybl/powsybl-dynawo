@@ -15,10 +15,9 @@ import com.powsybl.computation.ExecutionReport;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynawo.commons.CommonReports;
-import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
-import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
+import com.powsybl.dynawo.commons.NetworkExporter;
 import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.iidm.network.Network;
@@ -50,7 +49,6 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaFlowHandler.class);
 
     private final Network network;
-    private final Network dynawoInput;
     private final String workingStateId;
     private final DynaFlowParameters dynaFlowParameters;
     private final LoadFlowParameters loadFlowParameters;
@@ -63,14 +61,13 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
         this.dynaFlowParameters = dynaFlowParameters;
         this.loadFlowParameters = loadFlowParameters;
         this.command = command;
-        this.dynawoInput = this.dynaFlowParameters.isMergeLoads() ? LoadsMerger.mergeLoads(this.network) : this.network;
         this.reportNode = reportNode;
     }
 
     @Override
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(workingStateId);
-        DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
+        NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME), dynaFlowParameters.isMergeLoads());
         DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
 
         Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(EXEC_TMP_FILENAME);

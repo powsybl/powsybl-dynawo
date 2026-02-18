@@ -7,8 +7,6 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.iidm.serde.IidmVersion;
-
 import java.io.File;
 
 /**
@@ -18,11 +16,6 @@ public final class DynawoConstants {
 
     private DynawoConstants() {
     }
-
-    /**
-     * write the network to XIIDM v1.4 because currently Dynawo does not support versions above
-     */
-    public static final String IIDM_VERSION = IidmVersion.V_1_4.toString(".");
 
     public static final DynawoVersion VERSION_MIN = new DynawoVersion(1, 5, 0);
 
