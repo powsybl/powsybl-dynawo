@@ -69,5 +69,7 @@ public abstract class AbstractDynawoAlgorithmsHandler<R, S extends DynawoSimulat
         }
     }
 
+    protected abstract void writeIidm(Path workingDir);
+
     protected abstract void writeMultipleJobs(Path workingDir) throws XMLStreamException, IOException;
 }
