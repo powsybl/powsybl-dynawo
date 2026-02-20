@@ -6,11 +6,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-package dynamicModels
+package warnings
 
 
 PhaseShifterI {
-    dynamicModelId "PS_PS1"
+    dynamicModelId "PS_NGEN_NHV1"
     parameterSetId "ps"
-    transformer "PS1"
+    transformer "NGEN_NHV1"
 }
