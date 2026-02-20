@@ -86,4 +86,9 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
         createMacroConnections(adder);
         return ConnectionState.CONNECTED == getConnectionState();
     }
+
+    @Override
+    public boolean isConnected() {
+        return ConnectionState.CONNECTED == getConnectionState();
+    }
 }

@@ -60,13 +60,13 @@ public class DynawoTestUtil extends AbstractSerDeTest {
         outputVariables = new ArrayList<>();
 
         network.getLoadStream().forEach(b -> new DynawoOutputVariablesBuilder()
-                .staticId(b.getId())
+                .id(b.getId())
                 .variables("load_PPu", "load_QPu")
                 .outputType(OutputVariable.OutputType.FINAL_STATE)
                 .add(outputVariables::add));
 
         network.getBusBreakerView().getBusStream().forEach(b -> new DynawoOutputVariablesBuilder()
-                .staticId(b.getId())
+                .id(b.getId())
                 .variables("Upu_value")
                 .outputType(OutputVariable.OutputType.CURVE)
                 .add(outputVariables::add));
@@ -74,7 +74,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
         // A curve is made up of the id of the dynamic model and the variable to plot.
         // The static id of the generator is used as the id of the dynamic model (dynamicModelId).
         network.getGeneratorStream().forEach(g -> new DynawoOutputVariablesBuilder()
-                .dynamicModelId(g.getId())
+                .id(g.getId())
                 .variables("generator_omegaPu", "generator_PGen", "generator_UStatorPu", "voltageRegulator_UcEfdP", "voltageRegulator_EfdPu")
                 .outputType(OutputVariable.OutputType.CURVE)
                 .add(outputVariables::add));

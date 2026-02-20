@@ -65,4 +65,9 @@ public class PhaseShifterIAutomationSystem extends AbstractPhaseShifterAutomatio
     public String getLockedVarName() {
         return "phaseShifter_locked";
     }
+
+    @Override
+    public boolean isConnected() {
+        return ConnectionState.CONNECTED == getConnectionState();
+    }
 }
