@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.generators;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarMapping;
 
@@ -24,7 +23,8 @@ public enum EnumGeneratorComponent {
     NONE("generator_terminal", List.of(
             new VarMapping("generator_PGenPu", "p"),
             new VarMapping("generator_QGenPu", "q"),
-            new VarMapping(GENERATOR_STATE, STATE))),
+            new VarMapping(GENERATOR_STATE, STATE)
+    )),
     TRANSFORMER("transformer_terminal1", List.of(
             new VarMapping("transformer_P1GenPu", "p"),
             new VarMapping("transformer_Q1GenPu", "q"),
@@ -33,6 +33,11 @@ public enum EnumGeneratorComponent {
     AUXILIARY_TRANSFORMER("coupling_terminal1", List.of(
             new VarMapping("coupling_P1GenPu", "p"),
             new VarMapping("coupling_Q1GenPu", "q"),
+            new VarMapping(GENERATOR_STATE, STATE)
+    )),
+    AUXILIARY("coupling_terminal", List.of(
+            new VarMapping("generator_PGenPu", "p"),
+            new VarMapping("generator_QGenPu", "q"),
             new VarMapping(GENERATOR_STATE, STATE)
     ));
 
@@ -44,7 +49,7 @@ public enum EnumGeneratorComponent {
         } else if (transformer) {
             return EnumGeneratorComponent.TRANSFORMER;
         } else if (aux) {
-            throw new PowsyblException("Generator component auxiliary without transformer is not supported");
+            return EnumGeneratorComponent.AUXILIARY;
         }
         return EnumGeneratorComponent.NONE;
     }
