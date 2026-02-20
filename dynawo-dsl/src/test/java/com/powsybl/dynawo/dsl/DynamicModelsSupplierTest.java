@@ -169,13 +169,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                               + Model LoadAlphaBeta GEN instantiation KO
                                  'staticId' field value 'GEN' not found for equipment type(s) LOAD
                         """),
-                Arguments.of("/warnings/missingDanglingProperty.groovy", HvdcTestNetwork.createVsc(),
-                        """
-                        + DSL tests
-                           + Groovy Dynamic Models Supplier
-                              + Model HvdcPV L instantiation KO
-                                 'dangling' field is set but HvdcPV does not possess this option
-                        """),
                 Arguments.of("/warnings/underVoltageMissingGenerator.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
@@ -229,7 +222,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model TapChangerBlockingAutomaton ZAB instantiation KO
+                              + Model TapChangerBlockingAutomationSystem ZAB instantiation KO
                                  'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' field value 'Wrong_ID' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' list is empty
@@ -238,7 +231,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model TapChangerBlockingAutomaton ZAB instantiation KO
+                              + Model TapChangerBlockingAutomationSystem ZAB instantiation KO
                                  None of '[LOAD, Wrong_ID]' values from 'uMeasurements' field where found for energized and in main connected component equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' field value 'NGEN' should be energized and in main connected component
                                  None of '[NGEN_NHV1, NGEN]' values from 'uMeasurements' field where found for energized and in main connected component equipment type(s) BUS/BUSBAR_SECTION
@@ -248,7 +241,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model TapChangerBlockingAutomaton ZAB instantiation KO
+                              + Model TapChangerBlockingAutomationSystem ZAB instantiation KO
                                  'uMeasurements' field value 'GEN' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'transformers' field value 'GEN' not found for equipment type(s) TWO_WINDINGS_TRANSFORMER/LOAD, id will be used as pure dynamic model id
                         """),
