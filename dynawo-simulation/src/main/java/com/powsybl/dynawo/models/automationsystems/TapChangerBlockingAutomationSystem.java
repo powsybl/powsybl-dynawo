@@ -32,16 +32,16 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
     private static final int MAX_MEASUREMENTS = 5;
 
     private final List<Identifiable<?>> tapChangerEquipments;
-    private final List<String> tapChangerAutomatonIds;
+    private final List<String> tapChangerAutomationSystemIds;
     private final List<Identifiable<?>> uMeasurements;
     private boolean isConnected = true;
 
-    protected TapChangerBlockingAutomationSystem(String dynamicModelId, String parameterSetId, List<Identifiable<?>> tapChangerEquipments, List<String> tapChangerAutomatonIds, List<Identifiable<?>> uMeasurements, ModelConfig modelConfig) {
+    protected TapChangerBlockingAutomationSystem(String dynamicModelId, String parameterSetId, List<Identifiable<?>> tapChangerEquipments, List<String> tapChangerAutomationSystemIds, List<Identifiable<?>> uMeasurements, ModelConfig modelConfig) {
         super(dynamicModelId, parameterSetId, modelConfig);
         this.tapChangerEquipments = Objects.requireNonNull(tapChangerEquipments);
-        this.tapChangerAutomatonIds = Objects.requireNonNull(tapChangerAutomatonIds);
+        this.tapChangerAutomationSystemIds = Objects.requireNonNull(tapChangerAutomationSystemIds);
         this.uMeasurements = Objects.requireNonNull(uMeasurements);
-        if (tapChangerEquipments.isEmpty() && tapChangerAutomatonIds.isEmpty()) {
+        if (tapChangerEquipments.isEmpty() && tapChangerAutomationSystemIds.isEmpty()) {
             throw new PowsyblException("No Tap changers to monitor");
         }
         if (uMeasurements.isEmpty()) {
@@ -74,12 +74,12 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
                 skippedTapChangers++;
             }
         }
-        for (String id : tapChangerAutomatonIds) {
+        for (String id : tapChangerAutomationSystemIds) {
             if (adder.createMacroConnectionsOrSkip(this, id, TapChangerAutomationSystem.class, this::getVarConnectionsWith)) {
                 skippedTapChangers++;
             }
         }
-        if (skippedTapChangers < (tapChangerEquipments.size() + tapChangerAutomatonIds.size())) {
+        if (skippedTapChangers < (tapChangerEquipments.size() + tapChangerAutomationSystemIds.size())) {
             if (uMeasurements.size() == 1) {
                 adder.createMacroConnections(this, uMeasurements.getFirst(), ActionConnectionPoint.class, this::getVarConnectionsWith, MeasurementPointSuffix.of());
             } else {

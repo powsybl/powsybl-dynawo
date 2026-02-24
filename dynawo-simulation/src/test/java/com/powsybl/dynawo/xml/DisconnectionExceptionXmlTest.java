@@ -66,8 +66,8 @@ class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlT
 
     private static Stream<Arguments> provideModels() {
         return Stream.of(
-                Arguments.of("Equipment HvdcPVDangling side 2 is dangling and can't be disconnected with an event",
-                        TwoSides.TWO,
+                Arguments.of("Equipment HvdcPVDangling side 1 is dangling and can't be disconnected with an event",
+                        TwoSides.ONE,
                         (BiFunction<Network, TwoSides, BlackBoxModel>) (network, side) -> HvdcPBuilder.of(network, "HvdcPVDangling")
                                 .staticId("L")
                                 .parameterSetId("hvdc")

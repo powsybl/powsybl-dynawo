@@ -140,11 +140,10 @@ public final class ParametersXml {
                         parametersSet.addParameter(name, type, value);
                     }
                     case "reference" -> {
-                        String origData = xmlReader.getAttributeValue(null, "origData");
                         String origName = xmlReader.getAttributeValue(null, "origName");
                         String componentId = xmlReader.getAttributeValue(null, "componentId");
                         XmlUtil.readEndElementOrThrow(xmlReader);
-                        parametersSet.addReference(name, type, origData, origName, componentId);
+                        parametersSet.addReference(name, type, origName, componentId);
                     }
                     default -> closeAndThrowException(xmlReader, xmlReader.getLocalName());
                 }
@@ -185,7 +184,7 @@ public final class ParametersXml {
         write(context.getDynamicModelsParameters(), context.getSimulationParFile(), workingDir, DYN_PREFIX);
         DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
         write(parameters.getModelParameters(), MODELS_PARAMETERS_FILENAME, workingDir, "");
-        write(List.of(parameters.getNetworkParameters()), NETWORK_PARAMETERS_FILENAME, workingDir, "");
+        write(context.getNetworkParameters(), NETWORK_PARAMETERS_FILENAME, workingDir, "");
         write(List.of(parameters.getSolverParameters()), SOLVER_PARAMETERS_FILENAME, workingDir, "");
     }
 
@@ -219,7 +218,7 @@ public final class ParametersXml {
         for (Parameter par : parametersSet.getParameters().values()) {
             ParametersXml.writeParameter(xmlWriter, par.type(), par.name(), par.value());
         }
-        for (Reference par : parametersSet.getReferences()) {
+        for (Reference par : parametersSet.getReferences().values()) {
             ParametersXml.writeReference(xmlWriter, par.type(), par.name(), par.origData(), par.origName(), par.componentId());
         }
         xmlWriter.writeEndElement();
