@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2026, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -43,10 +43,11 @@ class EmptyActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest 
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "apv_empty_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        validate("parameters.xsd", "empty_par.xml", tmpDir.resolve(context.getSimulationParFile()));
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      EventActivePowerVariation ActivePowerVariation_LOAD cannot handle connection with LOAD dynamic model, the model will be skipped
+                      Event ActivePowerVariation_LOAD equipment is not a PControllableEquipmentModel, the event will be skipped
                 """);
     }
 }

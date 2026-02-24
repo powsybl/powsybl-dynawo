@@ -14,7 +14,10 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Generator;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 
@@ -24,6 +27,7 @@ import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 public class EventReferenceVoltageVariation extends AbstractEvent {
 
     protected final double deltaU;
+    protected boolean isConnected = true;
 
     protected EventReferenceVoltageVariation(String eventId, Generator equipment, EventModelInfo eventModelInfo, double startTime, double deltaU) {
         super(eventId, equipment, eventModelInfo, startTime);
@@ -36,15 +40,29 @@ public class EventReferenceVoltageVariation extends AbstractEvent {
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        boolean isSkipped = adder.createMacroConnectionsOrSkip(this, getEquipment(), UControllableEquipmentModel.class, this::getVarConnectionsWith);
-        if (isSkipped) {
-            DynawoSimulationReports.reportFailedDynamicModelHandling(adder.getReportNode(), getName(), getDynamicModelId(), getEquipment().getType().toString());
+        isConnected = !adder.createMacroConnectionsOrSkip(this, getEquipment(), UControllableEquipmentModel.class, this::getVarConnectionsWith);
+        if (!isConnected) {
+            DynawoSimulationReports.reportEmptyEvent(adder.getReportNode(), getDynamicModelId(), UControllableEquipmentModel.class.getSimpleName());
         }
     }
 
     @Override
     public String getName() {
         return EventReferenceVoltageVariation.class.getSimpleName();
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
+        if (isConnected) {
+            super.write(writer, parFileName);
+        }
+    }
+
+    @Override
+    public void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder) {
+        if (isConnected) {
+            super.createDynamicModelParameters(parametersAdder);
+        }
     }
 
     @Override
