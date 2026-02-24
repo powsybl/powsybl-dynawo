@@ -56,7 +56,7 @@ class DynawoProviderTest extends AbstractSerDeTest {
     public static class OutputVariablesSupplierMock implements OutputVariablesSupplier {
         @Override
         public List<OutputVariable> get(Network network, ReportNode reportNode) {
-            return new DynawoOutputVariablesBuilder().dynamicModelId("bus").variable("uPu").build();
+            return new DynawoOutputVariablesBuilder().id("bus").variable("uPu").build();
         }
     }
 
