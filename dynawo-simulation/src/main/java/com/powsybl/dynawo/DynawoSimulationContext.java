@@ -196,4 +196,16 @@ public class DynawoSimulationContext {
     public String getCurrentDynawoVersion() {
         return dynawoVersion.toString();
     }
+
+    public List<ParametersSet> getNetworkParameters() {
+        return List.of(getDynawoSimulationParameters().getNetworkParameters());
+    }
+
+    public String getNetworkParameterSetId() {
+        return getDynawoSimulationParameters().getNetworkParameters().getId();
+    }
+
+    public String getFinalStepNetworkParameterSetId() {
+        return getNetworkParameterSetId();
+    }
 }
