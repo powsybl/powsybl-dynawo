@@ -61,6 +61,7 @@ class TapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlT
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "tap_changer_blocking_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        checkConnected("BBM_TapChangerBlocking", true);
     }
 
     @Test
