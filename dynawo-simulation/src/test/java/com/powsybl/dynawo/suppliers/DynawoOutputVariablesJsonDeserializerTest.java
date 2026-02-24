@@ -35,6 +35,7 @@ class DynawoOutputVariablesJsonDeserializerTest {
 
     private static List<OutputVariable> getExpectedOutputVariables() {
         List<OutputVariable> variables = new ArrayList<>();
+        //TODO check all varaiables
         new DynawoOutputVariablesBuilder().dynamicModelId("BBM_GEN").variables("voltageRegulator_EfdPu").add(variables::add);
         new DynawoOutputVariablesBuilder().staticId("BUS").variables("Upu_value").add(variables::add);
         new DynawoOutputVariablesBuilder().dynamicModelId("BBM_GEN2").variables("generator_omegaPu", "generator_PGen", "generator_UStatorPU").add(variables::add);

@@ -66,22 +66,17 @@ public class DynawoSimulationContext {
             return self();
         }
 
-        private Map<OutputVariable.OutputType, List<OutputVariable>> resolveAndGroupOutputVariables(
-                List<OutputVariable> outputVariables) {
-
-            return outputVariables.stream()
+        private Map<OutputVariable.OutputType, List<OutputVariable>> resolveAndGroupOutputVariables() {
+            return outputVariablesList.stream()
                     .map(ov -> {
                         if (!(ov instanceof DynawoOutputVariable dynawoOv)) {
                             return ov;
                         }
-
                         BlackBoxModel model = blackBoxModelSupplier.getDynamicModel(dynawoOv.getModelId());
-
                         if (model == null) {
                             dynawoOv.setDefault();
                             return dynawoOv;
                         }
-
                         return model.isConnected() ? dynawoOv : null;
                     })
                     .filter(Objects::nonNull)
@@ -105,7 +100,7 @@ public class DynawoSimulationContext {
         @Override
         protected void setup() {
             super.setup();
-            this.outputVariables = resolveAndGroupOutputVariables(this.outputVariablesList);
+            outputVariables = resolveAndGroupOutputVariables();
         }
 
         @Override

@@ -19,8 +19,6 @@ import java.util.stream.Stream;
 
 /**
  * An output variable for <pre>Dynawo</pre> can be defined using {@code staticId} and {@code variable} or {@code dynamicModelId} and {@code variable}.
- * Definition with {@code staticId} and {@code variable} are used when no explicit dynamic component exists.
- * <pre>Dynawo</pre> expects {@code dynamicModelId} = “NETWORK” for these variables.
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class DynawoOutputVariablesBuilder {
@@ -47,7 +45,7 @@ public class DynawoOutputVariablesBuilder {
      * @param dynamicModelId the ID of the dynamic model
      * @return the builder instance
      *
-     * @deprecated since 3.2.0. Use {@link #id(String)} instead.
+     * @deprecated Use {@link #id(String)} instead.
      */
     @Deprecated(since = "3.2.0")
     public DynawoOutputVariablesBuilder dynamicModelId(String dynamicModelId) {
@@ -61,7 +59,7 @@ public class DynawoOutputVariablesBuilder {
      * @param staticId the ID of the static model
      * @return the builder instance
      *
-     * @deprecated since 3.2.0. Use {@link #id(String)} instead.
+     * @deprecated Use {@link #id(String)} instead.
      */
     @Deprecated(since = "3.2.0")
     public DynawoOutputVariablesBuilder staticId(String staticId) {
@@ -70,10 +68,9 @@ public class DynawoOutputVariablesBuilder {
     }
 
     /**
-     * Sets the identifier for the output variable being built.
+     * Sets the ID.
      *
-     * @param id the unique ID of the output variable whether static or dynamic
-     * @return this builder instance for method chaining
+     * @param id the ID of the output variable either static or dynamic
      */
     public DynawoOutputVariablesBuilder id(String id) {
         this.id = id;
