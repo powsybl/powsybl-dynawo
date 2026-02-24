@@ -36,15 +36,15 @@ public class EventActivePowerVariation extends AbstractVariationEvent {
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        isSkipped = adder.createMacroConnectionsOrSkip(this, getEquipment(), PControllableEquipmentModel.class, this::getVarConnectionsWith);
-        if (isSkipped) {
-            DynawoSimulationReports.reportFailedDynamicModelHandling(adder.getReportNode(), getName(), getDynamicModelId(), getEquipment().getType().toString());
+        isConnected = !adder.createMacroConnectionsOrSkip(this, getEquipment(), PControllableEquipmentModel.class, this::getVarConnectionsWith);
+        if (!isConnected) {
+            DynawoSimulationReports.reportEmptyEvent(adder.getReportNode(), getDynamicModelId(), PControllableEquipmentModel.class.getSimpleName());
         }
     }
 
     @Override
     public void createNetworkParameter(ParametersSet networkParameters) {
-        if (!isSkipped && equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_LOAD)) {
+        if (isConnected && equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_LOAD)) {
             networkParameters.addParameter(getEquipment().getId() + "_isPControllable", BOOL, Boolean.toString(true));
         }
     }

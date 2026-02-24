@@ -3,7 +3,6 @@
     <dyn:blackBoxModel id="LOAD" lib="LoadOneTransformer" parFile="models.par" parId="LOT" staticId="LOAD">
         <dyn:macroStaticRef id="MSR_LoadOneTransformer"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="ActivePowerVariation_LOAD" lib="Step" parFile="sim1.par" parId="ActivePowerVariation_LOAD"/>
     <dyn:macroConnector id="MC_LoadOneTransformer-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="transformer_terminal1" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="transformer_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>

@@ -13,6 +13,11 @@ import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Injection;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import java.util.function.Consumer;
+
 import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 
 /**
@@ -21,7 +26,7 @@ import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 public abstract class AbstractVariationEvent extends AbstractEvent implements ContextDependentEvent {
 
     protected static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
-    protected boolean isSkipped = false;
+    protected boolean isConnected = true;
 
     protected enum EquipmentModelType {
         SPECIFIED(true),
@@ -60,6 +65,20 @@ public abstract class AbstractVariationEvent extends AbstractEvent implements Co
             equipmentModelType.setValue(EquipmentModelType.DEFAULT_GENERATOR);
         } else if (IdentifiableType.LOAD == getEquipment().getType()) {
             equipmentModelType.setValue(EquipmentModelType.DEFAULT_LOAD);
+        }
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
+        if (isConnected) {
+            super.write(writer, parFileName);
+        }
+    }
+
+    @Override
+    public void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder) {
+        if (isConnected) {
+            super.createDynamicModelParameters(parametersAdder);
         }
     }
 
