@@ -30,7 +30,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
     void testDeserialize() {
 
         double expectedDsoVoltageLevelValue = 987.6;
-        double expectedTfoVoltageLevelValue = 100.0;
+        double expectedTfoVoltageLevelValue = 234.5;
         String expectedSettingPath = "path/to/settingFile";
         String expectedAssemblingPath = "path/to/assemblingFile";
         double expectedStartTime = 0.;
@@ -77,7 +77,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
             .setShuntRegulationOn(false)
             .setAutomaticSlackBusOn(true)
             .setDsoVoltageLevel(54.23)
-            .setTfoVoltageLevel(100.0)
+            .setTfoVoltageLevel(78.90)
             .setActivePowerCompensation(DynaFlowConstants.ActivePowerCompensation.P)
             .setSettingPath("path/to/settingFile")
             .setAssemblingPath("path/to/assemblingFile")

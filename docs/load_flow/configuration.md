@@ -38,7 +38,7 @@ The default value is `TRUE`.
 The default value is `45.0`.
 
 #### tfoVoltageLevel
-`tfoVoltageLevel` defines the maximum voltage level for which generator transformers are considered to be in the iidm file.
+`tfoVoltageLevel` defines the maximum voltage level for which generator transformers are considered to be in the iidm file.  
 The default value is `100.0`.
 
 #### activePowerCompensation

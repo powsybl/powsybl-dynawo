@@ -50,7 +50,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         boolean shuntRegulationOn = false;
         boolean automaticSlackBusOn = true;
         double dsoVoltageLevel = 87.32;
-        double tfoVoltageLevel = 100.;
+        double tfoVoltageLevel = 89.01;
         ActivePowerCompensation activePowerCompensation = ActivePowerCompensation.PMAX;
         String settingPath = "path/to/settingFile";
         String assemblingPath = "path/to/assemblingFile";
@@ -142,7 +142,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         boolean shuntRegulationOn = false;
         boolean automaticSlackBusOn = true;
         double dsoVoltageLevel = 87.32;
-        double tfoVoltageLevel = 100.0;
+        double tfoVoltageLevel = 56.78;
         ActivePowerCompensation activePowerCompensation = ActivePowerCompensation.PMAX;
         String settingPath = "path/to/settingFile";
         String assemblingPath = "path/to/assemblingFile";
@@ -223,7 +223,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
             .setShuntRegulationOn(false)
             .setAutomaticSlackBusOn(true)
             .setDsoVoltageLevel(32.4)
-            .setTfoVoltageLevel(100.)
+            .setTfoVoltageLevel(67.89)
             .setActivePowerCompensation(ActivePowerCompensation.P)
             .setSettingPath("path/to/settingFile")
             .setAssemblingPath("path/to/assemblingFile")
@@ -254,7 +254,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         boolean shuntRegulationOn = true;
         boolean automaticSlackBusOn = false;
         double dsoVoltageLevel = 2.0;
-        double tfoVoltageLevel = 100.0;
+        double tfoVoltageLevel = 10;
         ActivePowerCompensation activePowerCompensation = ActivePowerCompensation.PMAX;
         String settingPath = "path/to/settingFile";
         String assemblingPath = "path/to/assemblingFile";
