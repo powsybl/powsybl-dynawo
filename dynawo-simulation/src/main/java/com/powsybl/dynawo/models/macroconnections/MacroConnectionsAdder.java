@@ -9,21 +9,22 @@ package com.powsybl.dynawo.models.macroconnections;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawo.models.automationsystems.ConnectionStatefulModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.VarConnection;
+import com.powsybl.dynawo.models.automationsystems.ConnectionStatefulModel;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,10 +33,7 @@ import java.util.stream.Stream;
  */
 public final class MacroConnectionsAdder {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MacroConnectionsAdder.class);
     private static final String MODEL_ID_EXCEPTION = "The model identified by the id %s does not match the expected model (%s)";
-    private static final String MODEL_ID_LOG = "The model identified by the id {} does not match the expected model ({})";
-
     private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
     private final Function<String, BlackBoxModel> dynamicModelGetter;
     private final Function<String, BlackBoxModel> pureDynamicModelGetter;
@@ -231,7 +229,11 @@ public final class MacroConnectionsAdder {
             if (throwException) {
                 throw new PowsyblException("Pure dynamic model " + dynamicId + " not found");
             } else {
-                LOGGER.warn("Pure dynamic model {} not found", dynamicId);
+                reportNode.newReportNode()
+                        .withMessageTemplate("dynawo.dynasim.pureDynamicModelNotFound")
+                        .withUntypedValue("connectableClass", connectableClass.getSimpleName())
+                        .withUntypedValue("dynamicId", dynamicId)
+                        .add();
                 return null;
             }
         }
@@ -245,7 +247,11 @@ public final class MacroConnectionsAdder {
         if (throwException) {
             throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, id, connectableClass.getSimpleName()));
         } else {
-            LOGGER.warn(MODEL_ID_LOG, id, connectableClass.getSimpleName());
+            reportNode.newReportNode()
+                    .withMessageTemplate("dynawo.dynasim.handleModelNotFound")
+                    .withUntypedValue("id", id)
+                    .withUntypedValue("connectableClass", connectableClass.getSimpleName())
+                    .add();
             return null;
         }
     }

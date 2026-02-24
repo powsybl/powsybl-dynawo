@@ -7,11 +7,11 @@
 package com.powsybl.dynawo.models.defaultmodels;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.report.ReportNode;
+import com.powsybl.commons.report.ReportNodeNoOp;
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -25,8 +25,7 @@ import static java.util.stream.Collectors.groupingBy;
  */
 public final class DefaultModelsHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultModelsHandler.class);
-
+    private final ReportNode reportNode = new ReportNodeNoOp();
     private static final Map<IdentifiableType, List<DefaultModelConfiguration>> CONFIGURATIONS = EnumSet.allOf(DefaultModelConfiguration.class)
             .stream()
             .collect(groupingBy(DefaultModelConfiguration::getIdentifiableType));
@@ -38,9 +37,15 @@ public final class DefaultModelsHandler {
             return connectableClass.cast(defaultModel);
         }
         if (throwException) {
-            throw new PowsyblException("Default model " + defaultModel.getClass().getSimpleName() + " for " + equipment.getId() + " does not implement " + connectableClass.getSimpleName() + " interface");
+            throw new PowsyblException("Default model " + defaultModel.getClass().getSimpleName() + " associated with equipment " + equipment.getId() + " does not implement the required " + connectableClass.getSimpleName() + " interface");
         } else {
-            LOGGER.warn("Default model {} for {} does not implement {} interface", defaultModel.getClass().getSimpleName(), equipment.getId(), connectableClass.getSimpleName());
+            reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.defaultModelNotFound")
+                .withUntypedValue("defaultModel", defaultModel.getClass().getSimpleName())
+                .withUntypedValue("equipmentId", equipment.getId())
+                .withUntypedValue("equipmentClass", equipment.getClass().getSimpleName())
+                .withUntypedValue("connectableClass", connectableClass.getSimpleName())
+                .add();
             return null;
         }
     }

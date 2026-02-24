@@ -61,6 +61,8 @@ class EmptyTapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicMode
         checkReport("""
                   + Test DYD
                      + Dynawo models processing
+                        Model for 'LOAD' can't be found because the class of the equipment 'LOAD' does not implement the required 'TapChangerModel' interface
+                        Pure dynamic model for 'GEN' can't be found because the equipment 'GEN' does not implement the required 'TapChangerAutomationSystem' interface
                         TapChangerAutomaton BBM_TC equipment LOAD2 is not a LoadWithTransformers, the automation system will be skipped
                         None of TapChangerBlockingAutomaton BBM_TapChangerBlocking equipments are TapChangerModel, the automation system will be skipped
                   """);

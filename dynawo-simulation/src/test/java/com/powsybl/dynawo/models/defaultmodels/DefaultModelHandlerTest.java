@@ -54,7 +54,7 @@ class DefaultModelHandlerTest {
     void noInterfaceImplementationException() {
         Generator gen = network.getGenerator("GEN");
         PowsyblException pe = assertThrows(PowsyblException.class, () -> defaultModelHandler.getDefaultModel(gen, ShuntModel.class, true));
-        assertEquals("Default model DefaultGenerator for GEN does not implement ShuntModel interface", pe.getMessage());
+        assertEquals("Default model DefaultGenerator associated with equipment GEN does not implement the required ShuntModel interface", pe.getMessage());
     }
 
     @Test
