@@ -77,6 +77,15 @@ public final class BuilderReports {
                 .add();
     }
 
+    public static void reportFieldNotSetDefaultValue(ReportNode reportNode, String fieldName, String defaultValue) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.fieldNotSetDefaultValue")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue("defaultValue", defaultValue)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
     public static void reportFieldReplacement(ReportNode reportNode, String fieldName, String replacementName, String replacement) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.fieldReplacement")
@@ -154,15 +163,6 @@ public final class BuilderReports {
                 .withMessageTemplate("dynawo.dynasim.fieldSetWithWrongEquipment")
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue("equipment", equipment)
-                .withSeverity(TypedValue.WARN_SEVERITY)
-                .add();
-    }
-
-    public static void reportFieldOptionNotImplemented(ReportNode reportNode, String fieldName, String defaultValue) {
-        reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynasim.fieldOptionNotImplemented")
-                .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue("defaultValue", defaultValue)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }

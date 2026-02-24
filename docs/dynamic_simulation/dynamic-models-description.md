@@ -7,14 +7,11 @@ See how to use model in a simulation [here](dynamic-models-configuration.md).
 ### Generator
 
 #### Base generator
-- `GeneratorFictitious`: 
-Fictitious generator (behaves in a similar way as an alpha-beta load).
+- `GeneratorFictitious`:
+Simplified generator model with voltage-dependent active and reactive power.
 
 - `GeneratorPVFixed`:
 Simplified generator model with fixed active and reactive power.
-
-- `GeneratorFictitious`:
-Simplified generator model with voltage-dependent active and reactive power.
 
 
 #### Synchronized generator
@@ -222,7 +219,7 @@ Simplified generator PQ based on SignalN for the frequency handling and with a p
 Simplified generator PV based on SignalN for the frequency handling with an N points PQ diagram.
 
 - `GeneratorPVPropSignalN`:
-Simplified  generator PV based on SignalN for the frequency handling and with a proportional voltage regulation.
+Simplified generator PV based on SignalN for the frequency handling and with a proportional voltage regulation.
 
 - `GeneratorPVRemoteDiagramPQSignalN`:
 Simplified generator PV with a PQ diagram, based on SignalN for the frequency handling and a remote voltage regulation.
@@ -508,11 +505,11 @@ Blocks phase shifter I when the monitored intensity goes below a threshold.
 Phase-shifter which monitors a given active power. When the active power goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated.
 
 ### Tap changer automaton
-- `TapChangerAutomaton`:
+- `TapChangerAutomationSystem`:
 Tap changer.
 
 ### Tap changer blocking automaton
-- `TapChangerBlockingAutomaton`:
+- `TapChangerBlockingAutomationSystem`:
 Blocks tap changers when one of the monitored voltages goes below a threshold.
 
 ### Under voltage
