@@ -10,7 +10,7 @@ package com.powsybl.dynawo.xml;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterBlockingIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
-import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import com.powsybl.iidm.network.test.PhaseShifterTestCaseFactory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -23,7 +23,7 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
-        network = EurostagTutorialExample1Factory.createWithLFResults();
+        network = PhaseShifterTestCaseFactory.create();
     }
 
     @Override
@@ -32,7 +32,7 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
             PhaseShifterIAutomationSystemBuilder.of(network, reportNode)
                 .dynamicModelId("BBM_PS")
                 .parameterSetId("ps")
-                .transformer("NGEN_NHV1")
+                .transformer("PS1")
                 .build(),
             PhaseShifterBlockingIAutomationSystemBuilder.of(network, reportNode)
                 .dynamicModelId("BBM_PSB")
