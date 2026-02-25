@@ -42,10 +42,6 @@ public final class NetworkExporter {
     private NetworkExporter() {
     }
 
-    public static void writeIidm(Network network, Path file) {
-        writeIidm(network, file, false);
-    }
-
     public static void writeIidm(Network network, Path file, boolean isMergeLoads, VoltageLevelFinder... voltageLevelFinders) {
         Objects.requireNonNull(network);
         Objects.requireNonNull(file);

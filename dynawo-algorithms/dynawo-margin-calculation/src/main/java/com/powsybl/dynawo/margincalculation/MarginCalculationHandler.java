@@ -10,10 +10,10 @@ package com.powsybl.dynawo.margincalculation;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.ExecutionReport;
+import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.algorithms.AbstractDynawoAlgorithmsHandler;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
-import com.powsybl.dynawo.commons.NetworkExporter;
 import com.powsybl.dynawo.margincalculation.results.MarginCalculationResult;
 import com.powsybl.dynawo.margincalculation.results.XmlMarginCalculationResultParser;
 import com.powsybl.dynawo.margincalculation.xml.MultipleJobsXml;
@@ -24,10 +24,10 @@ import com.powsybl.dynawo.xml.JobsXml;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STEP_DYD_FILENAME;
-import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static com.powsybl.dynawo.contingency.ContingencyConstants.AGGREGATED_RESULTS;
 import static com.powsybl.dynawo.margincalculation.xml.MarginCalculationConstant.LOAD_VARIATION_AREA_FILENAME;
 
@@ -50,8 +50,8 @@ public class MarginCalculationHandler extends AbstractDynawoAlgorithmsHandler<Ma
     }
 
     @Override
-    protected void writeIidm(Path workingDir) {
-        NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
+    protected List<Contingency> getContingencies() {
+        return context.getContingencies();
     }
 
     @Override

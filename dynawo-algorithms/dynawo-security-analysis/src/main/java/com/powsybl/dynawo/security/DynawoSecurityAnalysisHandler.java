@@ -10,13 +10,12 @@ package com.powsybl.dynawo.security;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.ExecutionReport;
+import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.algorithms.AbstractDynawoAlgorithmsHandler;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
-import com.powsybl.dynawo.commons.NetworkExporter;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.contingency.ContingencyResultsUtils;
-import com.powsybl.dynawo.contingency.ContingencyVoltageLevelFinder;
 import com.powsybl.dynawo.security.xml.MultipleJobsXml;
 import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.iidm.serde.NetworkSerDe;
@@ -65,9 +64,8 @@ public final class DynawoSecurityAnalysisHandler extends AbstractDynawoAlgorithm
     }
 
     @Override
-    protected void writeIidm(Path workingDir) {
-        NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME), false,
-                new ContingencyVoltageLevelFinder(context.getContingencies()));
+    protected List<Contingency> getContingencies() {
+        return context.getContingencies();
     }
 
     @Override
