@@ -9,6 +9,8 @@ package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.BuilderEquipment;
+import com.powsybl.dynawo.builders.BuilderReports;
+import com.powsybl.dynawo.builders.EquipmentChecker;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.automationsystems.AbstractAutomationSystemModelBuilder;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -21,6 +23,13 @@ import com.powsybl.iidm.network.TwoWindingsTransformer;
 abstract class AbstractPhaseShifterModelBuilder<T extends AbstractAutomationSystemModelBuilder<T>> extends AbstractAutomationSystemModelBuilder<T> {
 
     protected final BuilderEquipment<TwoWindingsTransformer> transformer;
+    private static final EquipmentChecker<TwoWindingsTransformer> HAS_PHASE_TAP_CHANGER = (eq, f, r) -> {
+        if (!eq.hasPhaseTapChanger()) {
+            BuilderReports.reportMissingPhaseTapChanger(r, f, eq.getId());
+            return false;
+        }
+        return true;
+    };
 
     protected AbstractPhaseShifterModelBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
         super(network, modelConfig, parentReportNode);
@@ -29,7 +38,7 @@ abstract class AbstractPhaseShifterModelBuilder<T extends AbstractAutomationSyst
     }
 
     public T transformer(String staticId) {
-        transformer.addEquipment(staticId, network::getTwoWindingsTransformer);
+        transformer.addEquipment(staticId, network::getTwoWindingsTransformer, HAS_PHASE_TAP_CHANGER);
         return self();
     }
 

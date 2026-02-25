@@ -153,4 +153,23 @@
     <par type="DOUBLE" name="transformer_tNext_THT" value="10"/>
     <par type="DOUBLE" name="transformer_tolV" value="0.014999999700000001"/>
   </set>
+  <set id="PSI">
+      <par type="DOUBLE" name="phaseShifter_t1st" value="40"/>
+      <par type="DOUBLE" name="phaseShifter_tNext" value="20"/>
+      <par type="DOUBLE" name="phaseShifter_PDeadBand" value="5"/>
+      <par type="DOUBLE" name="phaseShifter_iMax" value="0.77"/>
+      <par type="DOUBLE" name="phaseShifter_iStop" value="0.77"/>
+      <par type="BOOL" name="phaseShifter_regulating0" value="true"/>
+      <par type="INT" name="phaseShifter_increasePhase" value="1"/>
+  </set>
+  <set id="PSP">
+        <par type="DOUBLE" name="phaseShifter_t1st" value="40"/>
+        <par type="DOUBLE" name="phaseShifter_tNext" value="20"/>
+        <par type="DOUBLE" name="phaseShifter_PDeadBand" value="5"/>
+        <par type="DOUBLE" name="phaseShifter_PTarget" value="0.77"/>
+        <par type="DOUBLE" name="phaseShifter_iMax" value="0.77"/>
+        <par type="DOUBLE" name="phaseShifter_iStop" value="0.77"/>
+        <par type="BOOL" name="phaseShifter_regulating0" value="true"/>
+        <par type="INT" name="phaseShifter_increasePhase" value="1"/>
+    </set>
 </parametersSet>
