@@ -72,5 +72,6 @@ class TapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "tap_changer_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        checkConnected("BBM_TC", true);
     }
 }

@@ -50,6 +50,7 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "empty_phase_shifter_blocking_i_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        checkConnected("BBM_PSB", false);
         checkReport("""
                 + Test DYD
                    Model PhaseShifterI BBM_PS instantiation OK

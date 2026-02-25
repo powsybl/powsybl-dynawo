@@ -37,9 +37,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -129,5 +131,13 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
         StringWriter sw = new StringWriter();
         reportNode.print(sw);
         assertEquals(report, TestUtil.normalizeLineSeparator(sw.toString()));
+    }
+
+    protected void checkConnected(String dynamicModelId, boolean isConnected) {
+        Optional<BlackBoxModel> bbm = dynamicModels.stream()
+                .filter(m -> dynamicModelId.equalsIgnoreCase(m.getDynamicModelId()))
+                .findFirst();
+        assertThat(bbm).isPresent()
+                .hasValueSatisfying(m -> assertEquals(isConnected, m.isConnected()));
     }
 }

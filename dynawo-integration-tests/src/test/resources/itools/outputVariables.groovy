@@ -8,11 +8,11 @@
 package itools
 
 curve {
-    dynamicModelId "_LOAD___2_EC"
+    id "_LOAD___2_EC"
     variables "load_PPu", "load_QPu"
 }
 
 fsv {
-    dynamicModelId "_LOAD___6_EC"
+    id "_LOAD___6_EC"
     variables "load_PPu", "load_QPu"
 }

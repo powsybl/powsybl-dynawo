@@ -78,7 +78,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         return self();
     }
 
-    protected final void setup() {
+    protected void setup() {
         setupData();
         setupMacroConnections();
     }

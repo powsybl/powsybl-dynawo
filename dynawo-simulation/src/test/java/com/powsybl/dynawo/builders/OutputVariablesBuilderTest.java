@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -37,27 +38,23 @@ class OutputVariablesBuilderTest {
     }
 
     @Test
-    void buildFromDynamicId() {
-        List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
-                .dynamicModelId("BBM_GEN")
-                .variable("generator_omegaPu")
-                .build();
-        assertEquals(1, outputVariables.size());
-        OutputVariable variable = outputVariables.getFirst();
-        assertEquals("BBM_GEN", variable.getModelId());
-        assertEquals("generator_omegaPu", variable.getVariableName());
-    }
+    void buildFromId() {
+        List<OutputVariable> outputVariables = new ArrayList<>();
 
-    @Test
-    void buildFromStaticId() {
-        List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
-                .staticId("GEN")
-                .variables("generator_omegaPu", "generator_PGen")
-                .build();
-        assertEquals(2, outputVariables.size());
-        OutputVariable variable = outputVariables.getFirst();
-        assertEquals("NETWORK", variable.getModelId());
-        assertEquals("GEN_generator_omegaPu", variable.getVariableName());
+        outputVariables.addAll(
+                new DynawoOutputVariablesBuilder()
+                        .id("BBM_GEN")
+                        .variable("generator_omegaPu")
+                        .build()
+        );
+        outputVariables.addAll(
+                new DynawoOutputVariablesBuilder()
+                        .id("GEN")
+                        .variables("generator_omegaPu", "generator_PGen")
+                        .build()
+        );
+
+        assertEquals(3, outputVariables.size());
     }
 
     @ParameterizedTest(name = "{1}")
@@ -78,7 +75,7 @@ class OutputVariablesBuilderTest {
                 .build();
 
         List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder(reportNode)
-                .staticId("GEN")
+                .id("GEN")
                 .variables("", "")
                 .build();
 
@@ -97,7 +94,7 @@ class OutputVariablesBuilderTest {
                 .build();
 
         List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder(reportNode)
-                .staticId("GEN")
+                .id("GEN")
                 .variables(Collections.emptyList())
                 .build();
 
@@ -109,18 +106,8 @@ class OutputVariablesBuilderTest {
     private static Stream<Arguments> provideBuilderError() {
         return Stream.of(
                 Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
-                        new DynawoOutputVariablesBuilder(r)
-                            .staticId("GEN")
-                            .dynamicModelId("BBM_GEN")
-                            .variable("uPu"),
-                        true,
-                        """
-                        + Builder tests
-                           Both 'dynamicModelId' and 'staticId' are defined, 'dynamicModelId' will be used
-                        """),
-                Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
-                        new DynawoOutputVariablesBuilder(r)
-                            .staticId("GEN"),
+                                new DynawoOutputVariablesBuilder(r)
+                                        .id("GEN"),
                         false,
                         """
                         + Builder tests
@@ -128,9 +115,9 @@ class OutputVariablesBuilderTest {
                            Output variable GEN cannot be instantiated
                         """),
                 Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
-                        new DynawoOutputVariablesBuilder(r)
-                            .staticId("GEN")
-                            .variables(),
+                                new DynawoOutputVariablesBuilder(r)
+                                        .id("GEN")
+                                        .variables(),
                         false,
                         """
                         + Builder tests

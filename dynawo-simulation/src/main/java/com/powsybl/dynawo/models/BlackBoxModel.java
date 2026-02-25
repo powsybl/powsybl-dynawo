@@ -53,4 +53,6 @@ public interface BlackBoxModel extends Model {
     boolean needMandatoryDynamicModels();
 
     void createDynamicModelInfoExtension();
+
+    boolean isConnected();
 }

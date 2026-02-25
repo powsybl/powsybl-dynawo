@@ -56,4 +56,9 @@ public class UnderVoltageAutomationSystem extends AbstractPureDynamicBlackBoxMod
             super.write(writer, parFileName);
         }
     }
+
+    @Override
+    public boolean isConnected() {
+        return isConnected;
+    }
 }
