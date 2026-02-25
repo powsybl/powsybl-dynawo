@@ -59,11 +59,6 @@ public class EventBusDisconnection extends AbstractEvent implements ContextDepen
     }
 
     @Override
-    public String getName() {
-        return getClass().getSimpleName();
-    }
-
-    @Override
     public void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder) {
         if (hasDefaultModel) {
             super.createDynamicModelParameters(parametersAdder);

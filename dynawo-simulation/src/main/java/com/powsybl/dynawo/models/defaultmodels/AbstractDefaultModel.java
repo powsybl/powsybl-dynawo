@@ -16,6 +16,11 @@ public abstract class AbstractDefaultModel implements Model {
     }
 
     @Override
+    public String getMacroConnectName() {
+        return this.getName();
+    }
+
+    @Override
     public List<MacroConnectAttribute> getMacroConnectToAttributes() {
         return List.of(
                 MacroConnectAttribute.of("id2", DynawoSimulationXmlConstants.NETWORK),

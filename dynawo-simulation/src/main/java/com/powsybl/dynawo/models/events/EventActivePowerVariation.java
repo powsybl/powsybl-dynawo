@@ -47,9 +47,4 @@ public class EventActivePowerVariation extends AbstractVariationEvent {
             networkParameters.addParameter(getEquipment().getId() + "_isPControllable", BOOL, Boolean.toString(true));
         }
     }
-
-    @Override
-    public String getName() {
-        return EventActivePowerVariation.class.getSimpleName();
-    }
 }

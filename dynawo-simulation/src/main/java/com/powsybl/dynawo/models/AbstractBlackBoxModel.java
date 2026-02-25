@@ -42,6 +42,11 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         return getLib();
     }
 
+    @Override
+    public String getMacroConnectName() {
+        return this.getLib();
+    }
+
     public String getDynamicModelId() {
         return dynamicModelId;
     }

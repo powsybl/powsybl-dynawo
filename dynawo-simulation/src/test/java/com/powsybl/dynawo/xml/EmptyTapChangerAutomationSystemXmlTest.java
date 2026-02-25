@@ -47,7 +47,7 @@ class EmptyTapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      TapChangerAutomaton BBM_TC equipment LOAD is not a LoadWithTransformers, the automation system will be skipped
+                      TapChangerAutomationSystem BBM_TC equipment LOAD is not a LoadWithTransformers, the automation system will be skipped
                 """);
     }
 }
