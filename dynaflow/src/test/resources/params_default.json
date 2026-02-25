@@ -5,6 +5,7 @@
     "ShuntRegulationOn" : true,
     "AutomaticSlackBusOn" : true,
     "DsoVoltageLevel" : 45.0,
+    "TfoVoltageLevel" : 100.0,
     "ActivePowerCompensation" : "PMax",
     "StartTime" : 0.0,
     "StopTime" : 100.0,

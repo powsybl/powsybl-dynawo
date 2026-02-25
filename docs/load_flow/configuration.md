@@ -37,6 +37,10 @@ The default value is `TRUE`.
 `dsoVoltageLevel` defines the minimum voltage of level of loads.  
 The default value is `45.0`.
 
+#### tfoVoltageLevel
+`tfoVoltageLevel` defines the maximum voltage level for which generator transformers are considered to be in the iidm file.  
+The default value is `100.0`.
+
 #### activePowerCompensation
 `activePowerCompensation` determines whether the generators participate in the active power balancing proportionally to:
 - `P`
@@ -104,6 +108,7 @@ dynaflow-default-parameters:
     shuntRegulationOn: false
     automaticSlackBusOn: true
     dsoVoltageLevel: 987.6
+    tfoVoltageLevel: 100
     activePowerCompensation: "P"
     settingPath: "path/to/settingFile"
     assemblingPath: "path/to/assemblingFile"
@@ -129,6 +134,7 @@ Alternatively, you can provide parameters as a JSON file where supported
       "shuntRegulationOn" : false,
       "automaticSlackBusOn" : true,
       "dsoVoltageLevel" : 987.6,
+      "tfoVoltageLevel" : 100.0,
       "activePowerCompensation" : "P",
       "settingPath" : "path/to/settingFile",
       "assemblingPath" : "path/to/assemblingFile",
