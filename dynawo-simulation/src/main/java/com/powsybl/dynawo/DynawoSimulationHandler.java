@@ -15,6 +15,7 @@ import com.powsybl.computation.ExecutionReport;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynamicsimulation.DynamicSimulationResultImpl;
+import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynamicsimulation.TimelineEvent;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.NetworkExporter;
@@ -203,7 +204,9 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
 
     private void writeInputFiles(Path workingDir) throws IOException {
         NetworkExporter.writeIidm(context.getNetwork(), workingDir.resolve(NETWORK_FILENAME),
-                context.getDynawoSimulationParameters().isMergeLoads());
+                context.getDynawoSimulationParameters().isMergeLoads(),
+                new OutputVariableVoltageLevelFinder(context.getOutputVariables(OutputVariable.OutputType.CURVE),
+                        context.getOutputVariables(OutputVariable.OutputType.FINAL_STATE)));
         JobsXml.write(workingDir, context);
         DynawoFilesUtils.writeInputFiles(workingDir, context);
     }

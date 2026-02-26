@@ -10,6 +10,7 @@ package com.powsybl.dynawo.security;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.ExecutionReport;
+import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.algorithms.AbstractDynawoAlgorithmsHandler;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
@@ -60,6 +61,11 @@ public final class DynawoSecurityAnalysisHandler extends AbstractDynawoAlgorithm
         ContingencyResultsUtils.reportContingencyResults(result.getPostContingencyResults(), workingDir.resolve(TIMELINE_FOLDER),
                 context.getDynawoSimulationParameters().getTimelineExportMode(), reportNode);
         return new SecurityAnalysisReport(result);
+    }
+
+    @Override
+    protected List<Contingency> getContingencies() {
+        return context.getContingencies();
     }
 
     @Override

@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 public final class MarginCalculationContext extends DynawoSimulationContext {
 
     private final MarginCalculationParameters marginCalculationParameters;
+    private final List<Contingency> contingencies;
     private final List<ContingencyEventModels> contingencyEventModels;
     private final LoadVariationModels loadVariationModels;
     private final ParametersSet finalStepNetworkParameters;
@@ -137,6 +138,7 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
     private MarginCalculationContext(Builder builder) {
         super(builder);
         this.marginCalculationParameters = builder.parameters;
+        this.contingencies = builder.contingencies;
         this.contingencyEventModels = builder.contingencyEventModels;
         this.loadVariationModels = builder.loadVariationModels;
         this.finalStepNetworkParameters = builder.finalStepNetworkParameters;
@@ -144,6 +146,10 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
 
     public MarginCalculationParameters getMarginCalculationParameters() {
         return marginCalculationParameters;
+    }
+
+    public List<Contingency> getContingencies() {
+        return contingencies;
     }
 
     public List<ContingencyEventModels> getContingencyEventModels() {
