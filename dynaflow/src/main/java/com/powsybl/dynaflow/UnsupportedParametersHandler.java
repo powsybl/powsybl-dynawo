@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynaflow;
 
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.loadflow.LoadFlowParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Log or replace unsupported parameters
@@ -17,62 +17,72 @@ import org.slf4j.LoggerFactory;
  */
 public final class UnsupportedParametersHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UnsupportedParametersHandler.class);
-
     private UnsupportedParametersHandler() {
     }
 
-    public static void checkParameters(LoadFlowParameters loadFlowParameters) {
+    public static boolean checkParameters(LoadFlowParameters loadFlowParameters, ReportNode reportNode) {
+
+        boolean isCompatible = checkCriticalParameters(loadFlowParameters, false, reportNode);
         // Unsupported parameters
-        if (loadFlowParameters.isDc()) {
-            LOGGER.error("DC power flow is not implemented in DynaFlow, the parameter will be ignored");
-        }
         if (loadFlowParameters.isWriteSlackBus()) {
-            LOGGER.warn("Load flow parameter WriteSlackBus is not implemented in DynaFlow, the parameter will be ignored");
+            DynaflowReports.createIgnoredParameterReportNode(reportNode, "WriteSlackBus");
         }
         if (loadFlowParameters.getVoltageInitMode() != LoadFlowParameters.DEFAULT_VOLTAGE_INIT_MODE) {
-            LOGGER.warn("Load flow parameter VoltageInitMode is not implemented in DynaFlow, the parameter will be ignored");
+            DynaflowReports.createIgnoredParameterReportNode(reportNode, "VoltageInitMode");
         }
 
         //IIDM properties
         if (loadFlowParameters.isTransformerVoltageControlOn() != LoadFlowParameters.DEFAULT_TRANSFORMER_VOLTAGE_CONTROL_ON) {
-            logIidmProperty("TransformerVoltageControlOn");
+            DynaflowReports.createIidmReplacedParameterReportNode(reportNode, "TransformerVoltageControlOn");
         }
         if (loadFlowParameters.isPhaseShifterRegulationOn() != LoadFlowParameters.DEFAULT_PHASE_SHIFTER_REGULATION_ON) {
-            logIidmProperty("PhaseShifterRegulationOn");
+            DynaflowReports.createIidmReplacedParameterReportNode(reportNode, "PhaseShifterRegulationOn");
         }
         if (loadFlowParameters.isTwtSplitShuntAdmittance() != LoadFlowParameters.DEFAULT_TWT_SPLIT_SHUNT_ADMITTANCE) {
-            logIidmProperty("TwtSplitShuntAdmittance");
+            DynaflowReports.createIidmReplacedParameterReportNode(reportNode, "TwtSplitShuntAdmittance");
         }
         if (!loadFlowParameters.getCountriesToBalance().isEmpty()) {
-            logIidmProperty("CountriesToBalance");
+            DynaflowReports.createIidmReplacedParameterReportNode(reportNode, "CountriesToBalance");
         }
         if (loadFlowParameters.isHvdcAcEmulation() != LoadFlowParameters.DEFAULT_HVDC_AC_EMULATION_ON) {
-            logIidmProperty("HvdcAcEmulation");
+            DynaflowReports.createIidmReplacedParameterReportNode(reportNode, "HvdcAcEmulation");
         }
 
         // Replaced values
         LoadFlowParameters.ComponentMode componentMode = loadFlowParameters.getComponentMode();
         if (componentMode != LoadFlowParameters.ComponentMode.MAIN_SYNCHRONOUS) {
-            logUnsupportedValue("ComponentMode", componentMode.toString(), LoadFlowParameters.ComponentMode.MAIN_SYNCHRONOUS.toString());
+            DynaflowReports.createReplacedParameterValueReportNode(reportNode, "ComponentMode",
+                    componentMode.toString(), LoadFlowParameters.ComponentMode.MAIN_SYNCHRONOUS.toString());
         }
         boolean isDistributedSlack = loadFlowParameters.isDistributedSlack();
         if (!isDistributedSlack) {
-            logUnsupportedValue("DistributedSlack", Boolean.toString(isDistributedSlack), Boolean.TRUE.toString());
+            DynaflowReports.createReplacedParameterValueReportNode(reportNode, "DistributedSlack",
+                    Boolean.toString(isDistributedSlack), Boolean.TRUE.toString());
         }
         LoadFlowParameters.BalanceType balanceType = loadFlowParameters.getBalanceType();
         if (isUnsupportedBalanceType(balanceType)) {
-            logUnsupportedValue("BalanceType", balanceType.toString(), LoadFlowParameters.DEFAULT_BALANCE_TYPE.toString());
-            loadFlowParameters.setBalanceType(LoadFlowParameters.DEFAULT_BALANCE_TYPE);
+            DynaflowReports.createReplacedParameterValueReportNode(reportNode, "BalanceType",
+                    balanceType.toString(), LoadFlowParameters.DEFAULT_BALANCE_TYPE.toString());
         }
+        return isCompatible;
     }
 
-    private static void logIidmProperty(String parameter) {
-        LOGGER.warn("Load flow parameter {} is not supported, DynaFlow will use the IIDM property instead", parameter);
+    /**
+     * Checks critical parameters and throw exception when an unsupported parameter is found
+     */
+    public static void checkCriticalParameters(LoadFlowParameters loadFlowParameters) {
+        checkCriticalParameters(loadFlowParameters, true, ReportNode.NO_OP);
     }
 
-    private static void logUnsupportedValue(String parameter, String value, String replacingValue) {
-        LOGGER.warn("Load flow parameter {} value {} is not supported, the value {} will be used instead", parameter, value, replacingValue);
+    private static boolean checkCriticalParameters(LoadFlowParameters loadFlowParameters, boolean throwException, ReportNode reportNode) {
+        if (loadFlowParameters.isDc()) {
+            if (throwException) {
+                throw new PowsyblException("DC power flow is not implemented in DynaFlow");
+            }
+            DynaflowReports.createCriticalUnsupportedParameterReportNode(reportNode, "DC power flow");
+            return false;
+        }
+        return true;
     }
 
     private static boolean isUnsupportedBalanceType(LoadFlowParameters.BalanceType balanceType) {

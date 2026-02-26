@@ -22,8 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
 
-import static com.powsybl.dynaflow.DynaFlowConstants.convertOrDefault;
-
 /**
  * Serializes parameters from {@link DynaFlowParameters} used by Dynawo.
  * Some parameters are directly used by powsybl-dynawo and thus not serialized.
@@ -112,5 +110,13 @@ public final class DynaFlowConfigSerializer {
         if (value != null) {
             jsonGenerator.writeStringField(fieldName, value);
         }
+    }
+
+    private static DynaFlowConstants.ActivePowerCompensation convertOrDefault(LoadFlowParameters.BalanceType balanceType) {
+        return switch (balanceType) {
+            case PROPORTIONAL_TO_GENERATION_P -> DynaFlowConstants.ActivePowerCompensation.P;
+            case PROPORTIONAL_TO_LOAD -> DynaFlowConstants.ActivePowerCompensation.TARGET_P;
+            default -> DynaFlowConstants.ActivePowerCompensation.PMAX;
+        };
     }
 }

@@ -31,6 +31,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.dynaflow.DynaFlowParameters.MODULE_SPECIFIC_PARAMETERS;
+import static com.powsybl.dynaflow.DynaflowReports.createCheckParameterReportNode;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME_PATH;
 
@@ -104,7 +105,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
         DynaFlowParameters.log(loadFlowParameters, dynaFlowParameters);
-        UnsupportedParametersHandler.checkParameters(loadFlowParameters);
+        UnsupportedParametersHandler.checkCriticalParameters(loadFlowParameters);
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
 
         ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX);
@@ -162,5 +163,11 @@ public class DynaFlowProvider implements LoadFlowProvider {
     @Override
     public Optional<ExtensionJsonSerializer> getSpecificParametersSerializer() {
         return Optional.of(new JsonDynaFlowParametersSerializer());
+    }
+
+    @Override
+    public boolean checkParameters(LoadFlowRunParameters runParameters) {
+        return UnsupportedParametersHandler.checkParameters(runParameters.getLoadFlowParameters(),
+                createCheckParameterReportNode(runParameters.getReportNode()));
     }
 }
