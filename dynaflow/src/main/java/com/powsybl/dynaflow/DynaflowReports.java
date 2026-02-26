@@ -38,4 +38,44 @@ public final class DynaflowReports {
                 .withUntypedValue("contingencyId", contingencyId)
                 .add();
     }
+
+    public static ReportNode createCheckParameterReportNode(ReportNode reportNode) {
+        return reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynaflow.checkParameters")
+                .add();
+    }
+
+    public static void createCriticalUnsupportedParameterReportNode(ReportNode reportNode, String parameterName) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynaflow.criticalUnsupportedParameter")
+                .withUntypedValue("parameterName", parameterName)
+                .withSeverity(TypedValue.ERROR_SEVERITY)
+                .add();
+    }
+
+    public static void createIgnoredParameterReportNode(ReportNode reportNode, String parameterName) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynaflow.ignoredParameter")
+                .withUntypedValue("parameterName", parameterName)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void createReplacedParameterValueReportNode(ReportNode reportNode, String parameterName, String value, String replacingValue) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynaflow.replacedParameter")
+                .withUntypedValue("parameterName", parameterName)
+                .withUntypedValue("value", value)
+                .withUntypedValue("replacingValue", replacingValue)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void createIidmReplacedParameterReportNode(ReportNode reportNode, String parameterName) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynaflow.iidmParameter")
+                .withUntypedValue("parameterName", parameterName)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
 }
