@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -42,6 +43,16 @@ class XmlTimeLineParserTest {
         assertEquals("GEN____3_SM", timeline.get(3).modelName());
         assertEquals("PMIN : activation", timeline.get(4).message());
         assertEquals("GEN____8_SM", timeline.get(4).modelName());
+    }
+
+    @Test
+    void testWithPriority() throws XMLStreamException {
+        InputStreamReader xml = new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/timelineWithPriority.xml")));
+        List<TimelineEntry> timelineWithPriority = new XmlTimeLineParser().parse(xml);
+        assertNull(timelineWithPriority.get(0).priority());
+        assertNull(timelineWithPriority.get(1).priority());
+        assertEquals("2", timelineWithPriority.get(2).priority());
+        assertEquals("2", timelineWithPriority.get(3).priority());
     }
 
     @Test

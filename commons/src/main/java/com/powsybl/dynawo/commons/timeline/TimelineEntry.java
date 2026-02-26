@@ -11,6 +11,9 @@ package com.powsybl.dynawo.commons.timeline;
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record TimelineEntry(double time, String modelName, String message) {
+public record TimelineEntry(double time, String modelName, String message, String priority) {
+    public TimelineEntry(double time, String modelName, String message) {
+        this(time, modelName, message, null);
+    }
 
 }
