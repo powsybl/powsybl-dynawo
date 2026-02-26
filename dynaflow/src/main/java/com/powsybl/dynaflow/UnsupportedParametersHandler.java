@@ -77,7 +77,7 @@ public final class UnsupportedParametersHandler {
 
     private static boolean isUnsupportedBalanceType(LoadFlowParameters.BalanceType balanceType) {
         return switch (balanceType) {
-            case PROPORTIONAL_TO_GENERATION_PARTICIPATION_FACTOR, PROPORTIONAL_TO_LOAD, PROPORTIONAL_TO_CONFORM_LOAD -> true;
+            case PROPORTIONAL_TO_GENERATION_PARTICIPATION_FACTOR, PROPORTIONAL_TO_GENERATION_REMAINING_MARGIN, PROPORTIONAL_TO_CONFORM_LOAD -> true;
             default -> false;
         };
     }
