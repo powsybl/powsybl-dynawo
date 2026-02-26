@@ -65,7 +65,7 @@ public final class DynaFlowConstants {
         return switch (balanceType) {
             case PROPORTIONAL_TO_GENERATION_P -> ActivePowerCompensation.P;
             case PROPORTIONAL_TO_GENERATION_P_MAX -> ActivePowerCompensation.PMAX;
-            case PROPORTIONAL_TO_GENERATION_REMAINING_MARGIN -> ActivePowerCompensation.TARGET_P;
+            case PROPORTIONAL_TO_LOAD -> ActivePowerCompensation.TARGET_P;
             default -> DEFAULT_ACTIVE_POWER_COMPENSATION;
         };
     }
