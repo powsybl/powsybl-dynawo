@@ -258,6 +258,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         Map<String, String> expectedProperties = Map.ofEntries(
                 Map.entry("svcRegulationOn", "true"),
                 Map.entry("dsoVoltageLevel", "45.0"),
+                Map.entry("tfoVoltageLevel", "100.0"),
                 Map.entry("timeStep", "10.0"),
                 Map.entry("startingPointMode", "WARM"),
                 Map.entry("startTime", "0.0"),

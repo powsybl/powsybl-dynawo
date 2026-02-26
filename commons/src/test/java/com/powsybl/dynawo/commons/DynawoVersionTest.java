@@ -71,4 +71,32 @@ class DynawoVersionTest {
         assertEquals(1, DV_MIN.compareTo(dv2));
         assertEquals(1, DV_MIN.compareTo(null));
     }
+
+    @Test
+    void testVersionWithLeadingWarnings() {
+        String input =
+                "WARNING: Dynawo started with non-default settings. " +
+                        "Some optional components are disabled. " +
+                        "1.5.0 (rev:master-1d327db)";
+
+        assertEquals("1.5.0", DynawoUtil.versionSanitizer(input));
+    }
+
+    @Test
+    void testWithoutVersionWithLeadingWarnings() {
+        String input =
+                "WARNING: Dynawo started with non-default settings. " +
+                        "Some optional components are disabled. ";
+
+        PowsyblException e = assertThrows(
+                PowsyblException.class,
+                () -> DynawoUtil.versionSanitizer(input)
+        );
+
+        assertEquals(
+                "Dynawo version parsing error: 'WARNING: Dynawo started with non-default settings. Some optional components are disabled. ' cannot be parsed",
+                e.getMessage()
+        );
+    }
+
 }

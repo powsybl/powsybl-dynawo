@@ -30,6 +30,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
     void testDeserialize() {
 
         double expectedDsoVoltageLevelValue = 987.6;
+        double expectedTfoVoltageLevelValue = 234.5;
         String expectedSettingPath = "path/to/settingFile";
         String expectedAssemblingPath = "path/to/assemblingFile";
         double expectedStartTime = 0.;
@@ -45,6 +46,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
 
         assertTrue(dynaFlowParameters.getSvcRegulationOn());
         assertEquals(expectedDsoVoltageLevelValue, dynaFlowParameters.getDsoVoltageLevel(), 0);
+        assertEquals(expectedTfoVoltageLevelValue, dynaFlowParameters.getTfoVoltageLevel(), 0);
         assertEquals(expectedSettingPath, dynaFlowParameters.getSettingPath());
         assertEquals(expectedAssemblingPath, dynaFlowParameters.getAssemblingPath());
         assertEquals(expectedStartTime, dynaFlowParameters.getStartTime(), 0.1d);
@@ -70,6 +72,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         DynaFlowParameters params = new DynaFlowParameters()
             .setSvcRegulationOn(true)
             .setDsoVoltageLevel(54.23)
+            .setTfoVoltageLevel(78.90)
             .setSettingPath("path/to/settingFile")
             .setAssemblingPath("path/to/assemblingFile")
             .setStartTime(0.)
@@ -105,6 +108,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         //set false in config.yml
         assertFalse(dynaFlowParameters.getSvcRegulationOn());
         assertEquals(45d, dynaFlowParameters.getDsoVoltageLevel(), 0);
+        assertEquals(100d, dynaFlowParameters.getTfoVoltageLevel(), 0);
         assertEquals("path/to/settingFile", dynaFlowParameters.getSettingPath());
         assertNull(dynaFlowParameters.getAssemblingPath());
         assertEquals(0d, dynaFlowParameters.getStartTime(), 0.1d);

@@ -74,7 +74,8 @@ public final class DynaFlowConfigSerializer {
         jsonGenerator.writeBooleanField("ShuntRegulationOn", lfParameters.isShuntCompensatorVoltageControlOn());
         jsonGenerator.writeBooleanField("AutomaticSlackBusOn", lfParameters.isReadSlackBus());
         writeNonNullField(jsonGenerator, "DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
-
+        writeNonNullField(jsonGenerator, "TfoVoltageLevel", dynaFlowParameters.getTfoVoltageLevel());
+      
         jsonGenerator.writeStringField("ActivePowerCompensation", convertOrDefault(lfParameters.getBalanceType()).getDynaflowName());
         writeNonNullField(jsonGenerator, "SettingPath", dynaFlowParameters.getSettingPath());
         writeNonNullField(jsonGenerator, "AssemblingPath", dynaFlowParameters.getAssemblingPath());

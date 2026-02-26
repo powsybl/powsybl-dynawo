@@ -9,6 +9,7 @@
     "DynaFlowParameters" : {
       "svcRegulationOn" : true,
       "dsoVoltageLevel" : 987.6,
+      "tfoVoltageLevel" : 234.5,
       "settingPath" : "path/to/settingFile",
       "assemblingPath" : "path/to/assemblingFile",
       "startTime" : 0.0,

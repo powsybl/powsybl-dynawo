@@ -37,6 +37,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaFlowParameters.class);
     private static final String SVC_REGULATION_ON = "svcRegulationOn";
     private static final String DSO_VOLTAGE_LEVEL = "dsoVoltageLevel";
+    private static final String TFO_VOLTAGE_LEVEL = "tfoVoltageLevel";
     private static final String SETTING_PATH = "settingPath";
     private static final String ASSEMBLING_PATH = "assemblingPath";
     private static final String START_TIME = "startTime";
@@ -50,6 +51,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     // Default values
     private static final boolean DEFAULT_SVC_REGULATION_ON = true;
     private static final double DEFAULT_DSO_VOLTAGE_LEVEL = 45d;
+    private static final double DEFAULT_TFO_VOLTAGE_LEVEL = 100d;
     private static final double DEFAULT_START_TIME = 0d;
     private static final double DEFAULT_STOP_TIME = 100d;
     private static final double DEFAULT_PRECISION = Double.NaN;
@@ -61,6 +63,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     public static final List<Parameter> SPECIFIC_PARAMETERS = List.of(
             new Parameter(SVC_REGULATION_ON, ParameterType.BOOLEAN, "Static Var Compensator regulation on", DEFAULT_SVC_REGULATION_ON),
             new Parameter(DSO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "DSO voltage level threshold", DEFAULT_DSO_VOLTAGE_LEVEL),
+            new Parameter(TFO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "Transformers voltage level threshold", DEFAULT_TFO_VOLTAGE_LEVEL),
             new Parameter(SETTING_PATH, ParameterType.STRING, "Setting file path", null, null, ParameterScope.TECHNICAL),
             new Parameter(ASSEMBLING_PATH, ParameterType.STRING, "Assembling file path", null, null, ParameterScope.TECHNICAL),
             new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", DEFAULT_START_TIME),
@@ -73,6 +76,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     private boolean svcRegulationOn = DEFAULT_SVC_REGULATION_ON;
     private double dsoVoltageLevel = DEFAULT_DSO_VOLTAGE_LEVEL;
+    private double tfoVoltageLevel = DEFAULT_TFO_VOLTAGE_LEVEL;
     private String settingPath = null;
     private String assemblingPath = null;
     private double startTime = DEFAULT_START_TIME;
@@ -98,6 +102,15 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     public DynaFlowParameters setDsoVoltageLevel(double dsoVoltageLevel) {
         this.dsoVoltageLevel = dsoVoltageLevel;
+        return this;
+    }
+
+    public Double getTfoVoltageLevel() {
+        return tfoVoltageLevel;
+    }
+
+    public DynaFlowParameters setTfoVoltageLevel(double tfoVoltageLevel) {
+        this.tfoVoltageLevel = tfoVoltageLevel;
         return this;
     }
 
@@ -197,6 +210,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return MoreObjects.toStringHelper("").omitNullValues()
                 .add(SVC_REGULATION_ON, svcRegulationOn)
                 .add(DSO_VOLTAGE_LEVEL, dsoVoltageLevel)
+                .add(TFO_VOLTAGE_LEVEL, tfoVoltageLevel)
                 .add(SETTING_PATH, settingPath)
                 .add(ASSEMBLING_PATH, assemblingPath)
                 .add(START_TIME, startTime)
@@ -238,6 +252,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static void load(DynaFlowParameters parameters, ModuleConfig config) {
         config.getOptionalBooleanProperty(SVC_REGULATION_ON).ifPresent(parameters::setSvcRegulationOn);
         config.getOptionalDoubleProperty(DSO_VOLTAGE_LEVEL).ifPresent(parameters::setDsoVoltageLevel);
+        config.getOptionalDoubleProperty(TFO_VOLTAGE_LEVEL).ifPresent(parameters::setTfoVoltageLevel);
         config.getOptionalStringProperty(SETTING_PATH).ifPresent(parameters::setSettingPath);
         config.getOptionalStringProperty(ASSEMBLING_PATH).ifPresent(parameters::setAssemblingPath);
         config.getOptionalDoubleProperty(START_TIME).ifPresent(parameters::setStartTime);
@@ -272,6 +287,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Objects.requireNonNull(properties);
         Optional.ofNullable(properties.get(SVC_REGULATION_ON)).ifPresent(prop -> setSvcRegulationOn(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(DSO_VOLTAGE_LEVEL)).ifPresent(prop -> setDsoVoltageLevel(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(TFO_VOLTAGE_LEVEL)).ifPresent(prop -> setTfoVoltageLevel(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(SETTING_PATH)).ifPresent(this::setSettingPath);
         Optional.ofNullable(properties.get(ASSEMBLING_PATH)).ifPresent(this::setAssemblingPath);
         Optional.ofNullable(properties.get(START_TIME)).ifPresent(prop -> setStartTime(Double.parseDouble(prop)));
@@ -288,6 +304,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Map<String, String> parameters = new HashMap<>();
         addNotNullEntry(SVC_REGULATION_ON, svcRegulationOn, parameters::put);
         addNotNullEntry(DSO_VOLTAGE_LEVEL, dsoVoltageLevel, parameters::put);
+        addNotNullEntry(TFO_VOLTAGE_LEVEL, tfoVoltageLevel, parameters::put);
         addNotNullEntry(SETTING_PATH, settingPath, parameters::put);
         addNotNullEntry(ASSEMBLING_PATH, assemblingPath, parameters::put);
         addNotNullEntry(START_TIME, startTime, parameters::put);

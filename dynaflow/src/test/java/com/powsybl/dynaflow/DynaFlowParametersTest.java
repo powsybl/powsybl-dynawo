@@ -47,6 +47,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
     void checkParameters() {
         boolean svcRegulationOn = true;
         double dsoVoltageLevel = 87.32;
+        double tfoVoltageLevel = 89.01;
         String settingPath = "path/to/settingFile";
         String assemblingPath = "path/to/assemblingFile";
         double startTime = 0.;
@@ -60,6 +61,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
         moduleConfig.setStringProperty("svcRegulationOn", Boolean.toString(svcRegulationOn));
         moduleConfig.setStringProperty("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
+        moduleConfig.setStringProperty("tfoVoltageLevel", Double.toString(tfoVoltageLevel));
         moduleConfig.setStringProperty("settingPath", settingPath);
         moduleConfig.setStringProperty("assemblingPath", assemblingPath);
         moduleConfig.setStringProperty("startTime", Double.toString(startTime));
@@ -74,6 +76,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
         assertEquals(svcRegulationOn, parameters.getSvcRegulationOn());
         assertEquals(dsoVoltageLevel, parameters.getDsoVoltageLevel(), 0.1d);
+        assertEquals(tfoVoltageLevel, parameters.getTfoVoltageLevel(), 0.1d);
         assertEquals(settingPath, parameters.getSettingPath());
         assertEquals(assemblingPath, parameters.getAssemblingPath());
         assertEquals(startTime, parameters.getStartTime(), 0.1d);
@@ -91,11 +94,12 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         assertNotNull(parametersExt);
 
-        assertEquals("{svcRegulationOn=true, dsoVoltageLevel=45.0, startTime=0.0, stopTime=100.0, chosenOutputs=[TIMELINE], timeStep=10.0, startingPointMode=WARM, mergeLoads=true}",
+        assertEquals("{svcRegulationOn=true, dsoVoltageLevel=45.0, tfoVoltageLevel=100.0, startTime=0.0, stopTime=100.0, chosenOutputs=[TIMELINE], timeStep=10.0, startingPointMode=WARM, mergeLoads=true}",
                 parametersExt.toString());
 
         assertTrue(parametersExt.getSvcRegulationOn());
         assertEquals(45d, parametersExt.getDsoVoltageLevel());
+        assertEquals(100d, parametersExt.getTfoVoltageLevel());
         assertNull(parametersExt.getSettingPath());
         assertNull(parametersExt.getAssemblingPath());
         assertEquals(0d, parametersExt.getStartTime());
@@ -123,6 +127,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         boolean svcRegulationOn = true;
         double dsoVoltageLevel = 87.32;
+        double tfoVoltageLevel = 56.78;
         String settingPath = "path/to/settingFile";
         String assemblingPath = "path/to/assemblingFile";
         double startTime = 0.;
@@ -136,6 +141,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("svcRegulationOn", Boolean.toString(svcRegulationOn));
         properties.put("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
+        properties.put("tfoVoltageLevel", Double.toString(tfoVoltageLevel));
         properties.put("settingPath", settingPath);
         properties.put("assemblingPath", assemblingPath);
         properties.put("startTime", Double.toString(startTime));
@@ -150,6 +156,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
         String expectedString = "{svcRegulationOn=" + svcRegulationOn +
                 ", dsoVoltageLevel=" + dsoVoltageLevel +
+                ", tfoVoltageLevel=" + tfoVoltageLevel +
                 ", settingPath=" + settingPath +
                 ", assemblingPath=" + assemblingPath +
                 ", startTime=" + startTime +
@@ -188,6 +195,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         DynaFlowParameters dynaFlowParameters = new DynaFlowParameters()
             .setSvcRegulationOn(true)
             .setDsoVoltageLevel(32.4)
+            .setTfoVoltageLevel(67.89)
             .setSettingPath("path/to/settingFile")
             .setAssemblingPath("path/to/assemblingFile")
             .setStartTime(0.)
@@ -216,6 +224,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
         boolean svcRegulationOn = true;
         double dsoVoltageLevel = 2.0;
+        double tfoVoltageLevel = 10;
         String settingPath = "path/to/settingFile";
         String assemblingPath = "path/to/assemblingFile";
         double startTime = 0.;
@@ -229,6 +238,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("svcRegulationOn", Boolean.toString(svcRegulationOn));
         properties.put("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
+        properties.put("tfoVoltageLevel", Double.toString(tfoVoltageLevel));
         properties.put("settingPath", settingPath);
         properties.put("assemblingPath", assemblingPath);
         properties.put("startTime", Double.toString(startTime));
@@ -243,6 +253,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
         assertTrue(dynaFlowParameters.getSvcRegulationOn());
         assertEquals(dsoVoltageLevel, dynaFlowParameters.getDsoVoltageLevel(), 0.1d);
+        assertEquals(tfoVoltageLevel, dynaFlowParameters.getTfoVoltageLevel(), 0.1d);
         assertEquals(settingPath, dynaFlowParameters.getSettingPath());
         assertEquals(assemblingPath, dynaFlowParameters.getAssemblingPath());
         assertEquals(startTime, dynaFlowParameters.getStartTime(), 0.1d);

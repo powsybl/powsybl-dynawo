@@ -113,7 +113,7 @@
           "value" : "0.014999999700000001"
         }
       },
-      "references" : [ ]
+      "references" : { }
     },
     "solverParameters" : {
       "id" : "1",
@@ -149,7 +149,7 @@
           "value" : "1e-4"
         }
       },
-      "references" : [ ]
+      "references" : { }
     },
     "solverType" : "IDA",
     "mergeLoads" : false,
@@ -179,31 +179,36 @@
           "value" : "2.5"
         }
       },
-      "references" : [ {
-        "name" : "load_P0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "p_pu",
-        "componentId" : null
-      }, {
-        "name" : "load_Q0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "q_pu",
-        "componentId" : null
-      }, {
-        "name" : "load_U0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "v_pu",
-        "componentId" : null
-      }, {
-        "name" : "load_UPhase0",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "angle_pu",
-        "componentId" : null
-      } ]
+      "references" : {
+        "load_P0Pu" : {
+          "name" : "load_P0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "p_pu",
+          "componentId" : null
+        },
+        "load_Q0Pu" : {
+          "name" : "load_Q0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "q_pu",
+          "componentId" : null
+        },
+        "load_U0Pu" : {
+          "name" : "load_U0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "v_pu",
+          "componentId" : null
+        },
+        "load_UPhase0" : {
+          "name" : "load_UPhase0",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "angle_pu",
+          "componentId" : null
+        }
+      }
     }, {
       "id" : "GSFWPR_GEN____1_SM",
       "parameters" : {
@@ -443,31 +448,36 @@
           "value" : "0"
         }
       },
-      "references" : [ {
-        "name" : "generator_P0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "p_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_Q0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "q_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_U0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "v_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_UPhase0",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "angle_pu",
-        "componentId" : null
-      } ]
+      "references" : {
+        "generator_P0Pu" : {
+          "name" : "generator_P0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "p_pu",
+          "componentId" : null
+        },
+        "generator_Q0Pu" : {
+          "name" : "generator_Q0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "q_pu",
+          "componentId" : null
+        },
+        "generator_U0Pu" : {
+          "name" : "generator_U0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "v_pu",
+          "componentId" : null
+        },
+        "generator_UPhase0" : {
+          "name" : "generator_UPhase0",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "angle_pu",
+          "componentId" : null
+        }
+      }
     }, {
       "id" : "GSFWPR_GEN____2_SM",
       "parameters" : {
@@ -707,31 +717,36 @@
           "value" : "0"
         }
       },
-      "references" : [ {
-        "name" : "generator_P0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "p_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_Q0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "q_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_U0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "v_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_UPhase0",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "angle_pu",
-        "componentId" : null
-      } ]
+      "references" : {
+        "generator_P0Pu" : {
+          "name" : "generator_P0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "p_pu",
+          "componentId" : null
+        },
+        "generator_Q0Pu" : {
+          "name" : "generator_Q0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "q_pu",
+          "componentId" : null
+        },
+        "generator_U0Pu" : {
+          "name" : "generator_U0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "v_pu",
+          "componentId" : null
+        },
+        "generator_UPhase0" : {
+          "name" : "generator_UPhase0",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "angle_pu",
+          "componentId" : null
+        }
+      }
     }, {
       "id" : "GSFWPR_GEN____3_SM",
       "parameters" : {
@@ -971,31 +986,36 @@
           "value" : "0"
         }
       },
-      "references" : [ {
-        "name" : "generator_P0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "p_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_Q0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "q_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_U0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "v_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_UPhase0",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "angle_pu",
-        "componentId" : null
-      } ]
+      "references" : {
+        "generator_P0Pu" : {
+          "name" : "generator_P0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "p_pu",
+          "componentId" : null
+        },
+        "generator_Q0Pu" : {
+          "name" : "generator_Q0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "q_pu",
+          "componentId" : null
+        },
+        "generator_U0Pu" : {
+          "name" : "generator_U0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "v_pu",
+          "componentId" : null
+        },
+        "generator_UPhase0" : {
+          "name" : "generator_UPhase0",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "angle_pu",
+          "componentId" : null
+        }
+      }
     }, {
       "id" : "GSTWPR_GEN____6_SM",
       "parameters" : {
@@ -1225,31 +1245,36 @@
           "value" : "0"
         }
       },
-      "references" : [ {
-        "name" : "generator_P0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "p_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_Q0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "q_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_U0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "v_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_UPhase0",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "angle_pu",
-        "componentId" : null
-      } ]
+      "references" : {
+        "generator_P0Pu" : {
+          "name" : "generator_P0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "p_pu",
+          "componentId" : null
+        },
+        "generator_Q0Pu" : {
+          "name" : "generator_Q0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "q_pu",
+          "componentId" : null
+        },
+        "generator_U0Pu" : {
+          "name" : "generator_U0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "v_pu",
+          "componentId" : null
+        },
+        "generator_UPhase0" : {
+          "name" : "generator_UPhase0",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "angle_pu",
+          "componentId" : null
+        }
+      }
     }, {
       "id" : "GSTWPR_GEN____8_SM",
       "parameters" : {
@@ -1479,31 +1504,36 @@
           "value" : "0"
         }
       },
-      "references" : [ {
-        "name" : "generator_P0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "p_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_Q0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "q_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_U0Pu",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "v_pu",
-        "componentId" : null
-      }, {
-        "name" : "generator_UPhase0",
-        "type" : "DOUBLE",
-        "origData" : "IIDM",
-        "origName" : "angle_pu",
-        "componentId" : null
-      } ]
+      "references" : {
+        "generator_P0Pu" : {
+          "name" : "generator_P0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "p_pu",
+          "componentId" : null
+        },
+        "generator_Q0Pu" : {
+          "name" : "generator_Q0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "q_pu",
+          "componentId" : null
+        },
+        "generator_U0Pu" : {
+          "name" : "generator_U0Pu",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "v_pu",
+          "componentId" : null
+        },
+        "generator_UPhase0" : {
+          "name" : "generator_UPhase0",
+          "type" : "DOUBLE",
+          "origData" : "IIDM",
+          "origName" : "angle_pu",
+          "componentId" : null
+        }
+      }
     }, {
       "id" : "Disconnect__BUS____1-BUS____5-1_AC",
       "parameters" : {
@@ -1523,7 +1553,7 @@
           "value" : "true"
         }
       },
-      "references" : [ ]
+      "references" : { }
     } ]
   }
 }
