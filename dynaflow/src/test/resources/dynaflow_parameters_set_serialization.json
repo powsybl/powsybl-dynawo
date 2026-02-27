@@ -19,11 +19,8 @@
   "extensions" : {
     "DynaFlowParameters" : {
       "svcRegulationOn" : true,
-      "shuntRegulationOn" : false,
-      "automaticSlackBusOn" : true,
       "dsoVoltageLevel" : 54.23,
       "tfoVoltageLevel" : 78.9,
-      "activePowerCompensation" : "P",
       "settingPath" : "path/to/settingFile",
       "assemblingPath" : "path/to/assemblingFile",
       "startTime" : 0.0,

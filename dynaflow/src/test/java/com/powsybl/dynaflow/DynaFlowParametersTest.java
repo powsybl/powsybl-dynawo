@@ -10,7 +10,6 @@ import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.parameters.Parameter;
 import com.powsybl.commons.test.AbstractSerDeTest;
-import com.powsybl.dynaflow.DynaFlowConstants.ActivePowerCompensation;
 import com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
@@ -47,11 +46,8 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
     @Test
     void checkParameters() {
         boolean svcRegulationOn = true;
-        boolean shuntRegulationOn = false;
-        boolean automaticSlackBusOn = true;
         double dsoVoltageLevel = 87.32;
         double tfoVoltageLevel = 89.01;
-        ActivePowerCompensation activePowerCompensation = ActivePowerCompensation.PMAX;
         String settingPath = "path/to/settingFile";
         String assemblingPath = "path/to/assemblingFile";
         double startTime = 0.;
@@ -64,11 +60,8 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
         moduleConfig.setStringProperty("svcRegulationOn", Boolean.toString(svcRegulationOn));
-        moduleConfig.setStringProperty("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
-        moduleConfig.setStringProperty("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
         moduleConfig.setStringProperty("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
         moduleConfig.setStringProperty("tfoVoltageLevel", Double.toString(tfoVoltageLevel));
-        moduleConfig.setStringProperty("activePowerCompensation", activePowerCompensation.name());
         moduleConfig.setStringProperty("settingPath", settingPath);
         moduleConfig.setStringProperty("assemblingPath", assemblingPath);
         moduleConfig.setStringProperty("startTime", Double.toString(startTime));
@@ -82,11 +75,8 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         DynaFlowParameters parameters = DynaFlowParameters.load(moduleConfig);
 
         assertEquals(svcRegulationOn, parameters.getSvcRegulationOn());
-        assertEquals(shuntRegulationOn, parameters.getShuntRegulationOn());
-        assertEquals(automaticSlackBusOn, parameters.getAutomaticSlackBusOn());
         assertEquals(dsoVoltageLevel, parameters.getDsoVoltageLevel(), 0.1d);
         assertEquals(tfoVoltageLevel, parameters.getTfoVoltageLevel(), 0.1d);
-        assertEquals(activePowerCompensation, parameters.getActivePowerCompensation());
         assertEquals(settingPath, parameters.getSettingPath());
         assertEquals(assemblingPath, parameters.getAssemblingPath());
         assertEquals(startTime, parameters.getStartTime(), 0.1d);
@@ -104,15 +94,12 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         assertNotNull(parametersExt);
 
-        assertEquals("{svcRegulationOn=true, shuntRegulationOn=true, automaticSlackBusOn=true, dsoVoltageLevel=45.0, tfoVoltageLevel=100.0, activePowerCompensation=PMAX, startTime=0.0, stopTime=100.0, chosenOutputs=[TIMELINE], timeStep=10.0, startingPointMode=WARM, mergeLoads=true}",
+        assertEquals("{svcRegulationOn=true, dsoVoltageLevel=45.0, tfoVoltageLevel=100.0, startTime=0.0, stopTime=100.0, chosenOutputs=[TIMELINE], timeStep=10.0, startingPointMode=WARM, mergeLoads=true}",
                 parametersExt.toString());
 
         assertTrue(parametersExt.getSvcRegulationOn());
-        assertTrue(parametersExt.getShuntRegulationOn());
-        assertTrue(parametersExt.getAutomaticSlackBusOn());
         assertEquals(45d, parametersExt.getDsoVoltageLevel());
         assertEquals(100d, parametersExt.getTfoVoltageLevel());
-        assertEquals(ActivePowerCompensation.PMAX, parametersExt.getActivePowerCompensation());
         assertNull(parametersExt.getSettingPath());
         assertNull(parametersExt.getAssemblingPath());
         assertEquals(0d, parametersExt.getStartTime());
@@ -139,11 +126,8 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         boolean svcRegulationOn = true;
-        boolean shuntRegulationOn = false;
-        boolean automaticSlackBusOn = true;
         double dsoVoltageLevel = 87.32;
         double tfoVoltageLevel = 56.78;
-        ActivePowerCompensation activePowerCompensation = ActivePowerCompensation.PMAX;
         String settingPath = "path/to/settingFile";
         String assemblingPath = "path/to/assemblingFile";
         double startTime = 0.;
@@ -156,11 +140,8 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
         Map<String, String> properties = new HashMap<>();
         properties.put("svcRegulationOn", Boolean.toString(svcRegulationOn));
-        properties.put("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
-        properties.put("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
         properties.put("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
         properties.put("tfoVoltageLevel", Double.toString(tfoVoltageLevel));
-        properties.put("activePowerCompensation", activePowerCompensation.name());
         properties.put("settingPath", settingPath);
         properties.put("assemblingPath", assemblingPath);
         properties.put("startTime", Double.toString(startTime));
@@ -174,11 +155,8 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         parametersExt.update(properties);
 
         String expectedString = "{svcRegulationOn=" + svcRegulationOn +
-                ", shuntRegulationOn=" + shuntRegulationOn +
-                ", automaticSlackBusOn=" + automaticSlackBusOn +
                 ", dsoVoltageLevel=" + dsoVoltageLevel +
                 ", tfoVoltageLevel=" + tfoVoltageLevel +
-                ", activePowerCompensation=" + activePowerCompensation +
                 ", settingPath=" + settingPath +
                 ", assemblingPath=" + assemblingPath +
                 ", startTime=" + startTime +
@@ -189,21 +167,15 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
                 ", startingPointMode=" + startingPointMode +
                 ", mergeLoads=" + mergeLoad + "}";
         assertEquals(expectedString, parametersExt.toString());
-        System.out.println(expectedString);
     }
 
     @Test
     void defaultParametersSerialization() throws IOException {
-        LoadFlowParameters lfParameters = LoadFlowParameters.load(platformConfig);
-        lfParameters.setUseReactiveLimits(false);
-        lfParameters.setPhaseShifterRegulationOn(false);
-
-        DynaFlowParameters dynaFlowParameters = new DynaFlowParameters();
-        lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
-
-        Path workingDir = fileSystem.getPath("dynaflow/workingDir");
         Path parameterFile = fileSystem.getPath(DynaFlowConstants.CONFIG_FILENAME);
-        DynaFlowConfigSerializer.serialize(lfParameters, dynaFlowParameters, workingDir, parameterFile);
+        DynaFlowConfigSerializer.serialize(new LoadFlowParameters(),
+                new DynaFlowParameters(),
+                fileSystem.getPath("dynaflow/workingDir"),
+                parameterFile);
 
         try (InputStream actual = Files.newInputStream(parameterFile);
              InputStream expected = getClass().getResourceAsStream("/params_default.json")) {
@@ -214,17 +186,16 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
     @Test
     void parametersSerialization() throws IOException {
-        LoadFlowParameters lfParameters = LoadFlowParameters.load(platformConfig);
+        LoadFlowParameters lfParameters = new LoadFlowParameters();
         lfParameters.setUseReactiveLimits(false);
-        lfParameters.setPhaseShifterRegulationOn(false);
+        lfParameters.setShuntCompensatorVoltageControlOn(true);
+        lfParameters.setReadSlackBus(false);
+        lfParameters.setBalanceType(LoadFlowParameters.BalanceType.PROPORTIONAL_TO_GENERATION_P);
 
         DynaFlowParameters dynaFlowParameters = new DynaFlowParameters()
             .setSvcRegulationOn(true)
-            .setShuntRegulationOn(false)
-            .setAutomaticSlackBusOn(true)
             .setDsoVoltageLevel(32.4)
             .setTfoVoltageLevel(67.89)
-            .setActivePowerCompensation(ActivePowerCompensation.P)
             .setSettingPath("path/to/settingFile")
             .setAssemblingPath("path/to/assemblingFile")
             .setStartTime(0.)
@@ -234,11 +205,12 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
             .setTimeStep(2.6)
             .setStartingPointMode(StartingPointMode.WARM)
             .setMergeLoads(true);
-        lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
 
-        Path workingDir = fileSystem.getPath("dynaflow/workingDir");
         Path parameterFile = fileSystem.getPath(DynaFlowConstants.CONFIG_FILENAME);
-        DynaFlowConfigSerializer.serialize(lfParameters, dynaFlowParameters, workingDir, parameterFile);
+        DynaFlowConfigSerializer.serialize(lfParameters,
+                dynaFlowParameters,
+                fileSystem.getPath("dynaflow/workingDir"),
+                parameterFile);
 
         try (InputStream actual = Files.newInputStream(parameterFile);
              InputStream expected = getClass().getResourceAsStream("/params.json")) {
@@ -251,11 +223,8 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
     void loadMapDynaflowParameters() {
 
         boolean svcRegulationOn = true;
-        boolean shuntRegulationOn = true;
-        boolean automaticSlackBusOn = false;
         double dsoVoltageLevel = 2.0;
         double tfoVoltageLevel = 10;
-        ActivePowerCompensation activePowerCompensation = ActivePowerCompensation.PMAX;
         String settingPath = "path/to/settingFile";
         String assemblingPath = "path/to/assemblingFile";
         double startTime = 0.;
@@ -268,11 +237,8 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
         Map<String, String> properties = new HashMap<>();
         properties.put("svcRegulationOn", Boolean.toString(svcRegulationOn));
-        properties.put("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
-        properties.put("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
         properties.put("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
         properties.put("tfoVoltageLevel", Double.toString(tfoVoltageLevel));
-        properties.put("activePowerCompensation", activePowerCompensation.name());
         properties.put("settingPath", settingPath);
         properties.put("assemblingPath", assemblingPath);
         properties.put("startTime", Double.toString(startTime));
@@ -286,11 +252,8 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         DynaFlowParameters dynaFlowParameters = DynaFlowParameters.load(properties);
 
         assertTrue(dynaFlowParameters.getSvcRegulationOn());
-        assertTrue(dynaFlowParameters.getShuntRegulationOn());
-        assertFalse(dynaFlowParameters.getAutomaticSlackBusOn());
         assertEquals(dsoVoltageLevel, dynaFlowParameters.getDsoVoltageLevel(), 0.1d);
         assertEquals(tfoVoltageLevel, dynaFlowParameters.getTfoVoltageLevel(), 0.1d);
-        assertEquals(activePowerCompensation, dynaFlowParameters.getActivePowerCompensation());
         assertEquals(settingPath, dynaFlowParameters.getSettingPath());
         assertEquals(assemblingPath, dynaFlowParameters.getAssemblingPath());
         assertEquals(startTime, dynaFlowParameters.getStartTime(), 0.1d);

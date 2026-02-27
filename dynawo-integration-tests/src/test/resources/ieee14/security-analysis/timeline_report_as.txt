@@ -1,5 +1,5 @@
 + IEEE14 test
-   + Dynaflow security analysis on network 'ieee14bus'
+   + DynaFlow security analysis on network 'ieee14bus'
       + Contingency '_BUS___10-BUS___11-1_AC' CONVERGED
          + Timeline
             [t=20.0] LINE : opening both sides on equipment '_BUS___10-BUS___11-1_AC'

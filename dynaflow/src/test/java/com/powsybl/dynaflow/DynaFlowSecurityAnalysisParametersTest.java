@@ -67,12 +67,11 @@ class DynaFlowSecurityAnalysisParametersTest extends AbstractSerDeTest {
 
     @Test
     void defaultParametersSerialization() throws IOException {
-        Path workingDir = fileSystem.getPath("dynaflow_sa/workingDir");
         Path parameterFile = fileSystem.getPath(DynaFlowConstants.CONFIG_FILENAME);
-        DynaFlowConfigSerializer.serialize(LoadFlowParameters.load(platformConfig),
+        DynaFlowConfigSerializer.serialize(new LoadFlowParameters(),
                 new DynaFlowParameters(),
                 new DynaFlowSecurityAnalysisParameters(),
-                workingDir,
+                fileSystem.getPath("dynaflow_sa/workingDir"),
                 parameterFile);
 
         try (InputStream actual = Files.newInputStream(parameterFile);
@@ -86,12 +85,11 @@ class DynaFlowSecurityAnalysisParametersTest extends AbstractSerDeTest {
     void parametersSerialization() throws IOException {
         DynaFlowSecurityAnalysisParameters saParam = new DynaFlowSecurityAnalysisParameters()
                 .setContingenciesStartTime(20d);
-        Path workingDir = fileSystem.getPath("dynaflow_sa/workingDir");
         Path parameterFile = fileSystem.getPath(DynaFlowConstants.CONFIG_FILENAME);
-        DynaFlowConfigSerializer.serialize(LoadFlowParameters.load(platformConfig),
+        DynaFlowConfigSerializer.serialize(new LoadFlowParameters(),
                 new DynaFlowParameters(),
                 saParam,
-                workingDir,
+                fileSystem.getPath("dynaflow_sa/workingDir"),
                 parameterFile);
 
         try (InputStream actual = Files.newInputStream(parameterFile);

@@ -15,7 +15,6 @@ import com.powsybl.commons.parameters.ParameterScope;
 import com.powsybl.commons.parameters.ParameterType;
 import com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import com.powsybl.loadflow.LoadFlowParameters;
-import com.powsybl.dynaflow.DynaFlowConstants.ActivePowerCompensation;
 import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestWord;
@@ -37,11 +36,8 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaFlowParameters.class);
     private static final String SVC_REGULATION_ON = "svcRegulationOn";
-    private static final String SHUNT_REGULATION_ON = "shuntRegulationOn";
-    private static final String AUTOMATIC_SLACK_BUS_ON = "automaticSlackBusOn";
     private static final String DSO_VOLTAGE_LEVEL = "dsoVoltageLevel";
     private static final String TFO_VOLTAGE_LEVEL = "tfoVoltageLevel";
-    private static final String ACTIVE_POWER_COMPENSATION = "activePowerCompensation";
     private static final String SETTING_PATH = "settingPath";
     private static final String ASSEMBLING_PATH = "assemblingPath";
     private static final String START_TIME = "startTime";
@@ -54,11 +50,8 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     // Default values
     private static final boolean DEFAULT_SVC_REGULATION_ON = true;
-    private static final boolean DEFAULT_SHUNT_REGULATION_ON = true;
-    private static final boolean DEFAULT_AUTOMATIC_SLACK_BUS_ON = true;
     private static final double DEFAULT_DSO_VOLTAGE_LEVEL = 45d;
     private static final double DEFAULT_TFO_VOLTAGE_LEVEL = 100d;
-    private static final ActivePowerCompensation DEFAULT_ACTIVE_POWER_COMPENSATION = ActivePowerCompensation.PMAX;
     private static final double DEFAULT_START_TIME = 0d;
     private static final double DEFAULT_STOP_TIME = 100d;
     private static final double DEFAULT_PRECISION = Double.NaN;
@@ -69,11 +62,8 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     public static final List<Parameter> SPECIFIC_PARAMETERS = List.of(
             new Parameter(SVC_REGULATION_ON, ParameterType.BOOLEAN, "Static Var Compensator regulation on", DEFAULT_SVC_REGULATION_ON),
-            new Parameter(SHUNT_REGULATION_ON, ParameterType.BOOLEAN, "Shunt compensator regulation on", DEFAULT_SHUNT_REGULATION_ON),
-            new Parameter(AUTOMATIC_SLACK_BUS_ON, ParameterType.BOOLEAN, "Automatic slack bus selection on", DEFAULT_AUTOMATIC_SLACK_BUS_ON),
             new Parameter(DSO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "DSO voltage level threshold", DEFAULT_DSO_VOLTAGE_LEVEL),
             new Parameter(TFO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "Transformers voltage level threshold", DEFAULT_TFO_VOLTAGE_LEVEL),
-            new Parameter(ACTIVE_POWER_COMPENSATION, ParameterType.STRING, "Active power compensation mode", DEFAULT_ACTIVE_POWER_COMPENSATION.name(), getEnumPossibleValues(ActivePowerCompensation.class)),
             new Parameter(SETTING_PATH, ParameterType.STRING, "Setting file path", null, null, ParameterScope.TECHNICAL),
             new Parameter(ASSEMBLING_PATH, ParameterType.STRING, "Assembling file path", null, null, ParameterScope.TECHNICAL),
             new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", DEFAULT_START_TIME),
@@ -85,11 +75,8 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", DEFAULT_MERGE_LOADS));
 
     private boolean svcRegulationOn = DEFAULT_SVC_REGULATION_ON;
-    private boolean shuntRegulationOn = DEFAULT_SHUNT_REGULATION_ON;
-    private boolean automaticSlackBusOn = DEFAULT_AUTOMATIC_SLACK_BUS_ON;
     private double dsoVoltageLevel = DEFAULT_DSO_VOLTAGE_LEVEL;
     private double tfoVoltageLevel = DEFAULT_TFO_VOLTAGE_LEVEL;
-    private ActivePowerCompensation activePowerCompensation = DEFAULT_ACTIVE_POWER_COMPENSATION;
     private String settingPath = null;
     private String assemblingPath = null;
     private double startTime = DEFAULT_START_TIME;
@@ -109,24 +96,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public Boolean getShuntRegulationOn() {
-        return shuntRegulationOn;
-    }
-
-    public DynaFlowParameters setShuntRegulationOn(boolean shuntRegulationOn) {
-        this.shuntRegulationOn = shuntRegulationOn;
-        return this;
-    }
-
-    public Boolean getAutomaticSlackBusOn() {
-        return automaticSlackBusOn;
-    }
-
-    public DynaFlowParameters setAutomaticSlackBusOn(boolean automaticSlackBusOn) {
-        this.automaticSlackBusOn = automaticSlackBusOn;
-        return this;
-    }
-
     public Double getDsoVoltageLevel() {
         return dsoVoltageLevel;
     }
@@ -142,15 +111,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     public DynaFlowParameters setTfoVoltageLevel(double tfoVoltageLevel) {
         this.tfoVoltageLevel = tfoVoltageLevel;
-        return this;
-    }
-
-    public ActivePowerCompensation getActivePowerCompensation() {
-        return activePowerCompensation;
-    }
-
-    public DynaFlowParameters setActivePowerCompensation(ActivePowerCompensation activePowerCompensation) {
-        this.activePowerCompensation = activePowerCompensation;
         return this;
     }
 
@@ -249,11 +209,8 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     public String toString() {
         return MoreObjects.toStringHelper("").omitNullValues()
                 .add(SVC_REGULATION_ON, svcRegulationOn)
-                .add(SHUNT_REGULATION_ON, shuntRegulationOn)
-                .add(AUTOMATIC_SLACK_BUS_ON, automaticSlackBusOn)
                 .add(DSO_VOLTAGE_LEVEL, dsoVoltageLevel)
                 .add(TFO_VOLTAGE_LEVEL, tfoVoltageLevel)
-                .add(ACTIVE_POWER_COMPENSATION, activePowerCompensation)
                 .add(SETTING_PATH, settingPath)
                 .add(ASSEMBLING_PATH, assemblingPath)
                 .add(START_TIME, startTime)
@@ -294,11 +251,8 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     private static void load(DynaFlowParameters parameters, ModuleConfig config) {
         config.getOptionalBooleanProperty(SVC_REGULATION_ON).ifPresent(parameters::setSvcRegulationOn);
-        config.getOptionalBooleanProperty(SHUNT_REGULATION_ON).ifPresent(parameters::setShuntRegulationOn);
-        config.getOptionalBooleanProperty(AUTOMATIC_SLACK_BUS_ON).ifPresent(parameters::setAutomaticSlackBusOn);
         config.getOptionalDoubleProperty(DSO_VOLTAGE_LEVEL).ifPresent(parameters::setDsoVoltageLevel);
         config.getOptionalDoubleProperty(TFO_VOLTAGE_LEVEL).ifPresent(parameters::setTfoVoltageLevel);
-        config.getOptionalEnumProperty(ACTIVE_POWER_COMPENSATION, ActivePowerCompensation.class).ifPresent(parameters::setActivePowerCompensation);
         config.getOptionalStringProperty(SETTING_PATH).ifPresent(parameters::setSettingPath);
         config.getOptionalStringProperty(ASSEMBLING_PATH).ifPresent(parameters::setAssemblingPath);
         config.getOptionalDoubleProperty(START_TIME).ifPresent(parameters::setStartTime);
@@ -332,11 +286,8 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     public void update(Map<String, String> properties) {
         Objects.requireNonNull(properties);
         Optional.ofNullable(properties.get(SVC_REGULATION_ON)).ifPresent(prop -> setSvcRegulationOn(Boolean.parseBoolean(prop)));
-        Optional.ofNullable(properties.get(SHUNT_REGULATION_ON)).ifPresent(prop -> setShuntRegulationOn(Boolean.parseBoolean(prop)));
-        Optional.ofNullable(properties.get(AUTOMATIC_SLACK_BUS_ON)).ifPresent(prop -> setAutomaticSlackBusOn(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(DSO_VOLTAGE_LEVEL)).ifPresent(prop -> setDsoVoltageLevel(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(TFO_VOLTAGE_LEVEL)).ifPresent(prop -> setTfoVoltageLevel(Double.parseDouble(prop)));
-        Optional.ofNullable(properties.get(ACTIVE_POWER_COMPENSATION)).ifPresent(prop -> setActivePowerCompensation(ActivePowerCompensation.valueOf(prop)));
         Optional.ofNullable(properties.get(SETTING_PATH)).ifPresent(this::setSettingPath);
         Optional.ofNullable(properties.get(ASSEMBLING_PATH)).ifPresent(this::setAssemblingPath);
         Optional.ofNullable(properties.get(START_TIME)).ifPresent(prop -> setStartTime(Double.parseDouble(prop)));
@@ -352,13 +303,8 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     public Map<String, String> createMapFromParameters() {
         Map<String, String> parameters = new HashMap<>();
         addNotNullEntry(SVC_REGULATION_ON, svcRegulationOn, parameters::put);
-        addNotNullEntry(SHUNT_REGULATION_ON, shuntRegulationOn, parameters::put);
-        addNotNullEntry(AUTOMATIC_SLACK_BUS_ON, automaticSlackBusOn, parameters::put);
         addNotNullEntry(DSO_VOLTAGE_LEVEL, dsoVoltageLevel, parameters::put);
         addNotNullEntry(TFO_VOLTAGE_LEVEL, tfoVoltageLevel, parameters::put);
-        if (activePowerCompensation != null) {
-            parameters.put(ACTIVE_POWER_COMPENSATION, activePowerCompensation.name());
-        }
         addNotNullEntry(SETTING_PATH, settingPath, parameters::put);
         addNotNullEntry(ASSEMBLING_PATH, assemblingPath, parameters::put);
         addNotNullEntry(START_TIME, startTime, parameters::put);

@@ -3,8 +3,6 @@
   "transformerVoltageControlOn" : true,
   "extensions" : {
     "DynaFlowParameters" : {
-      "shuntRegulationOn" : false,
-      "activePowerCompensation" : "P",
       "settingPath" : "path/to/settingFile",
       "stopTime" : 150.0
     }

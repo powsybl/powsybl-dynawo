@@ -58,5 +58,4 @@ public final class DynaFlowConstants {
 
     private DynaFlowConstants() {
     }
-
 }

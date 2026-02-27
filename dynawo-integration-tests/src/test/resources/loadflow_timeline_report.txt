@@ -1,5 +1,5 @@
 + IEEE14 test
-   + Dynaflow loadflow on network 'ieee14cdf-solved'
+   + DynaFlow load flow on network 'ieee14cdf-solved'
       + Timeline
          [t=0.0] Generator : minimum reactive power limit reached on equipment 'B6-G'
          [t=10.0] Generator : minimum reactive power limit reached on equipment 'B8-G'
