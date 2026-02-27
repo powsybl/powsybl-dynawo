@@ -15,6 +15,8 @@ import com.powsybl.commons.report.TypedValue;
  */
 public final class DynaflowReports {
 
+    private static final String PARAMETER_NAME_FIELD = "parameterName";
+
     private DynaflowReports() {
     }
 
@@ -48,7 +50,7 @@ public final class DynaflowReports {
     public static void createCriticalUnsupportedParameterReportNode(ReportNode reportNode, String parameterName) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynaflow.criticalUnsupportedParameter")
-                .withUntypedValue("parameterName", parameterName)
+                .withUntypedValue(PARAMETER_NAME_FIELD, parameterName)
                 .withSeverity(TypedValue.ERROR_SEVERITY)
                 .add();
     }
@@ -56,7 +58,7 @@ public final class DynaflowReports {
     public static void createIgnoredParameterReportNode(ReportNode reportNode, String parameterName) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynaflow.ignoredParameter")
-                .withUntypedValue("parameterName", parameterName)
+                .withUntypedValue(PARAMETER_NAME_FIELD, parameterName)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -64,7 +66,7 @@ public final class DynaflowReports {
     public static void createReplacedParameterValueReportNode(ReportNode reportNode, String parameterName, String value, String replacingValue) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynaflow.replacedParameter")
-                .withUntypedValue("parameterName", parameterName)
+                .withUntypedValue(PARAMETER_NAME_FIELD, parameterName)
                 .withUntypedValue("value", value)
                 .withUntypedValue("replacingValue", replacingValue)
                 .withSeverity(TypedValue.WARN_SEVERITY)
@@ -74,7 +76,7 @@ public final class DynaflowReports {
     public static void createIidmReplacedParameterReportNode(ReportNode reportNode, String parameterName) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynaflow.iidmParameter")
-                .withUntypedValue("parameterName", parameterName)
+                .withUntypedValue(PARAMETER_NAME_FIELD, parameterName)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
