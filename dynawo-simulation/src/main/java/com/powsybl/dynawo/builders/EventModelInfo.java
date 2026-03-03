@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawo.builders;
 
+import java.util.Objects;
+
 /**
  * @param lib Lib name
  * @param alias Alias of the library name used in Powsybl-Dynawo
@@ -15,6 +17,13 @@ package com.powsybl.dynawo.builders;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public record EventModelInfo(String lib, String alias, String doc, VersionInterval version) implements ModelInfo {
+
+    public EventModelInfo(String lib, String alias, String doc, VersionInterval version) {
+        this.lib = Objects.requireNonNull(lib);
+        this.alias = alias;
+        this.doc = Objects.requireNonNull(doc);
+        this.version = Objects.requireNonNull(version);
+    }
 
     public EventModelInfo(String lib, String alias, String info) {
         this(lib, alias, info, VersionInterval.createDefaultVersion());
@@ -34,7 +43,7 @@ public record EventModelInfo(String lib, String alias, String doc, VersionInterv
      */
     public String formattedInfo() {
         return name() + (alias != null ? " (" + lib + ")" : "")
-                + (doc != null ? ": " + doc : "")
+                + (doc.isEmpty() ? doc : ": " + doc)
                 + " (" + version.formattedInfo() + ")";
     }
 }
