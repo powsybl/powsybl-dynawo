@@ -22,8 +22,8 @@ import com.powsybl.contingency.list.ContingencyList;
 import com.powsybl.contingency.list.DefaultContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
-import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.ExportMode;
+import com.powsybl.dynawo.commons.NetworkExporter;
 import com.powsybl.dynawo.contingency.ContingencyResultsUtils;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -75,7 +75,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(workingVariantId);
 
-        DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
+        NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
         writeParameters(securityAnalysisParameters, workingDir);
         writeContingencies(contingencies, workingDir);
 

@@ -15,7 +15,7 @@ import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.dynawo.DynawoFilesUtils;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.NetworkExporter;
 import com.powsybl.iidm.network.Network;
 
 import javax.xml.stream.XMLStreamException;
@@ -59,7 +59,7 @@ public abstract class AbstractDynawoAlgorithmsHandler<R, S extends DynawoSimulat
 
     private void writeInputFiles(Path workingDir) {
         try {
-            DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
+            NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
             DynawoFilesUtils.writeInputFiles(workingDir, context);
             writeMultipleJobs(workingDir);
         } catch (IOException e) {
