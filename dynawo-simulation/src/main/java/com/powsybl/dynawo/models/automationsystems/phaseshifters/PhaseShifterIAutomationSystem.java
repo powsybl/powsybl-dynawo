@@ -69,6 +69,11 @@ public class PhaseShifterIAutomationSystem extends AbstractPhaseShifterAutomatio
     }
 
     @Override
+    public boolean isConnected() {
+        return ConnectionState.CONNECTED == getConnectionState();
+    }
+
+    @Override
     public void updateDynamicModelParameters(ParameterUpdater updater) {
         updater.addReference(getParameterSetId(), "phaseShifter_I0", ParameterType.DOUBLE, "i1", transformer.getId());
         super.updateDynamicModelParameters(updater);

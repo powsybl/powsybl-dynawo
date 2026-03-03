@@ -48,6 +48,8 @@ class UnderVoltageAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
     void writeModel() throws SAXException, IOException {
         DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", "under_voltage_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        checkConnected("BBM_under_voltage", true);
+        checkConnected("BBM_skipped_under_voltage", false);
         checkReport("""
                 + Test DYD
                    Model GeneratorFictitious GEN instantiation OK
