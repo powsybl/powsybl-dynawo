@@ -17,6 +17,8 @@ import com.powsybl.dynawo.commons.DynawoVersion;
 public final class DynawoSimulationReports {
 
     private static final String DYNAMIC_ID_FIELD = "dynamicId";
+    private static final String EQUIPMENT_ID_FIELD = "equipmentId";
+    private static final String EXPECTED_MODELS_FIELD = "expectedModels";
     private static final String MODEL_NAME_FIELD = "modelName";
 
     private DynawoSimulationReports() {
@@ -84,8 +86,8 @@ public final class DynawoSimulationReports {
                 .withMessageTemplate("dynawo.dynasim.emptyAutomationSystem")
                 .withUntypedValue("automationSystemName", automationSystemName)
                 .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
-                .withUntypedValue("equipmentId", equipmentId)
-                .withUntypedValue("expectedModels", expectedModels)
+                .withUntypedValue(EQUIPMENT_ID_FIELD, equipmentId)
+                .withUntypedValue(EXPECTED_MODELS_FIELD, expectedModels)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -95,7 +97,16 @@ public final class DynawoSimulationReports {
                 .withMessageTemplate("dynawo.dynasim.emptyListAutomationSystem")
                 .withUntypedValue("automationSystemName", automationSystemName)
                 .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
-                .withUntypedValue("expectedModels", expectedModels)
+                .withUntypedValue(EXPECTED_MODELS_FIELD, expectedModels)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportEmptyEvent(ReportNode reportNode, String dynamicId, String expectedModels) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.emptyEvent")
+                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
+                .withUntypedValue(EXPECTED_MODELS_FIELD, expectedModels)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }

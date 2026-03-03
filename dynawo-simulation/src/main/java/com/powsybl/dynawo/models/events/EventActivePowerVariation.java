@@ -7,9 +7,10 @@
  */
 package com.powsybl.dynawo.models.events;
 
+import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Injection;
 
@@ -35,15 +36,15 @@ public class EventActivePowerVariation extends AbstractVariationEvent {
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this,
-                getEquipment(),
-                PControllableEquipmentModel.class,
-                this::getVarConnectionsWith);
+        isConnected = !adder.createMacroConnectionsOrSkip(this, getEquipment(), PControllableEquipmentModel.class, this::getVarConnectionsWith);
+        if (!isConnected) {
+            DynawoSimulationReports.reportEmptyEvent(adder.getReportNode(), getDynamicModelId(), PControllableEquipmentModel.class.getSimpleName());
+        }
     }
 
     @Override
     public void createNetworkParameter(ParametersSet networkParameters) {
-        if (equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_LOAD)) {
+        if (isConnected && equipmentModelType.getValue().equals(EquipmentModelType.DEFAULT_LOAD)) {
             networkParameters.addParameter(getEquipment().getId() + "_isPControllable", BOOL, Boolean.toString(true));
         }
     }
