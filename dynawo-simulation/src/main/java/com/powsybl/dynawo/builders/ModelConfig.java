@@ -83,7 +83,7 @@ public record ModelConfig(String lib, String alias, String internalModelPrefix, 
 
     @Override
     public String formattedInfo() {
-        return name() + (alias != null ? " (" + lib + ")" : "")
+        return (alias == null ? lib : alias + " (" + lib + ")")
                 + (doc.isEmpty() ? doc : ": " + doc)
                 + " (" + version.formattedInfo() + ")";
     }

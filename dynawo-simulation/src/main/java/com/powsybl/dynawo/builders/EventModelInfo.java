@@ -42,7 +42,7 @@ public record EventModelInfo(String lib, String alias, String doc, VersionInterv
      * Concatenation of name, doc and version bound
      */
     public String formattedInfo() {
-        return name() + (alias != null ? " (" + lib + ")" : "")
+        return (alias == null ? lib : alias + " (" + lib + ")")
                 + (doc.isEmpty() ? doc : ": " + doc)
                 + " (" + version.formattedInfo() + ")";
     }
