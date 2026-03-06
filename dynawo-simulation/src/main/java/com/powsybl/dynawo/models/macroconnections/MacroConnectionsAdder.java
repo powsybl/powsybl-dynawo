@@ -213,14 +213,15 @@ public final class MacroConnectionsAdder {
     }
 
     private <T extends Model> T getDynamicModel(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> connectableClass, boolean throwException) {
-        BlackBoxModel bbm = dynamicModelGetter.apply(equipment.getId());
+        Model bbm = dynamicModelGetter.apply(equipment.getId());
         if (bbm == null) {
-            return defaultModelsHandler.getDefaultModel(equipment, connectableClass, throwException);
+            bbm = defaultModelsHandler.getDefaultModel(equipment, connectableClass);
         }
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        return handleModelNotFound(originModel, equipment.getType().toString(), equipment.getId(), connectableClass, throwException);
+        handleModelNotFound(originModel, equipment.getId(), connectableClass.getSimpleName(), bbm.getName(), throwException);
+        return null;
     }
 
     private <T extends Model> T getPureDynamicModel(BlackBoxModel originModel, String dynamicId, Class<T> connectableClass) {
@@ -233,17 +234,17 @@ public final class MacroConnectionsAdder {
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        return handleModelNotFound(originModel, "pure dynamic model", dynamicId, connectableClass, false);
+        handleModelNotFound(originModel, dynamicId, connectableClass.getSimpleName(), bbm.getName(), false);
+        return null;
     }
 
-    private <T extends Model> T handleModelNotFound(BlackBoxModel originModel, String modelType, String id, Class<T> connectableClass, boolean throwException) {
+    private void handleModelNotFound(BlackBoxModel originModel, String id, String connectableClassName, String actualModelName, boolean throwException) {
         if (throwException) {
-            throw new PowsyblException(String.format("%s %s require a connection with a %s but %s %s does not implement it",
-                    originModel.getName(), originModel.getDynamicModelId(), connectableClass.getSimpleName(), modelType, id));
+            throw new PowsyblException(String.format("%s %s requires a connection with a %s but dynamic model %s %s does not implement it",
+                    originModel.getName(), originModel.getDynamicModelId(), connectableClassName, actualModelName, id));
         } else {
-            LOGGER.warn("{} {} require a connection with a {} but {} {} does not implement it",
-                    originModel.getName(), originModel.getDynamicModelId(), connectableClass.getSimpleName(), modelType, id);
-            return null;
+            LOGGER.warn("{} {} requires a connection with a {} but dynamic model {} {} does not implement it",
+                    originModel.getName(), originModel.getDynamicModelId(), connectableClassName, actualModelName, id);
         }
     }
 }

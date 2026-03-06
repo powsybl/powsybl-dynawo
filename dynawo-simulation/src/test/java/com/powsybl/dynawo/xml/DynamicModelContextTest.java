@@ -12,7 +12,10 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.InjectionModel;
+import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystem;
+import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystem;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
@@ -33,8 +36,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -49,7 +51,7 @@ class DynamicModelContextTest {
         dynamicModels = new ArrayList<>();
     }
 
-@Test
+    @Test
     void duplicateStaticId() {
         BaseLoad load1 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
                 .staticId("LOAD")
@@ -101,29 +103,39 @@ class DynamicModelContextTest {
     }
 
     @Test
-    void testIncorrectModelException() {
-
+    void testIncorrectModelRequests() {
         BlackBoxModel bbm = BaseLoadBuilder.of(network, "LoadAlphaBeta")
                 .staticId("LOAD")
                 .parameterSetId("lab")
                 .build();
-        Generator gen = network.getGenerator("GEN");
-        BlackBoxModel bbm_gen = BaseGeneratorBuilder.of(network)
-                .equipment(gen)
-                .build();
         dynamicModels.add(bbm);
-        dynamicModels.add(bbm_gen);
+        Generator gen = network.getGenerator("GEN");
+        dynamicModels.add(BaseGeneratorBuilder.of(network)
+                .equipment(gen)
+                .build());
+        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
+                .dynamicModelId("TAP_CHANGER_1")
+                .parameterSetId("tc")
+                .staticId("LOAD")
+                .side(TransformerSide.LOW_VOLTAGE)
+                .build());
         MacroConnectionsAdder adder = createBasicMacroConnectionsAdder();
 
-        // default model not found
-
+        // default model not found exception
+        Exception e = assertThrows(PowsyblException.class, () ->
+                adder.createMacroConnections(bbm, network.getLine("NHV1_NHV2_1"), InjectionModel.class, l -> List.of()));
+        assertEquals("LoadAlphaBeta LOAD requires a connection with a InjectionModel but dynamic model DefaultLine NHV1_NHV2_1 does not implement it", e.getMessage());
+        // default model not found log
+        assertTrue(adder.createMacroConnectionsOrSkip(bbm, network.getLine("NHV1_NHV2_1"), InjectionModel.class, l -> List.of()));
         // implementation exception
-        Exception e = assertThrows(PowsyblException.class, () -> adder.createMacroConnections(bbm, gen, LineModel.class, l -> List.of()));
-        assertEquals("LoadAlphaBeta LOAD require a connection with a LineModel but GENERATOR GEN does not implement it", e.getMessage());
-        // pure dyna impl log
-        adder.createMacroConnectionsOrSkip(bbm, "TAP_CHANGER_1", PhaseShifterIAutomationSystem.class, l -> List.of());
+        e = assertThrows(PowsyblException.class, () -> adder.createMacroConnections(bbm, gen, LineModel.class, l -> List.of()));
+        assertEquals("LoadAlphaBeta LOAD requires a connection with a LineModel but dynamic model GeneratorFictitious GEN does not implement it", e.getMessage());
+        // implementation log
+        assertTrue(adder.createMacroConnectionsOrSkip(bbm, gen, LineModel.class, l -> List.of()));
+        // pure dynamic implementation log
+        assertTrue(adder.createMacroConnectionsOrSkip(bbm, "TAP_CHANGER_1", PhaseShifterIAutomationSystem.class, l -> List.of()));
         // pure dynamic model not found
-        adder.createMacroConnectionsOrSkip(bbm, "TAP_CHANGER_2", TapChangerAutomationSystem.class, l -> List.of());
+        assertTrue(adder.createMacroConnectionsOrSkip(bbm, "TAP_CHANGER_2", TapChangerAutomationSystem.class, l -> List.of()));
     }
 
     private MacroConnectionsAdder createBasicMacroConnectionsAdder() {
