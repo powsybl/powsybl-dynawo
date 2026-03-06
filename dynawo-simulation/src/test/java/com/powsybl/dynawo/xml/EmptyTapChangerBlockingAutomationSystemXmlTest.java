@@ -58,6 +58,7 @@ class EmptyTapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicMode
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "tap_changer_blocking_empty_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        checkConnected("BBM_TapChangerBlocking", false);
         checkReport("""
                   + Test DYD
                      + Dynawo models processing

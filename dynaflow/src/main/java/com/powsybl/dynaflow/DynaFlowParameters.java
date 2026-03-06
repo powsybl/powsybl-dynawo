@@ -40,6 +40,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final String SHUNT_REGULATION_ON = "shuntRegulationOn";
     private static final String AUTOMATIC_SLACK_BUS_ON = "automaticSlackBusOn";
     private static final String DSO_VOLTAGE_LEVEL = "dsoVoltageLevel";
+    private static final String TFO_VOLTAGE_LEVEL = "tfoVoltageLevel";
     private static final String ACTIVE_POWER_COMPENSATION = "activePowerCompensation";
     private static final String SETTING_PATH = "settingPath";
     private static final String ASSEMBLING_PATH = "assemblingPath";
@@ -56,6 +57,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final boolean DEFAULT_SHUNT_REGULATION_ON = true;
     private static final boolean DEFAULT_AUTOMATIC_SLACK_BUS_ON = true;
     private static final double DEFAULT_DSO_VOLTAGE_LEVEL = 45d;
+    private static final double DEFAULT_TFO_VOLTAGE_LEVEL = 100d;
     private static final ActivePowerCompensation DEFAULT_ACTIVE_POWER_COMPENSATION = ActivePowerCompensation.PMAX;
     private static final double DEFAULT_START_TIME = 0d;
     private static final double DEFAULT_STOP_TIME = 100d;
@@ -70,6 +72,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             new Parameter(SHUNT_REGULATION_ON, ParameterType.BOOLEAN, "Shunt compensator regulation on", DEFAULT_SHUNT_REGULATION_ON),
             new Parameter(AUTOMATIC_SLACK_BUS_ON, ParameterType.BOOLEAN, "Automatic slack bus selection on", DEFAULT_AUTOMATIC_SLACK_BUS_ON),
             new Parameter(DSO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "DSO voltage level threshold", DEFAULT_DSO_VOLTAGE_LEVEL),
+            new Parameter(TFO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "Transformers voltage level threshold", DEFAULT_TFO_VOLTAGE_LEVEL),
             new Parameter(ACTIVE_POWER_COMPENSATION, ParameterType.STRING, "Active power compensation mode", DEFAULT_ACTIVE_POWER_COMPENSATION.name(), getEnumPossibleValues(ActivePowerCompensation.class)),
             new Parameter(SETTING_PATH, ParameterType.STRING, "Setting file path", null, null, ParameterScope.TECHNICAL),
             new Parameter(ASSEMBLING_PATH, ParameterType.STRING, "Assembling file path", null, null, ParameterScope.TECHNICAL),
@@ -85,6 +88,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private boolean shuntRegulationOn = DEFAULT_SHUNT_REGULATION_ON;
     private boolean automaticSlackBusOn = DEFAULT_AUTOMATIC_SLACK_BUS_ON;
     private double dsoVoltageLevel = DEFAULT_DSO_VOLTAGE_LEVEL;
+    private double tfoVoltageLevel = DEFAULT_TFO_VOLTAGE_LEVEL;
     private ActivePowerCompensation activePowerCompensation = DEFAULT_ACTIVE_POWER_COMPENSATION;
     private String settingPath = null;
     private String assemblingPath = null;
@@ -129,6 +133,15 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     public DynaFlowParameters setDsoVoltageLevel(double dsoVoltageLevel) {
         this.dsoVoltageLevel = dsoVoltageLevel;
+        return this;
+    }
+
+    public Double getTfoVoltageLevel() {
+        return tfoVoltageLevel;
+    }
+
+    public DynaFlowParameters setTfoVoltageLevel(double tfoVoltageLevel) {
+        this.tfoVoltageLevel = tfoVoltageLevel;
         return this;
     }
 
@@ -239,6 +252,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 .add(SHUNT_REGULATION_ON, shuntRegulationOn)
                 .add(AUTOMATIC_SLACK_BUS_ON, automaticSlackBusOn)
                 .add(DSO_VOLTAGE_LEVEL, dsoVoltageLevel)
+                .add(TFO_VOLTAGE_LEVEL, tfoVoltageLevel)
                 .add(ACTIVE_POWER_COMPENSATION, activePowerCompensation)
                 .add(SETTING_PATH, settingPath)
                 .add(ASSEMBLING_PATH, assemblingPath)
@@ -283,6 +297,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         config.getOptionalBooleanProperty(SHUNT_REGULATION_ON).ifPresent(parameters::setShuntRegulationOn);
         config.getOptionalBooleanProperty(AUTOMATIC_SLACK_BUS_ON).ifPresent(parameters::setAutomaticSlackBusOn);
         config.getOptionalDoubleProperty(DSO_VOLTAGE_LEVEL).ifPresent(parameters::setDsoVoltageLevel);
+        config.getOptionalDoubleProperty(TFO_VOLTAGE_LEVEL).ifPresent(parameters::setTfoVoltageLevel);
         config.getOptionalEnumProperty(ACTIVE_POWER_COMPENSATION, ActivePowerCompensation.class).ifPresent(parameters::setActivePowerCompensation);
         config.getOptionalStringProperty(SETTING_PATH).ifPresent(parameters::setSettingPath);
         config.getOptionalStringProperty(ASSEMBLING_PATH).ifPresent(parameters::setAssemblingPath);
@@ -320,6 +335,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Optional.ofNullable(properties.get(SHUNT_REGULATION_ON)).ifPresent(prop -> setShuntRegulationOn(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(AUTOMATIC_SLACK_BUS_ON)).ifPresent(prop -> setAutomaticSlackBusOn(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(DSO_VOLTAGE_LEVEL)).ifPresent(prop -> setDsoVoltageLevel(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(TFO_VOLTAGE_LEVEL)).ifPresent(prop -> setTfoVoltageLevel(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(ACTIVE_POWER_COMPENSATION)).ifPresent(prop -> setActivePowerCompensation(ActivePowerCompensation.valueOf(prop)));
         Optional.ofNullable(properties.get(SETTING_PATH)).ifPresent(this::setSettingPath);
         Optional.ofNullable(properties.get(ASSEMBLING_PATH)).ifPresent(this::setAssemblingPath);
@@ -339,6 +355,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         addNotNullEntry(SHUNT_REGULATION_ON, shuntRegulationOn, parameters::put);
         addNotNullEntry(AUTOMATIC_SLACK_BUS_ON, automaticSlackBusOn, parameters::put);
         addNotNullEntry(DSO_VOLTAGE_LEVEL, dsoVoltageLevel, parameters::put);
+        addNotNullEntry(TFO_VOLTAGE_LEVEL, tfoVoltageLevel, parameters::put);
         if (activePowerCompensation != null) {
             parameters.put(ACTIVE_POWER_COMPENSATION, activePowerCompensation.name());
         }

@@ -60,8 +60,7 @@ public class OutputVariablesJsonDeserializer extends StdDeserializer<List<Output
         JsonUtil.parseObject(parser, name -> {
             boolean handled = true;
             switch (name) {
-                case "dynamicModelId" -> variablesBuilder.dynamicModelId(parser.nextTextValue());
-                case "staticId" -> variablesBuilder.staticId(parser.nextTextValue());
+                case "id" -> variablesBuilder.id(parser.nextTextValue());
                 case "variable" -> variablesBuilder.variable(parser.nextTextValue());
                 case "variables" -> variablesBuilder.variables(JsonUtil.parseStringArray(parser));
                 default -> handled = false;

@@ -50,6 +50,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         boolean shuntRegulationOn = false;
         boolean automaticSlackBusOn = true;
         double dsoVoltageLevel = 87.32;
+        double tfoVoltageLevel = 89.01;
         ActivePowerCompensation activePowerCompensation = ActivePowerCompensation.PMAX;
         String settingPath = "path/to/settingFile";
         String assemblingPath = "path/to/assemblingFile";
@@ -66,6 +67,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
         moduleConfig.setStringProperty("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
         moduleConfig.setStringProperty("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
+        moduleConfig.setStringProperty("tfoVoltageLevel", Double.toString(tfoVoltageLevel));
         moduleConfig.setStringProperty("activePowerCompensation", activePowerCompensation.name());
         moduleConfig.setStringProperty("settingPath", settingPath);
         moduleConfig.setStringProperty("assemblingPath", assemblingPath);
@@ -83,6 +85,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         assertEquals(shuntRegulationOn, parameters.getShuntRegulationOn());
         assertEquals(automaticSlackBusOn, parameters.getAutomaticSlackBusOn());
         assertEquals(dsoVoltageLevel, parameters.getDsoVoltageLevel(), 0.1d);
+        assertEquals(tfoVoltageLevel, parameters.getTfoVoltageLevel(), 0.1d);
         assertEquals(activePowerCompensation, parameters.getActivePowerCompensation());
         assertEquals(settingPath, parameters.getSettingPath());
         assertEquals(assemblingPath, parameters.getAssemblingPath());
@@ -101,13 +104,14 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         assertNotNull(parametersExt);
 
-        assertEquals("{svcRegulationOn=true, shuntRegulationOn=true, automaticSlackBusOn=true, dsoVoltageLevel=45.0, activePowerCompensation=PMAX, startTime=0.0, stopTime=100.0, chosenOutputs=[TIMELINE], timeStep=10.0, startingPointMode=WARM, mergeLoads=true}",
+        assertEquals("{svcRegulationOn=true, shuntRegulationOn=true, automaticSlackBusOn=true, dsoVoltageLevel=45.0, tfoVoltageLevel=100.0, activePowerCompensation=PMAX, startTime=0.0, stopTime=100.0, chosenOutputs=[TIMELINE], timeStep=10.0, startingPointMode=WARM, mergeLoads=true}",
                 parametersExt.toString());
 
         assertTrue(parametersExt.getSvcRegulationOn());
         assertTrue(parametersExt.getShuntRegulationOn());
         assertTrue(parametersExt.getAutomaticSlackBusOn());
         assertEquals(45d, parametersExt.getDsoVoltageLevel());
+        assertEquals(100d, parametersExt.getTfoVoltageLevel());
         assertEquals(ActivePowerCompensation.PMAX, parametersExt.getActivePowerCompensation());
         assertNull(parametersExt.getSettingPath());
         assertNull(parametersExt.getAssemblingPath());
@@ -138,6 +142,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         boolean shuntRegulationOn = false;
         boolean automaticSlackBusOn = true;
         double dsoVoltageLevel = 87.32;
+        double tfoVoltageLevel = 56.78;
         ActivePowerCompensation activePowerCompensation = ActivePowerCompensation.PMAX;
         String settingPath = "path/to/settingFile";
         String assemblingPath = "path/to/assemblingFile";
@@ -154,6 +159,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         properties.put("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
         properties.put("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
         properties.put("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
+        properties.put("tfoVoltageLevel", Double.toString(tfoVoltageLevel));
         properties.put("activePowerCompensation", activePowerCompensation.name());
         properties.put("settingPath", settingPath);
         properties.put("assemblingPath", assemblingPath);
@@ -171,6 +177,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
                 ", shuntRegulationOn=" + shuntRegulationOn +
                 ", automaticSlackBusOn=" + automaticSlackBusOn +
                 ", dsoVoltageLevel=" + dsoVoltageLevel +
+                ", tfoVoltageLevel=" + tfoVoltageLevel +
                 ", activePowerCompensation=" + activePowerCompensation +
                 ", settingPath=" + settingPath +
                 ", assemblingPath=" + assemblingPath +
@@ -216,6 +223,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
             .setShuntRegulationOn(false)
             .setAutomaticSlackBusOn(true)
             .setDsoVoltageLevel(32.4)
+            .setTfoVoltageLevel(67.89)
             .setActivePowerCompensation(ActivePowerCompensation.P)
             .setSettingPath("path/to/settingFile")
             .setAssemblingPath("path/to/assemblingFile")
@@ -246,6 +254,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         boolean shuntRegulationOn = true;
         boolean automaticSlackBusOn = false;
         double dsoVoltageLevel = 2.0;
+        double tfoVoltageLevel = 10;
         ActivePowerCompensation activePowerCompensation = ActivePowerCompensation.PMAX;
         String settingPath = "path/to/settingFile";
         String assemblingPath = "path/to/assemblingFile";
@@ -262,6 +271,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         properties.put("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
         properties.put("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
         properties.put("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
+        properties.put("tfoVoltageLevel", Double.toString(tfoVoltageLevel));
         properties.put("activePowerCompensation", activePowerCompensation.name());
         properties.put("settingPath", settingPath);
         properties.put("assemblingPath", assemblingPath);
@@ -279,6 +289,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         assertTrue(dynaFlowParameters.getShuntRegulationOn());
         assertFalse(dynaFlowParameters.getAutomaticSlackBusOn());
         assertEquals(dsoVoltageLevel, dynaFlowParameters.getDsoVoltageLevel(), 0.1d);
+        assertEquals(tfoVoltageLevel, dynaFlowParameters.getTfoVoltageLevel(), 0.1d);
         assertEquals(activePowerCompensation, dynaFlowParameters.getActivePowerCompensation());
         assertEquals(settingPath, dynaFlowParameters.getSettingPath());
         assertEquals(assemblingPath, dynaFlowParameters.getAssemblingPath());

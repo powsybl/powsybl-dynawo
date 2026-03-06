@@ -5,6 +5,7 @@
     "ShuntRegulationOn" : false,
     "AutomaticSlackBusOn" : true,
     "DsoVoltageLevel" : 32.4,
+    "TfoVoltageLevel" : 67.89,
     "ActivePowerCompensation" : "P",
     "SettingPath" : "path/to/settingFile",
     "AssemblingPath" : "path/to/assemblingFile",
