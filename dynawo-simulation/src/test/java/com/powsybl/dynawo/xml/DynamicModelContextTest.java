@@ -17,7 +17,6 @@ import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystem;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystem;
-import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.lines.LineModel;
 import com.powsybl.dynawo.models.loads.BaseLoad;
@@ -76,10 +75,11 @@ class DynamicModelContextTest {
                 .staticId(duplicatedId)
                 .parameterSetId("lab")
                 .build();
-        BlackBoxModel phaseShifter = PhaseShifterPAutomationSystemBuilder.of(network)
+        BlackBoxModel phaseShifter = TapChangerAutomationSystemBuilder.of(network)
                 .dynamicModelId(duplicatedId)
-                .transformer("NGEN_NHV1")
-                .parameterSetId("PS")
+                .parameterSetId("tc")
+                .staticId("LOAD")
+                .side(TransformerSide.LOW_VOLTAGE)
                 .build();
         dynamicModels.add(load);
         dynamicModels.add(phaseShifter);
