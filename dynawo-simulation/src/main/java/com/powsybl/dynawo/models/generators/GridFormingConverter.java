@@ -46,7 +46,7 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
         List<VarConnection> varConnections = new ArrayList<>();
         varConnections.add(new VarConnection("converter_terminal", connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()
-                .map(switchOff -> new VarConnection(switchOffSignalNodeVarName(), switchOff))
+                .map(switchOff -> new VarConnection("converter_switchOffSignal1", switchOff))
                 .ifPresent(varConnections::add);
         return varConnections;
     }
@@ -63,10 +63,6 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
     @Override
     public String getRunningVarName() {
         return "converter_running";
-    }
-
-    private String switchOffSignalNodeVarName() {
-        return "converter_switchOffSignal1";
     }
 
     @Override
