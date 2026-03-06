@@ -23,6 +23,7 @@ import com.powsybl.dynawo.models.loads.BaseLoad;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Generator;
+import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.assertj.core.api.Assertions;
@@ -104,6 +105,7 @@ class DynamicModelContextTest {
 
     @Test
     void testIncorrectModelRequests() {
+        Line line = network.getLine("NHV1_NHV2_1");
         BlackBoxModel bbm = BaseLoadBuilder.of(network, "LoadAlphaBeta")
                 .staticId("LOAD")
                 .parameterSetId("lab")
@@ -121,12 +123,14 @@ class DynamicModelContextTest {
                 .build());
         MacroConnectionsAdder adder = createBasicMacroConnectionsAdder();
 
+
+
         // default model not found exception
         Exception e = assertThrows(PowsyblException.class, () ->
-                adder.createMacroConnections(bbm, network.getLine("NHV1_NHV2_1"), InjectionModel.class, l -> List.of()));
+                adder.createMacroConnections(bbm, line, InjectionModel.class, l -> List.of()));
         assertEquals("LoadAlphaBeta LOAD requires a connection with a InjectionModel but dynamic model DefaultLine NHV1_NHV2_1 does not implement it", e.getMessage());
         // default model not found log
-        assertTrue(adder.createMacroConnectionsOrSkip(bbm, network.getLine("NHV1_NHV2_1"), InjectionModel.class, l -> List.of()));
+        assertTrue(adder.createMacroConnectionsOrSkip(bbm, line, InjectionModel.class, l -> List.of()));
         // implementation exception
         e = assertThrows(PowsyblException.class, () -> adder.createMacroConnections(bbm, gen, LineModel.class, l -> List.of()));
         assertEquals("LoadAlphaBeta LOAD requires a connection with a LineModel but dynamic model GeneratorFictitious GEN does not implement it", e.getMessage());
