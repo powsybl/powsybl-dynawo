@@ -22,7 +22,7 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> {
+public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> implements SpecifiedGeneratorModel {
 
     private final List<VarMapping> varsMapping;
     protected final String weccPrefix;
@@ -36,16 +36,23 @@ public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> {
                 new VarMapping(weccPrefix + "_injector_state", "state"));
     }
 
-    private String switchOffSignalNode() {
-        return weccPrefix + "_switchOffSignal1";
+    private String switchOffSignalNodeVarName() {
+        return weccPrefix + "_injector_switchOffSignal1";
     }
 
-    private String switchOffSignalEvent() {
-        return weccPrefix + "_switchOffSignal2";
+    @Override
+    public String getSwitchOffSignalEventVarName() {
+        return weccPrefix + "_injector_switchOffSignal2";
     }
 
-    private String switchOffSignalAutomaton() {
-        return weccPrefix + "_switchOffSignal3";
+    @Override
+    public String getSwitchOffSignalAutomatonVarName() {
+        return weccPrefix + "_injector_switchOffSignal3";
+    }
+
+    @Override
+    public String getUPuVarName() {
+        return weccPrefix + "_injector_UPu";
     }
 
     @Override
@@ -57,7 +64,7 @@ public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> {
         List<VarConnection> varConnections = new ArrayList<>();
         varConnections.add(new VarConnection(weccPrefix + "_terminal", connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()
-                .map(switchOff -> new VarConnection(switchOffSignalNode(), switchOff))
+                .map(switchOff -> new VarConnection(switchOffSignalNodeVarName(), switchOff))
                 .ifPresent(varConnections::add);
         return varConnections;
     }

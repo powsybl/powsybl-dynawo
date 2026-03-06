@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generator> implements FrequencySynchronizedModel {
+public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generator> implements FrequencySynchronizedModel, SpecifiedGeneratorModel {
 
     private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("converter_PGenPu", "p"),
@@ -46,7 +46,7 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
         List<VarConnection> varConnections = new ArrayList<>();
         varConnections.add(new VarConnection("converter_terminal", connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()
-                .map(switchOff -> new VarConnection(switchOffSignalNode(), switchOff))
+                .map(switchOff -> new VarConnection(switchOffSignalNodeVarName(), switchOff))
                 .ifPresent(varConnections::add);
         return varConnections;
     }
@@ -65,16 +65,23 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
         return "converter_running";
     }
 
-    private String switchOffSignalNode() {
+    private String switchOffSignalNodeVarName() {
         return "converter_switchOffSignal1";
     }
 
-    private String switchOffSignalEvent() {
+    @Override
+    public String getSwitchOffSignalEventVarName() {
         return "converter_switchOffSignal2";
     }
 
-    private String switchOffSignalAutomaton() {
+    @Override
+    public String getSwitchOffSignalAutomatonVarName() {
         return "converter_switchOffSignal3";
+    }
+
+    @Override
+    public String getUPuVarName() {
+        return "converter_UPu";
     }
 
     @Override
