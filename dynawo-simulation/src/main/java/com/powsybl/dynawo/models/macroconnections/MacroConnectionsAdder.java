@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.macroconnections;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.models.automationsystems.ConnectionStatefulModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.Model;
@@ -18,8 +19,6 @@ import com.powsybl.dynawo.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,8 +30,6 @@ import java.util.stream.Stream;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class MacroConnectionsAdder {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MacroConnectionsAdder.class);
 
     private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
     private final Function<String, BlackBoxModel> dynamicModelGetter;
@@ -227,8 +224,7 @@ public final class MacroConnectionsAdder {
     private <T extends Model> T getPureDynamicModel(BlackBoxModel originModel, String dynamicId, Class<T> connectableClass) {
         BlackBoxModel bbm = pureDynamicModelGetter.apply(dynamicId);
         if (bbm == null) {
-            LOGGER.warn("{} {} require a connection with a {} but pure dynamic model {} is not found",
-                    originModel.getName(), originModel.getDynamicModelId(), connectableClass.getSimpleName(), dynamicId);
+            DynawoSimulationReports.reportConnectedModelNotFound(reportNode, originModel.getName(), originModel.getDynamicModelId(), connectableClass.getSimpleName(), dynamicId);
             return null;
         }
         if (connectableClass.isInstance(bbm)) {
@@ -243,8 +239,8 @@ public final class MacroConnectionsAdder {
             throw new PowsyblException(String.format("%s %s requires a connection with a %s but dynamic model %s %s does not implement it",
                     originModel.getName(), originModel.getDynamicModelId(), connectableClassName, actualModelName, id));
         } else {
-            LOGGER.warn("{} {} requires a connection with a {} but dynamic model {} {} does not implement it",
-                    originModel.getName(), originModel.getDynamicModelId(), connectableClassName, actualModelName, id);
+            DynawoSimulationReports.reportConnectedModelNotImplemented(reportNode, originModel.getName(),
+                    originModel.getDynamicModelId(), connectableClassName, id, actualModelName);
         }
     }
 }

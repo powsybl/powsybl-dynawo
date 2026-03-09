@@ -58,7 +58,8 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
                    + Model PhaseShifterBlockingI BBM_PSB2 instantiation KO
                       'phaseShifterId' field is not set
                    + Dynawo models processing
-                      PhaseShifterBlockingI BBM_PSB equipment WRONG_ID is not a PhaseShifterIModel, the automation system will be skipped
+                      PhaseShifterBlockingI BBM_PSB requires a connection with a PhaseShifterIAutomationSystem but pure dynamic model WRONG_ID is not found
+                      PhaseShifterBlockingI BBM_PSB connections cannot be created, the model will be skipped
                 """);
     }
 }
