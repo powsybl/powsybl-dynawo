@@ -463,7 +463,12 @@ The list is statically loaded via [ModelConfigLoader](https://javadoc.io/doc/com
 ### Library properties
 * `lib`: library name used in Dynawo
 * `alias`: name used in powsybl-dynawo instead of `lib`
-* `properties`: dynamic model properties (synchronized, dangling, etc.)
+* `properties`: dynamic model properties
+  * `AUXILIARY`: the model possesses an auxiliary (for [synchronous generator](dynamic-models-description.md#synchronous-generator))
+  * `CONTROLLABLE`: the model can be subjected to a [variation event](event-models-configuration.md#active-power-variation) (for [generator](dynamic-models-description.md#generator))
+  * `DANGLING`: the model has a dangling side (for [HVDC](dynamic-models-description.md#hvdc))
+  * `SYNCHRONIZED`: the specific model is synchronized but not in a synchronized category (for [base load](dynamic-models-description.md#base-load) or [WECC](dynamic-models-description.md#wecc))
+  * `TRANSFORMER`: the model possesses a transformer (for [synchronous generator](dynamic-models-description.md#synchronous-generator))
 * `internalModelPrefix`: used for dynamic model file creation
 * `doc`: library documentation
 * `minVersion`: Dynawo minimum version required
