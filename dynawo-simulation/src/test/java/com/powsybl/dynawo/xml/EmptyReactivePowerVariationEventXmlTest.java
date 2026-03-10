@@ -46,7 +46,8 @@ class EmptyReactivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTes
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      Event ReactivePowerVariation_LOAD equipment is not a QControllableEquipmentModel, the event will be skipped
+                      EventReactivePowerVariation ReactivePowerVariation_LOAD requires a connection with a QControllableEquipmentModel but dynamic model LoadOneTransformer LOAD does not implement it
+                      EventReactivePowerVariation ReactivePowerVariation_LOAD connections cannot be created, the model will be skipped
                 """);
     }
 }

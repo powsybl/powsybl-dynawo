@@ -39,7 +39,7 @@ public class EventReactivePowerVariation extends AbstractVariationEvent {
     public void createMacroConnections(MacroConnectionsAdder adder) {
         isConnected = !adder.createMacroConnectionsOrSkip(this, getEquipment(), QControllableEquipmentModel.class, this::getVarConnectionsWith);
         if (!isConnected) {
-            DynawoSimulationReports.reportEmptyEvent(adder.getReportNode(), getDynamicModelId(), QControllableEquipmentModel.class.getSimpleName());
+            DynawoSimulationReports.reportEmptyModel(adder.getReportNode(), getName(), getDynamicModelId());
         }
     }
 

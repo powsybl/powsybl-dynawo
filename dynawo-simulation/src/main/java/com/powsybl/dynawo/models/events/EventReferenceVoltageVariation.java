@@ -42,7 +42,7 @@ public class EventReferenceVoltageVariation extends AbstractEvent {
     public void createMacroConnections(MacroConnectionsAdder adder) {
         isConnected = !adder.createMacroConnectionsOrSkip(this, getEquipment(), UControllableEquipmentModel.class, this::getVarConnectionsWith);
         if (!isConnected) {
-            DynawoSimulationReports.reportEmptyEvent(adder.getReportNode(), getDynamicModelId(), UControllableEquipmentModel.class.getSimpleName());
+            DynawoSimulationReports.reportEmptyModel(adder.getReportNode(), getName(), getDynamicModelId());
         }
     }
 

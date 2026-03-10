@@ -38,7 +38,7 @@ public class EventActivePowerVariation extends AbstractVariationEvent {
     public void createMacroConnections(MacroConnectionsAdder adder) {
         isConnected = !adder.createMacroConnectionsOrSkip(this, getEquipment(), PControllableEquipmentModel.class, this::getVarConnectionsWith);
         if (!isConnected) {
-            DynawoSimulationReports.reportEmptyEvent(adder.getReportNode(), getDynamicModelId(), PControllableEquipmentModel.class.getSimpleName());
+            DynawoSimulationReports.reportEmptyModel(adder.getReportNode(), getName(), getDynamicModelId());
         }
     }
 

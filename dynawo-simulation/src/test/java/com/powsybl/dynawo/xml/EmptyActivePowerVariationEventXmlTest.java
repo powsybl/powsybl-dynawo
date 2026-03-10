@@ -47,7 +47,8 @@ class EmptyActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest 
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      Event ActivePowerVariation_LOAD equipment is not a PControllableEquipmentModel, the event will be skipped
+                      EventActivePowerVariation ActivePowerVariation_LOAD requires a connection with a PControllableEquipmentModel but dynamic model LoadOneTransformer LOAD does not implement it
+                      EventActivePowerVariation ActivePowerVariation_LOAD connections cannot be created, the model will be skipped
                 """);
     }
 }

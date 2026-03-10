@@ -48,7 +48,8 @@ class EmptyReferenceVoltageVariationEventXmlTest extends AbstractDynamicModelXml
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      Event ReferenceVoltageVariation_GEN equipment is not a UControllableEquipmentModel, the event will be skipped
+                      EventReferenceVoltageVariation ReferenceVoltageVariation_GEN requires a connection with a UControllableEquipmentModel but dynamic model GeneratorPVFixed GEN does not implement it
+                      EventReferenceVoltageVariation ReferenceVoltageVariation_GEN connections cannot be created, the model will be skipped
                 """);
     }
 }
