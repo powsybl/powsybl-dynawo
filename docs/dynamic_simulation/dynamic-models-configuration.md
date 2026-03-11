@@ -451,53 +451,34 @@ TapChangerBlockingAutomationSystem {
 ]
 ```
 
-## Supported models
-Models are listed in [models.json](../../dynawo/src/main/resources/models.json).  
-The list is divided in categories each linked to a dedicated builder.
-### Categories properties
-* `defaultLib` : name of the default library
-* `libs` : list of dynawo libraries supported for this category
-
-The list is statically loaded via [ModelConfigLoader](https://javadoc.io/doc/com.powsybl/powsybl-dynawo/latest/com/powsybl/dynawo/builders/ModelConfigLoader.html) services and thus can be extended.
-
-### Library properties
-* `lib`: library name used in dynawo
-* `alias`: name used in powsybl-dynawo instead of lib
-* `properties`: dynamic model properties (synchronized, dangling, etc.)
-* `internalModelPrefix`: used for dynamic model file creation
-* `doc`: library documentation
-* `minVersion`: Dynawo minimum version required
-* `maxVersion`: Dynawo maximum version required
-* `endCause`: explains the cause of the model ending at `maxVersion` 
-
-## Dynamic model Builder List
+## Dynamic model builder List
 Ultimately, all groovy scripts call dedicated builders that can be used directly by developers.
 ### Equipments
-* BaseStaticVarCompensatorBuilder
-* BaseShuntBuilder
-* HvdcPBuilder
-* HvdcVscBuilder
-* BaseGeneratorBuilder
-* SignalNGeneratorBuilder
-* SynchronizedGeneratorBuilder
-* SynchronousGeneratorBuilder
-* WeccBuilder
-* GridFormingConverterBuilder
-* LineBuilder
-* StandardBusBuilder
-* InfiniteBusBuilder
-* TransformerFixedRatioBuilder
-* BaseLoadBuilder
-* LoadOneTransformerBuilder
-* LoadTwoTransformersBuilder
-* LoadOneTransformerTapChangerBuilder
-* LoadTwoTransformersTapChangersBuilder
+* `BaseStaticVarCompensatorBuilder`
+* `BaseShuntBuilder`
+* `HvdcPBuilder`
+* `HvdcVscBuilder`
+* `BaseGeneratorBuilder`
+* `SignalNGeneratorBuilder`
+* `SynchronizedGeneratorBuilder`
+* `SynchronousGeneratorBuilder`
+* `WeccBuilder`
+* `GridFormingConverterBuilder`
+* `LineBuilder`
+* `StandardBusBuilder`
+* `InfiniteBusBuilder`
+* `TransformerFixedRatioBuilder`
+* `BaseLoadBuilder`
+* `LoadOneTransformerBuilder`
+* `LoadTwoTransformersBuilder`
+* `LoadOneTransformerTapChangerBuilder`
+* `LoadTwoTransformersTapChangersBuilder`
 ### Automation Systems
-* TapChangerAutomationSystemBuilder
-* TapChangerBlockingAutomationSystemBuilder
-* UnderVoltageAutomationSystemBuilder
-* DynamicOverloadManagementSystemBuilder
-* DynamicTwoLevelOverloadManagementSystemBuilder
-* PhaseShifterPAutomationSystemBuilder
-* PhaseShifterIAutomationSystemBuilder
-* PhaseShifterBlockingIAutomationSystemBuilder
+* `TapChangerAutomationSystemBuilder`
+* `TapChangerBlockingAutomationSystemBuilder`
+* `UnderVoltageAutomationSystemBuilder`
+* `DynamicOverloadManagementSystemBuilder`
+* `DynamicTwoLevelOverloadManagementSystemBuilder`
+* `PhaseShifterPAutomationSystemBuilder`
+* `PhaseShifterIAutomationSystemBuilder`
+* `PhaseShifterBlockingIAutomationSystemBuilder`
