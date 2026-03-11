@@ -451,30 +451,6 @@ TapChangerBlockingAutomationSystem {
 ]
 ```
 
-## Supported models
-Models are listed in the [models.json](../../dynawo-simulation/src/main/resources/models.json) configuration file.  
-The list is divided into categories, each linked to a dedicated builder. The category list with model description can be found [here](dynamic-models-description.md).  
-The list is statically loaded via [ModelConfigLoader](https://javadoc.io/doc/com.powsybl/powsybl-dynawo/latest/com/powsybl/dynawo/builders/ModelConfigLoader.html) services and thus can be extended.
-
-### Categories properties
-* `defaultLib` : name of the library used by default when no library name is specified
-* `libs` : list of Dynawo libraries supported for this category
-
-### Library properties
-* `lib`: library name used in Dynawo
-* `alias`: name used in powsybl-dynawo instead of `lib`
-* `properties`: dynamic model properties
-  * `AUXILIARY`: the model possesses an auxiliary (for [synchronous generator](dynamic-models-description.md#synchronous-generator))
-  * `CONTROLLABLE`: the model can be subjected to a [variation event](event-models-configuration.md#active-power-variation) (for [generator](dynamic-models-description.md#generator))
-  * `DANGLING`: the model has a dangling side (for [HVDC](dynamic-models-description.md#hvdc))
-  * `SYNCHRONIZED`: the specific model is synchronized but not in a synchronized category (for [base load](dynamic-models-description.md#base-load) or [WECC](dynamic-models-description.md#wecc))
-  * `TRANSFORMER`: the model possesses a transformer (for [synchronous generator](dynamic-models-description.md#synchronous-generator))
-* `internalModelPrefix`: used for dynamic model file creation
-* `doc`: library documentation
-* `minVersion`: Dynawo minimum version required
-* `maxVersion`: Dynawo maximum version required
-* `endCause`: explains the cause of the model ending at `maxVersion` 
-
 ## Dynamic model builder List
 Ultimately, all groovy scripts call dedicated builders that can be used directly by developers.
 ### Equipments

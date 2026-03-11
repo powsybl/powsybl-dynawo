@@ -9,7 +9,7 @@ event-models-configuration.md
 output-variables-configuration.md
 model-simplifiers.md
 extensions.md
-additional-models.md
+base-additional-models.md
 ```
 
 PowSyBl provides an implementation of the [DynamicSimulation API from powsybl-core](inv:powsyblcore:*:*#simulation/dynamic/index) with [Dynaωo](https://dynawo.github.io), a tool for long-term stability simulation.
@@ -20,6 +20,6 @@ Read this [documentation page](https://dynawo.github.io/install/) to learn how t
 
 ## Going further
 
-You may find an extensive documentation of the Dynawo project [here](https://github.com/dynawo/dynawo/releases/latest/download/DynawoDocumentation.pdf).
+You may find extensive documentation of the Dynawo project [here](https://github.com/dynawo/dynawo/releases/latest/download/DynawoDocumentation.pdf).
 
 
