@@ -11,3 +11,12 @@ NodeFault {
     rPu 0.025
     xPu 0.025
 }
+
+NodeFault {
+    staticId "g12"
+    startTime 1
+    faultTime 0.1
+    rPu 0.025
+    xPu 0.025
+}
+
