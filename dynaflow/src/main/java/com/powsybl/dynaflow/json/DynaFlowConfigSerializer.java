@@ -73,7 +73,7 @@ public final class DynaFlowConfigSerializer {
         jsonGenerator.writeBooleanField("AutomaticSlackBusOn", lfParameters.isReadSlackBus());
         writeNonNullField(jsonGenerator, "DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
         writeNonNullField(jsonGenerator, "TfoVoltageLevel", dynaFlowParameters.getTfoVoltageLevel());
-        jsonGenerator.writeStringField("ActivePowerCompensation", convertOrDefault(lfParameters.getBalanceType()).getDynaflowName());
+        jsonGenerator.writeStringField("ActivePowerCompensation", convertToActivePowerCompensation(lfParameters.getBalanceType()).getDynaflowName());
         writeNonNullField(jsonGenerator, "SettingPath", dynaFlowParameters.getSettingPath());
         writeNonNullField(jsonGenerator, "AssemblingPath", dynaFlowParameters.getAssemblingPath());
         writeNonNullField(jsonGenerator, "StartTime", dynaFlowParameters.getStartTime());
@@ -112,7 +112,7 @@ public final class DynaFlowConfigSerializer {
         }
     }
 
-    private static DynaFlowConstants.ActivePowerCompensation convertOrDefault(LoadFlowParameters.BalanceType balanceType) {
+    private static DynaFlowConstants.ActivePowerCompensation convertToActivePowerCompensation(LoadFlowParameters.BalanceType balanceType) {
         return switch (balanceType) {
             case PROPORTIONAL_TO_GENERATION_P -> DynaFlowConstants.ActivePowerCompensation.P;
             case PROPORTIONAL_TO_LOAD -> DynaFlowConstants.ActivePowerCompensation.TARGET_P;
