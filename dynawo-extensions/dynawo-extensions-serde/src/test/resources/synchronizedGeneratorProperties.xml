@@ -6,7 +6,7 @@
   ~ file, You can obtain one at http://mozilla.org/MPL/2.0/.
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_15"
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_16"
               xmlns:sdgp="http://www.powsybl.org/schema/iidm/ext/synchronized_generator_properties/1_0"
               id="sim1" caseDate="2016-12-07T11:18:52.881+01:00"
               forecastDistance="0" sourceFormat="test"
