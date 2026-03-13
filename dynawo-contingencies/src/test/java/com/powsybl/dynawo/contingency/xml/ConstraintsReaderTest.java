@@ -9,9 +9,9 @@ package com.powsybl.dynawo.contingency.xml;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.powsybl.commons.json.JsonUtil;
+import com.powsybl.contingency.violations.LimitViolation;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
-import com.powsybl.security.LimitViolation;
 import com.powsybl.security.json.SecurityAnalysisJsonModule;
 import org.junit.jupiter.api.Test;
 
