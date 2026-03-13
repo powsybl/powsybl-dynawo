@@ -14,7 +14,7 @@
     "Precision" : 0.0,
     "ChosenOutputs" : [ "STEADYSTATE" ],
     "TimeStep" : 2.6,
-    "StartingPointMode" : "warm",
+    "StartingPointMode" : "flat",
     "OutputDir" : "dynaflow/workingDir"
   }
 }

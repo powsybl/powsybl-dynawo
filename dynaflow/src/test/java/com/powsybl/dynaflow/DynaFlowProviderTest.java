@@ -260,7 +260,6 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
                 Map.entry("dsoVoltageLevel", "45.0"),
                 Map.entry("tfoVoltageLevel", "100.0"),
                 Map.entry("timeStep", "10.0"),
-                Map.entry("startingPointMode", "WARM"),
                 Map.entry("startTime", "0.0"),
                 Map.entry("stopTime", "100.0"),
                 Map.entry("chosenOutputs", "TIMELINE"),

@@ -1,6 +1,6 @@
 {
   "version" : "1.10",
-  "voltageInitMode" : "UNIFORM_VALUES",
+  "voltageInitMode" : "PREVIOUS_VALUES",
   "transformerVoltageControlOn" : false,
   "phaseShifterRegulationOn" : false,
   "useReactiveLimits" : false,
@@ -28,7 +28,6 @@
       "precision" : 0.0,
       "chosenOutputs" : [ "STEADYSTATE" ],
       "timeStep" : 2.6,
-      "startingPointMode" : "warm",
       "mergeLoads" : false
     }
   }

@@ -11,7 +11,7 @@
     "StopTime" : 100.0,
     "ChosenOutputs" : [ "TIMELINE" ],
     "TimeStep" : 10.0,
-    "StartingPointMode" : "warm",
+    "StartingPointMode" : "flat",
     "sa" : {
       "TimeOfEvent" : 10.0
     },

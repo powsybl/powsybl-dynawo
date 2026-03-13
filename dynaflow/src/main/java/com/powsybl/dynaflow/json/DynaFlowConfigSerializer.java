@@ -91,7 +91,7 @@ public final class DynaFlowConfigSerializer {
         }
 
         writeNonNullField(jsonGenerator, "TimeStep", dynaFlowParameters.getTimeStep());
-        jsonGenerator.writeStringField("StartingPointMode", dynaFlowParameters.getStartingPointMode().getName());
+        jsonGenerator.writeStringField("StartingPointMode", convertToStartingPointMode(lfParameters.getVoltageInitMode()).getName());
     }
 
     private static void serialize(DynaFlowSecurityAnalysisParameters saParameters, JsonGenerator jsonGenerator) throws IOException {
@@ -118,5 +118,12 @@ public final class DynaFlowConfigSerializer {
             case PROPORTIONAL_TO_LOAD -> DynaFlowConstants.ActivePowerCompensation.TARGET_P;
             default -> DynaFlowConstants.ActivePowerCompensation.PMAX;
         };
+    }
+
+    private static DynaFlowConstants.StartingPointMode convertToStartingPointMode(LoadFlowParameters.VoltageInitMode voltageInitMode) {
+        if (LoadFlowParameters.VoltageInitMode.UNIFORM_VALUES == voltageInitMode) {
+            return DynaFlowConstants.StartingPointMode.FLAT;
+        }
+        return DynaFlowConstants.StartingPointMode.WARM;
     }
 }

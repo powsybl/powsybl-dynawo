@@ -35,7 +35,6 @@
         "stopTime" : 100.0,
         "chosenOutputs" : [ "TIMELINE" ],
         "timeStep" : 10.0,
-        "startingPointMode" : "warm",
         "mergeLoads" : true
       }
     }
