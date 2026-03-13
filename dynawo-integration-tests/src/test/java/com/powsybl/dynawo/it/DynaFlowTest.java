@@ -60,9 +60,10 @@ class DynaFlowTest extends AbstractDynawoTest {
         super.setUp();
         DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), true);
         loadFlowProvider = new DynaFlowProvider(() -> config);
-        loadFlowParameters = new LoadFlowParameters();
+        loadFlowParameters = new LoadFlowParameters()
+                .setVoltageInitMode(LoadFlowParameters.VoltageInitMode.PREVIOUS_VALUES);
         securityAnalysisProvider = new DynaFlowSecurityAnalysisProvider(() -> config);
-        securityAnalysisParameters = new SecurityAnalysisParameters();
+        securityAnalysisParameters = new SecurityAnalysisParameters().setLoadFlowParameters(loadFlowParameters);
         loadFlowParameters.addExtension(DynaFlowParameters.class, new DynaFlowParameters());
         securityAnalysisParameters.addExtension(DynaFlowSecurityAnalysisParameters.class,
                 new DynaFlowSecurityAnalysisParameters().setContingenciesStartTime(15.));
@@ -96,7 +97,6 @@ class DynaFlowTest extends AbstractDynawoTest {
 
         StringWriter sw = new StringWriter();
         reportNode.print(sw);
-        System.out.println(sw);
 
         testExecutionTempFile();
         InputStream refStream = Objects.requireNonNull(getClass().getResourceAsStream("/loadflow_timeline_report.txt"));
