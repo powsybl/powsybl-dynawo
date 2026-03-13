@@ -9,6 +9,8 @@ package com.powsybl.dynawo.contingency;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
+import com.powsybl.contingency.violations.LimitViolation;
+import com.powsybl.contingency.violations.LimitViolationFilter;
 import com.powsybl.dynawo.commons.CommonReports;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.timeline.TimeLineParser;
