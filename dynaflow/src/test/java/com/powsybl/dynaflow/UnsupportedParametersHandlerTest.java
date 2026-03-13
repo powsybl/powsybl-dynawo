@@ -67,7 +67,6 @@ class UnsupportedParametersHandlerTest {
                    + Check load flow parameters compatibility with DynaFlow
                       Load flow parameter 'DC power flow' is not supported by DynaFlow, the load flow cannot be run
                       Load flow parameter 'WriteSlackBus' is not supported by DynaFlow, the parameter will be ignored
-                      Load flow parameter 'VoltageInitMode' is not supported by DynaFlow, the parameter will be ignored
                       Load flow parameter 'TransformerVoltageControlOn' is not supported by DynaFlow, the IIDM property will be used instead
                       Load flow parameter 'PhaseShifterRegulationOn' is not supported by DynaFlow, the IIDM property will be used instead
                       Load flow parameter 'TwtSplitShuntAdmittance' is not supported by DynaFlow, the IIDM property will be used instead
@@ -76,6 +75,7 @@ class UnsupportedParametersHandlerTest {
                       Load flow parameter 'ComponentMode' value MAIN_CONNECTED is not supported by DynaFlow, the value MAIN_SYNCHRONOUS will be used instead
                       Load flow parameter 'DistributedSlack' value false is not supported by DynaFlow, the value true will be used instead
                       Load flow parameter 'BalanceType' value PROPORTIONAL_TO_GENERATION_REMAINING_MARGIN is not supported by DynaFlow, the value PROPORTIONAL_TO_GENERATION_P_MAX will be used instead
+                      Load flow parameter 'VoltageInitMode' value DC_VALUES is not supported by DynaFlow, the value PREVIOUS_VALUES will be used instead
                 """;
 
         assertFalse(provider.checkParameters(runParameters));

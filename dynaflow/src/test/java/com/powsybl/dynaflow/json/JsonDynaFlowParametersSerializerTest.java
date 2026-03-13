@@ -54,7 +54,6 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         assertEquals(expectedPrecision, dynaFlowParameters.getPrecision(), 0.1d);
         assertThat(dynaFlowParameters.getChosenOutputs()).containsExactlyInAnyOrderElementsOf(expectedChosenOutputs);
         assertEquals(expectedTimeStep, dynaFlowParameters.getTimeStep(), 0.1d);
-        assertEquals(DynaFlowConstants.StartingPointMode.WARM, dynaFlowParameters.getStartingPointMode());
         assertFalse(dynaFlowParameters.isMergeLoads());
 
         assertTrue(lfParameters.isTransformerVoltageControlOn());
@@ -65,9 +64,10 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
     void roundTripParameters() throws IOException {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
 
-        LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
-        parameters.setUseReactiveLimits(false);
-        parameters.setPhaseShifterRegulationOn(false);
+        LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig)
+                .setUseReactiveLimits(false)
+                .setPhaseShifterRegulationOn(false)
+                .setVoltageInitMode(LoadFlowParameters.VoltageInitMode.PREVIOUS_VALUES);
 
         DynaFlowParameters params = new DynaFlowParameters()
             .setSvcRegulationOn(true)
@@ -80,7 +80,6 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
             .setPrecision(0.)
             .setChosenOutputs(Set.of(DynaFlowConstants.OutputTypes.STEADYSTATE))
             .setTimeStep(2.6)
-            .setStartingPointMode(DynaFlowConstants.StartingPointMode.WARM)
             .setMergeLoads(false);
 
         parameters.addExtension(DynaFlowParameters.class, params);
@@ -116,7 +115,6 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         assertNull(dynaFlowParameters.getPrecision());
         assertThat(dynaFlowParameters.getChosenOutputs()).containsExactlyInAnyOrderElementsOf(EnumSet.of(DynaFlowConstants.OutputTypes.TIMELINE));
         assertEquals(10d, dynaFlowParameters.getTimeStep(), 0.1d);
-        assertEquals(DynaFlowConstants.StartingPointMode.WARM, dynaFlowParameters.getStartingPointMode());
         assertTrue(dynaFlowParameters.isMergeLoads());
     }
 }

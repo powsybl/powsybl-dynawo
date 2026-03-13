@@ -17,7 +17,6 @@
       "precision" : 0.0,
       "chosenOutputs" : [ "STEADYSTATE", "TIMELINE" ],
       "timeStep" : 2.6,
-      "startingPointMode" : "warm",
       "mergeLoads" : false
     }
   }

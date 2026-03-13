@@ -27,9 +27,6 @@ public final class UnsupportedParametersHandler {
         if (loadFlowParameters.isWriteSlackBus()) {
             DynaflowReports.createIgnoredParameterReportNode(reportNode, "WriteSlackBus");
         }
-        if (loadFlowParameters.getVoltageInitMode() != LoadFlowParameters.DEFAULT_VOLTAGE_INIT_MODE) {
-            DynaflowReports.createIgnoredParameterReportNode(reportNode, "VoltageInitMode");
-        }
 
         //IIDM properties
         if (loadFlowParameters.isTransformerVoltageControlOn() != LoadFlowParameters.DEFAULT_TRANSFORMER_VOLTAGE_CONTROL_ON) {
@@ -63,6 +60,11 @@ public final class UnsupportedParametersHandler {
         if (isUnsupportedBalanceType(balanceType)) {
             DynaflowReports.createReplacedParameterValueReportNode(reportNode, "BalanceType",
                     balanceType.toString(), LoadFlowParameters.DEFAULT_BALANCE_TYPE.toString());
+        }
+        LoadFlowParameters.VoltageInitMode voltageInitMode = loadFlowParameters.getVoltageInitMode();
+        if (voltageInitMode == LoadFlowParameters.VoltageInitMode.DC_VALUES) {
+            DynaflowReports.createReplacedParameterValueReportNode(reportNode, "VoltageInitMode",
+                    voltageInitMode.toString(), LoadFlowParameters.VoltageInitMode.PREVIOUS_VALUES.toString());
         }
         return isCompatible;
     }

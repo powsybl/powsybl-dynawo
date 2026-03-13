@@ -15,7 +15,6 @@ import com.powsybl.commons.parameters.ParameterScope;
 import com.powsybl.commons.parameters.ParameterType;
 import com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import com.powsybl.loadflow.LoadFlowParameters;
-import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestWord;
 import org.slf4j.Logger;
@@ -45,7 +44,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final String PRECISION_NAME = "precision";
     private static final String CHOSEN_OUTPUTS = "chosenOutputs";
     private static final String TIME_STEP = "timeStep";
-    private static final String STARTING_POINT_MODE = "startingPointMode";
     private static final String MERGE_LOADS = "mergeLoads";
 
     // Default values
@@ -57,7 +55,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final double DEFAULT_PRECISION = Double.NaN;
     private static final EnumSet<OutputTypes> DEFAULT_CHOSEN_OUTPUTS = EnumSet.of(OutputTypes.TIMELINE);
     private static final double DEFAULT_TIME_STEP = 10d;
-    private static final StartingPointMode DEFAULT_STARTING_POINT_MODE = StartingPointMode.WARM;
     private static final boolean DEFAULT_MERGE_LOADS = true;
 
     public static final List<Parameter> SPECIFIC_PARAMETERS = List.of(
@@ -71,7 +68,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             new Parameter(PRECISION_NAME, ParameterType.DOUBLE, "Precision", DEFAULT_PRECISION),
             new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", DEFAULT_CHOSEN_OUTPUTS.stream().map(OutputTypes::name).toList(), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
             new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", DEFAULT_TIME_STEP),
-            new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", DEFAULT_STARTING_POINT_MODE.name(), getEnumPossibleValues(StartingPointMode.class)),
             new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", DEFAULT_MERGE_LOADS));
 
     private boolean svcRegulationOn = DEFAULT_SVC_REGULATION_ON;
@@ -84,7 +80,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private Double precision = null;
     private EnumSet<OutputTypes> chosenOutputs = DEFAULT_CHOSEN_OUTPUTS;
     private double timeStep = DEFAULT_TIME_STEP;
-    private StartingPointMode startingPointMode = DEFAULT_STARTING_POINT_MODE;
     private boolean mergeLoads = DEFAULT_MERGE_LOADS;
 
     public Boolean getSvcRegulationOn() {
@@ -182,15 +177,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public StartingPointMode getStartingPointMode() {
-        return startingPointMode;
-    }
-
-    public DynaFlowParameters setStartingPointMode(StartingPointMode startingPointMode) {
-        this.startingPointMode = startingPointMode;
-        return this;
-    }
-
     public boolean isMergeLoads() {
         return mergeLoads;
     }
@@ -218,7 +204,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 .add(PRECISION_NAME, precision)
                 .add(CHOSEN_OUTPUTS, chosenOutputs)
                 .add(TIME_STEP, timeStep)
-                .add(STARTING_POINT_MODE, startingPointMode)
                 .add(MERGE_LOADS, mergeLoads)
                 .toString();
     }
@@ -260,7 +245,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         config.getOptionalDoubleProperty(PRECISION_NAME).ifPresent(parameters::setPrecision);
         config.getOptionalEnumSetProperty(CHOSEN_OUTPUTS, OutputTypes.class).ifPresent(parameters::setChosenOutputs);
         config.getOptionalDoubleProperty(TIME_STEP).ifPresent(parameters::setTimeStep);
-        config.getOptionalStringProperty(STARTING_POINT_MODE).map(StartingPointMode::fromString).ifPresent(parameters::setStartingPointMode);
         config.getOptionalBooleanProperty(MERGE_LOADS).ifPresent(parameters::setMergeLoads);
     }
 
@@ -296,7 +280,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Optional.ofNullable(properties.get(CHOSEN_OUTPUTS)).ifPresent(prop ->
                 setChosenOutputs(Stream.of(prop.split(PROPERTY_LIST_DELIMITER)).map(o -> OutputTypes.valueOf(o.trim())).collect(Collectors.toSet())));
         Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> setTimeStep(Double.parseDouble(prop)));
-        Optional.ofNullable(properties.get(STARTING_POINT_MODE)).ifPresent(prop -> setStartingPointMode(StartingPointMode.fromString(prop)));
         Optional.ofNullable(properties.get(MERGE_LOADS)).ifPresent(prop -> setMergeLoads(Boolean.parseBoolean(prop)));
     }
 
@@ -314,7 +297,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             parameters.put(CHOSEN_OUTPUTS, String.join(PROPERTY_LIST_DELIMITER, chosenOutputs.stream().map(OutputTypes::name).toList()));
         }
         addNotNullEntry(TIME_STEP, timeStep, parameters::put);
-        addNotNullEntry(STARTING_POINT_MODE, startingPointMode, parameters::put);
         addNotNullEntry(MERGE_LOADS, mergeLoads, parameters::put);
         return parameters;
     }

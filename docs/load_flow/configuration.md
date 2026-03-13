@@ -73,14 +73,6 @@ Available values:
 
 The default value is a list of all values.
 
-#### startingPointMode
-`startingPointMode` indicates the starting point values considered in the simulation
-Available values:
-- `WARM`: starting point values for voltage, phase and injections are the ones in the network.
-- `FLAT`: starting point values are the nominal value for bus voltages and the set points values for injections.
-
-The default value is `WARM`.
-
 #### precision
 `precision` defines the real number precision  
 The default value is `NaN`.
@@ -101,7 +93,7 @@ The default value is `TRUE`.
 Some [Load flow parameters](inv:powsyblcore:*:*#loadflow-generic-parameters) are not fully supported.
 
 DC load flow is not supported.<br>
-The `writeSlackBus` and `VoltageInitMode` parameters will be ignored.<br>
+The `writeSlackBus` parameter will be ignored.<br>
 The following parameters will be ignored and IIDM setup will be used instead:
 * `countriesToBalance`
 * `hvdcAcEmulation`
@@ -136,7 +128,6 @@ dynaflow-default-parameters:
     chosenOutputs: [ "STEADYSTATE", "LOSTEQ", "TIMELINE", "CONSTRAINTS" ]
     timeStep: 2.6
     mergeLoads: true
-    startingPointMode: "WARM"
 ```
 
 
@@ -159,7 +150,6 @@ Alternatively, you can provide parameters as a JSON file where supported
       "chosenOutputs" : [ "STEADYSTATE", "LOSTEQ", "TIMELINE", "CONSTRAINTS" ],
       "timeStep" : 2.6,
       "mergeLoads" : true,
-      "startingPointMode" : "WARM"
     }
   }
 }
