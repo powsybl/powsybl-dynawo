@@ -30,6 +30,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
     void testDeserialize() {
 
         double expectedDsoVoltageLevelValue = 987.6;
+        double expectedTfoVoltageLevelValue = 234.5;
         String expectedSettingPath = "path/to/settingFile";
         String expectedAssemblingPath = "path/to/assemblingFile";
         double expectedStartTime = 0.;
@@ -47,6 +48,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         assertFalse(dynaFlowParameters.getShuntRegulationOn());
         assertTrue(dynaFlowParameters.getAutomaticSlackBusOn());
         assertEquals(expectedDsoVoltageLevelValue, dynaFlowParameters.getDsoVoltageLevel(), 0);
+        assertEquals(expectedTfoVoltageLevelValue, dynaFlowParameters.getTfoVoltageLevel(), 0);
         assertEquals(DynaFlowConstants.ActivePowerCompensation.P, dynaFlowParameters.getActivePowerCompensation());
         assertEquals(expectedSettingPath, dynaFlowParameters.getSettingPath());
         assertEquals(expectedAssemblingPath, dynaFlowParameters.getAssemblingPath());
@@ -75,6 +77,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
             .setShuntRegulationOn(false)
             .setAutomaticSlackBusOn(true)
             .setDsoVoltageLevel(54.23)
+            .setTfoVoltageLevel(78.90)
             .setActivePowerCompensation(DynaFlowConstants.ActivePowerCompensation.P)
             .setSettingPath("path/to/settingFile")
             .setAssemblingPath("path/to/assemblingFile")
@@ -113,6 +116,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         assertFalse(dynaFlowParameters.getShuntRegulationOn());
         assertTrue(dynaFlowParameters.getAutomaticSlackBusOn());
         assertEquals(45d, dynaFlowParameters.getDsoVoltageLevel(), 0);
+        assertEquals(100d, dynaFlowParameters.getTfoVoltageLevel(), 0);
         assertEquals(DynaFlowConstants.ActivePowerCompensation.P, dynaFlowParameters.getActivePowerCompensation());
         assertEquals("path/to/settingFile", dynaFlowParameters.getSettingPath());
         assertNull(dynaFlowParameters.getAssemblingPath());

@@ -11,11 +11,15 @@ import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
+import com.powsybl.dynawo.outputvariables.DynawoOutputVariable;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DynawoData;
 import com.powsybl.iidm.network.Network;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +40,7 @@ public class DynawoSimulationContext {
     protected final DynawoVersion dynawoVersion;
 
     public static class Builder extends AbstractContextBuilder<Builder> {
+        private List<OutputVariable> outputVariablesList = List.of();
 
         public Builder(Network network, List<BlackBoxModel> dynamicModels) {
             super(network, dynamicModels);
@@ -52,14 +57,30 @@ public class DynawoSimulationContext {
         }
 
         public Builder outputVariables(List<OutputVariable> outputVariables) {
-            this.outputVariables = Objects.requireNonNull(outputVariables).stream()
-                    .collect(Collectors.groupingBy(OutputVariable::getOutputType));
+            this.outputVariablesList = Objects.requireNonNull(outputVariables);
             return self();
         }
 
         public Builder finalStepConfig(FinalStepConfig finalStepConfig) {
             this.finalStepConfig = Objects.requireNonNull(finalStepConfig);
             return self();
+        }
+
+        private Map<OutputVariable.OutputType, List<OutputVariable>> resolveAndGroupOutputVariables() {
+            return outputVariablesList.stream()
+                    .map(ov -> {
+                        if (!(ov instanceof DynawoOutputVariable dynawoOv)) {
+                            return ov;
+                        }
+                        BlackBoxModel model = blackBoxModelSupplier.getDynamicModel(dynawoOv.getModelId());
+                        if (model == null) {
+                            dynawoOv.setDefault();
+                            return dynawoOv;
+                        }
+                        return model.isConnected() ? dynawoOv : null;
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.groupingBy(OutputVariable::getOutputType));
         }
 
         @Override
@@ -74,6 +95,12 @@ public class DynawoSimulationContext {
                     .filter(ContextDependentEvent.class::isInstance)
                     .map(ContextDependentEvent.class::cast)
                     .forEach(e -> e.setEquipmentModelType(blackBoxModelSupplier.hasDynamicModel(e.getEquipment())));
+        }
+
+        @Override
+        protected void setup() {
+            super.setup();
+            outputVariables = resolveAndGroupOutputVariables();
         }
 
         @Override

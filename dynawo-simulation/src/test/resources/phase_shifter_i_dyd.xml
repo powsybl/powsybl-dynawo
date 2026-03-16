@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_phase_shifter" lib="PhaseShifterI" parFile="models.par" parId="ps"/>
+    <dyn:blackBoxModel id="BBM_phase_shifter" lib="PhaseShifterI" parFile="models.par" parId="phase_shifter_i_par"/>
     <dyn:blackBoxModel id="NGEN_NHV1" lib="TransformerFixedRatio" parFile="models.par" parId="tt" staticId="NGEN_NHV1">
         <dyn:macroStaticRef id="MSR_TransformerFixedRatio"/>
     </dyn:blackBoxModel>
