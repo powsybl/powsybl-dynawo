@@ -29,10 +29,14 @@ public final class LoadsMerger {
     private LoadsMerger() {
     }
 
-    public static Network mergeLoads(Network network) throws PowsyblException {
-        Network mergedLoadsNetwork = NetworkSerDe.copy(network);
+    public static Network mergeLoads(Network network, boolean inplace) throws PowsyblException {
+        Network mergedLoadsNetwork = inplace ? network : NetworkSerDe.copy(network);
         mergedLoadsNetwork.getVoltageLevelStream().forEach(LoadsMerger::mergeLoadsInVoltageLevel);
         return mergedLoadsNetwork;
+    }
+
+    public static Network mergeLoads(Network network) throws PowsyblException {
+        return mergeLoads(network, false);
     }
 
     private static void mergeLoadsInVoltageLevel(VoltageLevel vl) {
