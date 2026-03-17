@@ -30,23 +30,23 @@ class DisconnectDynamicBusEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(BaseGeneratorBuilder.of(network)
+        dynamicModels.add(BaseGeneratorBuilder.of(network, reportNode)
                 .staticId("G1")
                 .parameterSetId("gen")
                 .build());
-        dynamicModels.add(StandardBusBuilder.of(network)
+        dynamicModels.add(StandardBusBuilder.of(network, reportNode)
                 .staticId("B1")
                 .parameterSetId("bus")
                 .build());
-        dynamicModels.add(StandardBusBuilder.of(network)
+        dynamicModels.add(StandardBusBuilder.of(network, reportNode)
                 .staticId("B2")
                 .parameterSetId("bus")
                 .build());
-        dynamicModels.add(LineBuilder.of(network)
+        dynamicModels.add(LineBuilder.of(network, reportNode)
                 .staticId("L1")
                 .parameterSetId("line")
                 .build());
-        eventModels.add(EventDisconnectionBuilder.of(network)
+        eventModels.add(EventDisconnectionBuilder.of(network, reportNode)
                 .staticId("B1")
                 .startTime(1)
                 .build());
@@ -58,5 +58,15 @@ class DisconnectDynamicBusEventXmlTest extends AbstractDynamicModelXmlTest {
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "disconnect_dynamic_bus_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "disconnect_dynamic_bus_par.xml", tmpDir.resolve(context.getSimulationParFile()));
+        checkReport("""
+                + Test DYD
+                   Model GeneratorFictitious G1 instantiation OK
+                   Model Bus B1 instantiation OK
+                   Model Bus B2 instantiation OK
+                   Model Line L1 instantiation OK
+                   Model Disconnect Disconnect_B1 instantiation OK
+                   + Dynawo models processing
+                      EventBusDisconnection Disconnect_B1 cannot handle connection with BUS dynamic model, the model will be skipped
+                """);
     }
 }
