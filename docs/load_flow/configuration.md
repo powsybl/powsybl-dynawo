@@ -90,7 +90,7 @@ The default value is `null`.
 The default value is `TRUE`.
 
 ## Unsupported generic parameters
-Some [Load flow parameters](inv:powsyblcore:*:*#loadflow-generic-parameters) are not fully supported.
+Some [Load flow parameters](inv:powsyblcore:*:*#simulation/loadflow/configuration) are not fully supported.
 
 DC load flow is not supported.<br>
 The `writeSlackBus` parameter will be ignored.<br>
