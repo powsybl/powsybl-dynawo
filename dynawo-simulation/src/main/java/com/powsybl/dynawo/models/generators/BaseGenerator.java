@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.models.GeneratorModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
@@ -22,7 +23,7 @@ import java.util.List;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  * @author Olivier Perrin {@literal <olivier.perrin at rte-france.com>}
  */
-public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements SpecifiedGeneratorModel {
+public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements SpecifiedGeneratorModel, GeneratorModel {
 
     private static final ComponentDescription DEFAULT_COMPONENT_DESCRIPTION = new Description();
     private final ComponentDescription componentDescription;

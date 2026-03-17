@@ -467,7 +467,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         .startTime(5)
                         .build(),
                 NodeFaultEventBuilder.of(n, r)
-                        .staticId(EurostagTutorialExample1Factory.NGEN)
+                        .staticId("GEN")
                         .startTime(10)
                         .faultTime(15)
                         .build()
