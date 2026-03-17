@@ -23,6 +23,9 @@ security-analysis:
 dynamic-security-analysis:
   default-impl-name: Dynawo
 
+load-flow-default-parameters:
+  voltageInitMode: PREVIOUS_VALUES
+
 dynawo-simulation-default-parameters:
   parametersFile: /work/unittests/models.par
   network.parametersFile: /work/unittests/network.par
