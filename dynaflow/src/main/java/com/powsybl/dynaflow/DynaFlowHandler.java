@@ -15,6 +15,7 @@ import com.powsybl.computation.ExecutionReport;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynawo.commons.CommonReports;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.NetworkExporter;
@@ -53,21 +54,24 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
     private final DynaFlowParameters dynaFlowParameters;
     private final LoadFlowParameters loadFlowParameters;
     private final Command command;
+    private final DynawoVersion dynawoVersion;
     private final ReportNode reportNode;
 
-    public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters, LoadFlowParameters loadFlowParameters, Command command, ReportNode reportNode) {
+    public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters,
+                           LoadFlowParameters loadFlowParameters, Command command, DynawoVersion dynawoVersion, ReportNode reportNode) {
         this.network = network;
         this.workingStateId = workingStateId;
         this.dynaFlowParameters = dynaFlowParameters;
         this.loadFlowParameters = loadFlowParameters;
         this.command = command;
+        this.dynawoVersion = dynawoVersion;
         this.reportNode = reportNode;
     }
 
     @Override
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(workingStateId);
-        NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME), dynaFlowParameters.isMergeLoads());
+        NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME), dynawoVersion, dynaFlowParameters.isMergeLoads());
         DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
 
         Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(EXEC_TMP_FILENAME);
