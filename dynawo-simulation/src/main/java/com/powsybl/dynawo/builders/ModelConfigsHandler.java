@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.EventModel;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,6 +106,13 @@ public final class ModelConfigsHandler {
                     }
                 }
         );
+    }
 
+    public List<String> getSupportedLibs(DynawoVersion dynawoVersion) {
+        return modelConfigsCat.values().stream()
+                .flatMap(mc -> mc.getModelInfos().stream())
+                .filter(mi -> mi.version().includes(dynawoVersion))
+                .map(ModelInfo::lib)
+                .toList();
     }
 }
