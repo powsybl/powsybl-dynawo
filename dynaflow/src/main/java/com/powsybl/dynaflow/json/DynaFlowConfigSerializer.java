@@ -56,7 +56,10 @@ public final class DynaFlowConfigSerializer {
             jsonGenerator.writeObjectFieldStart("dfl-config");
             serialize(lfParameters, dynaFlowParameters, jsonGenerator);
             if (saParameters != null) {
+                jsonGenerator.writeStringField("StartingPointMode", DynaFlowConstants.StartingPointMode.WARM.getName());
                 serialize(saParameters, jsonGenerator);
+            } else {
+                jsonGenerator.writeStringField("StartingPointMode", convertToStartingPointMode(lfParameters.getVoltageInitMode()).getName());
             }
             jsonGenerator.writeStringField("OutputDir", workingDir.toString());
             jsonGenerator.writeEndObject();
@@ -91,7 +94,6 @@ public final class DynaFlowConfigSerializer {
         }
 
         writeNonNullField(jsonGenerator, "TimeStep", dynaFlowParameters.getTimeStep());
-        jsonGenerator.writeStringField("StartingPointMode", convertToStartingPointMode(lfParameters.getVoltageInitMode()).getName());
     }
 
     private static void serialize(DynaFlowSecurityAnalysisParameters saParameters, JsonGenerator jsonGenerator) throws IOException {
