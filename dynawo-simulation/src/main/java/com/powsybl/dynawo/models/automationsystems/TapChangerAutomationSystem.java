@@ -38,13 +38,8 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
     }
 
     @Override
-    public String getName() {
-        return super.getName() + side.getSideSuffix();
-    }
-
-    @Override
     public String getMacroConnectName() {
-        return super.getLib() + side.getSideSuffix();
+        return getLib() + side.getSideSuffix();
     }
 
     @Override

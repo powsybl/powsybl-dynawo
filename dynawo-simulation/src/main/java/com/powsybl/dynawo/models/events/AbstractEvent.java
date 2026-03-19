@@ -57,7 +57,7 @@ public abstract class AbstractEvent extends AbstractBlackBoxModel implements Eve
 
     @Override
     public String getMacroConnectName() {
-        return this.getClass().getSimpleName();
+        return getClass().getSimpleName();
     }
 
     @Override

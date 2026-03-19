@@ -97,7 +97,7 @@ class EnergizedSimplifierTest {
                         """
                         + Simplifier test
                            + Energized model filter
-                              Bus VL2_2 is not energized, model HvdcPVInverted L will be skipped
+                              Bus VL2_2 is not energized, model HvdcPV L will be skipped
                         """),
                 Arguments.of(HvdcTestNetwork.createVsc(),
                         (Consumer<Network>) n -> { },
@@ -108,7 +108,7 @@ class EnergizedSimplifierTest {
                         """
                         + Simplifier test
                            + Energized model filter
-                              Bus B1 is not energized, model HvdcPVDanglingInverted L will be skipped
+                              Bus B1 is not energized, model HvdcPVDangling L will be skipped
                         """),
                 Arguments.of(EurostagTutorialExample1Factory.create(),
                         (Consumer<Network>) n -> n.getLine("NHV1_NHV2_1").getTerminal1().disconnect(),

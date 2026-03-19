@@ -37,16 +37,6 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         this.parameterSetId = dynamicModelId;
     }
 
-    @Override
-    public String getName() {
-        return getLib();
-    }
-
-    @Override
-    public String getMacroConnectName() {
-        return this.getLib();
-    }
-
     public String getDynamicModelId() {
         return dynamicModelId;
     }

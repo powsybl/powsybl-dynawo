@@ -20,7 +20,6 @@ import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.*;

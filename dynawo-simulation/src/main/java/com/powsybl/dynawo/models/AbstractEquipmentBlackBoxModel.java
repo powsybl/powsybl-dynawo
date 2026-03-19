@@ -66,7 +66,7 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<T>> 
         writeDynamicAttributes(writer, parFileName);
         writer.writeAttribute("staticId", getDynamicModelId());
         if (hasVarMapping) {
-            MacroStaticReference.writeMacroStaticRef(writer, getName());
+            MacroStaticReference.writeMacroStaticRef(writer, getMacroConnectName());
             writer.writeEndElement();
         }
     }
