@@ -12,8 +12,8 @@
      id="defs18" />
   <style
      id="style1">
-    .text { font-family: Arial, sans-serif; font-size: 14px; fill: #333; text-anchor: middle; }
-    .text-tech { font-family: &quot;Courier New&quot;, Courier, monospace; font-size: 11px; fill: #d63384; font-weight: bold; text-anchor: middle; }
+    .text { font-family: Arial, sans-serif; font-size: 21px; fill: #333; text-anchor: middle; }
+    .text-tech { font-family: &quot;Courier New&quot;, Courier, monospace; font-size: 17px; fill: #d63384; font-weight: bold; text-anchor: middle; }
     .text-bold { font-weight: bold; }
     .line-blue { stroke: #5bc0de; stroke-width: 4; fill: none; stroke-linecap: round; }
     .line-red { stroke: #b0413e; stroke-width: 4; fill: none; stroke-linecap: round; }
@@ -72,7 +72,7 @@
      id="text6">startTime</text>
   <text
      x="280"
-     y="380"
+     y="405"
      class="text-tech"
      id="text7">loadIncrease.startTime</text>
   <text
@@ -82,7 +82,7 @@
      id="text8">loadIncrease.stopTime</text>
   <text
      x="680"
-     y="380"
+     y="405"
      class="text-tech"
      id="text9">margin-calculation-start-time</text>
   <text
@@ -92,7 +92,7 @@
      id="text10">contingencies-start-time</text>
   <text
      x="1120"
-     y="380"
+     y="405"
      class="text-tech"
      id="text11">stopTime</text>
   <path
@@ -105,7 +105,7 @@
      id="path12" />
   <text
      x="180"
-     y="280"
+     y="290"
      class="text"
      id="text12">Stabilization before<tspan
    x="180"
@@ -113,24 +113,21 @@
    id="tspan12">load increase</tspan></text>
   <text
      x="365"
-     y="280"
+     y="290"
      class="text"
      id="text13"
-     style="white-space:pre;inline-size:76.3962"
-     xml:space="preserve"><tspan
+     >Load<tspan
        x="365"
-       y="280"
-       id="tspan1">Load<tspan
-   y="280"
-   id="tspan2"> </tspan></tspan><tspan
-       x="365"
-       y="297.5"
+       dy="18"
        id="tspan3">increase</tspan></text>
   <text
      x="565"
      y="290"
      class="text"
-     id="text14">Load increase stabilization</text>
+     id="text14">Load increase <tspan
+          x="565"
+          dy="18"
+          id="tspan14">stabilization</tspan></text>
   <text
      x="800"
      y="290"

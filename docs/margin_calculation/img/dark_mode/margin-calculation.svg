@@ -14,8 +14,8 @@
   </defs>
   <style
      id="style1">
-    .text { font-family: Arial, sans-serif; font-size: 14px; fill: #333; text-anchor: middle; }
-    .text-tech { font-family: &quot;Courier New&quot;, Courier, monospace; font-size: 11px; fill: #d63384; font-weight: bold; text-anchor: middle; }
+    .text { font-family: Arial, sans-serif; font-size: 21px; fill: #333; text-anchor: middle; }
+    .text-tech { font-family: &quot;Courier New&quot;, Courier, monospace; font-size: 17px; fill: #d63384; font-weight: bold; text-anchor: middle; }
     .text-bold { font-weight: bold; }
     .line-blue { stroke: #5bc0de; stroke-width: 4; fill: none; stroke-linecap: round; }
     .line-red { stroke: #b0413e; stroke-width: 4; fill: none; stroke-linecap: round; }
@@ -77,7 +77,7 @@
      style="fill:#e996bf;fill-opacity:1">startTime</text>
   <text
      x="280"
-     y="380"
+     y="405"
      class="text-tech"
      id="text7"
      style="fill:#e995bf;fill-opacity:1">loadIncrease.startTime</text>
@@ -89,7 +89,7 @@
      style="fill:#e995bf;fill-opacity:1">loadIncrease.stopTime</text>
   <text
      x="680"
-     y="380"
+     y="405"
      class="text-tech"
      id="text9"
      style="fill:#e996c2;fill-opacity:1">margin-calculation-start-time</text>
@@ -101,7 +101,7 @@
      style="fill:#e996bf;fill-opacity:1">contingencies-start-time</text>
   <text
      x="1120"
-     y="380"
+     y="405"
      class="text-tech"
      id="text11"
      style="fill:#e996bf;fill-opacity:1">stopTime</text>
@@ -115,7 +115,7 @@
      id="path12" />
   <text
      x="180"
-     y="280"
+     y="290"
      class="text"
      id="text12"
      style="fill:#cccccc;fill-opacity:1">Stabilization before<tspan
@@ -124,26 +124,23 @@
    id="tspan12"
    style="fill:#cccccc;fill-opacity:1">load increase</tspan></text>
   <text
-     x="365"
-     y="280"
-     class="text"
-     id="text13"
-     style="white-space:pre;inline-size:76.3962;fill:#cccccc;fill-opacity:1"
-     xml:space="preserve"><tspan
-       x="365"
-       y="280"
-       id="tspan4">Load<tspan
-   y="280"
-   id="tspan5"> </tspan></tspan><tspan
-       x="365"
-       y="297.5"
-       id="tspan6">increase</tspan></text>
+      x="365"
+      y="290"
+      class="text"
+      id="text13"
+      style="fill:#cccccc;fill-opacity:1">Load<tspan
+  x="365"
+  dy="18"
+  id="tspan3">increase</tspan></text>
   <text
      x="565"
      y="290"
      class="text"
-     id="text14"
-     style="fill:#cccccc;fill-opacity:1">Load increase stabilization</text>
+     style="fill:#cccccc;fill-opacity:1"
+     id="text14">Load increase<tspan
+          x="565"
+          dy="18"
+          id="tspan14">stabilization</tspan></text>
   <text
      x="800"
      y="290"
