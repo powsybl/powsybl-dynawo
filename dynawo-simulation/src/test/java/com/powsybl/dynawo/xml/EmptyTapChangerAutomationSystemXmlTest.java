@@ -44,10 +44,12 @@ class EmptyTapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "tap_changer_empty_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        checkConnected("BBM_TC", false);
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      TapChangerAutomaton BBM_TC equipment LOAD is not a LoadWithTransformers, the automation system will be skipped
+                      TapChangerAutomaton BBM_TC requires a connection with a LoadWithTransformers but dynamic model LoadAlphaBeta LOAD does not implement it
+                      TapChangerAutomaton BBM_TC connections cannot be created, the model will be skipped
                 """);
     }
 }

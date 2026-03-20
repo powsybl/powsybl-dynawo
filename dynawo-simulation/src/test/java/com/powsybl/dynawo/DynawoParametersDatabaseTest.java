@@ -111,6 +111,20 @@ class DynawoParametersDatabaseTest {
     }
 
     @Test
+    void addReferenceWithNullNameToAParameterSet() {
+        ParametersSet p = new ParametersSet("ps1");
+        p.addReference(null, null, "origName", "componentId");
+        assertTrue(p.getReferences().isEmpty());
+    }
+
+    @Test
+    void addReferenceWithEmptyNameToAParameterSet() {
+        ParametersSet p = new ParametersSet("ps1");
+        p.addReference("", null, "origName", "componentId");
+        assertTrue(p.getReferences().isEmpty());
+    }
+
+    @Test
     void checkPrefixParameters() {
         List<ParametersSet> setsMap = ParametersXml.load(fileSystem.getPath("/modelsPrefixParameters.par"));
         DynawoSimulationParameters dParameters = new DynawoSimulationParameters().setModelsParameters(setsMap);

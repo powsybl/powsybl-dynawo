@@ -23,21 +23,22 @@ public class ParametersSet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParametersSet.class);
     private final Map<String, Parameter> parameters;
-    private final List<Reference> references;
+    private final Map<String, Reference> references;
     private final Map<String, Map<String, PrefixParameter>> prefixParameters;
     private final String id;
+    private static final String ORIGIN_DATA = "IIDM";
 
     public ParametersSet(@JsonProperty("id") String id) {
         this.id = id;
         this.parameters = new LinkedHashMap<>();
-        this.references = new ArrayList<>();
+        this.references = new LinkedHashMap<>();
         this.prefixParameters = new HashMap<>();
     }
 
     public ParametersSet(String id, ParametersSet parametersSet) {
         this.id = id;
         this.parameters = new LinkedHashMap<>(parametersSet.parameters);
-        this.references = new ArrayList<>(parametersSet.references);
+        this.references = new LinkedHashMap<>(parametersSet.references);
         this.prefixParameters = new HashMap<>(parametersSet.prefixParameters);
     }
 
@@ -53,12 +54,21 @@ public class ParametersSet {
         parameters.replace(parameterName, new Parameter(parameterName, type, value));
     }
 
-    public void addReference(String name, ParameterType type, String origData, String origName, String componentId) {
-        references.add(new Reference(name, type, origData, origName, componentId));
+    public void addReference(String name, ParameterType type, String origName, String componentId) {
+
+        if (name == null || name.isEmpty()) {
+            return;
+        }
+
+        if (parameters.containsKey(name) || references.containsKey(name)) {
+            return;
+        }
+
+        references.put(name, new Reference(name, type, ORIGIN_DATA, origName, componentId));
     }
 
-    public void addReference(String name, ParameterType type, String origData, String origName) {
-        references.add(new Reference(name, type, origData, origName, null));
+    public void addReference(String name, ParameterType type, String origName) {
+        addReference(name, type, origName, null);
     }
 
     public void addPrefixParameter(String name, String componentId, ParameterType type, String value) {
@@ -74,7 +84,7 @@ public class ParametersSet {
         return parameters;
     }
 
-    public List<Reference> getReferences() {
+    public Map<String, Reference> getReferences() {
         return references;
     }
 

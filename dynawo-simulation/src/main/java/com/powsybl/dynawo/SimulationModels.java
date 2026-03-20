@@ -48,6 +48,11 @@ public final class SimulationModels implements DynawoData {
             }
 
             @Override
+            public void addReference(String parameterSetId, String name, ParameterType type, String origName, String componentId) {
+                dynawoParameters.getModelParameters(parameterSetId).addReference(name, type, origName, componentId);
+            }
+          
+            @Override
             public void generateParametersFromPrefix(String parameterSetId, String name, List<String> componentIds) {
                 dynawoParameters.getModelParameters(parameterSetId).generateParametersFromPrefix(name, componentIds);
             }

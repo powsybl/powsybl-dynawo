@@ -204,4 +204,13 @@ public final class BuilderReports {
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
+
+    public static void reportMissingPhaseTapChanger(ReportNode reportNode, String fieldName, String staticId) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.missingPhaseTapChanger")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withTypedValue(STATIC_ID, staticId, TypedValue.ID)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
 }

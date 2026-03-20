@@ -24,6 +24,10 @@ class PhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void setupNetwork() {
         network = EurostagTutorialExample1Factory.createWithLFResults();
+        network.getTwoWindingsTransformer("NGEN_NHV1").newPhaseTapChanger()
+                .setTapPosition(0)
+                .beginStep().setR(1.0).setX(2.0).setG(3.0).setB(4.0).setAlpha(5.0).setRho(6.0).endStep()
+                .add();
     }
 
     @Override
@@ -45,5 +49,6 @@ class PhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "phase_shifter_blocking_i_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        checkConnected("BBM_PSB", true);
     }
 }
