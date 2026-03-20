@@ -10,20 +10,24 @@ package com.powsybl.dynawo.commons;
 import com.powsybl.dynawo.commons.exportconfiguration.ExportConfigurationHandler;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.TopologyLevel;
+import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.serde.AbstractTreeDataExporter;
 import com.powsybl.iidm.serde.IidmVersion;
 import com.powsybl.iidm.serde.NetworkSerDe;
 
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.function.Consumer;
+import java.util.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class NetworkExporter {
+
+    @FunctionalInterface
+    public interface VoltageLevelFinder {
+        void findVoltageLevels(Network network, Consumer<VoltageLevel> voltageLevelConsumer);
+    }
 
     private static final String IIDM_VERSION_1_4 = IidmVersion.V_1_4.toString(".");
     private static final String IIDM_VERSION_1_5 = IidmVersion.V_1_5.toString(".");
@@ -33,11 +37,7 @@ public final class NetworkExporter {
     private NetworkExporter() {
     }
 
-    public static void writeIidm(Network network, Path file, DynawoVersion version) {
-        writeIidm(network, file, version, false);
-    }
-
-    public static void writeIidm(Network network, Path file, DynawoVersion version, boolean isMergeLoads) {
+    public static void writeIidm(Network network, Path file, DynawoVersion version, boolean isMergeLoads, VoltageLevelFinder... voltageLevelFinders) {
         Objects.requireNonNull(network);
         Objects.requireNonNull(file);
         List<Consumer<Network>> networkModifiers = CONFIGURATION_HANDLER.getNetworkModifiers();
@@ -49,11 +49,25 @@ public final class NetworkExporter {
         if (hasNetworkModificators) {
             networkModifiers.forEach(m -> m.accept(dynawoInput));
         }
+        dynawoInput.write("XIIDM", createProperties(network, voltageLevelFinders), file);
+    }
+
+    private static Properties createProperties(Network network, VoltageLevelFinder... voltageLevelFinders) {
         Properties params = new Properties();
         params.setProperty(AbstractTreeDataExporter.VERSION,
                 version.compareTo(IIDM_1_5_MIN_DYNAWO_VERSION) >= 0 ? IIDM_VERSION_1_5 : IIDM_VERSION_1_4);
         params.setProperty(AbstractTreeDataExporter.EXTENSIONS_INCLUDED_LIST,
                 String.join(",", CONFIGURATION_HANDLER.getExtensionNames()));
-        dynawoInput.write("XIIDM", params, file);
+        params.setProperty(AbstractTreeDataExporter.THROW_EXCEPTION_IF_EXTENSION_NOT_FOUND, "true");
+        params.setProperty(AbstractTreeDataExporter.TOPOLOGY_LEVEL, TopologyLevel.BUS_BRANCH.toString());
+        params.setProperty(AbstractTreeDataExporter.BUS_BRANCH_VOLTAGE_LEVEL_INCOMPATIBILITY_BEHAVIOR, "KEEP_ORIGINAL_TOPOLOGY");
+
+        Set<VoltageLevel> voltageLevels = new HashSet<>();
+        Stream.of(voltageLevelFinders).forEach(finder -> finder.findVoltageLevels(network, voltageLevels::add));
+        if (!voltageLevels.isEmpty()) {
+            params.setProperty(AbstractTreeDataExporter.VOLTAGE_LEVELS_NODE_BREAKER,
+                    voltageLevels.stream().map(VoltageLevel::getId).collect(Collectors.joining(",")));
+        }
+        return params;
     }
 }
