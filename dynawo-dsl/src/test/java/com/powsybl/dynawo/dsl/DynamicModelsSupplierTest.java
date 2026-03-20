@@ -25,17 +25,14 @@ import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAu
 import com.powsybl.dynawo.models.buses.InfiniteBus;
 import com.powsybl.dynawo.models.buses.StandardBus;
 import com.powsybl.dynawo.models.generators.*;
-import com.powsybl.dynawo.models.loads.*;
 import com.powsybl.dynawo.models.hvdc.BaseHvdc;
 import com.powsybl.dynawo.models.hvdc.HvdcDangling;
 import com.powsybl.dynawo.models.lines.StandardLine;
+import com.powsybl.dynawo.models.loads.*;
 import com.powsybl.dynawo.models.svarcs.BaseStaticVarCompensator;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
-import com.powsybl.iidm.network.test.HvdcTestNetwork;
-import com.powsybl.iidm.network.test.SvcTestCaseFactory;
+import com.powsybl.iidm.network.test.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -147,8 +144,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/tapChanger.groovy", TapChangerAutomationSystem.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
                 Arguments.of("/dynamicModels/tapChangerBlockingBusBar.groovy", TapChangerBlockingAutomationSystem.class, FourSubstationsNodeBreakerFactory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton2"),
                 Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomationSystem.class, EurostagTutorialExample1Factory.createWithLFResults(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
-                Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomationSystem.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterI"),
-                Arguments.of("/dynamicModels/phaseShifterP.groovy", PhaseShifterPAutomationSystem.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterP"),
+                Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomationSystem.class, PhaseShifterTestCaseFactory.create(), "PS_PS1", "ps", "PhaseShifterI"),
+                Arguments.of("/dynamicModels/phaseShifterP.groovy", PhaseShifterPAutomationSystem.class, PhaseShifterTestCaseFactory.create(), "PS_PS1", "ps", "PhaseShifterP"),
                 Arguments.of("/dynamicModels/underVoltage.groovy", UnderVoltageAutomationSystem.class, EurostagTutorialExample1Factory.create(), "UV_GEN", "uv", "UnderVoltageAutomaton")
         );
     }
@@ -182,6 +179,13 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                            + Groovy Dynamic Models Supplier
                               + Model PhaseShifterI PS_NGEN_NHV1 instantiation KO
                                  'transformer' field value 'NGEN' not found for equipment type(s) TWO_WINDINGS_TRANSFORMER
+                        """),
+                Arguments.of("/warnings/phaseShifterWithTransformerMissingPhaseTapChanger.groovy", EurostagTutorialExample1Factory.create(),
+                        """
+                        + DSL tests
+                           + Groovy Dynamic Models Supplier
+                              + Model PhaseShifterI PS_NGEN_NHV1 instantiation KO
+                                 'transformer' field value 'NGEN_NHV1' must have a phase tap changer
                         """),
                 Arguments.of("/warnings/claMissingMeasurement.groovy", EurostagTutorialExample1Factory.create(),
                         """
@@ -252,7 +256,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                               + Model HvdcVsc L instantiation KO
                                  'staticId' field value 'L' should be an HVDC VSC
                         """)
-                );
+        );
     }
 
     private static Stream<Arguments> provideGenerator() {

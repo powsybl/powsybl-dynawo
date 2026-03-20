@@ -57,7 +57,7 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
     }
 
     @Override
-    public String getName() {
+    public String getMacroConnectName() {
         return super.getLib();
     }
 
@@ -91,7 +91,7 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
             }
         } else {
             isConnected = false;
-            DynawoSimulationReports.reportEmptyListAutomationSystem(adder.getReportNode(), this.getName(), getDynamicModelId(), TapChangerModel.class.getSimpleName());
+            DynawoSimulationReports.reportEmptyModel(adder.getReportNode(), this.getName(), getDynamicModelId());
         }
     }
 
@@ -110,5 +110,10 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
         if (isConnected) {
             super.write(writer, parFileName);
         }
+    }
+
+    @Override
+    public boolean isConnected() {
+        return isConnected;
     }
 }

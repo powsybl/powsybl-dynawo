@@ -14,7 +14,6 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.generators.SpecifiedGeneratorModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Generator;
-import com.powsybl.iidm.network.IdentifiableType;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -39,7 +38,7 @@ public class UnderVoltageAutomationSystem extends AbstractPureDynamicBlackBoxMod
     public void createMacroConnections(MacroConnectionsAdder adder) {
         isConnected = !adder.createMacroConnectionsOrSkip(this, generator, SpecifiedGeneratorModel.class, this::getVarConnectionsWith);
         if (!isConnected) {
-            DynawoSimulationReports.reportFailedDefaultModelHandling(adder.getReportNode(), getName(), getDynamicModelId(), IdentifiableType.GENERATOR.toString());
+            DynawoSimulationReports.reportEmptyModel(adder.getReportNode(), getName(), getDynamicModelId());
         }
     }
 
@@ -55,5 +54,10 @@ public class UnderVoltageAutomationSystem extends AbstractPureDynamicBlackBoxMod
         if (isConnected) {
             super.write(writer, parFileName);
         }
+    }
+
+    @Override
+    public boolean isConnected() {
+        return isConnected;
     }
 }

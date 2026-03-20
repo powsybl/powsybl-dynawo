@@ -17,9 +17,7 @@ import com.powsybl.computation.SimpleCommandBuilder;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynaflow.json.JsonDynaFlowSaParametersSerializer;
-import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.commons.ExecutionEnvironmentUtils;
-import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
+import com.powsybl.dynawo.commons.*;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisProvider;
@@ -85,13 +83,13 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
 
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX);
-        DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, runParameters.getComputationManager(), DynaFlowProvider.getVersionCommand(config), DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
+        DynawoVersion version = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, runParameters.getComputationManager(), DynaFlowProvider.getVersionCommand(config), DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
 
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         ReportNode dfsaReportNode = DynaflowReports.createDynaFlowSecurityAnalysisReportNode(runParameters.getReportNode(), network.getId());
 
         DynaFlowSecurityAnalysisHandler executionHandler = new DynaFlowSecurityAnalysisHandler(network, workingVariantId, getCommand(config),
-                runParameters.getSecurityAnalysisParameters(), contingencies, runParameters.getFilter(), dfsaReportNode);
+                runParameters.getSecurityAnalysisParameters(), contingencies, runParameters.getFilter(), version, dfsaReportNode);
         ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX);
         return runParameters.getComputationManager().execute(execEnvSimulation, executionHandler);
     }

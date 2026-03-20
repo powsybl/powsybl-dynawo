@@ -61,7 +61,8 @@ public abstract class AbstractDynawoAlgorithmsHandler<R, S extends DynawoSimulat
 
     private void writeInputFiles(Path workingDir) {
         try {
-            NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME), false,
+            NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME),
+                    context.getCurrentDynawoVersion(), false,
                     new ContingencyVoltageLevelFinder(getContingencies()));
             DynawoFilesUtils.writeInputFiles(workingDir, context);
             writeMultipleJobs(workingDir);
