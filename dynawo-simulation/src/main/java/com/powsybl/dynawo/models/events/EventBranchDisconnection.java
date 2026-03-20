@@ -49,11 +49,6 @@ public class EventBranchDisconnection extends AbstractEvent {
     }
 
     @Override
-    public String getName() {
-        return "EventBranchDisconnection";
-    }
-
-    @Override
     public String getLib() {
         return "EventQuadripoleDisconnection";
     }

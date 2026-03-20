@@ -66,7 +66,7 @@ class DisconnectDynamicBusEventXmlTest extends AbstractDynamicModelXmlTest {
                    Model Line L1 instantiation OK
                    Model Disconnect Disconnect_B1 instantiation OK
                    + Dynawo models processing
-                      EventBusDisconnection Disconnect_B1 cannot handle connection with BUS dynamic model, the model will be skipped
+                      Disconnect Disconnect_B1 cannot handle connection with BUS dynamic model, the model will be skipped
                 """);
     }
 }
