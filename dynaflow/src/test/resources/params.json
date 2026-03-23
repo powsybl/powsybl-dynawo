@@ -3,7 +3,7 @@
     "InfiniteReactiveLimits" : true,
     "SVCRegulationOn" : true,
     "ShuntRegulationOn" : true,
-    "AutomaticSlackBusOn" : false,
+    "AutomaticSlackBusOn" : true,
     "DsoVoltageLevel" : 32.4,
     "TfoVoltageLevel" : 67.89,
     "ActivePowerCompensation" : "P",

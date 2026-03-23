@@ -61,7 +61,8 @@ class DynaFlowTest extends AbstractDynawoTest {
         DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), true);
         loadFlowProvider = new DynaFlowProvider(() -> config);
         loadFlowParameters = new LoadFlowParameters()
-                .setVoltageInitMode(LoadFlowParameters.VoltageInitMode.PREVIOUS_VALUES);
+                .setVoltageInitMode(LoadFlowParameters.VoltageInitMode.PREVIOUS_VALUES)
+                .setReadSlackBus(false);
         securityAnalysisProvider = new DynaFlowSecurityAnalysisProvider(() -> config);
         securityAnalysisParameters = new SecurityAnalysisParameters().setLoadFlowParameters(loadFlowParameters);
         loadFlowParameters.addExtension(DynaFlowParameters.class, new DynaFlowParameters());

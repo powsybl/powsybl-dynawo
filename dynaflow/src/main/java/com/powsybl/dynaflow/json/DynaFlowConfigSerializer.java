@@ -70,7 +70,7 @@ public final class DynaFlowConfigSerializer {
         jsonGenerator.writeBooleanField("InfiniteReactiveLimits", !lfParameters.isUseReactiveLimits());
         jsonGenerator.writeBooleanField("SVCRegulationOn", dynaFlowParameters.getSvcRegulationOn());
         jsonGenerator.writeBooleanField("ShuntRegulationOn", lfParameters.isShuntCompensatorVoltageControlOn());
-        jsonGenerator.writeBooleanField("AutomaticSlackBusOn", lfParameters.isReadSlackBus());
+        jsonGenerator.writeBooleanField("AutomaticSlackBusOn", !lfParameters.isReadSlackBus());
         writeNonNullField(jsonGenerator, "DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
         writeNonNullField(jsonGenerator, "TfoVoltageLevel", dynaFlowParameters.getTfoVoltageLevel());
         jsonGenerator.writeStringField("ActivePowerCompensation", convertToActivePowerCompensation(lfParameters.getBalanceType()).getDynaflowName());

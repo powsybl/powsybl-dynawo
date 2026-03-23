@@ -178,11 +178,11 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
     @Test
     void parametersSerialization() throws IOException {
-        LoadFlowParameters lfParameters = new LoadFlowParameters();
-        lfParameters.setUseReactiveLimits(false);
-        lfParameters.setShuntCompensatorVoltageControlOn(true);
-        lfParameters.setReadSlackBus(false);
-        lfParameters.setBalanceType(LoadFlowParameters.BalanceType.PROPORTIONAL_TO_GENERATION_P);
+        LoadFlowParameters lfParameters = new LoadFlowParameters()
+                .setUseReactiveLimits(false)
+                .setShuntCompensatorVoltageControlOn(true)
+                .setReadSlackBus(false)
+                .setBalanceType(LoadFlowParameters.BalanceType.PROPORTIONAL_TO_GENERATION_P);
 
         DynaFlowParameters dynaFlowParameters = new DynaFlowParameters()
             .setSvcRegulationOn(true)
