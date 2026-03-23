@@ -25,6 +25,7 @@ dynamic-security-analysis:
 
 load-flow-default-parameters:
   voltageInitMode: PREVIOUS_VALUES
+  readSlackBus: false
 
 dynawo-simulation-default-parameters:
   parametersFile: /work/unittests/models.par
