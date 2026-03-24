@@ -44,4 +44,16 @@ public class BuilderIdListEquipmentList<T extends Identifiable<?>> extends Build
                     reportNodeBuilder.buildReportNode(reportNode, fieldName, ids, equipmentType);
                 });
     }
+
+    /**
+     * Is instantiable if the related field has been set and if equipment has been found for each collection
+     */
+    @Override
+    public boolean checkEquipmentData() {
+        if (equipments.isEmpty() && missingEquipmentIds.isEmpty()) {
+            BuilderReports.reportFieldNotSet(reportNode, fieldName);
+            return false;
+        }
+        return missingEquipmentIds.isEmpty();
+    }
 }

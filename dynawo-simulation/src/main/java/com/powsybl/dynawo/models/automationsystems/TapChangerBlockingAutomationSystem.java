@@ -17,7 +17,6 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.iidm.network.IdentifiableType;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -28,7 +27,6 @@ import java.util.*;
  */
 public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlackBoxModel {
 
-    private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.LOAD, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
     private static final int MAX_MEASUREMENTS = 5;
 
     private final List<Identifiable<?>> tapChangerEquipments;
@@ -50,10 +48,6 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
         if (uMeasurements.size() > MAX_MEASUREMENTS) {
             throw new PowsyblException("Tap changer blocking automation system can only handle " + MAX_MEASUREMENTS + " measurement points at the same time");
         }
-    }
-
-    public static boolean isCompatibleEquipment(IdentifiableType type) {
-        return COMPATIBLE_EQUIPMENTS.contains(type);
     }
 
     @Override
