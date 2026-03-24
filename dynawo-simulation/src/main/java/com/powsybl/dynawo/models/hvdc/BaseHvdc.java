@@ -68,7 +68,7 @@ public class BaseHvdc extends AbstractEquipmentBlackBoxModel<HvdcLine> implement
     }
 
     @Override
-    public String getName() {
+    public String getMacroConnectName() {
         return isInverted ? getLib() + "Inverted" : getLib();
     }
 
