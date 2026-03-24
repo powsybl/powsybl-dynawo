@@ -21,7 +21,7 @@ import com.powsybl.iidm.network.Network;
  */
 public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFaultEventBuilder> {
 
-    private static final EventModelInfo MODEL_INFO = new EventModelInfo("NodeFault", "Node fault with configurable resistance, reactance and duration");
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("NodeFault", "Node fault with configurable resistance, reactance and duration.");
 
     protected double faultTime;
     protected double rPu;
