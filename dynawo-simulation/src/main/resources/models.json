@@ -653,7 +653,7 @@
       },
       {
         "lib": "LoadPQ",
-        "doc": "PQ load"
+        "doc": "PQ load."
       },
       {
         "lib": "LoadAlphaBetaRestorativeNetwork",

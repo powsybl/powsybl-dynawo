@@ -38,13 +38,8 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
     }
 
     @Override
-    public String getName() {
+    public String getMacroConnectName() {
         return getLib() + side.getSideSuffix();
-    }
-
-    @Override
-    public String getLib() {
-        return "TapChangerAutomaton";
     }
 
     @Override
@@ -53,7 +48,7 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
             boolean isSkipped = adder.createMacroConnectionsOrSkip(this, load, LoadWithTransformers.class, this::getVarConnectionsWith);
             if (isSkipped) {
                 connection = ConnectionState.CANNOT_CONNECT;
-                DynawoSimulationReports.reportEmptyAutomationSystem(adder.getReportNode(), getName(), getDynamicModelId(), load.getId(), LoadWithTransformers.class.getSimpleName());
+                DynawoSimulationReports.reportEmptyModel(adder.getReportNode(), getName(), getDynamicModelId());
             } else {
                 connection = ConnectionState.CONNECTED;
             }

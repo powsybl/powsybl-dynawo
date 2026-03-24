@@ -32,7 +32,7 @@ public record ModelConfig(String lib, String alias, String internalModelPrefix, 
         this.alias = alias;
         this.internalModelPrefix = internalModelPrefix;
         this.properties = Objects.requireNonNull(properties);
-        this.doc = doc;
+        this.doc = Objects.requireNonNull(doc);
         this.version = Objects.requireNonNull(version);
         this.varMapping = varMapping;
         this.varPrefix = varPrefix;
@@ -43,12 +43,12 @@ public record ModelConfig(String lib, String alias, String internalModelPrefix, 
     }
 
     public ModelConfig(String lib, List<String> properties) {
-        this(lib, null, null, properties, null, VersionInterval.createDefaultVersion(),
+        this(lib, null, null, properties, "", VersionInterval.createDefaultVersion(),
                 Collections.emptyList(), Collections.emptyMap());
     }
 
     public ModelConfig(String lib) {
-        this(lib, null, null, Collections.emptyList(), null, VersionInterval.createDefaultVersion(),
+        this(lib, null, null, Collections.emptyList(), "", VersionInterval.createDefaultVersion(),
                 Collections.emptyList(), Collections.emptyMap());
     }
 
@@ -83,8 +83,8 @@ public record ModelConfig(String lib, String alias, String internalModelPrefix, 
 
     @Override
     public String formattedInfo() {
-        return name() + (alias != null ? " (" + lib + ")" : "")
-                + (doc != null ? ": " + doc : "")
+        return (alias == null ? lib : alias + " (" + lib + ")")
+                + (doc.isEmpty() ? doc : ": " + doc)
                 + " (" + version.formattedInfo() + ")";
     }
 }
