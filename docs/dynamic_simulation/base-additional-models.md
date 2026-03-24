@@ -26,10 +26,10 @@ The list is statically loaded via [ModelConfigLoader](https://javadoc.io/doc/com
 
 ## Additional models
 Additional models allow advanced user to test new Dynawo models that are not already implemented in powsybl-dynawo.
-Additional models can be set in [Dynawo simulation parameters](configuration.md#additionalModelsFile) with a JSON file.
+Additional models can be set in [Dynawo simulation parameters](configuration.md#additionalmodelsfile) with a JSON file.
 
 ### Minimal configuration
-To add a dynamic model, the `lib` name have to be written in an existing category. 
+To add a dynamic model, the `lib` name has to be written in an existing category. 
 For example:
 ```json
 {
@@ -49,7 +49,7 @@ Note: the dynamic model must exist in Dynawo.
 
 ### Complex configuration
 For generator model using specialized component, we need to override some connection properties.
-Thus, `macroStaticReference` and variable prefix can be set for an additional model.
+Thus, `macroStaticReference` and `variablePrefix` can be set for an additional model.
 For example:
 ```json
 {
