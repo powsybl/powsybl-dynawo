@@ -3,11 +3,12 @@
 ## Dynawo properties
 The `dynawo` module defines the required parameters to run with Dynawo.
 
-**homeDir**  
-Use the `homeDir` property to defines the installation directory of the dynawo simulator.
+### homeDir
+Use the `homeDir` property to define the installation directory of the dynawo simulator.
 
-**debug**  
-Use the `debug` property to specify if the temporary folder where the inputs are generated should be kept after the simulation.
+### debug
+Use the `debug` property to specify if the temporary folder where the inputs are generated should be kept after the simulation.<br>
+This property is independent of the `debugDir` parameter [property](inv:powsyblcore:*:*#simulation/dynamic/configuration.md#optional-properties). If both properties are set to `true`, the temporary simulation folder will be kept **and** dumped in the requested folder.
 
 ### Examples
 

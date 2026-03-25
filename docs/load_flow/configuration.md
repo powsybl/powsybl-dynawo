@@ -1,19 +1,28 @@
 # Configuration
 
-## DynaFlow configuration
+## DynaFlow properties
+The `dynaflow` module defines the required parameters to run a load flow with DynaFlow.
 
-You need to tell powsybl where to find DynaFlow, by adding this into you configuration file:
+### homeDir
+Use the `homeDir` property to define the installation directory of the dynaflow wrapper.
+
+### debug
+Use the `debug` property to specify if the temporary folder where the inputs are generated should be kept after the simulation.
+
+
+### Examples
 ```yaml
 dynaflow:
-    homeDir: /path/to/dynaflow  # Directory obtained by unzipping the package, should contain "bin"
+    homeDir: /path/to/dynaflow  # Directory obtained by unzipping the package should contain "bin"
     debug: false
 ```
 
-To use DynaFlow as a default for all power flow computations, you may configure the `load-flow`
-module in your configuration file:
-```yaml
-load-flow:
-    default-impl-name: DynaFlow
+**XML configuration:**
+```xml
+<dynaflow>
+  <homeDir>/path/to/dynaflow</homeDir>
+  <debug>false</debug>
+</dynaflow>
 ```
 
 ## Default parameters
