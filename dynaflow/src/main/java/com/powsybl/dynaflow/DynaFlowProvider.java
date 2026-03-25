@@ -154,6 +154,11 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
+    public List<Parameter> getRawSpecificParameters() {
+        return getSpecificParameters();
+    }
+
+    @Override
     public Optional<ModuleConfig> getModuleConfig(PlatformConfig platformConfig) {
         return platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS);
     }
@@ -162,4 +167,5 @@ public class DynaFlowProvider implements LoadFlowProvider {
     public Optional<ExtensionJsonSerializer> getSpecificParametersSerializer() {
         return Optional.of(new JsonDynaFlowParametersSerializer());
     }
+
 }
