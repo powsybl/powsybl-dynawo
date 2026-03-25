@@ -8,7 +8,7 @@ Use the `homeDir` property to define the installation directory of the dynawo si
 
 ### debug
 Use the `debug` property to specify if the temporary folder where the inputs are generated should be kept after the simulation.<br>
-This property is independent of the `debugDir` parameter [property](inv:powsyblcore:*:*#simulation/dynamic/configuration.md#optional-properties). If both properties are set to `true`, the temporary simulation folder will be kept **and** dumped in the requested folder.
+This property is independent of the `debugDir` parameter [property](inv:powsyblcore:*:*#simulation/dynamic/configuration). If both properties are set to `true`, the temporary simulation folder will be kept **and** dumped in the requested folder.
 
 ### Examples
 

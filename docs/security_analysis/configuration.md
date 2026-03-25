@@ -1,6 +1,6 @@
 # Configuration
 
-The security analysis reuse the `dynaflow` [module](../load_flow/configuration.md#dynaflow-configuration)
+The security analysis reuse the `dynaflow` [module](../load_flow/configuration.md#dynaflow-properties)
 and the `dynaflow-default-parameters` [module](../load_flow/configuration.md#default-parameters).
 
 ## Default parameters

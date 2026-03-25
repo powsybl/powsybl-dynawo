@@ -41,13 +41,13 @@ Available arguments are:
 ### Required options
 
 `--case-file`  
-This option defines the path of the case file on which the simulation is run. The [supported formats](inv:powsyblcore:*:*#grid_exchange_formats/index.md) depend on the execution class path. 
+This option defines the path of the case file on which the simulation is run. The [supported formats](inv:powsyblcore:*:*#grid_exchange_formats/index) depend on the execution class path. 
 
 `--dynamic-models-file`  
-This option defines the path of the file used to associate dynamic models to static equipments of the network or add dynamic automation systems. At the moment, only groovy scripts are supported. The [dynamic models DSL](inv:powsyblcore:*:*#simulation/dynamic/index.md#dynamic-models-configuration) depends on the simulator used.
+This option defines the path of the file used to associate dynamic models to static equipments of the network or add dynamic automation systems. At the moment, only groovy scripts are supported. The [dynamic models DSL](inv:powsyblcore:*:*#simulation/dynamic/index.html#inputs) depends on the simulator used.
 
 `--contingencies-file`  
-This option defines the path of the contingency files. This file is a groovy script that respects the [contingency DSL](inv:powsyblcore:*:*#simulation/security/contingency-dsl.md) syntax.
+This option defines the path of the contingency files. This file is a groovy script that respects the [contingency DSL](inv:powsyblcore:*:*#simulation/security/contingency-dsl) syntax.
 
 `--load-variations-file`  
 This option defines the path of the load variations files. This file is a JSON that respects the [load variations](../margin_calculation/load_variations_supplier.md) syntax.
@@ -55,7 +55,7 @@ This option defines the path of the load variations files. This file is a JSON t
 ### Optional options
 
 `--import-parameters`  
-This option defines the path of the importer's configuration file. It's possible to overload one or many parameters using the `-I property=value` syntax. The list of supported properties depends on the [input format](inv:powsyblcore:*:*#grid_exchange_formats/index.md).
+This option defines the path of the importer's configuration file. It's possible to overload one or many parameters using the `-I property=value` syntax. The list of supported properties depends on the [input format](inv:powsyblcore:*:*#grid_exchange_formats/index).
 
 `--output-file`  
 This option defines the path where to export the [results](#results) of the simulation.
@@ -67,7 +67,7 @@ This option defines the path of the [parameters](#parameters) file of the simula
 The available parameters are described [here](../margin_calculation/configuration).
 
 ## Results
-The expected results are described [here](../margin_calculation/index#outputs)
+The expected results are described [here](../margin_calculation/index.md#outputs)
 
 ## Examples
 The following example shows how to run a margin calculation, using the default configuration:
