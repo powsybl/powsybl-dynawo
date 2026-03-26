@@ -56,7 +56,8 @@ class UnderVoltageAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
                    Model UnderVoltage BBM_under_voltage instantiation OK
                    Model UnderVoltage BBM_skipped_under_voltage instantiation OK
                    + Dynawo models processing
-                      UnderVoltageAutomaton BBM_skipped_under_voltage cannot handle connection with GENERATOR default model, the model will be skipped
+                      UnderVoltage BBM_skipped_under_voltage requires a connection with a SpecifiedGeneratorModel but dynamic model DefaultGenerator GEN2 does not implement it
+                      UnderVoltage BBM_skipped_under_voltage connections cannot be created, the model will be skipped
                 """);
     }
 }
