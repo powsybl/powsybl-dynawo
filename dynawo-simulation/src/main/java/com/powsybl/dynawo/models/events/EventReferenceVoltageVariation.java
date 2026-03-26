@@ -47,15 +47,15 @@ public class EventReferenceVoltageVariation extends AbstractEvent {
     }
 
     @Override
-    public String getName() {
-        return EventReferenceVoltageVariation.class.getSimpleName();
-    }
-
-    @Override
     public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         if (isConnected) {
             super.write(writer, parFileName);
         }
+    }
+
+    @Override
+    public String getName() {
+        return EventReferenceVoltageVariation.class.getSimpleName();
     }
 
     @Override
