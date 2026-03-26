@@ -12,6 +12,7 @@ import com.powsybl.iidm.network.Network;
 
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -22,17 +23,17 @@ import java.util.stream.Collectors;
  */
 public class ExportConfigurationHandler {
 
-    private static final Supplier<List<String>> IIDM_EXTENSION_NAMES_SUPPLIER =
+    private static final Supplier<Set<String>> IIDM_EXTENSION_NAMES_SUPPLIER =
             Suppliers.memoize(() -> ServiceLoader.load(ExportedIidmExtensions.class).stream()
                     .flatMap(provider -> provider.get().getIidmExtensionNames().stream())
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
 
     private static final Supplier<List<Consumer<Network>>> NETWORK_MODIFIERS_SUPPLIER =
             Suppliers.memoize(() -> ServiceLoader.load(NetworkModifier.class).stream()
                     .map(provider -> provider.get().getNetworkModifier())
                     .collect(Collectors.toList()));
 
-    private final List<String> extensionNames;
+    private final Set<String> extensionNames;
     private final List<Consumer<Network>> networkModifiers;
 
     public ExportConfigurationHandler() {
@@ -40,7 +41,7 @@ public class ExportConfigurationHandler {
         this.networkModifiers = NETWORK_MODIFIERS_SUPPLIER.get();
     }
 
-    public List<String> getExtensionNames() {
+    public Set<String> getExtensionNames() {
         return extensionNames;
     }
 

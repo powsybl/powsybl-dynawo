@@ -63,7 +63,7 @@ class DynaFlowTest extends AbstractDynawoTest {
         loadFlowParameters = new LoadFlowParameters();
         securityAnalysisProvider = new DynaFlowSecurityAnalysisProvider(() -> config);
         securityAnalysisParameters = new SecurityAnalysisParameters();
-        loadFlowParameters.addExtension(DynaFlowParameters.class, new DynaFlowParameters());
+        loadFlowParameters.addExtension(DynaFlowParameters.class, new DynaFlowParameters().setMergeLoads(false));
         securityAnalysisParameters.addExtension(DynaFlowSecurityAnalysisParameters.class,
                 new DynaFlowSecurityAnalysisParameters().setContingenciesStartTime(15.));
     }
@@ -92,7 +92,7 @@ class DynaFlowTest extends AbstractDynawoTest {
         assertEquals(1, result.getComponentResults().size());
         LoadFlowResult.ComponentResult componentResult = result.getComponentResults().getFirst();
         assertEquals(CONVERGED, componentResult.getStatus());
-        assertEquals("B4", componentResult.getSlackBusResults().getFirst().getId());
+        assertEquals("VL4_0", componentResult.getSlackBusResults().getFirst().getId());
 
         StringWriter sw = new StringWriter();
         reportNode.print(sw);

@@ -64,7 +64,7 @@ public final class NetworkResultsUpdater {
         // We choose to iterate over BusBreakerView buses instead of BusView buses because they are more stable:
         // a use-case when we need to export a node/breaker network to bus/breaker to Dynawo exists,
         // and reading the results from Dynawo-exported bus/breaker will end up with different ids at BusView level
-        Map<String, Bus> targetNetworkBusBreakerViewBusById = targetNetwork.getBusBreakerView().getBusStream()
+        Map<String, Bus> targetNetworkBusBreakerViewBusById = targetNetwork.getBusView().getBusStream()
                 .collect(Collectors.toMap(Identifiable::getId, Function.identity())); // it is needed to pre-index into a map as in network store n.getBusBreakerView().getBus(id) is slow
         for (Bus sourceBus : sourceNetwork.getBusBreakerView().getBuses()) {
             Bus targetBus = targetNetworkBusBreakerViewBusById.get(sourceBus.getId());

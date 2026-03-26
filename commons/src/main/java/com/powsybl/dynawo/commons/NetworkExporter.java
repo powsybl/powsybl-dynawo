@@ -12,12 +12,14 @@ import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TopologyLevel;
 import com.powsybl.iidm.network.VoltageLevel;
-import com.powsybl.iidm.serde.AbstractTreeDataExporter;
+import com.powsybl.iidm.serde.ExportOptions;
 import com.powsybl.iidm.serde.IidmVersion;
 import com.powsybl.iidm.serde.NetworkSerDe;
 
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -49,25 +51,21 @@ public final class NetworkExporter {
         if (hasNetworkModificators) {
             networkModifiers.forEach(m -> m.accept(dynawoInput));
         }
-        dynawoInput.write("XIIDM", createProperties(network, voltageLevelFinders), file);
+        NetworkSerDe.write(dynawoInput, createExportOptions(network, version, voltageLevelFinders), file);
     }
 
-    private static Properties createProperties(Network network, VoltageLevelFinder... voltageLevelFinders) {
-        Properties params = new Properties();
-        params.setProperty(AbstractTreeDataExporter.VERSION,
-                version.compareTo(IIDM_1_5_MIN_DYNAWO_VERSION) >= 0 ? IIDM_VERSION_1_5 : IIDM_VERSION_1_4);
-        params.setProperty(AbstractTreeDataExporter.EXTENSIONS_INCLUDED_LIST,
-                String.join(",", CONFIGURATION_HANDLER.getExtensionNames()));
-        params.setProperty(AbstractTreeDataExporter.THROW_EXCEPTION_IF_EXTENSION_NOT_FOUND, "true");
-        params.setProperty(AbstractTreeDataExporter.TOPOLOGY_LEVEL, TopologyLevel.BUS_BRANCH.toString());
-        params.setProperty(AbstractTreeDataExporter.BUS_BRANCH_VOLTAGE_LEVEL_INCOMPATIBILITY_BEHAVIOR, "KEEP_ORIGINAL_TOPOLOGY");
+    private static ExportOptions createExportOptions(Network network, DynawoVersion version, VoltageLevelFinder... voltageLevelFinders) {
 
-        Set<VoltageLevel> voltageLevels = new HashSet<>();
-        Stream.of(voltageLevelFinders).forEach(finder -> finder.findVoltageLevels(network, voltageLevels::add));
-        if (!voltageLevels.isEmpty()) {
-            params.setProperty(AbstractTreeDataExporter.VOLTAGE_LEVELS_NODE_BREAKER,
-                    voltageLevels.stream().map(VoltageLevel::getId).collect(Collectors.joining(",")));
-        }
-        return params;
+        ExportOptions exportOptions = new ExportOptions()
+                .setVersion(version.compareTo(IIDM_1_5_MIN_DYNAWO_VERSION) >= 0 ? IIDM_VERSION_1_5 : IIDM_VERSION_1_4)
+                .setIncludedExtensions(CONFIGURATION_HANDLER.getExtensionNames())
+                .setThrowExceptionIfExtensionNotFound(true)
+                .setTopologyLevel(TopologyLevel.NODE_BREAKER)
+                .setBusBranchVoltageLevelIncompatibilityBehavior(ExportOptions.BusBranchVoltageLevelIncompatibilityBehavior.KEEP_ORIGINAL_TOPOLOGY);
+
+        // TODO handle bus breaker
+        Stream.of(voltageLevelFinders).forEach(finder -> finder.findVoltageLevels(network,
+                vl -> exportOptions.addVoltageLevelTopologyLevel(vl.getId(), TopologyLevel.NODE_BREAKER)));
+        return exportOptions;
     }
 }
