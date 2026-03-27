@@ -9,7 +9,7 @@
 package warnings
 
 
-TapChangerBlockingAutomaton {
+TapChangerBlockingAutomationSystem {
     dynamicModelId "ZAB"
     parameterSetId "ZAB"
     uMeasurements "LOAD", "Wrong_ID"

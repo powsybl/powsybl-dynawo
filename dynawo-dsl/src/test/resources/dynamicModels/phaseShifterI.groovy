@@ -10,7 +10,7 @@ package dynamicModels
 
 
 PhaseShifterI {
-    dynamicModelId "PS_NGEN_NHV1"
+    dynamicModelId "PS_PS1"
     parameterSetId "ps"
-    transformer "NGEN_NHV1"
+    transformer "PS1"
 }

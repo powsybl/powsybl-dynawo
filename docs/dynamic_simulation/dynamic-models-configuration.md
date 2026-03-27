@@ -341,7 +341,7 @@ With specific attributes:
 ```groovy
 import com.powsybl.dynawo.models.TransformerSide
 
-TapChangerAutomaton {
+TapChangerAutomationSystem {
     dynamicModelId "TC"
     parameterSetId "TC"
     staticId "LOAD"
@@ -351,7 +351,7 @@ TapChangerAutomaton {
 **Json configuration:**
 ```json
 {
-  "model":"TapChangerAutomaton",
+  "model":"TapChangerAutomationSystem",
   "group": "TC",
   "properties":[
     {
@@ -389,14 +389,14 @@ With specific attributes:
 def measurementsTCB1 = ["S1VL2_BBS1", "S3VL1_B1"]
 List[] measurementsTCB2 = [["OldId", "NGEN", "NHV1"], ["NHV1", "OldId"], ["NHV2"]]
 
-TapChangerBlockingAutomaton {
+TapChangerBlockingAutomationSystem {
     dynamicModelId "TCB1"
     parameterSetId "TCB"
     uMeasurements measurementsTCB1
     transformers "TWT", "LD1"
 }
 
-TapChangerBlockingAutomaton {
+TapChangerBlockingAutomationSystem {
     dynamicModelId "TCB2"
     parameterSetId "TCB"
     uMeasurements measurementsTCB2
@@ -407,7 +407,7 @@ TapChangerBlockingAutomaton {
 ```json
 [
   {
-    "model":"TapChangerBlockingAutomaton",
+    "model":"TapChangerBlockingAutomationSystem",
     "group": "TCB",
     "properties":[
       {
@@ -428,7 +428,7 @@ TapChangerBlockingAutomaton {
     ]
   },
   {
-    "model":"TapChangerBlockingAutomaton",
+    "model":"TapChangerBlockingAutomationSystem",
     "group": "TCB",
     "properties":[
       {

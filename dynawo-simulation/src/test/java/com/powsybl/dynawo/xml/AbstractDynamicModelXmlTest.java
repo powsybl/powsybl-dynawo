@@ -37,8 +37,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
+import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -65,6 +68,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
                 ModelConfigsHandler.getInstance().addModels(new AdditionalModelConfigLoader(additionalModelPath)));
         addDynamicModels();
+        setupDynawoSimulationParameters();
         setupDynawoContext();
     }
 
@@ -76,6 +80,10 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
+        validate(schemaDefinition, expectedResourceName, xmlFile, false);
+    }
+
+    public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile, boolean ignoreComment) throws SAXException, IOException {
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/" + expectedResourceName));
         InputStream actual = Files.newInputStream(xmlFile);
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -84,7 +92,11 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        assertTxtEquals(expected, actual);
+        if (ignoreComment) {
+            assertXmlEquals(expected, actual);
+        } else {
+            assertTxtEquals(expected, actual);
+        }
     }
 
     protected void setupDynawoSimulationParameters() {
@@ -120,5 +132,13 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
         StringWriter sw = new StringWriter();
         reportNode.print(sw);
         assertEquals(report, TestUtil.normalizeLineSeparator(sw.toString()));
+    }
+
+    protected void checkConnected(String dynamicModelId, boolean isConnected) {
+        Optional<BlackBoxModel> bbm = dynamicModels.stream()
+                .filter(m -> dynamicModelId.equalsIgnoreCase(m.getDynamicModelId()))
+                .findFirst();
+        assertThat(bbm).isPresent()
+                .hasValueSatisfying(m -> assertEquals(isConnected, m.isConnected()));
     }
 }

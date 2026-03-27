@@ -18,14 +18,14 @@ import com.powsybl.iidm.network.Generator
 
 for (Bus bus : network.busBreakerView.buses) {
     fsv {
-        staticId bus.id
+        id bus.id
         variable "wrong value"
     }
 }
 
 for (Generator gen : network.generators) {
     curve {
-        dynamicModelId gen.id
+        id gen.id
         variables "wrong value", "wrong value 2", "wrong value 3"
     }
 }

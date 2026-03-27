@@ -8,9 +8,9 @@
 
 package dynamicModels
 
-def measurements = ["S1VL2_BBS1", "OldId", "S3VL1_BBS"]
+def measurements = ["S1VL2_BBS1", "S3VL1_BBS"]
 
-TapChangerBlockingAutomaton {
+TapChangerBlockingAutomationSystem {
     dynamicModelId "ZAB"
     parameterSetId "ZAB"
     uMeasurements measurements
