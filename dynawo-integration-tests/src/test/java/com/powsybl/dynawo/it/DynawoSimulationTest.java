@@ -52,7 +52,8 @@ import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.commons.report.ReportNode.newRootReportNode;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -192,8 +193,8 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(result.getStatusText().isEmpty());
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
-        assertEquals(7, timeLine.size());
-        checkTimeLineEvent(timeLine.getFirst(), 30.0, "_BUS____5-BUS____6-1_PS", "Tap position change (increment)");
+        assertEquals(22, timeLine.size());
+        checkTimeLineEvent(timeLine.getFirst(), 0.0, "PhaseShifterI", "Phase-shifter : above maximum allowed value");
     }
 
     @Test
@@ -500,6 +501,11 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA);
+
+        network.getTwoWindingsTransformer(EurostagTutorialExample1Factory.NHV2_NLOAD).newPhaseTapChanger()
+                .setTapPosition(0)
+                .beginStep().setR(1.0).setX(2.0).setG(3.0).setB(4.0).setAlpha(5.0).setRho(6.0).endStep()
+                .add();
 
         DynamicModelsSupplier dynamicModelsSupplier = (n, r) -> List.of(
                 DynamicOverloadManagementSystemBuilder.of(n, r)

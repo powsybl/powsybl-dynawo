@@ -12,7 +12,9 @@ import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
+import com.powsybl.dynawo.models.generators.GridFormingConverterBuilder;
 import com.powsybl.dynawo.models.generators.InertialGridBuilder;
+import com.powsybl.dynawo.models.generators.WeccBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -31,8 +33,14 @@ class DisconnectInjectionEventXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void setupNetwork() {
         network = EurostagTutorialExample1Factory.createWithLFResults();
+        addGenerator("GEN2");
+        addGenerator("GEN3");
+        addGenerator("GEN4");
+    }
+
+    private void addGenerator(String genId) {
         network.getVoltageLevel(VLGEN).newGenerator()
-                .setId("GEN2")
+                .setId(genId)
                 .setBus(NGEN)
                 .setConnectableBus(NGEN)
                 .setMinP(-9999.99)
@@ -42,7 +50,7 @@ class DisconnectInjectionEventXmlTest extends AbstractDynamicModelXmlTest {
                 .setTargetP(607.0)
                 .setTargetQ(301.0)
                 .add();
-        network.getGenerator("GEN2").getTerminal()
+        network.getGenerator(genId).getTerminal()
                 .setP(-605.558349609375)
                 .setQ(-225.2825164794922);
     }
@@ -63,6 +71,13 @@ class DisconnectInjectionEventXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(BaseLoadBuilder.of(network)
                 .staticId("LOAD")
                 .build());
+        dynamicModels.add(WeccBuilder.of(network, "WT4AWeccCurrentSource")
+                .staticId("GEN3")
+                .build());
+        dynamicModels.add(GridFormingConverterBuilder.of(network, "GridFormingConverterDroopControl")
+                .staticId("GEN4")
+                .parameterSetId("GF")
+                .build());
         eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("GEN")
                 .startTime(1)
@@ -73,6 +88,14 @@ class DisconnectInjectionEventXmlTest extends AbstractDynamicModelXmlTest {
                 .build());
         eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("LOAD")
+                .startTime(1)
+                .build());
+        eventModels.add(EventDisconnectionBuilder.of(network)
+                .staticId("GEN3")
+                .startTime(1)
+                .build());
+        eventModels.add(EventDisconnectionBuilder.of(network)
+                .staticId("GEN4")
                 .startTime(1)
                 .build());
     }

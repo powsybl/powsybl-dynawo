@@ -37,11 +37,6 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         this.parameterSetId = dynamicModelId;
     }
 
-    @Override
-    public String getName() {
-        return getLib();
-    }
-
     public String getDynamicModelId() {
         return dynamicModelId;
     }
@@ -109,5 +104,10 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     @Override
     public void createDynamicModelInfoExtension() {
         // method empty by default to be redefined by specific models
+    }
+
+    @Override
+    public boolean isConnected() {
+        return true;
     }
 }
