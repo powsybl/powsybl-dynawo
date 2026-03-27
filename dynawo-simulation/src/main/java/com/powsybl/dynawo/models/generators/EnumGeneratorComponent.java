@@ -37,11 +37,9 @@ public enum EnumGeneratorComponent {
     ));
 
     public static EnumGeneratorComponent createFrom(ModelConfig modelConfig) {
-        boolean aux = modelConfig.hasAuxiliary();
-        boolean transformer = modelConfig.hasTransformer();
-        if (aux) {
+        if (modelConfig.hasAuxiliary()) {
             return EnumGeneratorComponent.AUXILIARY;
-        } else if (transformer) {
+        } else if (modelConfig.hasTransformer()) {
             return EnumGeneratorComponent.TRANSFORMER;
         }
         return EnumGeneratorComponent.NONE;
