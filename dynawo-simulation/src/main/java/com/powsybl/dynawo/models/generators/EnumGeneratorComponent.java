@@ -30,11 +30,6 @@ public enum EnumGeneratorComponent {
             new VarMapping("transformer_Q1GenPu", "q"),
             new VarMapping(GENERATOR_STATE, STATE)
     )),
-    AUXILIARY_TRANSFORMER("coupling_terminal1", List.of(
-            new VarMapping("coupling_P1GenPu", "p"),
-            new VarMapping("coupling_Q1GenPu", "q"),
-            new VarMapping(GENERATOR_STATE, STATE)
-    )),
     AUXILIARY("coupling_terminal1", List.of(
             new VarMapping("coupling_P1GenPu", "p"),
             new VarMapping("coupling_Q1GenPu", "q"),
@@ -44,12 +39,10 @@ public enum EnumGeneratorComponent {
     public static EnumGeneratorComponent createFrom(ModelConfig modelConfig) {
         boolean aux = modelConfig.hasAuxiliary();
         boolean transformer = modelConfig.hasTransformer();
-        if (aux && transformer) {
-            return EnumGeneratorComponent.AUXILIARY_TRANSFORMER;
+        if (aux) {
+            return EnumGeneratorComponent.AUXILIARY;
         } else if (transformer) {
             return EnumGeneratorComponent.TRANSFORMER;
-        } else if (aux) {
-            return EnumGeneratorComponent.AUXILIARY;
         }
         return EnumGeneratorComponent.NONE;
     }
