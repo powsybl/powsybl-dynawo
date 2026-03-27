@@ -2,8 +2,8 @@
   "dfl-config" : {
     "InfiniteReactiveLimits" : false,
     "SVCRegulationOn" : true,
-    "ShuntRegulationOn" : true,
-    "AutomaticSlackBusOn" : true,
+    "ShuntRegulationOn" : false,
+    "AutomaticSlackBusOn" : false,
     "DsoVoltageLevel" : 45.0,
     "TfoVoltageLevel" : 100.0,
     "ActivePowerCompensation" : "PMax",
@@ -11,7 +11,7 @@
     "StopTime" : 100.0,
     "ChosenOutputs" : [ "TIMELINE" ],
     "TimeStep" : 10.0,
-    "StartingPointMode" : "warm",
+    "StartingPointMode" : "flat",
     "sa" : {
       "TimeOfEvent" : 10.0
     },
