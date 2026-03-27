@@ -1,11 +1,12 @@
 {
-  "version" : "1.8",
+  "version" : "1.9",
   "preContingencyResult" : {
     "status" : "CONVERGED",
     "limitViolationsResult" : {
       "limitViolations" : [ {
         "subjectId" : "_BUS____1-BUS____5-1_AC",
         "subjectName" : "BUS    1-BUS    5-1",
+        "operationalLimitsGroupId" : "DEFAULT",
         "limitType" : "CURRENT",
         "limitName" : "permanent",
         "limit" : 500.0,

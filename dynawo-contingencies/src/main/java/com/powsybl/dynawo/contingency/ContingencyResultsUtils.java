@@ -9,6 +9,8 @@ package com.powsybl.dynawo.contingency;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
+import com.powsybl.contingency.violations.LimitViolation;
+import com.powsybl.contingency.violations.LimitViolationFilter;
 import com.powsybl.dynawo.commons.CommonReports;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.timeline.TimeLineParser;
@@ -20,6 +22,7 @@ import com.powsybl.dynawo.contingency.xml.ConstraintsReader;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.*;
+import com.powsybl.security.results.ConnectivityResult;
 import com.powsybl.security.results.NetworkResult;
 import com.powsybl.security.results.PostContingencyResult;
 import com.powsybl.security.results.PreContingencyResult;
@@ -61,11 +64,11 @@ public final class ContingencyResultsUtils {
      * Build the pre-contingency results from the constraints file written by dynawo or directly form the network if the results are not found
      */
     private static PreContingencyResult getPreContingencyResult(Network network, LimitViolationFilter violationFilter) {
-        NetworkResult networkResult = new NetworkResult(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         List<LimitViolation> limitViolations = Security.checkLimits(network);
         List<LimitViolation> filteredViolations = violationFilter.apply(limitViolations, network);
         // Pre contingency always set to CONVERGED (see issue #174 & #414)
-        return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(filteredViolations), networkResult);
+        return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED,
+                new LimitViolationsResult(filteredViolations), NetworkResult.empty(), Double.NaN);
     }
 
     /**
@@ -77,7 +80,10 @@ public final class ContingencyResultsUtils {
         return contingencies.stream()
                 .map(c -> new PostContingencyResult(c,
                         ResultsUtil.convertToPostStatus(scenarioResults.getOrDefault(c.getId(), Status.EXECUTION_PROBLEM)),
-                        getLimitViolationsResult(network, violationFilter, constraintsDir, c.getId())))
+                        getLimitViolationsResult(network, violationFilter, constraintsDir, c.getId()),
+                        NetworkResult.empty(),
+                        ConnectivityResult.empty(),
+                        Double.NaN))
                 .toList();
     }
 

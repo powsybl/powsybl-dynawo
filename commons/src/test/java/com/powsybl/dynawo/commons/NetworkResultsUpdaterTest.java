@@ -8,6 +8,7 @@ package com.powsybl.dynawo.commons;
 
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.test.BoundaryLineNetworkFactory;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.iidm.network.test.ThreeWindingsTransformerNetworkFactory;
 import com.powsybl.iidm.serde.ExportOptions;
@@ -149,6 +150,23 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
                 getActualNetworkInputStream(actual));
     }
 
+    @Test
+    void testUpdateBoundaryLineSolvedValues() throws IOException {
+        Network expected = BoundaryLineNetworkFactory.create();
+        Network updated = NetworkSerDe.copy(expected);
+        Network actual = NetworkSerDe.copy(expected);
+        reset(actual);
+
+        updated.getBoundaryLine("BL").getTerminal().setP(60);
+        updated.getBoundaryLine("BL").getTerminal().setQ(20);
+        expected.getBoundaryLine("BL").getTerminal().setP(60);
+        expected.getBoundaryLine("BL").getTerminal().setQ(20);
+
+        NetworkResultsUpdater.update(actual, updated, false);
+        assertXmlEquals(getExpectedNetworkInputStream(expected),
+                getActualNetworkInputStream(actual));
+    }
+
     private static void reset(Network targetNetwork) {
         for (Bus targetBus : targetNetwork.getBusView().getBuses()) {
             targetBus.setV(Double.NaN);
@@ -158,8 +176,8 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
             reset(targetline.getTerminal1());
             reset(targetline.getTerminal2());
         }
-        for (DanglingLine targetDangling : targetNetwork.getDanglingLines()) {
-            reset(targetDangling.getTerminal());
+        for (BoundaryLine targetBoundaryLine : targetNetwork.getBoundaryLines()) {
+            reset(targetBoundaryLine.getTerminal());
         }
         for (HvdcLine targetHvdcLine : targetNetwork.getHvdcLines()) {
             reset(targetHvdcLine.getConverterStation(TwoSides.ONE).getTerminal());
