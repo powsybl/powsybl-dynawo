@@ -3,11 +3,12 @@
 ## Dynawo-algorithms properties
 The `dynawo-algorithms` module defines the required parameters to run with Dynawo-algorithms.
 
-**homeDir**  
-Use the `homeDir` property to defines the installation directory of the dynawo-algorithms wrapper.
+### homeDir
+Use the `homeDir` property to define the installation directory of the dynawo-algorithms wrapper.
 
-**debug**  
-Use the `debug` property to specify if the temporary folder where the inputs are generated should be kept after the simulation.
+### debug
+Use the `debug` property to specify if the temporary folder where the inputs are generated should be kept after the simulation.<br>
+This property is independent of the `debugDir` parameter property (here for [SA](inv:powsyblcore:*:*#simulation/dynamic_security/configuration) and here for [MC](../margin_calculation/configuration.md#debugdir)). If both properties are set to `true`, the temporary simulation folder will be kept **and** dumped in the requested folder.
 
 ### Examples
 
@@ -27,4 +28,4 @@ dynawo-algorithms:
 ```
 
 ## Default parameters
-The dynamic security analysis reuse the `dynawo-simulation-default-parameters` [module](../dynamic_simulation/configuration.md#default-parameters).
+The dynamic security analysis reuses the `dynawo-simulation-default-parameters` [module](../dynamic_simulation/configuration.md#default-parameters).

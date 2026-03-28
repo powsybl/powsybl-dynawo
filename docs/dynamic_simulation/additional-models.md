@@ -1,6 +1,6 @@
 # Additional models
 Additional models allow advanced user to test new Dynawo models that are not already implemented in powsybl-dynawo.
-Additional models can be set in [Dynawo simulation parameters](configuration.md#additionalModelsFile) with a JSON file.
+Additional models can be set in [Dynawo simulation parameters](configuration.md#additionalmodelsfile) with a JSON file.
 
 ## Minimal configuration
 In order to add a dynamic model, the `lib` name have to be written in an existing category. 
