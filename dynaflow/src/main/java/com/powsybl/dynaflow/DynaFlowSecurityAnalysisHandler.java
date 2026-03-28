@@ -26,6 +26,7 @@ import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.NetworkExporter;
 import com.powsybl.dynawo.contingency.ContingencyResultsUtils;
+import com.powsybl.dynawo.contingency.ContingencyVoltageLevelFinder;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.security.LimitViolationFilter;
@@ -78,7 +79,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(workingVariantId);
 
-        NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME), dynawoVersion);
+        NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME), dynawoVersion, false, new ContingencyVoltageLevelFinder(contingencies));
         writeParameters(securityAnalysisParameters, workingDir);
         writeContingencies(contingencies, workingDir);
 

@@ -157,7 +157,7 @@ public class DynawoSimulationContext {
     }
 
     public List<OutputVariable> getOutputVariables(OutputVariable.OutputType type) {
-        return outputVariables.get(type);
+        return outputVariables.getOrDefault(type, List.of());
     }
 
     public boolean withCurveVariables() {

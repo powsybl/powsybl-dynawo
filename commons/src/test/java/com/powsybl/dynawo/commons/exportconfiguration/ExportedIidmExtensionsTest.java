@@ -9,7 +9,7 @@ package com.powsybl.dynawo.commons.exportconfiguration;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +20,7 @@ class ExportedIidmExtensionsTest {
 
     @Test
     void loadExtensionNames() {
-        List<String> extensionNames = new ExportConfigurationHandler().getExtensionNames();
+        Set<String> extensionNames = new ExportConfigurationHandler().getExtensionNames();
         assertThat(extensionNames).containsExactly(
                 "activePowerControl",
                 "slackTerminal",
