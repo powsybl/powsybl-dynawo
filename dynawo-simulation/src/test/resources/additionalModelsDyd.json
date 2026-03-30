@@ -136,6 +136,12 @@
             "prefix":"converter"
           }
         ]
+      },
+      {
+        "lib": "SynchronousGenerator4",
+        "properties": [
+          "AUXILIARY"
+        ]
       }
     ]
   }

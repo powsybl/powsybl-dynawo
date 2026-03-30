@@ -10,6 +10,8 @@ package com.powsybl.dynawo.parameters;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.powsybl.commons.PowsyblException;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -19,8 +21,10 @@ import java.util.*;
  */
 public class ParametersSet {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParametersSet.class);
     private final Map<String, Parameter> parameters;
     private final Map<String, Reference> references;
+    private final Map<String, Map<String, PrefixParameter>> prefixParameters;
     private final String id;
     private static final String ORIGIN_DATA = "IIDM";
 
@@ -28,12 +32,14 @@ public class ParametersSet {
         this.id = id;
         this.parameters = new LinkedHashMap<>();
         this.references = new LinkedHashMap<>();
+        this.prefixParameters = new HashMap<>();
     }
 
     public ParametersSet(String id, ParametersSet parametersSet) {
         this.id = id;
         this.parameters = new LinkedHashMap<>(parametersSet.parameters);
         this.references = new LinkedHashMap<>(parametersSet.references);
+        this.prefixParameters = new HashMap<>(parametersSet.prefixParameters);
     }
 
     public void addParameter(String name, ParameterType type, String value) {
@@ -65,6 +71,11 @@ public class ParametersSet {
         addReference(name, type, origName, null);
     }
 
+    public void addPrefixParameter(String name, String componentId, ParameterType type, String value) {
+        prefixParameters.computeIfAbsent(name, k -> new HashMap<>())
+                .put(componentId, new PrefixParameter(name, componentId, type, value));
+    }
+
     public String getId() {
         return id;
     }
@@ -75,6 +86,10 @@ public class ParametersSet {
 
     public Map<String, Reference> getReferences() {
         return references;
+    }
+
+    public Map<String, Map<String, PrefixParameter>> getPrefixParameters() {
+        return prefixParameters;
     }
 
     public boolean getBool(String parameterName) {
@@ -112,8 +127,31 @@ public class ParametersSet {
         return parameter;
     }
 
+    /**
+     * Create one parameter by componentId from prefix parameters in the form of name_N
+     * @param name name of the parameter that will be used as prefix
+     * @param componentIds componentIds of the PrefixParameter
+     */
+    public void generateParametersFromPrefix(String name, List<String> componentIds) {
+        Map<String, PrefixParameter> prefixParametersMap = prefixParameters.get(name);
+        if (prefixParametersMap != null) {
+            for (int i = 0; i < componentIds.size(); i++) {
+                String componentId = componentIds.get(i);
+                PrefixParameter prefixParameter = prefixParametersMap.get(componentId);
+                if (prefixParameter != null) {
+                    addParameter(name + "_" + i, prefixParameter.type(), prefixParameter.value());
+                } else {
+                    LOGGER.warn("Prefix parameter {} for equipment {} not found, the associated parameter cannot be created", name, componentId);
+                }
+            }
+        } else {
+            LOGGER.warn("Prefix parameters {} not found, all the associated parameters for equipments {} cannot be created", name, componentIds);
+        }
+    }
+
     @Override
     public String toString() {
-        return StringUtils.joinWith(",", id, StringUtils.join(parameters), StringUtils.join(references));
+        return StringUtils.joinWith(",", id, StringUtils.join(parameters), StringUtils.join(references),
+                StringUtils.join(prefixParameters));
     }
 }

@@ -20,7 +20,7 @@ import com.powsybl.iidm.network.Network;
  */
 public class EventReferenceVoltageVariationBuilder extends AbstractEventModelBuilder<Generator, EventReferenceVoltageVariationBuilder> {
 
-    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ReferenceVoltageVariation", "Reference voltage variation on synchronous/synchronized generator");
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ReferenceVoltageVariation", "Reference voltage variation on synchronous/synchronized generator.");
     protected Double deltaU;
 
     public static EventReferenceVoltageVariationBuilder of(Network network) {

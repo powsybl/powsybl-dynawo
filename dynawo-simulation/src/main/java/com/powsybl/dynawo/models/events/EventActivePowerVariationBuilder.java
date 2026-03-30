@@ -18,7 +18,7 @@ import com.powsybl.iidm.network.Network;
  */
 public class EventActivePowerVariationBuilder extends AbstractVariationEventBuilder<EventActivePowerVariationBuilder> {
 
-    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ActivePowerVariation", "Active power variation on generator or load");
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ActivePowerVariation", "Active power variation on generator or load.");
 
     public static EventActivePowerVariationBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);

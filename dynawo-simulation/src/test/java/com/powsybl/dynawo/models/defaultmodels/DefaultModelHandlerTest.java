@@ -13,7 +13,6 @@ import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.shunts.ShuntModel;
 import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -31,43 +30,29 @@ class DefaultModelHandlerTest {
 
     @Test
     void getSimpleDefaultModel() {
-        Model model = defaultModelHandler.getDefaultModel(network.getGenerator("GEN"), InjectionModel.class, false);
+        Model model = defaultModelHandler.getDefaultModel(network.getGenerator("GEN"), InjectionModel.class);
         assertNotNull(model);
         assertEquals("DefaultGenerator", model.getName());
     }
 
     @Test
     void getMultipleConfigDefaultModel() {
-        Model model = defaultModelHandler.getDefaultModel(network.getBusBreakerView().getBus("NGEN"), EquipmentConnectionPoint.class, false);
+        Model model = defaultModelHandler.getDefaultModel(network.getBusBreakerView().getBus("NGEN"), EquipmentConnectionPoint.class);
         assertNotNull(model);
         assertEquals("DefaultEquipmentConnectionPoint", model.getName());
     }
 
     @Test
-    void noInterfaceImplementationLog() {
-        Generator gen = network.getGenerator("GEN");
-        Model model = defaultModelHandler.getDefaultModel(gen, ShuntModel.class, false);
-        assertNull(model);
-    }
-
-    @Test
-    void noInterfaceImplementationException() {
-        Generator gen = network.getGenerator("GEN");
-        PowsyblException pe = assertThrows(PowsyblException.class, () -> defaultModelHandler.getDefaultModel(gen, ShuntModel.class, true));
-        assertEquals("Default model DefaultGenerator for GEN does not implement ShuntModel interface", pe.getMessage());
-    }
-
-    @Test
     void noDynamicModelException() {
         VoltageLevel vl = network.getVoltageLevel("VLGEN");
-        PowsyblException pe = assertThrows(PowsyblException.class, () -> defaultModelHandler.getDefaultModel(vl, ShuntModel.class, true));
+        PowsyblException pe = assertThrows(PowsyblException.class, () -> defaultModelHandler.getDefaultModel(vl, ShuntModel.class));
         assertEquals("No default model configuration for VOLTAGE_LEVEL", pe.getMessage());
     }
 
     @Test
     void noMultipleDynamicModelException() {
         Bus bus = network.getBusBreakerView().getBus("NGEN");
-        PowsyblException pe = assertThrows(PowsyblException.class, () -> defaultModelHandler.getDefaultModel(bus, ShuntModel.class, true));
+        PowsyblException pe = assertThrows(PowsyblException.class, () -> defaultModelHandler.getDefaultModel(bus, ShuntModel.class));
         assertEquals("No default model configuration for BUS - ShuntModel", pe.getMessage());
     }
 }
