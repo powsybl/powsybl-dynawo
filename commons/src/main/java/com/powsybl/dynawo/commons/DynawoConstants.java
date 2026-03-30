@@ -7,10 +7,7 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.iidm.serde.IidmVersion;
-
 import java.io.File;
-import java.util.List;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -20,20 +17,7 @@ public final class DynawoConstants {
     private DynawoConstants() {
     }
 
-    /**
-     * write the network to XIIDM v1.4 because currently Dynawo does not support versions above
-     */
-    public static final String IIDM_VERSION = IidmVersion.V_1_4.toString(".");
-
     public static final DynawoVersion VERSION_MIN = new DynawoVersion(1, 5, 0);
-
-    public static final List<String> IIDM_EXTENSIONS = List.of(
-            "activePowerControl",
-            "slackTerminal",
-            "coordinatedReactiveControl",
-            "hvdcAngleDroopActivePowerControl",
-            "hvdcOperatorActivePowerRange",
-            "standbyAutomaton");
 
     public static final String NETWORK_FILENAME = "powsybl_dynawo.xiidm";
 

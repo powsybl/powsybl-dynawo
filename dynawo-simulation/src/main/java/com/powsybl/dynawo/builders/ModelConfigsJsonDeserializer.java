@@ -66,7 +66,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
             String lib = null;
             String alias = null;
             String internalModelPrefix = null;
-            String doc = null;
+            String doc = "";
             List<String> properties = Collections.emptyList();
             DynawoVersion minVersion = VersionInterval.MODEL_DEFAULT_MIN_VERSION;
             DynawoVersion maxVersion = null;

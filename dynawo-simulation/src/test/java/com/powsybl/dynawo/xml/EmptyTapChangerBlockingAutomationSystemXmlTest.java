@@ -62,8 +62,11 @@ class EmptyTapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicMode
         checkReport("""
                   + Test DYD
                      + Dynawo models processing
-                        TapChangerAutomaton BBM_TC equipment LOAD2 is not a LoadWithTransformers, the automation system will be skipped
-                        None of TapChangerBlockingAutomaton BBM_TapChangerBlocking equipments are TapChangerModel, the automation system will be skipped
+                        TapChangerBlockingAutomationSystem BBM_TapChangerBlocking requires a connection with a TapChangerModel but dynamic model LoadOneTransformer LOAD does not implement it
+                        TapChangerBlockingAutomationSystem BBM_TapChangerBlocking requires a connection with a TapChangerAutomationSystem but pure dynamic model GEN is not found
+                        TapChangerAutomationSystem BBM_TC requires a connection with a LoadWithTransformers but dynamic model DefaultLoad LOAD2 does not implement it
+                        TapChangerAutomationSystem BBM_TC connections cannot be created, the model will be skipped
+                        TapChangerBlockingAutomationSystem BBM_TapChangerBlocking connections cannot be created, the model will be skipped
                   """);
     }
 }

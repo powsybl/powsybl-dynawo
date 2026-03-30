@@ -42,22 +42,25 @@ public final class SimulationModels implements DynawoData {
         MacroConnectionsAdder adder = new MacroConnectionsAdder(bbmSupplier::getEquipmentDynamicModel,
                 bbmSupplier::getPureDynamicModel, macroConnectList::add, macroConnectorsMap::computeIfAbsent, reportNode);
         ParameterUpdater parameterUpdater = new ParameterUpdater() {
-
             @Override
-            public void addParameter(String id, String name, ParameterType type, String value) {
-                dynawoParameters.getModelParameters(id).addParameter(name, type, value);
+            public void addParameter(String parameterSetId, String name, ParameterType type, String value) {
+                dynawoParameters.getModelParameters(parameterSetId).addParameter(name, type, value);
             }
 
             @Override
             public void addReference(String parameterSetId, String name, ParameterType type, String origName, String componentId) {
                 dynawoParameters.getModelParameters(parameterSetId).addReference(name, type, origName, componentId);
             }
-        };
 
+            @Override
+            public void generateParametersFromPrefix(String parameterSetId, String name, List<String> componentIds) {
+                dynawoParameters.getModelParameters(parameterSetId).generateParametersFromPrefix(name, componentIds);
+            }
+        };
         ParametersSet networkParameters = dynawoParameters.getNetworkParameters();
         // Write macro connection
         for (BlackBoxModel bbm : dynamicModels) {
-            macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
+            macroStaticReferences.computeIfAbsent(bbm.getMacroConnectName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             bbm.createMacroConnections(adder);
             bbm.createDynamicModelParameters(parametersAdder);
             bbm.updateDynamicModelParameters(parameterUpdater);
@@ -110,7 +113,7 @@ public final class SimulationModels implements DynawoData {
     }
 
     public boolean hasMacroStaticReference(BlackBoxModel bbm) {
-        return macroStaticReferences.containsKey(bbm.getName());
+        return macroStaticReferences.containsKey(bbm.getMacroConnectName());
     }
 
     @Override

@@ -19,13 +19,14 @@ import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generator> implements FrequencySynchronizedModel {
+public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generator> implements FrequencySynchronizedModel, SpecifiedGeneratorModel {
 
     private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("converter_PGenPu", "p"),
@@ -42,7 +43,12 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
     }
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
-        return List.of(new VarConnection("converter_terminal", connected.getTerminalVarName()));
+        List<VarConnection> varConnections = new ArrayList<>();
+        varConnections.add(new VarConnection("converter_terminal", connected.getTerminalVarName()));
+        connected.getSwitchOffSignalVarName()
+                .map(switchOff -> new VarConnection("converter_switchOffSignal1", switchOff))
+                .ifPresent(varConnections::add);
+        return varConnections;
     }
 
     protected String getOmegaPuVarName() {
@@ -57,6 +63,21 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
     @Override
     public String getRunningVarName() {
         return "converter_running";
+    }
+
+    @Override
+    public String getSwitchOffSignalEventVarName() {
+        return "converter_switchOffSignal2";
+    }
+
+    @Override
+    public String getSwitchOffSignalAutomatonVarName() {
+        return "converter_switchOffSignal3";
+    }
+
+    @Override
+    public String getUPuVarName() {
+        return "converter_UPu";
     }
 
     @Override

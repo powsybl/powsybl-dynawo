@@ -19,7 +19,7 @@ import com.powsybl.iidm.network.Network;
  */
 public class EventReactivePowerVariationBuilder extends AbstractVariationEventBuilder<EventReactivePowerVariationBuilder> {
 
-    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ReactivePowerVariation", "Reactive power variation on generator or load");
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "ReactivePowerVariation", "Reactive power variation on generator or load.");
 
     public static EventReactivePowerVariationBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);

@@ -10,8 +10,6 @@ package com.powsybl.dynawo.commons;
 import com.google.common.io.CharStreams;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.computation.*;
-import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.serde.AbstractTreeDataExporter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,9 +19,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_EXTENSIONS;
-import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_VERSION;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -37,15 +32,6 @@ public final class DynawoUtil {
 
     public static List<CommandExecution> getCommandExecutions(Command command) {
         return Collections.singletonList(new CommandExecution(command, 1, 0));
-    }
-
-    public static void writeIidm(Network network, Path file) {
-        Objects.requireNonNull(network);
-        Objects.requireNonNull(file);
-        Properties params = new Properties();
-        params.setProperty(AbstractTreeDataExporter.VERSION, IIDM_VERSION);
-        params.setProperty(AbstractTreeDataExporter.EXTENSIONS_INCLUDED_LIST, String.join(",", IIDM_EXTENSIONS));
-        network.write("XIIDM", params, file);
     }
 
     public static DynawoVersion requireDynaMinVersion(ExecutionEnvironment env, ComputationManager computationManager,
