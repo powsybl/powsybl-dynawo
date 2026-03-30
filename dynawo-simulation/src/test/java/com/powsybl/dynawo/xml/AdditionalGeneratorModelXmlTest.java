@@ -110,6 +110,12 @@ class AdditionalGeneratorModelXmlTest extends AbstractParametrizedDynamicModelXm
                                 SynchronousGeneratorBuilder.of(n, "SynchronousGenerator3")
                                         .staticId(GEN_ID)
                                         .parameterSetId("GSTWPR")
+                                        .build()),
+                Arguments.of("additional_synchronous_gen_auxiliary_dyd.xml",
+                        (Function<Network, BlackBoxModel>) n ->
+                                SynchronousGeneratorBuilder.of(n, "SynchronousGenerator4")
+                                        .staticId(GEN_ID)
+                                        .parameterSetId("GSTWPR")
                                         .build())
         );
     }
