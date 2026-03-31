@@ -106,7 +106,7 @@ The default value is `TRUE`.
 
 ## Generic parameters
 Furthermore, DynaFlow only supports `useReactiveLimits` generic parameter, the other parameters are ignored.
-You may have a description of these parameters [here](inv:powsyblcore:*:*:#loadflow-generic-parameters).
+You may have a description of these parameters [here](inv:powsyblcore:*:*:#simulation/loadflow/configuration).
 
 ## Example
 
