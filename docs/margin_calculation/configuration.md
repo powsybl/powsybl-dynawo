@@ -16,7 +16,8 @@ The default value of this property is `0`.
 The default value of this property is `200`.
 
 #### debugDir
-This property specifies the directory path where debug files will be dumped. If `null`, no file will be dumped.
+This property specifies the directory path where debug files will be dumped. If `null`, no file will be dumped.<br>
+This property is independent of the `debug` dynawo-algorithms [property](../dynamic_security_analysis/configuration.md#debug). If both properties are set to `true`, the temporary simulation folder will be kept **and** dumped in the requested folder.
 
 #### loadIncrease.startTime
 `loadIncrease.startTime` defines when the load variation starts, in seconds.

@@ -26,7 +26,7 @@ The inputs of the margin calculation are the following:
 - a set of dynamic models provided by the same [suppliers](../dynamic_simulation/dynamic-models-configuration) used for the dynawo dynamic simulation
 - a set of [contingencies](inv:powsyblcore:*:*#simulation/security/contingency-dsl)
 - a set of [load variations](load_variations_supplier)
-- a set of parameters for the [margin calculation](/configuration) and for [Dynawo](../dynamic_simulation/configuration)
+- a set of parameters for the [margin calculation](configuration.md) and for [Dynawo](../dynamic_simulation/configuration.md)
 
 ## Outputs
 
