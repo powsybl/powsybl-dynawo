@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynaflow;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
@@ -45,11 +44,6 @@ public final class DynaFlowConstants {
         WARM,
         FLAT;
 
-        @JsonCreator
-        public static StartingPointMode fromString(String startingPointMode) {
-            return startingPointMode == null ? null : StartingPointMode.valueOf(startingPointMode.toUpperCase());
-        }
-
         @JsonValue
         public String getName() {
             return name().toLowerCase();
@@ -58,5 +52,4 @@ public final class DynaFlowConstants {
 
     private DynaFlowConstants() {
     }
-
 }

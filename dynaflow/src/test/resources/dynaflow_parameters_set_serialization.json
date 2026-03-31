@@ -1,6 +1,6 @@
 {
   "version" : "1.10",
-  "voltageInitMode" : "UNIFORM_VALUES",
+  "voltageInitMode" : "PREVIOUS_VALUES",
   "transformerVoltageControlOn" : false,
   "phaseShifterRegulationOn" : false,
   "useReactiveLimits" : false,
@@ -19,11 +19,8 @@
   "extensions" : {
     "DynaFlowParameters" : {
       "svcRegulationOn" : true,
-      "shuntRegulationOn" : false,
-      "automaticSlackBusOn" : true,
       "dsoVoltageLevel" : 54.23,
       "tfoVoltageLevel" : 78.9,
-      "activePowerCompensation" : "P",
       "settingPath" : "path/to/settingFile",
       "assemblingPath" : "path/to/assemblingFile",
       "startTime" : 0.0,
@@ -31,7 +28,6 @@
       "precision" : 0.0,
       "chosenOutputs" : [ "STEADYSTATE" ],
       "timeStep" : 2.6,
-      "startingPointMode" : "warm",
       "mergeLoads" : false
     }
   }
