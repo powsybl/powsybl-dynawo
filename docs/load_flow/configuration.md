@@ -1,37 +1,30 @@
 # Configuration
 
 ## DynaFlow properties
+The `dynaflow` module defines the required parameters to run a load flow with DynaFlow.
 
-The `dynaflow` module defines the required parameters to run Dynaflow.
+### homeDir
+Use the `homeDir` property to define the installation directory of the dynaflow wrapper.
 
-**homeDir**  
-Use the `homeDir` property to define the installation directory of the DynaFlow wrapper.
-
-**debug**  
+### debug
 Use the `debug` property to specify if the temporary folder where the inputs are generated should be kept after the simulation.
+
 
 ### Examples
 
 **YAML configuration:**
 ```yaml
 dynaflow:
-    homeDir: /path/to/dynaflow  # Directory obtained by unzipping the package, should contain "bin"
+    homeDir: /path/to/dynaflow  # Directory obtained by unzipping the package should contain "bin"
     debug: false
 ```
 
 **XML configuration:**
 ```xml
 <dynaflow>
-  <homeDir>/home/user/dynawo</homeDir>
+  <homeDir>/path/to/dynaflow</homeDir>
   <debug>false</debug>
 </dynaflow>
-```
-
-To use DynaFlow as a default for all power flow computations, you may configure the `load-flow`
-module in your configuration file:
-```yaml
-load-flow:
-    default-impl-name: DynaFlow
 ```
 
 ## Default parameters

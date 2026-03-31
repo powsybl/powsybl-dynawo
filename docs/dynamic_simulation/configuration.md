@@ -3,11 +3,12 @@
 ## Dynawo properties
 The `dynawo` module defines the required parameters to run with Dynawo.
 
-**homeDir**  
-Use the `homeDir` property to defines the installation directory of the dynawo simulator.
+### homeDir
+Use the `homeDir` property to define the installation directory of the dynawo simulator.
 
-**debug**  
-Use the `debug` property to specify if the temporary folder where the inputs are generated should be kept after the simulation.
+### debug
+Use the `debug` property to specify if the temporary folder where the inputs are generated should be kept after the simulation.<br>
+This property is independent of the `debugDir` parameter [property](inv:powsyblcore:*:*#simulation/dynamic/configuration). If both properties are set to `true`, the temporary simulation folder will be kept **and** dumped in the requested folder.
 
 ### Examples
 
@@ -125,8 +126,8 @@ The default value is `null`.
 
 #### additionalModelsFile
 `additionalModelsFile` defines the JSON file listing additional models used in the simulation.  
-The file must follow the `models.json` pattern defined [here](dynamic-models-configuration.md#supported-models).
-The models added in the file cannot overload an existing model and must belong to an existing category otherwise they will be skipped (see [here](additional-models.md)).  
+The file must follow the `models.json` pattern defined [here](base-additional-models.md#base-models).
+The models added in the file cannot overload an existing model and must belong to an existing category, otherwise they will be skipped (see [here](base-additional-models.md#additional-models)).  
 The default value is `null`.
 
 ### Examples

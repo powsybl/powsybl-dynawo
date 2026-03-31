@@ -60,7 +60,7 @@ Disconnect {
 ```
 
 ### Active Power Variation
-Active power variation on generator or load.  
+Active power variation on controllable generator or load.  
 With specific attribute:
 - `deltaP`: active power variation.
 
@@ -97,7 +97,7 @@ ActivePowerVariation {
 ```
 
 ### Reactive Power Variation
-Reactive power variation on load and generator without dynamic model.  
+Reactive power variation on controllable load and generator without dynamic model.  
 With specific attribute:
 - `deltaQ`: reactive power variation.
 
@@ -134,7 +134,7 @@ ReactivePowerVariation {
 ```
 
 ### Reference Voltage Variation
-Reference voltage variation on synchronized/synchronous generator  
+Reference voltage variation on controllable synchronized/synchronous generator  
 With specific attribute:
 - `deltaU`: reference voltage variation.
 
