@@ -8,7 +8,7 @@ Use the `homeDir` property to define the installation directory of the dynaflow 
 
 ### debug
 Use the `debug` property to specify if the temporary folder where the inputs are generated should be kept after the simulation.
-
+This property is independent of the `debugDir` parameter property (here for [LF](inv:powsyblcore:*:*#simulation/loadflow/configuration) and here for [SA](inv:powsyblcore:*:*#simulation/security/configuration)). If both properties are set to `true`, the temporary simulation folder will be kept **and** dumped in the requested folder.
 
 ### Examples
 
