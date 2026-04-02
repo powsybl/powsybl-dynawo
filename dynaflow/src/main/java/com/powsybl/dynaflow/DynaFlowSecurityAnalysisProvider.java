@@ -82,7 +82,8 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         }
 
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
-        ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX);
+        String dumpDir = runParameters.getSecurityAnalysisParameters().getDebugDir();
+        ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX, dumpDir);
         DynawoVersion version = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, runParameters.getComputationManager(), DynaFlowProvider.getVersionCommand(config), DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
 
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
@@ -90,7 +91,7 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
 
         DynaFlowSecurityAnalysisHandler executionHandler = new DynaFlowSecurityAnalysisHandler(network, workingVariantId, getCommand(config),
                 runParameters.getSecurityAnalysisParameters(), contingencies, runParameters.getFilter(), version, dfsaReportNode);
-        ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX);
+        ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX, dumpDir);
         return runParameters.getComputationManager().execute(execEnvSimulation, executionHandler);
     }
 
