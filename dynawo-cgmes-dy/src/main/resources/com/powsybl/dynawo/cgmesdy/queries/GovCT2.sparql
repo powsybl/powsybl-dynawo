@@ -1,0 +1,69 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:GovCT2 .
+  OPTIONAL { ?id cim:TurbineGovernorDynamics.SynchronousMachineDynamics ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:GovCT2.mwbase ?mwbase . }
+  OPTIONAL { ?id cim:GovCT2.r ?r . }
+  OPTIONAL { ?id cim:GovCT2.rdown ?rdown . }
+  OPTIONAL { ?id cim:GovCT2.rup ?rup . }
+  OPTIONAL { ?id cim:GovCT2.ta ?ta . }
+  OPTIONAL { ?id cim:GovCT2.tact ?tact . }
+  OPTIONAL { ?id cim:GovCT2.tb ?tb . }
+  OPTIONAL { ?id cim:GovCT2.tc ?tc . }
+  OPTIONAL { ?id cim:GovCT2.teng ?teng . }
+  OPTIONAL { ?id cim:GovCT2.tf ?tf . }
+  OPTIONAL { ?id cim:GovCT2.tsa ?tsa . }
+  OPTIONAL { ?id cim:GovCT2.tsb ?tsb . }
+  OPTIONAL { ?id cim:GovCT2.vmax ?vmax . }
+  OPTIONAL { ?id cim:GovCT2.vmin ?vmin . }
+  OPTIONAL { ?id cim:GovCT2.wfnl ?wfnl . }
+  OPTIONAL { ?id cim:GovCT2.wfspd ?wfspd . }
+  OPTIONAL { ?id cim:GovCT2.kdgov ?kdgov . }
+  OPTIONAL { ?id cim:GovCT2.kigov ?kigov . }
+  OPTIONAL { ?id cim:GovCT2.kpgov ?kpgov . }
+  OPTIONAL { ?id cim:GovCT2.kpload ?kpload . }
+  OPTIONAL { ?id cim:GovCT2.kiload ?kiload . }
+  OPTIONAL { ?id cim:GovCT2.tdgov ?tdgov . }
+  OPTIONAL { ?id cim:GovCT2.tno ?tno . }
+  OPTIONAL { ?id cim:GovCT2.ldref ?ldref . }
+  OPTIONAL { ?id cim:GovCT2.dm ?dm . }
+  OPTIONAL { ?id cim:GovCT2.db ?db . }
+  OPTIONAL { ?id cim:GovCT2.ropen ?ropen . }
+  OPTIONAL { ?id cim:GovCT2.rclose ?rclose . }
+  OPTIONAL { ?id cim:GovCT2.kimw ?kimw . }
+  OPTIONAL { ?id cim:GovCT2.pmwset ?pmwset . }
+  OPTIONAL { ?id cim:GovCT2.aset ?aset . }
+  OPTIONAL { ?id cim:GovCT2.ka ?ka . }
+  OPTIONAL { ?id cim:GovCT2.flim1 ?flim1 . }
+  OPTIONAL { ?id cim:GovCT2.plim1 ?plim1 . }
+  OPTIONAL { ?id cim:GovCT2.flim2 ?flim2 . }
+  OPTIONAL { ?id cim:GovCT2.plim2 ?plim2 . }
+  OPTIONAL { ?id cim:GovCT2.flim3 ?flim3 . }
+  OPTIONAL { ?id cim:GovCT2.plim3 ?plim3 . }
+  OPTIONAL { ?id cim:GovCT2.flim4 ?flim4 . }
+  OPTIONAL { ?id cim:GovCT2.plim4 ?plim4 . }
+  OPTIONAL { ?id cim:GovCT2.flim5 ?flim5 . }
+  OPTIONAL { ?id cim:GovCT2.plim5 ?plim5 . }
+  OPTIONAL { ?id cim:GovCT2.flim6 ?flim6 . }
+  OPTIONAL { ?id cim:GovCT2.plim6 ?plim6 . }
+  OPTIONAL { ?id cim:GovCT2.flim7 ?flim7 . }
+  OPTIONAL { ?id cim:GovCT2.plim7 ?plim7 . }
+  OPTIONAL { ?id cim:GovCT2.flim8 ?flim8 . }
+  OPTIONAL { ?id cim:GovCT2.plim8 ?plim8 . }
+  OPTIONAL { ?id cim:GovCT2.flim9 ?flim9 . }
+  OPTIONAL { ?id cim:GovCT2.plim9 ?plim9 . }
+  OPTIONAL { ?id cim:GovCT2.flim10 ?flim10 . }
+  OPTIONAL { ?id cim:GovCT2.plim10 ?plim10 . }
+  OPTIONAL { ?id cim:GovCT2.prate ?prate . }
+  OPTIONAL { ?id cim:GovCT2.uc ?uc . }
+  OPTIONAL { ?id cim:GovCT2.uo ?uo . }
+}

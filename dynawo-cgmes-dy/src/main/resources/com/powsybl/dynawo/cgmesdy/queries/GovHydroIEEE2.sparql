@@ -1,0 +1,43 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:GovHydroIEEE2 .
+  OPTIONAL { ?id cim:TurbineGovernorDynamics.SynchronousMachineDynamics ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.mwbase ?mwbase . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.r ?r . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.tr ?tr . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.tf ?tf . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.tg ?tg . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.velm ?velm . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.pmax ?pmax . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.pmin ?pmin . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.tw ?tw . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.at ?at . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.dturb ?dturb . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.qnl ?qnl . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.rperm ?rperm . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.rtemp ?rtemp . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.tp ?tp . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.hdam ?hdam . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.ki ?ki . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.gv1 ?gv1 . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.pgv1 ?pgv1 . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.gv2 ?gv2 . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.pgv2 ?pgv2 . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.gv3 ?gv3 . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.pgv3 ?pgv3 . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.gv4 ?gv4 . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.pgv4 ?pgv4 . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.gv5 ?gv5 . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.pgv5 ?pgv5 . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.gv6 ?gv6 . }
+  OPTIONAL { ?id cim:GovHydroIEEE2.pgv6 ?pgv6 . }
+}

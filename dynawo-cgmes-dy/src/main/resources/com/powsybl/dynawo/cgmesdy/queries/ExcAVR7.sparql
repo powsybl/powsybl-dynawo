@@ -1,0 +1,35 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:ExcAVR7 .
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?synchronousMachineId . }
+  OPTIONAL { ?id cim:ExcAVR7.a1 ?a1 . }
+  OPTIONAL { ?id cim:ExcAVR7.a2 ?a2 . }
+  OPTIONAL { ?id cim:ExcAVR7.a3 ?a3 . }
+  OPTIONAL { ?id cim:ExcAVR7.a4 ?a4 . }
+  OPTIONAL { ?id cim:ExcAVR7.a5 ?a5 . }
+  OPTIONAL { ?id cim:ExcAVR7.a6 ?a6 . }
+  OPTIONAL { ?id cim:ExcAVR7.k1 ?k1 . }
+  OPTIONAL { ?id cim:ExcAVR7.k3 ?k3 . }
+  OPTIONAL { ?id cim:ExcAVR7.k5 ?k5 . }
+  OPTIONAL { ?id cim:ExcAVR7.t1 ?t1 . }
+  OPTIONAL { ?id cim:ExcAVR7.t2 ?t2 . }
+  OPTIONAL { ?id cim:ExcAVR7.t3 ?t3 . }
+  OPTIONAL { ?id cim:ExcAVR7.t4 ?t4 . }
+  OPTIONAL { ?id cim:ExcAVR7.t5 ?t5 . }
+  OPTIONAL { ?id cim:ExcAVR7.t6 ?t6 . }
+  OPTIONAL { ?id cim:ExcAVR7.vmax1 ?vmax1 . }
+  OPTIONAL { ?id cim:ExcAVR7.vmax3 ?vmax3 . }
+  OPTIONAL { ?id cim:ExcAVR7.vmax5 ?vmax5 . }
+  OPTIONAL { ?id cim:ExcAVR7.vmin1 ?vmin1 . }
+  OPTIONAL { ?id cim:ExcAVR7.vmin3 ?vmin3 . }
+  OPTIONAL { ?id cim:ExcAVR7.vmin5 ?vmin5 . }
+}
