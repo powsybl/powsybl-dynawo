@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.loads;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
@@ -20,17 +19,23 @@ import static com.powsybl.dynawo.models.TransformerSide.*;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class LoadTwoTransformers extends AbstractLoadTwoTransformers implements LoadWithTransformers {
+public class LoadTwoTransformers extends AbstractLoadTwoTransformers implements LoadWithTransformersModel {
 
     protected LoadTwoTransformers(Load load, String parameterSetId, ModelConfig modelConfig) {
         super(load, parameterSetId, modelConfig);
     }
 
     @Override
-    public List<VarConnection> getTapChangerVarConnections(TransformerSide side) {
-        if (NONE == side) {
-            throw new PowsyblException("LoadTwoTransformers must have a side connected to the Tap changer automaton");
-        }
+    public List<VarConnection> getHighVoltageTapChangerVarConnections() {
+        return getTapChangerVarConnections(HIGH_VOLTAGE);
+    }
+
+    @Override
+    public List<VarConnection> getLowVoltageTapChangerVarConnections() {
+        return getTapChangerVarConnections(LOW_VOLTAGE);
+    }
+
+    private List<VarConnection> getTapChangerVarConnections(TransformerSide side) {
         return List.of(new VarConnection("tapChanger_tap", getTransformerVar(side, "tap")),
                 new VarConnection("tapChanger_UMonitored", getTransformerVar(side, "U2Pu")),
                 new VarConnection("tapChanger_switchOffSignal1", getTransformerVar(side, SWITCH_OFF_SIGNAL_NAME)));
