@@ -90,7 +90,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     protected void setupDynawoContext() {
         context = new DynawoSimulationContext
                 .Builder(network, dynamicModels)
-                .eventModels(eventModels)
+                .eventModels(eventModels.stream().filter(Objects::nonNull).toList())
                 .outputVariables(outputVariables)
                 .dynawoParameters(dynawoParameters)
                 .reportNode(reportNode)
