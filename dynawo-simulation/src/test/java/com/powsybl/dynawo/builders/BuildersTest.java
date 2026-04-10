@@ -223,5 +223,6 @@ class BuildersTest {
         assertNull(EventReactivePowerVariationBuilder.of(NETWORK).build());
         assertNull(EventReferenceVoltageVariationBuilder.of(NETWORK).build());
         assertNull(EventOpenSwitchBuilder.of(NETWORK).build());
+        assertNull(EventCloseSwitchBuilder.of(NETWORK).build());
     }
 }

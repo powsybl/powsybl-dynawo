@@ -11,21 +11,21 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.builders.ModelInfo;
 import com.powsybl.dynawo.commons.DynawoVersion;
-import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.Network;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventOpenSwitchBuilder extends AbstractEventOpenCloseSwitchBuilder<EventOpenSwitchBuilder> {
+public class EventCloseSwitchBuilder extends AbstractEventOpenCloseSwitchBuilder<EventCloseSwitchBuilder> {
 
-    private static final EventModelInfo MODEL_INFO = new EventModelInfo("EventConnectedStatus", "OpenSwitch", "Open a breaker or a load break switch");
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("EventConnectedStatus", "CloseSwitch", "Close a breaker or a load break switch");
 
-    public static EventOpenSwitchBuilder of(Network network) {
+    public static EventCloseSwitchBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
     }
 
-    public static EventOpenSwitchBuilder of(Network network, ReportNode parentReportNode) {
-        return new EventOpenSwitchBuilder(network, parentReportNode);
+    public static EventCloseSwitchBuilder of(Network network, ReportNode parentReportNode) {
+        return new EventCloseSwitchBuilder(network, parentReportNode);
     }
 
     public static ModelInfo getModelInfo() {
@@ -39,7 +39,7 @@ public class EventOpenSwitchBuilder extends AbstractEventOpenCloseSwitchBuilder<
         return MODEL_INFO.version().includes(dynawoVersion) ? MODEL_INFO : null;
     }
 
-    EventOpenSwitchBuilder(Network network, ReportNode reportNode) {
+    EventCloseSwitchBuilder(Network network, ReportNode reportNode) {
         super(network, reportNode);
     }
 
@@ -50,11 +50,11 @@ public class EventOpenSwitchBuilder extends AbstractEventOpenCloseSwitchBuilder<
 
     @Override
     public EventSwitchOpen build() {
-        return isInstantiable() ? new EventSwitchOpen(eventId, builderEquipment.getEquipment(), MODEL_INFO, startTime, true) : null;
+        return isInstantiable() ? new EventSwitchOpen(eventId, builderEquipment.getEquipment(), MODEL_INFO, startTime, false) : null;
     }
 
     @Override
-    protected EventOpenSwitchBuilder self() {
+    protected EventCloseSwitchBuilder self() {
         return this;
     }
 }

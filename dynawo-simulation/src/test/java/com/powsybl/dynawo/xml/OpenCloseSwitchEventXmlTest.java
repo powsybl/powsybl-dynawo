@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.models.events.EventCloseSwitchBuilder;
 import com.powsybl.dynawo.models.events.EventOpenSwitchBuilder;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,14 @@ class OpenCloseSwitchEventXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("S1VL1_BBS_LD1_DISCONNECTOR")
                 .startTime(5)
                 .build());
+        eventModels.add(EventCloseSwitchBuilder.of(network, reportNode)
+                .staticId("S1VL1_LD1_BREAKER")
+                .startTime(7)
+                .build());
+        eventModels.add(EventCloseSwitchBuilder.of(network, reportNode)
+                .staticId("S1VL1_BBS_LD1_DISCONNECTOR")
+                .startTime(7)
+                .build());
     }
 
     @Test
@@ -47,6 +56,9 @@ class OpenCloseSwitchEventXmlTest extends AbstractDynamicModelXmlTest {
                 + Test DYD
                    Model OpenSwitch OpenSwitch_S1VL1_LD1_BREAKER instantiation OK
                    + Model OpenSwitch OpenSwitch_S1VL1_BBS_LD1_DISCONNECTOR instantiation KO
+                      'staticId' field value 'S1VL1_BBS_LD1_DISCONNECTOR' should not be a disconnector
+                   Model CloseSwitch CloseSwitch_S1VL1_LD1_BREAKER instantiation OK
+                   + Model CloseSwitch CloseSwitch_S1VL1_BBS_LD1_DISCONNECTOR instantiation KO
                       'staticId' field value 'S1VL1_BBS_LD1_DISCONNECTOR' should not be a disconnector
                    Dynawo models processing
                 """);

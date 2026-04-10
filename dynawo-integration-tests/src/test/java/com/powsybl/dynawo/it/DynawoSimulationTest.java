@@ -22,10 +22,7 @@ import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
-import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
-import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawo.models.events.EventOpenSwitchBuilder;
-import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
+import com.powsybl.dynawo.models.events.*;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
 import com.powsybl.dynawo.suppliers.events.DynawoEventModelsSupplier;
@@ -436,6 +433,10 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 EventOpenSwitchBuilder.of(n, r)
                         .staticId("S1VL1_LD1_BREAKER")
                         .startTime(85)
+                        .build(),
+                EventCloseSwitchBuilder.of(n, r)
+                        .staticId("S1VL1_LD1_BREAKER")
+                        .startTime(87)
                         .build()
         );
 
