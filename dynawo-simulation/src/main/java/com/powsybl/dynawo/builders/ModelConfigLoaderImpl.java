@@ -79,6 +79,7 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new EventBuilderConfig(EventReactivePowerVariationBuilder::of, EventReactivePowerVariationBuilder.getModelInfo()),
             new EventBuilderConfig(EventReferenceVoltageVariationBuilder::of, EventReferenceVoltageVariationBuilder.getModelInfo()),
             new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.getModelInfo()),
+            new EventBuilderConfig(EventOpenSwitchBuilder::of, EventOpenSwitchBuilder.getModelInfo()),
             new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.getModelInfo()));
 
     @Override
