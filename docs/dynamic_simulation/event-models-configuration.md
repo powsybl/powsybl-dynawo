@@ -88,6 +88,35 @@ OpenSwitch {
 }
 ```
 
+### Close Switch
+Close a breaker or a load break switch.
+
+**Groovy script:**
+```groovy
+CloseSwitch {
+    staticId "BREAKER"
+    startTime 1
+}
+```
+**Json configuration:**
+```json
+{
+  "model":"CloseSwitch",
+  "properties":[
+    {
+      "name":"staticId",
+      "value":"BREAKER",
+      "type":"STRING"
+    },
+    {
+      "name":"startTime",
+      "value":"1",
+      "type":"DOUBLE"
+    }
+  ]
+}
+```
+
 ### Active Power Variation
 Active power variation on controllable generator or load.  
 With specific attribute:
