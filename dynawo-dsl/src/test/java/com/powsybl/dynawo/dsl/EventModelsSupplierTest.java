@@ -83,7 +83,8 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/eventModels/nodeFault.groovy", NodeFaultEvent.class, EurostagTutorialExample1Factory.createWithLFResults(), "NGEN", "NodeFault_NGEN", "NodeFault", 1),
                 Arguments.of("/eventModels/activePowerVariation.groovy", EventActivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ActivePowerVariation_LOAD", null, 2),
                 Arguments.of("/eventModels/reactivePowerVariation.groovy", EventReactivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ReactivePowerVariation_LOAD", null, 2),
-                Arguments.of("/eventModels/openSwitch.groovy", EventSwitchOpen.class, FourSubstationsNodeBreakerFactory.create(), "S1VL1_LD1_BREAKER", "OpenSwitch_S1VL1_LD1_BREAKER", "EventConnectedStatus", 2)
+                Arguments.of("/eventModels/openSwitch.groovy", EventSwitchOpen.class, FourSubstationsNodeBreakerFactory.create(), "S1VL1_LD1_BREAKER", "OpenSwitch_S1VL1_LD1_BREAKER", "EventConnectedStatus", 2),
+                Arguments.of("/eventModels/closeSwitch.groovy", EventSwitchOpen.class, FourSubstationsNodeBreakerFactory.create(), "S1VL1_LD1_BREAKER", "CloseSwitch_S1VL1_LD1_BREAKER", "EventConnectedStatus", 2)
         );
     }
 

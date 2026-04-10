@@ -4,4 +4,8 @@
         <dyn:par type="DOUBLE" name="event_tEvent" value="5.0"/>
         <dyn:par type="BOOL" name="event_open" value="true"/>
     </dyn:set>
+    <dyn:set id="CloseSwitch_S1VL1_LD1_BREAKER">
+        <dyn:par type="DOUBLE" name="event_tEvent" value="7.0"/>
+        <dyn:par type="BOOL" name="event_open" value="false"/>
+    </dyn:set>
 </dyn:parametersSet>
