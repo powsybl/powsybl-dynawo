@@ -3,6 +3,8 @@ Dynamic model configuration creates dynamic models used by Dynawo.
 Most of the dynamic models are associated with a static equipment present in the network.
 If some equipments are not configured, Dynawo would use a default model and set of parameters.
 
+See the definition of all Dynawo models [here](dynamic-models-description.md).
+
 ## Implementation
 Powsybl-Dynawo handles two methods of configuration:
 - **Dynamic Models DSL**: a domain specific language written in groovy (used in iTools)
@@ -339,7 +341,7 @@ With specific attributes:
 ```groovy
 import com.powsybl.dynawo.models.TransformerSide
 
-TapChangerAutomaton {
+TapChangerAutomationSystem {
     dynamicModelId "TC"
     parameterSetId "TC"
     staticId "LOAD"
@@ -349,7 +351,7 @@ TapChangerAutomaton {
 **Json configuration:**
 ```json
 {
-  "model":"TapChangerAutomaton",
+  "model":"TapChangerAutomationSystem",
   "group": "TC",
   "properties":[
     {
@@ -387,14 +389,14 @@ With specific attributes:
 def measurementsTCB1 = ["S1VL2_BBS1", "S3VL1_B1"]
 List[] measurementsTCB2 = [["OldId", "NGEN", "NHV1"], ["NHV1", "OldId"], ["NHV2"]]
 
-TapChangerBlockingAutomaton {
+TapChangerBlockingAutomationSystem {
     dynamicModelId "TCB1"
     parameterSetId "TCB"
     uMeasurements measurementsTCB1
     transformers "TWT", "LD1"
 }
 
-TapChangerBlockingAutomaton {
+TapChangerBlockingAutomationSystem {
     dynamicModelId "TCB2"
     parameterSetId "TCB"
     uMeasurements measurementsTCB2
@@ -405,7 +407,7 @@ TapChangerBlockingAutomaton {
 ```json
 [
   {
-    "model":"TapChangerBlockingAutomaton",
+    "model":"TapChangerBlockingAutomationSystem",
     "group": "TCB",
     "properties":[
       {
@@ -426,7 +428,7 @@ TapChangerBlockingAutomaton {
     ]
   },
   {
-    "model":"TapChangerBlockingAutomaton",
+    "model":"TapChangerBlockingAutomationSystem",
     "group": "TCB",
     "properties":[
       {
@@ -449,53 +451,34 @@ TapChangerBlockingAutomaton {
 ]
 ```
 
-## Supported models
-Models are listed in [models.json](../../dynawo/src/main/resources/models.json).  
-The list is divided in categories each linked to a dedicated builder.
-### Categories properties
-* `defaultLib` : name of the default library
-* `libs` : list of dynawo libraries supported for this category
-
-The list is statically loaded via [ModelConfigLoader](https://javadoc.io/doc/com.powsybl/powsybl-dynawo/latest/com/powsybl/dynawo/builders/ModelConfigLoader.html) services and thus can be extended.
-
-### Library properties
-* `lib`: library name used in dynawo
-* `alias`: name used in powsybl-dynawo instead of lib
-* `properties`: dynamic model properties (synchronized, dangling, etc.)
-* `internalModelPrefix`: used for dynamic model file creation
-* `doc`: library documentation
-* `minVersion`: Dynawo minimum version required
-* `maxVersion`: Dynawo maximum version required
-* `endCause`: explains the cause of the model ending at `maxVersion` 
-
-## Dynamic model Builder List
+## Dynamic model builder List
 Ultimately, all groovy scripts call dedicated builders that can be used directly by developers.
 ### Equipments
-* BaseStaticVarCompensatorBuilder
-* BaseShuntBuilder
-* HvdcPBuilder
-* HvdcVscBuilder
-* BaseGeneratorBuilder
-* SignalNGeneratorBuilder
-* SynchronizedGeneratorBuilder
-* SynchronousGeneratorBuilder
-* WeccBuilder
-* GridFormingConverterBuilder
-* LineBuilder
-* StandardBusBuilder
-* InfiniteBusBuilder
-* TransformerFixedRatioBuilder
-* BaseLoadBuilder
-* LoadOneTransformerBuilder
-* LoadTwoTransformersBuilder
-* LoadOneTransformerTapChangerBuilder
-* LoadTwoTransformersTapChangersBuilder
+* `BaseStaticVarCompensatorBuilder`
+* `BaseShuntBuilder`
+* `HvdcPBuilder`
+* `HvdcVscBuilder`
+* `BaseGeneratorBuilder`
+* `SignalNGeneratorBuilder`
+* `SynchronizedGeneratorBuilder`
+* `SynchronousGeneratorBuilder`
+* `WeccBuilder`
+* `GridFormingConverterBuilder`
+* `LineBuilder`
+* `StandardBusBuilder`
+* `InfiniteBusBuilder`
+* `TransformerFixedRatioBuilder`
+* `BaseLoadBuilder`
+* `LoadOneTransformerBuilder`
+* `LoadTwoTransformersBuilder`
+* `LoadOneTransformerTapChangerBuilder`
+* `LoadTwoTransformersTapChangersBuilder`
 ### Automation Systems
-* TapChangerAutomationSystemBuilder
-* TapChangerBlockingAutomationSystemBuilder
-* UnderVoltageAutomationSystemBuilder
-* DynamicOverloadManagementSystemBuilder
-* DynamicTwoLevelOverloadManagementSystemBuilder
-* PhaseShifterPAutomationSystemBuilder
-* PhaseShifterIAutomationSystemBuilder
-* PhaseShifterBlockingIAutomationSystemBuilder
+* `TapChangerAutomationSystemBuilder`
+* `TapChangerBlockingAutomationSystemBuilder`
+* `UnderVoltageAutomationSystemBuilder`
+* `DynamicOverloadManagementSystemBuilder`
+* `DynamicTwoLevelOverloadManagementSystemBuilder`
+* `PhaseShifterPAutomationSystemBuilder`
+* `PhaseShifterIAutomationSystemBuilder`
+* `PhaseShifterBlockingIAutomationSystemBuilder`

@@ -16,14 +16,30 @@ import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
 
+import static com.powsybl.dynawo.models.generators.GeneratorProperties.DEFAULT_OMEGA_REF_PU;
+import static com.powsybl.dynawo.models.generators.GeneratorProperties.DEFAULT_RUNNING;
+
 /**
  * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ * @author Olivier Perrin {@literal <olivier.perrin at rte-france.com>}
  */
 public class SynchronizedGenerator extends BaseGenerator implements FrequencySynchronizedModel {
+    private static final ComponentDescription DEFAULT_COMPONENT_DESCRIPTION = new Description();
 
     protected SynchronizedGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
-        super(generator, parameterSetId, modelConfig);
+        super(generator, parameterSetId, modelConfig,
+                isGeneratorCustom(modelConfig) ? CustomGeneratorComponent.fromModelConfig(modelConfig) : DEFAULT_COMPONENT_DESCRIPTION);
+    }
+
+    @Override
+    public String getOmegaRefPuVarName() {
+        return getComponentDescription().omegaRefPu();
+    }
+
+    @Override
+    public String getRunningVarName() {
+        return getComponentDescription().running();
     }
 
     @Override
@@ -37,5 +53,17 @@ public class SynchronizedGenerator extends BaseGenerator implements FrequencySyn
     @Override
     public Bus getConnectableBus() {
         return BusUtils.getConnectableBus(equipment);
+    }
+
+    static class Description extends BaseGenerator.Description implements ComponentDescription {
+        @Override
+        public String omegaRefPu() {
+            return DEFAULT_OMEGA_REF_PU;
+        }
+
+        @Override
+        public String running() {
+            return DEFAULT_RUNNING;
+        }
     }
 }

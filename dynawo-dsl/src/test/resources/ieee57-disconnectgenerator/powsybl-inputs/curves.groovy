@@ -12,7 +12,7 @@ for (Bus bus : network.busBreakerView.buses) {
     if (bus.id == "_KANA___1_TN" || bus.id == "_TURN___2_TN" || bus.id == "_LOGA___3_TN" || bus.id == "_BEAV___6_TN" 
         || bus.id == "_CLIN___8_TN" || bus.id == "_SALT___9_TN" || bus.id == "_GLEN__12_TN") {
         curve {
-            staticId bus.id
+            id bus.id
             variable "Upu_value"
         }
     }
@@ -20,7 +20,7 @@ for (Bus bus : network.busBreakerView.buses) {
 
 for (Generator gen : network.generators) {
     curve {
-        dynamicModelId gen.id
+        id gen.id
         variables "generator_omegaPu", "generator_PGen", "generator_QGen", "generator_UStatorPu"
     }
 }

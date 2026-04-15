@@ -32,6 +32,16 @@ public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxM
     }
 
     @Override
+    public String getName() {
+        return modelConfig.name();
+    }
+
+    @Override
+    public String getMacroConnectName() {
+        return getLib();
+    }
+
+    @Override
     public String getLib() {
         return modelConfig.lib();
     }

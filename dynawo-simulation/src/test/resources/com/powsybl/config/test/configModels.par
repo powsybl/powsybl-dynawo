@@ -271,4 +271,7 @@
     <set id="GF">
         <par type="DOUBLE" name="converter_SNom" value="10.3"/>
     </set>
+    <set id="ps">
+        <par type="STRING" name="componentId" value="NGEN_NHV1"/>
+    </set>
 </parametersSet>

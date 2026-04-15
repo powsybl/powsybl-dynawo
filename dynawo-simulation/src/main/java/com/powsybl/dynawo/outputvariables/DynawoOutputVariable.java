@@ -19,6 +19,8 @@ public class DynawoOutputVariable implements OutputVariable {
     private final String dynamicModelId;
     private final String variable;
     private final OutputType outputType;
+    private boolean isDefault = false;
+    private static final String DEFAULT_DYNAMIC_MODEL_ID = "NETWORK";
 
     DynawoOutputVariable(String dynamicModelId, String variable, OutputType outputType) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
@@ -28,16 +30,26 @@ public class DynawoOutputVariable implements OutputVariable {
 
     @Override
     public String getModelId() {
+        if (isDefault) {
+            return DEFAULT_DYNAMIC_MODEL_ID;
+        }
         return dynamicModelId;
     }
 
     @Override
     public String getVariableName() {
+        if (isDefault) {
+            return dynamicModelId + "_" + variable;
+        }
         return variable;
     }
 
     @Override
     public OutputType getOutputType() {
         return outputType;
+    }
+
+    public void setDefault() {
+        isDefault = true;
     }
 }

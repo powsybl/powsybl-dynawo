@@ -95,6 +95,23 @@ class JobsXmlTest extends DynawoTestUtil {
                 tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME), true);
     }
 
+    /**
+     * Test final step job creation without final step dyd
+     * by setting FinalStepConfig predicate to always false removing all dynamic models from the final step
+     */
+    @Test
+    void writeEmptyFinalStepJob() throws SAXException, IOException {
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .finalStepConfig(new FinalStepConfig(200, bbm -> false))
+                .build();
+        JobsXml.writeFinalStep(tmpDir, context);
+        validate("jobs.xsd", "jobsWithEmptyFinalStep.xml",
+                tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME), true);
+    }
+
     @Test
     void testJobXmlComments() throws IOException, XMLStreamException {
         DynawoSimulationContext context = new DynawoSimulationContext

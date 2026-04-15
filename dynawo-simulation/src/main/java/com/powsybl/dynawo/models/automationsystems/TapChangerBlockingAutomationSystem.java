@@ -17,7 +17,6 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.iidm.network.IdentifiableType;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -28,20 +27,19 @@ import java.util.*;
  */
 public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlackBoxModel {
 
-    private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.LOAD, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
     private static final int MAX_MEASUREMENTS = 5;
 
     private final List<Identifiable<?>> tapChangerEquipments;
-    private final List<String> tapChangerAutomatonIds;
+    private final List<String> tapChangerAutomationSystemIds;
     private final List<Identifiable<?>> uMeasurements;
     private boolean isConnected = true;
 
-    protected TapChangerBlockingAutomationSystem(String dynamicModelId, String parameterSetId, List<Identifiable<?>> tapChangerEquipments, List<String> tapChangerAutomatonIds, List<Identifiable<?>> uMeasurements, ModelConfig modelConfig) {
+    protected TapChangerBlockingAutomationSystem(String dynamicModelId, String parameterSetId, List<Identifiable<?>> tapChangerEquipments, List<String> tapChangerAutomationSystemIds, List<Identifiable<?>> uMeasurements, ModelConfig modelConfig) {
         super(dynamicModelId, parameterSetId, modelConfig);
         this.tapChangerEquipments = Objects.requireNonNull(tapChangerEquipments);
-        this.tapChangerAutomatonIds = Objects.requireNonNull(tapChangerAutomatonIds);
+        this.tapChangerAutomationSystemIds = Objects.requireNonNull(tapChangerAutomationSystemIds);
         this.uMeasurements = Objects.requireNonNull(uMeasurements);
-        if (tapChangerEquipments.isEmpty() && tapChangerAutomatonIds.isEmpty()) {
+        if (tapChangerEquipments.isEmpty() && tapChangerAutomationSystemIds.isEmpty()) {
             throw new PowsyblException("No Tap changers to monitor");
         }
         if (uMeasurements.isEmpty()) {
@@ -52,12 +50,8 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
         }
     }
 
-    public static boolean isCompatibleEquipment(IdentifiableType type) {
-        return COMPATIBLE_EQUIPMENTS.contains(type);
-    }
-
     @Override
-    public String getName() {
+    public String getMacroConnectName() {
         return super.getLib();
     }
 
@@ -74,12 +68,12 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
                 skippedTapChangers++;
             }
         }
-        for (String id : tapChangerAutomatonIds) {
+        for (String id : tapChangerAutomationSystemIds) {
             if (adder.createMacroConnectionsOrSkip(this, id, TapChangerAutomationSystem.class, this::getVarConnectionsWith)) {
                 skippedTapChangers++;
             }
         }
-        if (skippedTapChangers < (tapChangerEquipments.size() + tapChangerAutomatonIds.size())) {
+        if (skippedTapChangers < (tapChangerEquipments.size() + tapChangerAutomationSystemIds.size())) {
             if (uMeasurements.size() == 1) {
                 adder.createMacroConnections(this, uMeasurements.getFirst(), ActionConnectionPoint.class, this::getVarConnectionsWith, MeasurementPointSuffix.of());
             } else {
@@ -91,7 +85,7 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
             }
         } else {
             isConnected = false;
-            DynawoSimulationReports.reportEmptyListAutomationSystem(adder.getReportNode(), this.getName(), getDynamicModelId(), TapChangerModel.class.getSimpleName());
+            DynawoSimulationReports.reportEmptyModel(adder.getReportNode(), this.getName(), getDynamicModelId());
         }
     }
 
@@ -110,5 +104,10 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
         if (isConnected) {
             super.write(writer, parFileName);
         }
+    }
+
+    @Override
+    public boolean isConnected() {
+        return isConnected;
     }
 }

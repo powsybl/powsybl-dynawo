@@ -7,5 +7,5 @@
         <dyn:connect var1="phaseShifter_P" var2="@NAME@_P1"/>
         <dyn:connect var1="phaseShifter_AutomatonExists" var2="@NAME@_disable_internal_tapChanger"/>
     </dyn:macroConnector>
-    <dyn:macroConnect connector="MC_PhaseShifterI-DefaultTransformer" id1="BBM_PS" id2="NETWORK" name2="NGEN_NHV1"/>
+    <dyn:macroConnect connector="MC_PhaseShifterI-DefaultTransformer" id1="BBM_PS" id2="NETWORK" name2="PS1"/>
 </dyn:dynamicModelsArchitecture>

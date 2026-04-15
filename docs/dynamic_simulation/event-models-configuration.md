@@ -60,7 +60,7 @@ Disconnect {
 ```
 
 ### Active Power Variation
-Active power variation on generator or load.  
+Active power variation on controllable generator or load.  
 With specific attribute:
 - `deltaP`: active power variation.
 
@@ -97,7 +97,7 @@ ActivePowerVariation {
 ```
 
 ### Reactive Power Variation
-Reactive power variation on load and generator without dynamic model.  
+Reactive power variation on controllable load and generator without dynamic model.  
 With specific attribute:
 - `deltaQ`: reactive power variation.
 
@@ -126,6 +126,43 @@ ReactivePowerVariation {
     },
     {
       "name":"deltaQ",
+      "value":"0.2",
+      "type":"DOUBLE"
+    }
+  ]
+}
+```
+
+### Reference Voltage Variation
+Reference voltage variation on controllable synchronized/synchronous generator  
+With specific attribute:
+- `deltaU`: reference voltage variation.
+
+**Groovy script:**
+```groovy
+ReferenceVoltageVariation {
+    staticId "GEN"
+    startTime 2
+    deltaU 0.2
+}
+```
+**Json configuration:**
+```json
+{
+  "model":"ReferenceVoltageVariation",
+  "properties":[
+    {
+      "name":"staticId",
+      "value":"GEN",
+      "type":"STRING"
+    },
+    {
+      "name":"startTime",
+      "value":"2",
+      "type":"DOUBLE"
+    },
+    {
+      "name":"deltaU",
       "value":"0.2",
       "type":"DOUBLE"
     }
@@ -189,4 +226,5 @@ Ultimately, all groovy scripts or Json configuration file call the dedicated bui
 - EventDisconnectionBuilder
 - EventActivePowerVariationBuilder
 - EventReactivePowerVariationBuilder
+- EventReferenceVoltageVariationBuilder
 - NodeFaultEventBuilder

@@ -79,23 +79,36 @@ public final class DynawoSimulationReports {
                 .add();
     }
 
-    public static void reportEmptyAutomationSystem(ReportNode reportNode, String automationSystemName, String dynamicId, String equipmentId, String expectedModels) {
+    public static void reportEmptyModel(ReportNode reportNode, String modelName, String dynamicId) {
         reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynasim.emptyAutomationSystem")
-                .withUntypedValue("automationSystemName", automationSystemName)
+                .withMessageTemplate("dynawo.dynasim.emptyModel")
+                .withUntypedValue(MODEL_NAME_FIELD, modelName)
                 .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
-                .withUntypedValue("equipmentId", equipmentId)
-                .withUntypedValue("expectedModels", expectedModels)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
 
-    public static void reportEmptyListAutomationSystem(ReportNode reportNode, String automationSystemName, String dynamicId, String expectedModels) {
+    public static void reportConnectedModelNotFound(ReportNode reportNode, String modelName, String dynamicId,
+                                                    String targetedModelName, String targetedDynamicId) {
         reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynasim.emptyListAutomationSystem")
-                .withUntypedValue("automationSystemName", automationSystemName)
+                .withMessageTemplate("dynawo.dynasim.connectedModelNotFound")
+                .withUntypedValue(MODEL_NAME_FIELD, modelName)
                 .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
-                .withUntypedValue("expectedModels", expectedModels)
+                .withUntypedValue("targetedModelName", targetedModelName)
+                .withUntypedValue("targetedDynamicId", targetedDynamicId)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportConnectedModelNotImplemented(ReportNode reportNode, String modelName, String dynamicId,
+                                                          String targetedModelName, String targetedDynamicId, String actualModelName) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.connectedModelNotImplemented")
+                .withUntypedValue(MODEL_NAME_FIELD, modelName)
+                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
+                .withUntypedValue("targetedModelName", targetedModelName)
+                .withUntypedValue("targetedDynamicId", targetedDynamicId)
+                .withUntypedValue("actualModelName", actualModelName)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -103,16 +116,6 @@ public final class DynawoSimulationReports {
     public static void reportFailedDynamicModelHandling(ReportNode reportNode, String modelName, String dynamicId, String equipmentType) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.failedDynamicModelHandling")
-                .withUntypedValue(MODEL_NAME_FIELD, modelName)
-                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
-                .withUntypedValue("equipmentType", equipmentType)
-                .withSeverity(TypedValue.WARN_SEVERITY)
-                .add();
-    }
-
-    public static void reportFailedDefaultModelHandling(ReportNode reportNode, String modelName, String dynamicId, String equipmentType) {
-        reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynasim.failedDefaultModelHandling")
                 .withUntypedValue(MODEL_NAME_FIELD, modelName)
                 .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
                 .withUntypedValue("equipmentType", equipmentType)

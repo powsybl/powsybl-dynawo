@@ -15,24 +15,44 @@ import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.Generator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> {
+public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> implements SpecifiedGeneratorModel {
 
     private final List<VarMapping> varsMapping;
     protected final String weccPrefix;
 
-    protected WeccGen(Generator generator, String parameterSetId, ModelConfig modelConfig, String weccPrefix) {
+    protected WeccGen(Generator generator, String parameterSetId, ModelConfig modelConfig) {
         super(generator, parameterSetId, modelConfig);
-        this.weccPrefix = Objects.requireNonNull(weccPrefix);
+        this.weccPrefix = Objects.requireNonNull(modelConfig.internalModelPrefix());
         varsMapping = List.of(
                 new VarMapping(weccPrefix + "_measurements_PPuSnRef", "p"),
                 new VarMapping(weccPrefix + "_measurements_QPuSnRef", "q"),
                 new VarMapping(weccPrefix + "_injector_state", "state"));
+    }
+
+    private String switchOffSignalNodeVarName() {
+        return weccPrefix + "_injector_switchOffSignal1";
+    }
+
+    @Override
+    public String getSwitchOffSignalEventVarName() {
+        return weccPrefix + "_injector_switchOffSignal2";
+    }
+
+    @Override
+    public String getSwitchOffSignalAutomatonVarName() {
+        return weccPrefix + "_injector_switchOffSignal3";
+    }
+
+    @Override
+    public String getUPuVarName() {
+        return weccPrefix + "_injector_UPu";
     }
 
     @Override
@@ -41,7 +61,12 @@ public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> {
     }
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
-        return List.of(new VarConnection(weccPrefix + "_terminal", connected.getTerminalVarName()));
+        List<VarConnection> varConnections = new ArrayList<>();
+        varConnections.add(new VarConnection(weccPrefix + "_terminal", connected.getTerminalVarName()));
+        connected.getSwitchOffSignalVarName()
+                .map(switchOff -> new VarConnection(switchOffSignalNodeVarName(), switchOff))
+                .ifPresent(varConnections::add);
+        return varConnections;
     }
 
     @Override

@@ -8,7 +8,7 @@ All load variations should be written in a `variations` array.
 ## Loads variation model
 The variation model has two attributes:
 - `loadsIds`: an array of load ids.
-- `variationValue`: the variation to apply on each load.
+- `variationValue`: the variation to apply proportionally on all loads (in MW).
 
 **Json configuration:**
 ```json

@@ -17,15 +17,13 @@ import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynamicsimulation.DynamicSimulationResultImpl;
 import com.powsybl.dynamicsimulation.TimelineEvent;
 import com.powsybl.dynawo.commons.ExportMode;
+import com.powsybl.dynawo.commons.NetworkExporter;
 import com.powsybl.dynawo.outputvariables.CsvFsvParser;
 import com.powsybl.dynawo.commons.CommonReports;
-import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.dynawologs.CsvLogParser;
-import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.timeline.TimeLineParser;
 import com.powsybl.dynawo.xml.JobsXml;
-import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.timeseries.*;
 import org.slf4j.Logger;
@@ -56,7 +54,6 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
 
     private final DynawoSimulationContext context;
     private final Command command;
-    private final Network dynawoInput;
     private final ReportNode reportNode;
 
     private final List<TimelineEvent> timeline = new ArrayList<>();
@@ -67,9 +64,6 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
 
     public DynawoSimulationHandler(DynawoSimulationContext context, Command command, ReportNode reportNode) {
         this.context = context;
-        this.dynawoInput = context.getDynawoSimulationParameters().isMergeLoads()
-                ? LoadsMerger.mergeLoads(context.getNetwork())
-                : context.getNetwork();
         this.command = command;
         this.reportNode = reportNode;
     }
@@ -171,18 +165,24 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         Path timelineFile = outputsFolder.resolve(TIMELINE_FOLDER).resolve(TIMELINE_FILENAME + exportMode.getFileExtension());
         if (Files.exists(timelineFile)) {
             TimeLineParser.parse(timelineFile, exportMode)
-                    .forEach(e -> timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message())));
+                        .forEach(e -> timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message())));
         } else {
             LOGGER.warn("Timeline file not found");
         }
     }
 
-    private void setCurves(Path workingDir) {
+    private void setCurves(Path workingDir) throws IOException {
         Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).resolve(CURVES_FILENAME);
         if (Files.exists(curvesPath)) {
-            TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false,
-                            TimeSeries.TimeFormat.FRACTIONS_OF_SECOND, true)).values()
-                    .forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
+            if (Files.size(curvesPath) > 0) {
+                TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false,
+                                TimeSeries.TimeFormat.FRACTIONS_OF_SECOND, true)).values()
+                        .forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
+            } else {
+                LOGGER.warn("CRV file is empty");
+                status = DynamicSimulationResult.Status.FAILURE;
+                statusText = "CRV file is empty";
+            }
         } else {
             LOGGER.warn("Curves folder not found");
             status = DynamicSimulationResult.Status.FAILURE;
@@ -202,7 +202,8 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     }
 
     private void writeInputFiles(Path workingDir) throws IOException {
-        DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
+        NetworkExporter.writeIidm(context.getNetwork(), workingDir.resolve(NETWORK_FILENAME),
+                context.getCurrentDynawoVersion(), context.getDynawoSimulationParameters().isMergeLoads());
         JobsXml.write(workingDir, context);
         DynawoFilesUtils.writeInputFiles(workingDir, context);
     }

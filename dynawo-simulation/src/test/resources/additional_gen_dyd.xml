@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="GEN" lib="BaseGenerator2" parFile="models.par" parId="GPQ" staticId="GEN">
+        <dyn:macroStaticRef id="MSR_BaseGenerator2"/>
+    </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="UVA" lib="UnderVoltageAutomaton" parFile="models.par" parId="UVA"/>
+    <dyn:blackBoxModel id="Disconnect_GEN" lib="EventSetPointBoolean" parFile="sim1.par" parId="Disconnect_GEN"/>
+    <dyn:macroConnector id="MC_BaseGenerator2-DefaultEquipmentConnectionPoint">
+        <dyn:connect var1="generatorAlt_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="generatorAlt_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_UnderVoltageAutomaton-BaseGenerator2">
+        <dyn:connect var1="underVoltageAutomaton_UMonitoredPu" var2="generator_UPu"/>
+        <dyn:connect var1="underVoltageAutomaton_switchOffSignal" var2="generatorAlt_switchOffSignal3"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_EventInjectionDisconnection-BaseGenerator2">
+        <dyn:connect var1="event_state1" var2="generatorAlt_switchOffSignal2"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_BaseGenerator2">
+        <dyn:staticRef var="generator2_PGen2" staticVar="p"/>
+        <dyn:staticRef var="generator2_QGen2" staticVar="q"/>
+        <dyn:staticRef var="generator2_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_BaseGenerator2-DefaultEquipmentConnectionPoint" id1="GEN" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_UnderVoltageAutomaton-BaseGenerator2" id1="UVA" id2="GEN"/>
+    <dyn:macroConnect connector="MC_EventInjectionDisconnection-BaseGenerator2" id1="Disconnect_GEN" id2="GEN"/>
+</dyn:dynamicModelsArchitecture>

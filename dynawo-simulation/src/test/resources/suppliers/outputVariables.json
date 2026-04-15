@@ -1,29 +1,29 @@
 {
   "curves":[
     {
-      "dynamicModelId": "BBM_GEN",
+      "id": "BBM_GEN",
       "variable": "voltageRegulator_EfdPu"
     },
     {
-      "staticId": "BUS",
+      "id": "BUS",
       "variable": "Upu_value"
     },
     {
-      "dynamicModelId": "BBM_GEN2",
+      "id": "BBM_GEN2",
       "variables": ["generator_omegaPu", "generator_PGen", "generator_UStatorPU"]
     },
     {
-      "staticId": "LOAD",
+      "id": "LOAD",
       "variables": ["load_PPu", "load_QPu"]
     }
   ],
   "fsv":[
     {
-      "dynamicModelId": "BBM_GEN",
+      "id": "BBM_GEN",
       "variable": "generator_PGen"
     },
     {
-      "staticId": "LOAD",
+      "id": "LOAD",
       "variable": "load_QPu"
     }
   ]

@@ -18,7 +18,7 @@ import com.powsybl.iidm.network.*;
  */
 public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identifiable<?>, EventDisconnectionBuilder> {
 
-    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Disconnect", "Disconnects a bus, a branch, an injection or an HVDC line");
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Disconnect", "Disconnects a bus, a branch, an injection or an HVDC line.");
     private static final String STATIC_ID_FIELD_NAME = "staticId";
 
     private enum DisconnectionType {

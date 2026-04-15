@@ -7,22 +7,57 @@
  */
 package com.powsybl.dynawo.models.generators;
 
+import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.models.VarMapping;
+
+import java.util.List;
+
+import static com.powsybl.dynawo.models.generators.GeneratorProperties.GENERATOR_STATE;
+import static com.powsybl.dynawo.models.generators.GeneratorProperties.STATE;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public enum EnumGeneratorComponent {
 
-    NONE("generator_terminal"),
-    TRANSFORMER("transformer_terminal1"),
-    AUXILIARY_TRANSFORMER("coupling_terminal1");
+    NONE("generator_terminal", List.of(
+            new VarMapping("generator_PGenPu", "p"),
+            new VarMapping("generator_QGenPu", "q"),
+            new VarMapping(GENERATOR_STATE, STATE)
+    )),
+    TRANSFORMER("transformer_terminal1", List.of(
+            new VarMapping("transformer_P1GenPu", "p"),
+            new VarMapping("transformer_Q1GenPu", "q"),
+            new VarMapping(GENERATOR_STATE, STATE)
+    )),
+    AUXILIARY("coupling_terminal1", List.of(
+            new VarMapping("coupling_P1GenPu", "p"),
+            new VarMapping("coupling_Q1GenPu", "q"),
+            new VarMapping(GENERATOR_STATE, STATE)
+    ));
 
-    EnumGeneratorComponent(String terminalVarName) {
+    public static EnumGeneratorComponent createFrom(ModelConfig modelConfig) {
+        if (modelConfig.hasAuxiliary()) {
+            return EnumGeneratorComponent.AUXILIARY;
+        } else if (modelConfig.hasTransformer()) {
+            return EnumGeneratorComponent.TRANSFORMER;
+        }
+        return EnumGeneratorComponent.NONE;
+    }
+
+    EnumGeneratorComponent(String terminalVarName, List<VarMapping> varMapping) {
         this.terminalVarName = terminalVarName;
+        this.varMapping = varMapping;
     }
 
     private final String terminalVarName;
+    private final List<VarMapping> varMapping;
 
     public String getTerminalVarName() {
         return terminalVarName;
+    }
+
+    public List<VarMapping> getVarMapping() {
+        return varMapping;
     }
 }
