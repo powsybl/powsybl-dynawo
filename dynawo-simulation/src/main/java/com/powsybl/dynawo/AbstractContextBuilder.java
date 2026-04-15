@@ -18,6 +18,8 @@ import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.AbstractBus;
 import com.powsybl.dynawo.models.frequencysynchronizers.*;
+import com.powsybl.dynawo.models.versionableVariable.VariableResolver;
+import com.powsybl.dynawo.models.versionableVariable.VariableResolverModel;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.simplifiers.ModelSimplifiers;
 import com.powsybl.dynawo.simplifiers.ModelsRemovalSimplifier;
@@ -133,6 +135,12 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         setupFrequencySynchronizer();
         blackBoxModelSupplier = BlackBoxModelSupplier.createFrom(dynamicModels);
         checkForbiddenDefaultModels();
+        // Late init on VariableResolverModels
+        VariableResolver variableResolver = new VariableResolver(dynawoVersion);
+        dynamicModels.stream()
+                .filter(VariableResolverModel.class::isInstance)
+                .map(VariableResolverModel.class::cast)
+                .forEach(m -> m.setVariableResolver(variableResolver));
     }
 
     private void checkForbiddenDefaultModels() {

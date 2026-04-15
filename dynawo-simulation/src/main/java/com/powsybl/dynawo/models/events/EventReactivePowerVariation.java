@@ -16,6 +16,7 @@ import com.powsybl.iidm.network.Injection;
 
 import java.util.List;
 
+import static com.powsybl.dynawo.models.versionableVariable.VersionVariableUtils.STEP;
 import static com.powsybl.dynawo.parameters.ParameterType.BOOL;
 
 /**
@@ -30,7 +31,7 @@ public class EventReactivePowerVariation extends AbstractVariationEvent {
 
     private List<VarConnection> getVarConnectionsWith(QControllableEquipmentModel connected) {
         if (equipmentModelType.getValue().isStep()) {
-            return List.of(new VarConnection("step_step_value", connected.getDeltaQVarName()));
+            return List.of(new VarConnection(variableResolver.getValue().resolve(STEP), connected.getDeltaQVarName()));
         }
         return List.of(new VarConnection("event_state1", connected.getDeltaQVarName()));
     }
