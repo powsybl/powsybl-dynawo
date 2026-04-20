@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.builders;
 
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +22,12 @@ public class ModelConfigs {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelConfigs.class);
 
+    private final String category;
     private ModelConfig defaultModelConfig;
     private final SortedMap<String, ModelConfig> modelConfigMap;
 
-    ModelConfigs(SortedMap<String, ModelConfig> modelConfigMap, String defaultModelConfigName) {
+    ModelConfigs(String category, SortedMap<String, ModelConfig> modelConfigMap, String defaultModelConfigName) {
+        this.category = Objects.requireNonNull(category);
         this.modelConfigMap = Objects.requireNonNull(modelConfigMap);
         if (defaultModelConfigName != null) {
             this.defaultModelConfig = Objects.requireNonNull(modelConfigMap.get(defaultModelConfigName));
@@ -39,8 +42,13 @@ public class ModelConfigs {
         return defaultModelConfig;
     }
 
-    public ModelConfig getModelConfig(String modelName) {
-        return modelConfigMap.get(modelName);
+    public ModelConfig getModelConfig(String modelName, ReportNode reportNode) {
+        ModelConfig modelConfig = modelConfigMap.get(modelName);
+        if (modelConfig == null) {
+            BuilderReports.reportModelNotFound(reportNode, category, modelName);
+            return null;
+        }
+        return modelConfig;
     }
 
     public Collection<ModelInfo> getModelInfos() {
