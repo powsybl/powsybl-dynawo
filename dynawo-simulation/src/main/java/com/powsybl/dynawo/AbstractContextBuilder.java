@@ -11,7 +11,6 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.OutputVariable;
-import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
@@ -117,7 +116,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
 
     private void setupDynamicModels() {
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
-                .filter(distinctByDynamicId(reportNode).and(supportedVersion(dynawoVersion, reportNode)));
+                .filter(distinctByDynamicId(reportNode));
 
         Set<String> modelSimplifierNames = dynawoParameters.getModelSimplifiers();
         if (!modelSimplifierNames.isEmpty()) {
@@ -207,21 +206,6 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         return bbm -> {
             if (!seen.add(bbm.getDynamicModelId())) {
                 DynawoSimulationReports.reportDuplicateDynamicId(reportNode, bbm.getDynamicModelId(), bbm.getName());
-                return false;
-            }
-            return true;
-        };
-    }
-
-    protected static Predicate<BlackBoxModel> supportedVersion(DynawoVersion currentVersion, ReportNode reportNode) {
-        return bbm -> {
-            VersionInterval versionInterval = bbm.getVersionInterval();
-            if (currentVersion.compareTo(versionInterval.min()) < 0) {
-                DynawoSimulationReports.reportDynawoVersionTooHigh(reportNode, bbm.getName(), bbm.getDynamicModelId(), versionInterval.min(), currentVersion);
-                return false;
-            }
-            if (versionInterval.max() != null && currentVersion.compareTo(versionInterval.max()) >= 0) {
-                DynawoSimulationReports.reportDynawoVersionTooLow(reportNode, bbm.getName(), bbm.getDynamicModelId(), versionInterval.max(), currentVersion, versionInterval.endCause());
                 return false;
             }
             return true;

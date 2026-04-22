@@ -89,8 +89,7 @@ public class DynawoSimulationContext {
         protected void setupData() {
             super.setupData();
             eventModels = Objects.requireNonNull(eventModels).stream()
-                    .filter(distinctByDynamicId(reportNode)
-                            .and(supportedVersion(dynawoVersion, reportNode)))
+                    .filter(distinctByDynamicId(reportNode))
                     .toList();
             // Late init on ContextDependentEvents and VariableResolverModels
             VariableResolver variableResolver = new VariableResolver(dynawoVersion);

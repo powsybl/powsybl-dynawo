@@ -9,6 +9,7 @@ package com.powsybl.dynawo.builders;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.report.TypedValue;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.HvdcConverterStation;
 import com.powsybl.iidm.network.IdentifiableType;
 
@@ -58,6 +59,27 @@ public final class BuilderReports {
                 .withUntypedValue("category", category)
                 .withUntypedValue(MODEL_NAME, modelName)
                 .withSeverity(TypedValue.INFO_SEVERITY)
+                .add();
+    }
+
+    public static void reportDynawoVersionTooHigh(ReportNode reportNode, String modelName, DynawoVersion modelVersion, DynawoVersion currentVersion) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.highDynawoVersion")
+                .withUntypedValue("modelVersion", modelVersion.toString())
+                .withUntypedValue("currentVersion", currentVersion.toString())
+                .withUntypedValue(MODEL_NAME, modelName)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportDynawoVersionTooLow(ReportNode reportNode, String modelName, DynawoVersion modelVersion, DynawoVersion currentVersion, String endCause) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.lowDynawoVersion")
+                .withUntypedValue("modelVersion", modelVersion.toString())
+                .withUntypedValue("currentVersion", currentVersion.toString())
+                .withUntypedValue("endCause", endCause)
+                .withUntypedValue(MODEL_NAME, modelName)
+                .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
 

@@ -48,6 +48,16 @@ public class ModelConfigs {
             BuilderReports.reportModelNotFound(reportNode, category, modelName);
             return null;
         }
+        DynawoVersion currentVersion = ModelConfigsHandler.getInstance().getDynawoVersion();
+        VersionInterval versionInterval = modelConfig.version();
+        if (currentVersion.compareTo(versionInterval.min()) < 0) {
+            BuilderReports.reportDynawoVersionTooHigh(reportNode, modelConfig.name(), versionInterval.min(), currentVersion);
+            return null;
+        }
+        if (versionInterval.max() != null && currentVersion.compareTo(versionInterval.max()) > 0) {
+            BuilderReports.reportDynawoVersionTooLow(reportNode, modelConfig.name(), versionInterval.max(), currentVersion, versionInterval.endCause());
+            return null;
+        }
         return modelConfig;
     }
 
