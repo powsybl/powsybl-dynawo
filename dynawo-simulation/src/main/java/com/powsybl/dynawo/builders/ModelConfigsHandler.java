@@ -73,6 +73,9 @@ public final class ModelConfigsHandler {
         return eventBuilderConfigs;
     }
 
+    /**
+     * Get the ModelBuilder associated with modelName if the model is supported by the current Dynawo version
+     */
     public ModelBuilder<DynamicModel> getModelBuilder(Network network, String modelName, ReportNode reportNode) {
         BuilderConfig.ModelBuilderConstructor constructor = builderConstructorByName.get(modelName);
         if (constructor == null) {
