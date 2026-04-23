@@ -14,6 +14,7 @@ import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.*;
+import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.iidm.network.Network;
@@ -21,6 +22,7 @@ import com.powsybl.iidm.network.Substation;
 import com.powsybl.iidm.network.TopologyKind;
 import com.powsybl.iidm.network.VoltageLevel;
 import org.apache.commons.lang3.SystemUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -200,6 +202,12 @@ class DynawoProviderTest extends AbstractSerDeTest {
         DynamicSimulationParameters dsp = DynamicSimulationParameters.load();
         PowsyblException e = assertThrows(PowsyblException.class, () -> dynawoSimulation.run(network, dms, ems, cs, wvId, computationManager, dsp, NO_OP));
         assertEquals("dynawo version not supported. Must be >= " + DynawoConstants.VERSION_MIN, e.getMessage());
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        super.tearDown();
+        ModelConfigsHandler.getInstance().setDynawoVersion(DynawoConstants.CURRENT_VERSION);
     }
 
     private static Network createTestNetwork() {

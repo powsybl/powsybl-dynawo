@@ -42,6 +42,9 @@ public class ModelConfigs {
         return defaultModelConfig;
     }
 
+    /**
+     * Get the ModelConfig associated with modelName if the model is supported by the current Dynawo version
+     */
     public ModelConfig getModelConfig(String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = modelConfigMap.get(modelName);
         if (modelConfig == null) {
