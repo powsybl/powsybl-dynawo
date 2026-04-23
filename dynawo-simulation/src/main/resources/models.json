@@ -4,7 +4,14 @@
     "libs": [
       {
         "lib": "GeneratorFictitious",
-        "doc": "Simplified generator model with voltage-dependent active and reactive power."
+        "doc": "Simplified generator model with voltage-dependent active and reactive power.",
+        "maxVersion": "1.7.0",
+        "endCause": "Renamed GeneratorAlphaBeta"
+      },
+      {
+        "lib": "GeneratorAlphaBeta",
+        "doc": "Simplified generator model with voltage-dependent active and reactive power.",
+        "minVersion": "1.8.0"
       },
       {
         "lib": "GeneratorPVFixed",
@@ -843,6 +850,17 @@
         "internalModelPrefix": "WTG4A",
         "properties": [
           "SYNCHRONIZED"
+        ],
+        "maxVersion": "1.7.0",
+        "endCause": "Renamed WTG4AWeccCurrentSource1"
+      },
+      {
+        "lib": "WTG4AWeccCurrentSource1",
+        "doc": "WECC Wind Turbine model with a simplified drive train model WTGTA, current control REECA, and generator/converter REGCB with a current source as interface with the grid.",
+        "internalModelPrefix": "WTG4A",
+        "minVersion": "1.8.0",
+        "properties": [
+          "SYNCHRONIZED"
         ]
       },
       {
@@ -878,6 +896,8 @@
         "doc": "WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a current source as interface with the grid.",
         "internalModelPrefix": "photovoltaics",
         "minVersion": "1.7.0",
+        "maxVersion": "1.7.0",
+        "endCause": "Renamed PhotovoltaicsWeccCurrentSource",
         "properties": [
           "SYNCHRONIZED"
         ]
@@ -897,6 +917,17 @@
         "doc": "WECC Photovoltaics grid following model with plant control REPCA, current control REECA, generator/converter REGCB with a voltage source as interface with the grid.",
         "internalModelPrefix": "photovoltaics",
         "minVersion": "1.7.0",
+        "maxVersion": "1.7.0",
+        "endCause": "Renamed PhotovoltaicsWeccVoltageSource1",
+        "properties": [
+          "SYNCHRONIZED"
+        ]
+      },
+      {
+        "lib": "PhotovoltaicsWeccVoltageSource1",
+        "doc": "WECC Photovoltaics grid following model with plant control REPCA, current control REECA, generator/converter REGCB with a voltage source as interface with the grid.",
+        "internalModelPrefix": "photovoltaics",
+        "minVersion": "1.8.0",
         "properties": [
           "SYNCHRONIZED"
         ]
@@ -906,6 +937,17 @@
         "doc": "WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a voltage source as interface with the grid.",
         "internalModelPrefix": "photovoltaics",
         "minVersion": "1.7.0",
+        "maxVersion": "1.7.0",
+        "endCause": "Renamed PhotovoltaicsWeccVoltageSource2",
+        "properties": [
+          "SYNCHRONIZED"
+        ]
+      },
+      {
+        "lib": "PhotovoltaicsWeccVoltageSource2",
+        "doc": "WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a voltage source as interface with the grid.",
+        "internalModelPrefix": "photovoltaics",
+        "minVersion": "1.8.0",
         "properties": [
           "SYNCHRONIZED"
         ]
