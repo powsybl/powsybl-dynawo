@@ -158,7 +158,7 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
             reset(targetline.getTerminal1());
             reset(targetline.getTerminal2());
         }
-        for (DanglingLine targetDangling : targetNetwork.getDanglingLines()) {
+        for (BoundaryLine targetDangling : targetNetwork.getBoundaryLines()) {
             reset(targetDangling.getTerminal());
         }
         for (HvdcLine targetHvdcLine : targetNetwork.getHvdcLines()) {
