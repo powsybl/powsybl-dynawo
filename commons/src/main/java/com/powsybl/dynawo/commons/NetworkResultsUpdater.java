@@ -34,8 +34,8 @@ public final class NetworkResultsUpdater {
         for (Line lineSource : sourceNetwork.getLines()) {
             update(targetNetwork.getLine(lineSource.getId()), lineSource);
         }
-        for (DanglingLine sourceDangling : sourceNetwork.getDanglingLines()) {
-            update(targetNetwork.getDanglingLine(sourceDangling.getId()), sourceDangling);
+        for (BoundaryLine sourceDangling : sourceNetwork.getBoundaryLines()) {
+            update(targetNetwork.getBoundaryLine(sourceDangling.getId()), sourceDangling);
         }
 
         updateHvdcLines(targetNetwork, sourceNetwork.getHvdcLines());

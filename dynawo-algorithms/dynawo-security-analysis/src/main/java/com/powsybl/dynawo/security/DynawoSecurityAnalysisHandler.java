@@ -18,7 +18,7 @@ import com.powsybl.dynawo.contingency.ContingencyResultsUtils;
 import com.powsybl.dynawo.security.xml.MultipleJobsXml;
 import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.iidm.serde.NetworkSerDe;
-import com.powsybl.security.LimitViolationFilter;
+import com.powsybl.contingency.violations.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisReport;
 import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
