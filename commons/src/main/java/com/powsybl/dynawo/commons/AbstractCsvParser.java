@@ -30,17 +30,17 @@ public abstract class AbstractCsvParser<T> {
 
     protected static final char DEFAULT_SEPARATOR = '|';
 
-    private char separator = DEFAULT_SEPARATOR;
-    private boolean skipHeader = false;
-    private int maxColumns = -1;
+    private final char separator;
+    private final boolean skipHeader;
+    private final int maxColumns;
 
     protected AbstractCsvParser(char separator, boolean skipHeader) {
-        this.separator = separator;
-        this.skipHeader = skipHeader;
+        this(separator, skipHeader, -1);
     }
 
     protected AbstractCsvParser(char separator, boolean skipHeader, int maxColumns) {
-        this(separator, skipHeader);
+        this.separator = separator;
+        this.skipHeader = skipHeader;
         this.maxColumns = maxColumns;
     }
 
@@ -60,30 +60,32 @@ public abstract class AbstractCsvParser<T> {
             if (skipHeader) {
                 csvReader.skipLines(1);
             }
-            List<T> logs = new ArrayList<>();
+            List<T> results = new ArrayList<>();
             AtomicInteger lineIndex = new AtomicInteger(0);
-            csvReader.forEach(csvRecord -> {
-                int iLine = lineIndex.incrementAndGet();
-                int size = maxColumns >= 0 && maxColumns < csvRecord.getFieldCount() ?
-                        maxColumns : csvRecord.getFieldCount();
-                if (hasCorrectNbColumns(size)) {
-                    List<String> fields = csvRecord.getFields();
-                    String[] tokens = new String[size];
-                    for (int i = 0; i < fields.size(); i++) {
-                        tokens[i] = fields.get(i).trim();
-                        if (tokens[i].isEmpty()) {
-                            tokens[i] = null;
-                        }
-                    }
-                    createEntry(tokens).ifPresent(logs::add);
-                } else {
-                    LOGGER.warn("Columns of line {} are inconsistent, the line will be skipped", iLine);
-                }
-            });
-            return logs;
+            csvReader.forEach(csvRecord ->
+                    parseRecord(csvRecord, lineIndex.incrementAndGet()).ifPresent(results::add));
+            return results;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    private Optional<T> parseRecord(CsvRecord csvRecord, int iLine) {
+        int size = maxColumns >= 0 && maxColumns < csvRecord.getFieldCount() ?
+                maxColumns : csvRecord.getFieldCount();
+        if (!hasCorrectNbColumns(size)) {
+            LOGGER.warn("Columns of line {} are inconsistent, the line will be skipped", iLine);
+            return Optional.empty();
+        }
+        List<String> fields = csvRecord.getFields();
+        String[] tokens = new String[size];
+        for (int i = 0; i < fields.size(); i++) {
+            tokens[i] = fields.get(i).trim();
+            if (tokens[i].isEmpty()) {
+                tokens[i] = null;
+            }
+        }
+        return createEntry(tokens);
     }
 
     protected abstract Optional<T> createEntry(String[] tokens);
