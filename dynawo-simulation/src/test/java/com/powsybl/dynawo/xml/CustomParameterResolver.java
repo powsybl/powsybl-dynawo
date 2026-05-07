@@ -13,43 +13,23 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.params.ParameterInfo;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
-import java.util.Optional;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class CustomParameterResolver implements BeforeEachMethodAdapter, ParameterResolver {
-
-    private ParameterResolver parameterisedTestParameterResolver = null;
-
-    @Override
-    public void invokeBeforeEachMethod(ExtensionContext context, ExtensionRegistry registry) {
-        Optional<ParameterResolver> resolverOptional = registry.getExtensions(ParameterResolver.class)
-                .stream()
-                .filter(parameterResolver ->
-                        parameterResolver.getClass().getName()
-                                .contains("ParameterizedTestParameterResolver")
-                )
-                .findFirst();
-        if (resolverOptional.isEmpty()) {
-            throw new IllegalStateException(
-                    "ParameterizedTestParameterResolver missing");
-        } else {
-            parameterisedTestParameterResolver = resolverOptional.get();
-        }
-    }
+public class CustomParameterResolver implements ParameterResolver {
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext,
                                      ExtensionContext extensionContext) throws ParameterResolutionException {
         if (isExecutedOnAfterOrBeforeMethod(parameterContext)) {
-            ParameterContext pContext = getMappedContext(parameterContext, extensionContext);
-            return parameterisedTestParameterResolver.supportsParameter(pContext, extensionContext);
+            ParameterInfo parameterInfo = ParameterInfo.get(extensionContext);
+            return parameterInfo != null
+                && parameterContext.getIndex() < parameterInfo.getArguments().toArray().length;
         }
         return false;
     }
@@ -57,16 +37,18 @@ public class CustomParameterResolver implements BeforeEachMethodAdapter, Paramet
     @Override
     public Object resolveParameter(ParameterContext parameterContext,
                                    ExtensionContext extensionContext) throws ParameterResolutionException {
-        return parameterisedTestParameterResolver.resolveParameter(
-                getMappedContext(parameterContext, extensionContext), extensionContext);
-    }
-
-    private MappedParameterContext getMappedContext(ParameterContext parameterContext,
-                                                    ExtensionContext extensionContext) {
-        return new MappedParameterContext(
-                parameterContext.getIndex(),
-                extensionContext.getRequiredTestMethod().getParameters()[parameterContext.getIndex()],
-                Optional.of(parameterContext.getTarget()));
+        ParameterInfo parameterInfo = ParameterInfo.get(extensionContext);
+        if (parameterInfo == null) {
+            throw new ParameterResolutionException(
+                "No ParameterInfo found in ExtensionContext for parameterized test");
+        }
+        Object[] arguments = parameterInfo.getArguments().toArray();
+        int index = parameterContext.getIndex();
+        if (index >= arguments.length) {
+            throw new ParameterResolutionException(
+                "Parameter index " + index + " is out of bounds for arguments of size " + arguments.length);
+        }
+        return arguments[index];
     }
 
     private boolean isExecutedOnAfterOrBeforeMethod(ParameterContext parameterContext) {
