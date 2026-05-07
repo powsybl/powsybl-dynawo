@@ -7,10 +7,8 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.univocity.parsers.common.ParsingContext;
-import com.univocity.parsers.common.ResultIterator;
-import com.univocity.parsers.csv.CsvParser;
-import com.univocity.parsers.csv.CsvParserSettings;
+import de.siegmar.fastcsv.reader.CsvReader;
+import de.siegmar.fastcsv.reader.CsvRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -31,42 +30,60 @@ public abstract class AbstractCsvParser<T> {
 
     protected static final char DEFAULT_SEPARATOR = '|';
 
-    protected CsvParser csvParser;
+    private char separator = DEFAULT_SEPARATOR;
+    private boolean skipHeader = false;
+    private int maxColumns = -1;
 
-    protected static CsvParserSettings setupSettings(char separator, boolean skipHeader) {
-        CsvParserSettings settings = new CsvParserSettings();
-        settings.getFormat().setDelimiter(separator);
-        settings.getFormat().setQuoteEscape('"');
-        settings.getFormat().setLineSeparator(System.lineSeparator());
-        settings.setHeaderExtractionEnabled(skipHeader);
-        return settings;
+    protected AbstractCsvParser(char separator, boolean skipHeader) {
+        this.separator = separator;
+        this.skipHeader = skipHeader;
+    }
+
+    protected AbstractCsvParser(char separator, boolean skipHeader, int maxColumns) {
+        this(separator, skipHeader);
+        this.maxColumns = maxColumns;
     }
 
     public List<T> parse(Path file) {
         if (!Files.exists(file)) {
             return Collections.emptyList();
         }
-        try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
-            Objects.requireNonNull(reader);
-            return read(csvParser.iterate(reader).iterator());
+        try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8);
+             CsvReader<CsvRecord> csvReader = CsvReader.builder()
+                     .fieldSeparator(separator)
+                     .quoteCharacter('"')
+                     .allowMissingFields(true)
+                     .allowExtraFields(true)
+                     .trimWhitespacesAroundQuotes(true)
+                     .skipEmptyLines(true)
+                     .ofCsvRecord(reader)) {
+            if (skipHeader) {
+                csvReader.skipLines(1);
+            }
+            List<T> logs = new ArrayList<>();
+            AtomicInteger lineIndex = new AtomicInteger(0);
+            csvReader.forEach(csvRecord -> {
+                int iLine = lineIndex.incrementAndGet();
+                int size = maxColumns >= 0 && maxColumns < csvRecord.getFieldCount() ?
+                        maxColumns : csvRecord.getFieldCount();
+                if (hasCorrectNbColumns(size)) {
+                    List<String> fields = csvRecord.getFields();
+                    String[] tokens = new String[size];
+                    for (int i = 0; i < fields.size(); i++) {
+                        tokens[i] = fields.get(i).trim();
+                        if (tokens[i].isEmpty()) {
+                            tokens[i] = null;
+                        }
+                    }
+                    createEntry(tokens).ifPresent(logs::add);
+                } else {
+                    LOGGER.warn("Columns of line {} are inconsistent, the line will be skipped", iLine);
+                }
+            });
+            return logs;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    protected List<T> read(ResultIterator<String[], ParsingContext> iterator) {
-        List<T> logs = new ArrayList<>();
-        int iLine = 0;
-        while (iterator.hasNext()) {
-            iLine++;
-            String[] tokens = iterator.next();
-            if (hasCorrectNbColumns(tokens.length)) {
-                createEntry(tokens).ifPresent(logs::add);
-            } else {
-                LOGGER.warn("Columns of line {} are inconsistent, the line will be skipped", iLine);
-            }
-        }
-        return logs;
     }
 
     protected abstract Optional<T> createEntry(String[] tokens);
