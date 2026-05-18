@@ -29,7 +29,7 @@ public class CustomParameterResolver implements ParameterResolver {
         if (isExecutedOnAfterOrBeforeMethod(parameterContext)) {
             ParameterInfo parameterInfo = ParameterInfo.get(extensionContext);
             return parameterInfo != null
-                && parameterContext.getIndex() < parameterInfo.getArguments().toArray().length;
+                && parameterContext.getIndex() < parameterInfo.getArguments().size();
         }
         return false;
     }
@@ -42,13 +42,8 @@ public class CustomParameterResolver implements ParameterResolver {
             throw new ParameterResolutionException(
                 "No ParameterInfo found in ExtensionContext for parameterized test");
         }
-        Object[] arguments = parameterInfo.getArguments().toArray();
         int index = parameterContext.getIndex();
-        if (index >= arguments.length) {
-            throw new ParameterResolutionException(
-                "Parameter index " + index + " is out of bounds for arguments of size " + arguments.length);
-        }
-        return arguments[index];
+        return parameterInfo.getArguments().get(index);
     }
 
     private boolean isExecutedOnAfterOrBeforeMethod(ParameterContext parameterContext) {
