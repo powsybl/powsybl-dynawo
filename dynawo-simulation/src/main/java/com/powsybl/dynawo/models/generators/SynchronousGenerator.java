@@ -10,7 +10,7 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
-import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
+import com.powsybl.dynawo.models.frequencysynchronizers.PowerAngleModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
@@ -25,7 +25,7 @@ import static com.powsybl.dynawo.models.generators.GeneratorProperties.*;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  * @author Olivier Perrin {@literal <olivier.perrin at rte-france.com>}
  */
-public class SynchronousGenerator extends BaseGenerator implements FrequencySynchronizedModel {
+public class SynchronousGenerator extends BaseGenerator implements PowerAngleModel {
 
     protected SynchronousGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
         super(generator, parameterSetId, modelConfig,
@@ -66,6 +66,11 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
     @Override
     public Bus getConnectableBus() {
         return BusUtils.getConnectableBus(equipment);
+    }
+
+    @Override
+    public String getThetaVarName() {
+        return "generator_theta";
     }
 
     static class Description extends BaseGenerator.Description implements ComponentDescription {

@@ -9,6 +9,7 @@ package com.powsybl.dynawo;
 
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
+import com.powsybl.dynawo.models.Model;
 import com.powsybl.iidm.network.Identifiable;
 
 import java.util.List;
@@ -63,4 +64,10 @@ public final class BlackBoxModelSupplier {
         return pureDynamicModelMap.getOrDefault(id, dynamicModelMap.get(id));
     }
 
+    public <T extends Model> List<T> getAllEquipmentDynamicModels(Class<T> modelClass) {
+        return dynamicModelMap.values().stream()
+                .filter(modelClass::isInstance)
+                .map(modelClass::cast)
+                .collect(Collectors.toList());
+    }
 }
