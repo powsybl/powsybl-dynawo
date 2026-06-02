@@ -43,6 +43,7 @@ public class SynchronousGenerator extends BaseGenerator implements PowerAngleMod
         return getComponentDescription().running();
     }
 
+    @Override
     public String getOmegaPuVarName() {
         return getComponentDescription().omegaPu();
     }

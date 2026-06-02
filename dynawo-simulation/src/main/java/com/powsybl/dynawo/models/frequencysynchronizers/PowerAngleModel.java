@@ -13,4 +13,6 @@ package com.powsybl.dynawo.models.frequencysynchronizers;
 public interface PowerAngleModel extends FrequencySynchronizedModel {
 
     String getThetaVarName();
+
+    String getOmegaPuVarName();
 }
