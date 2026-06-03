@@ -9,7 +9,7 @@ package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.frequencysynchronizers.PowerAngleModel;
+import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generator> implements PowerAngleModel, SpecifiedGeneratorModel {
+public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generator> implements FrequencySynchronizedModel, SpecifiedGeneratorModel {
 
     private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("converter_PGenPu", "p"),
@@ -51,7 +51,6 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
         return varConnections;
     }
 
-    @Override
     public String getOmegaPuVarName() {
         return "converter_omegaPu";
     }
@@ -64,11 +63,6 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
     @Override
     public String getRunningVarName() {
         return "converter_running";
-    }
-
-    @Override
-    public String getThetaVarName() {
-        return "converter_theta";
     }
 
     @Override
