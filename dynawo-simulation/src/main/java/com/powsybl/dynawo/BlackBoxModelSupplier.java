@@ -12,6 +12,7 @@ import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.iidm.network.Identifiable;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -40,7 +41,10 @@ public final class BlackBoxModelSupplier {
     private static Map<Boolean, Map<String, BlackBoxModel>> createDynamicModelMaps(List<BlackBoxModel> dynamicModels) {
         return dynamicModels.stream()
                 .collect(Collectors.partitioningBy(EquipmentBlackBoxModel.class::isInstance,
-                        Collectors.toMap(BlackBoxModel::getDynamicModelId, Function.identity())));
+                        Collectors.toMap(BlackBoxModel::getDynamicModelId,
+                                Function.identity(),
+                                (existing, replacement) -> existing,
+                                LinkedHashMap::new)));
     }
 
     private BlackBoxModelSupplier(Map<String, BlackBoxModel> dynamicModelMap, Map<String, BlackBoxModel> pureDynamicModelMap) {
@@ -64,9 +68,10 @@ public final class BlackBoxModelSupplier {
         return pureDynamicModelMap.getOrDefault(id, dynamicModelMap.get(id));
     }
 
-    public <T extends Model> List<T> getAllEquipmentDynamicModels(Class<T> modelClass) {
+    public <T extends Model> List<T> getAllEquipmentDynamicModels(Class<T> modelClass, Identifiable<?> filteredEquipment) {
         return dynamicModelMap.values().stream()
                 .filter(modelClass::isInstance)
+                .filter(m -> !m.getDynamicModelId().equalsIgnoreCase(filteredEquipment.getId()))
                 .map(modelClass::cast)
                 .collect(Collectors.toList());
     }

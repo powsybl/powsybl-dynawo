@@ -210,13 +210,13 @@ public final class MacroConnectionsAdder {
     }
 
     /**
-     * Creates macro connection for all models following modelClass
+     * Creates macro connection for all models following modelClass except the filtered equipment
      * Add MacroConnectAttribute "from" attributes
      * @return the number of MacroConnections created
      */
-    public <T extends Model> int createMacroConnectionsForAll(BlackBoxModel originModel, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier) {
+    public <T extends Model> int createMacroConnectionsForAll(BlackBoxModel originModel, Class<T> modelClass, Identifiable<?> filteredEquipment, Function<T, List<VarConnection>> varConnectionsSupplier) {
         int nbMacroConnections = 0;
-        for (T model : blackBoxModelSupplier.getAllEquipmentDynamicModels(modelClass)) {
+        for (T model : blackBoxModelSupplier.getAllEquipmentDynamicModels(modelClass, filteredEquipment)) {
             createMacroConnections(originModel, model, varConnectionsSupplier.apply(model), MacroConnectAttribute.ofIndex1(nbMacroConnections));
             nbMacroConnections++;
         }
