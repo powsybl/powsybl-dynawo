@@ -51,7 +51,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     protected FinalStepModels finalStepModels = null;
     protected SimulationTime simulationTime;
     protected SimulationTime finalStepTime = null;
-    protected DynawoVersion dynawoVersion = DynawoConstants.VERSION_MIN;
+    protected DynawoVersion dynawoVersion = DynawoConstants.CURRENT_VERSION;
     protected ReportNode reportNode = ReportNode.NO_OP;
 
     protected AbstractContextBuilder(Network network, List<BlackBoxModel> dynamicModels) {
