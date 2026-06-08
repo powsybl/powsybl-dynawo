@@ -11,7 +11,7 @@ import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.models.versionableVariable.VersionVariables;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Generator;
 
@@ -36,7 +36,7 @@ public class EventReferenceVoltageVariation extends AbstractEvent {
     }
 
     private List<VarConnection> getVarConnectionsWith(UControllableEquipmentModel connected) {
-        return List.of(new VarConnection(VersionVariables.getCurrentValue("STEP"), connected.getDeltaUVarName()));
+        return List.of(new VarConnection(VersionableVariables.getCurrentValue("STEP"), connected.getDeltaUVarName()));
     }
 
     @Override

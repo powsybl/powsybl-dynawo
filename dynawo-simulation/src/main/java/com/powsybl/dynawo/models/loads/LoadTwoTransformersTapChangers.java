@@ -14,7 +14,7 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
-import com.powsybl.dynawo.models.versionableVariable.VersionVariables;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
         List<VarConnection> varConnections = getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {
-                    String switchOffVar = VersionVariables.getCurrentValue("TC_SWITCH_OFF");
+                    String switchOffVar = VersionableVariables.getCurrentValue("TC_SWITCH_OFF");
                     varConnections.add(new VarConnection(String.format(switchOffVar, HIGH_VOLTAGE.getSideSuffix()), switchOff));
                     varConnections.add(new VarConnection(String.format(switchOffVar, LOW_VOLTAGE.getSideSuffix()), switchOff));
                 });
@@ -54,7 +54,7 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        String lockedVar = VersionVariables.getCurrentValue("TC_LOCKED");
+        String lockedVar = VersionableVariables.getCurrentValue("TC_LOCKED");
         return List.of(getTapChangerBlockerVarConnection(LOW_VOLTAGE, lockedVar),
                 getTapChangerBlockerVarConnection(HIGH_VOLTAGE, lockedVar));
     }

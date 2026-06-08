@@ -12,7 +12,7 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
-import com.powsybl.dynawo.models.versionableVariable.VersionVariables;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
@@ -50,8 +50,8 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
         return List.of(
-                new VarConnection(VersionVariables.getCurrentValue("OMEGA_GRP"), getOmegaPuVarName()),
-                new VarConnection(VersionVariables.getCurrentValue("OMEGA_REF_GRP"), getOmegaRefPuVarName()),
+                new VarConnection(VersionableVariables.getCurrentValue("OMEGA_GRP"), getOmegaPuVarName()),
+                new VarConnection(VersionableVariables.getCurrentValue("OMEGA_REF_GRP"), getOmegaRefPuVarName()),
                 new VarConnection("running_grp_@INDEX@", getRunningVarName())
         );
     }
