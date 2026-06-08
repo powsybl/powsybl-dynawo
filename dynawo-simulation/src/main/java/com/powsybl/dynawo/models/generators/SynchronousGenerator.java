@@ -12,26 +12,20 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
-import com.powsybl.dynawo.models.utils.ImmutableLateInit;
-import com.powsybl.dynawo.models.versionableVariable.VariableResolver;
-import com.powsybl.dynawo.models.versionableVariable.VariableResolverModel;
+import com.powsybl.dynawo.models.versionableVariable.VersionVariables;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
 
 import static com.powsybl.dynawo.models.generators.GeneratorProperties.*;
-import static com.powsybl.dynawo.models.versionableVariable.VersionVariableUtils.OMEGA_GRP;
-import static com.powsybl.dynawo.models.versionableVariable.VersionVariableUtils.OMEGA_REF_GRP;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  * @author Olivier Perrin {@literal <olivier.perrin at rte-france.com>}
  */
-public class SynchronousGenerator extends BaseGenerator implements FrequencySynchronizedModel, VariableResolverModel {
-
-    protected final ImmutableLateInit<VariableResolver> variableResolver = new ImmutableLateInit<>();
+public class SynchronousGenerator extends BaseGenerator implements FrequencySynchronizedModel {
 
     protected SynchronousGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
         super(generator, parameterSetId, modelConfig,
@@ -56,8 +50,8 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
         return List.of(
-                new VarConnection(variableResolver.getValue().resolve(OMEGA_GRP), getOmegaPuVarName()),
-                new VarConnection(variableResolver.getValue().resolve(OMEGA_REF_GRP), getOmegaRefPuVarName()),
+                new VarConnection(VersionVariables.getCurrentValue("OMEGA_GRP"), getOmegaPuVarName()),
+                new VarConnection(VersionVariables.getCurrentValue("OMEGA_REF_GRP"), getOmegaRefPuVarName()),
                 new VarConnection("running_grp_@INDEX@", getRunningVarName())
         );
     }
@@ -105,10 +99,5 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
         public String omegaPu() {
             return DEFAULT_OMEGA_PU;
         }
-    }
-
-    @Override
-    public void setVariableResolver(VariableResolver variableResolver) {
-        this.variableResolver.setValue(variableResolver);
     }
 }

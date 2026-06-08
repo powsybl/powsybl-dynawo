@@ -14,23 +14,17 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
-import com.powsybl.dynawo.models.utils.ImmutableLateInit;
-import com.powsybl.dynawo.models.versionableVariable.VariableResolver;
-import com.powsybl.dynawo.models.versionableVariable.VariableResolverModel;
+import com.powsybl.dynawo.models.versionableVariable.VersionVariables;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
 
 import static com.powsybl.dynawo.models.TransformerSide.NONE;
-import static com.powsybl.dynawo.models.versionableVariable.VersionVariableUtils.TC_LOCKED;
-import static com.powsybl.dynawo.models.versionableVariable.VersionVariableUtils.TC_SWITCH_OFF;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class LoadOneTransformerTapChanger extends LoadOneTransformer implements TapChangerModel, VariableResolverModel {
-
-    protected final ImmutableLateInit<VariableResolver> variableResolver = new ImmutableLateInit<>();
+public class LoadOneTransformerTapChanger extends LoadOneTransformer implements TapChangerModel {
 
     protected LoadOneTransformerTapChanger(Load load, String parameterSetId, ModelConfig modelConfig) {
         super(load, parameterSetId, modelConfig);
@@ -44,7 +38,7 @@ public class LoadOneTransformerTapChanger extends LoadOneTransformer implements 
     protected List<VarConnection> getVarConnectionsWithResolver(EquipmentConnectionPoint connected) {
         List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
-                .map(switchOff -> new VarConnection(String.format(variableResolver.getValue().resolve(TC_SWITCH_OFF), NONE.getSideSuffix()), switchOff))
+                .map(switchOff -> new VarConnection(String.format(VersionVariables.getCurrentValue("TC_SWITCH_OFF"), NONE.getSideSuffix()), switchOff))
                 .ifPresent(varConnections::add);
         return varConnections;
     }
@@ -56,11 +50,6 @@ public class LoadOneTransformerTapChanger extends LoadOneTransformer implements 
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), String.format(variableResolver.getValue().resolve(TC_LOCKED), NONE.getSideSuffix())));
-    }
-
-    @Override
-    public void setVariableResolver(VariableResolver variableResolver) {
-        this.variableResolver.setValue(variableResolver);
+        return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), String.format(VersionVariables.getCurrentValue("TC_LOCKED"), NONE.getSideSuffix())));
     }
 }

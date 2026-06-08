@@ -9,8 +9,6 @@ package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.utils.ImmutableLateInit;
-import com.powsybl.dynawo.models.versionableVariable.VariableResolver;
-import com.powsybl.dynawo.models.versionableVariable.VariableResolverModel;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Injection;
@@ -25,7 +23,7 @@ import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 /**
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public abstract class AbstractVariationEvent extends AbstractEvent implements ContextDependentEvent, VariableResolverModel {
+public abstract class AbstractVariationEvent extends AbstractEvent implements ContextDependentEvent {
 
     protected static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
     protected boolean isConnected = true;
@@ -48,7 +46,6 @@ public abstract class AbstractVariationEvent extends AbstractEvent implements Co
 
     protected final double deltaValue;
     protected final ImmutableLateInit<EquipmentModelType> equipmentModelType = new ImmutableLateInit<>();
-    protected final ImmutableLateInit<VariableResolver> variableResolver = new ImmutableLateInit<>();
 
     protected AbstractVariationEvent(String eventId, Injection<?> equipment, EventModelInfo eventModelInfo, double startTime, double deltaValue) {
         super(eventId, equipment, eventModelInfo, startTime);
@@ -95,10 +92,5 @@ public abstract class AbstractVariationEvent extends AbstractEvent implements Co
             paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
             paramSet.addParameter("event_stateEvent1", DOUBLE, Double.toString(deltaValue));
         }
-    }
-
-    @Override
-    public void setVariableResolver(VariableResolver variableResolver) {
-        this.variableResolver.setValue(variableResolver);
     }
 }
