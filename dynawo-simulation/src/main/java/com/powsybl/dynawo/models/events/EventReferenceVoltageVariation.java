@@ -11,9 +11,7 @@ import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.models.utils.ImmutableLateInit;
-import com.powsybl.dynawo.models.versionableVariable.VariableResolver;
-import com.powsybl.dynawo.models.versionableVariable.VariableResolverModel;
+import com.powsybl.dynawo.models.versionableVariable.VersionVariables;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Generator;
 
@@ -22,16 +20,14 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.powsybl.dynawo.models.versionableVariable.VersionVariableUtils.STEP;
 import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 
 /**
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */
-public class EventReferenceVoltageVariation extends AbstractEvent implements VariableResolverModel {
+public class EventReferenceVoltageVariation extends AbstractEvent {
 
     protected final double deltaU;
-    protected final ImmutableLateInit<VariableResolver> variableResolver = new ImmutableLateInit<>();
     protected boolean isConnected = true;
 
     protected EventReferenceVoltageVariation(String eventId, Generator equipment, EventModelInfo eventModelInfo, double startTime, double deltaU) {
@@ -40,7 +36,7 @@ public class EventReferenceVoltageVariation extends AbstractEvent implements Var
     }
 
     private List<VarConnection> getVarConnectionsWith(UControllableEquipmentModel connected) {
-        return List.of(new VarConnection(variableResolver.getValue().resolve(STEP), connected.getDeltaUVarName()));
+        return List.of(new VarConnection(VersionVariables.getCurrentValue("STEP"), connected.getDeltaUVarName()));
     }
 
     @Override
@@ -75,10 +71,5 @@ public class EventReferenceVoltageVariation extends AbstractEvent implements Var
         paramSet.addParameter("step_Value0", DOUBLE, "0.0");
         paramSet.addParameter("step_tStep", DOUBLE, Double.toString(getStartTime()));
         paramSet.addParameter("step_Height", DOUBLE, Double.toString(deltaU));
-    }
-
-    @Override
-    public void setVariableResolver(VariableResolver variableResolver) {
-        this.variableResolver.setValue(variableResolver);
     }
 }

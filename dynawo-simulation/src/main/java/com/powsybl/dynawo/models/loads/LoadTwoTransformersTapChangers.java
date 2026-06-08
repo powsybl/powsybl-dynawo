@@ -14,24 +14,18 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
-import com.powsybl.dynawo.models.utils.ImmutableLateInit;
-import com.powsybl.dynawo.models.versionableVariable.VariableResolver;
-import com.powsybl.dynawo.models.versionableVariable.VariableResolverModel;
+import com.powsybl.dynawo.models.versionableVariable.VersionVariables;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
 
 import static com.powsybl.dynawo.models.TransformerSide.HIGH_VOLTAGE;
 import static com.powsybl.dynawo.models.TransformerSide.LOW_VOLTAGE;
-import static com.powsybl.dynawo.models.versionableVariable.VersionVariableUtils.TC_LOCKED;
-import static com.powsybl.dynawo.models.versionableVariable.VersionVariableUtils.TC_SWITCH_OFF;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implements TapChangerModel, VariableResolverModel {
-
-    protected final ImmutableLateInit<VariableResolver> variableResolver = new ImmutableLateInit<>();
+public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implements TapChangerModel {
 
     protected LoadTwoTransformersTapChangers(Load load, String parameterSetId, ModelConfig modelConfig) {
         super(load, parameterSetId, modelConfig);
@@ -46,7 +40,7 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
         List<VarConnection> varConnections = getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {
-                    String switchOffVar = variableResolver.getValue().resolve(TC_SWITCH_OFF);
+                    String switchOffVar = VersionVariables.getCurrentValue("TC_SWITCH_OFF");
                     varConnections.add(new VarConnection(String.format(switchOffVar, HIGH_VOLTAGE.getSideSuffix()), switchOff));
                     varConnections.add(new VarConnection(String.format(switchOffVar, LOW_VOLTAGE.getSideSuffix()), switchOff));
                 });
@@ -60,17 +54,12 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        String lockedVar = variableResolver.getValue().resolve(TC_LOCKED);
+        String lockedVar = VersionVariables.getCurrentValue("TC_LOCKED");
         return List.of(getTapChangerBlockerVarConnection(LOW_VOLTAGE, lockedVar),
                 getTapChangerBlockerVarConnection(HIGH_VOLTAGE, lockedVar));
     }
 
     private VarConnection getTapChangerBlockerVarConnection(TransformerSide side, String lockedVar) {
         return new VarConnection(getTapChangerBlockingVarName(side), String.format(lockedVar, side.getSideSuffix()));
-    }
-
-    @Override
-    public void setVariableResolver(VariableResolver variableResolver) {
-        this.variableResolver.setValue(variableResolver);
     }
 }

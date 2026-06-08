@@ -7,10 +7,13 @@
  */
 package com.powsybl.dynawo.models.versionableVariable;
 
+import com.powsybl.dynawo.commons.DynawoVersion;
+
 /**
+ * Resolve all VarConnection variable with a value dependent of the Dynawo version
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface VariableResolverModel {
+public interface VersionableVariablesResolver {
 
-    void setVariableResolver(VariableResolver variableResolver);
+    void setCurrentValues(DynawoVersion currentVersion);
 }

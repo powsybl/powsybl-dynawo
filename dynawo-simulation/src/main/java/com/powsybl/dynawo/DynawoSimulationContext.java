@@ -11,8 +11,6 @@ import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
-import com.powsybl.dynawo.models.versionableVariable.VariableResolver;
-import com.powsybl.dynawo.models.versionableVariable.VariableResolverModel;
 import com.powsybl.dynawo.outputvariables.DynawoOutputVariable;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DynawoData;
@@ -91,16 +89,11 @@ public class DynawoSimulationContext {
             eventModels = Objects.requireNonNull(eventModels).stream()
                     .filter(distinctByDynamicId(reportNode))
                     .toList();
-            // Late init on ContextDependentEvents and VariableResolverModels
-            VariableResolver variableResolver = new VariableResolver(dynawoVersion);
-            for (BlackBoxModel event : eventModels) {
-                if (event instanceof ContextDependentEvent cde) {
-                    cde.setEquipmentModelType(blackBoxModelSupplier.hasDynamicModel(cde.getEquipment()));
-                }
-                if (event instanceof VariableResolverModel vrm) {
-                    vrm.setVariableResolver(variableResolver);
-                }
-            }
+            // Late init on ContextDependentEvents
+            eventModels.stream()
+                    .filter(ContextDependentEvent.class::isInstance)
+                    .map(ContextDependentEvent.class::cast)
+                    .forEach(e -> e.setEquipmentModelType(blackBoxModelSupplier.hasDynamicModel(e.getEquipment())));
         }
 
         @Override

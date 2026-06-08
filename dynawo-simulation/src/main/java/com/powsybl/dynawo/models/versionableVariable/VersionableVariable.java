@@ -25,11 +25,26 @@ public class VersionableVariable {
 
     private final List<VariableStep> steps;
 
+    private String currentValue;
+
     public VersionableVariable(String baseVariable, VariableStep step) {
         this.steps = List.of(new VariableStep(baseVariable), step);
     }
 
     public List<VariableStep> getSteps() {
         return steps;
+    }
+
+    public String getCurrentValue() {
+        return currentValue;
+    }
+
+    public void setCurrentValue(DynawoVersion currentVersion) {
+        //TODO handle multiple steps
+        if (steps.getLast().versionMin().compareTo(currentVersion) <= 0) {
+            currentValue = steps.getLast().variable();
+        } else {
+            currentValue = steps.getFirst().variable();
+        }
     }
 }
