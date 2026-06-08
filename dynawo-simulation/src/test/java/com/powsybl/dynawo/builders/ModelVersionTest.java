@@ -10,11 +10,13 @@ package com.powsybl.dynawo.builders;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
+import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -67,5 +69,10 @@ class ModelVersionTest {
         StringWriter sw = new StringWriter();
         reportNode.print(sw);
         assertEquals(report, TestUtil.normalizeLineSeparator(sw.toString()));
+    }
+
+    @AfterEach
+    void tearDown() {
+        ModelConfigsHandler.getInstance().setDynawoVersion(DynawoConstants.CURRENT_VERSION);
     }
 }
