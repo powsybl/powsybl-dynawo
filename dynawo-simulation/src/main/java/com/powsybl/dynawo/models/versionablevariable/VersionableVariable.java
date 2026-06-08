@@ -5,8 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.models.versionableVariable;
+package com.powsybl.dynawo.models.versionablevariable;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 
@@ -27,12 +28,8 @@ public class VersionableVariable {
 
     private String currentValue;
 
-    public VersionableVariable(String baseVariable, VariableStep step) {
-        this.steps = List.of(new VariableStep(baseVariable), step);
-    }
-
-    public List<VariableStep> getSteps() {
-        return steps;
+    public VersionableVariable(VariableStep... steps) {
+        this.steps = List.of(steps);
     }
 
     public String getCurrentValue() {
@@ -40,11 +37,13 @@ public class VersionableVariable {
     }
 
     public void setCurrentValue(DynawoVersion currentVersion) {
-        //TODO handle multiple steps
-        if (steps.getLast().versionMin().compareTo(currentVersion) <= 0) {
-            currentValue = steps.getLast().variable();
-        } else {
-            currentValue = steps.getFirst().variable();
+        for (int i = steps.size() - 1; i >= 0; i--) {
+            VariableStep step = steps.get(i);
+            if (step.versionMin().compareTo(currentVersion) <= 0) {
+                currentValue = step.variable();
+                return;
+            }
         }
+        throw new PowsyblException("No VersionableVariable value found for Dynawo version %s".formatted(currentVersion));
     }
 }

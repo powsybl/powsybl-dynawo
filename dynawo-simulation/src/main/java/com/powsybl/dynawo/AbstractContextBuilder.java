@@ -17,7 +17,7 @@ import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.AbstractBus;
 import com.powsybl.dynawo.models.frequencysynchronizers.*;
-import com.powsybl.dynawo.models.versionableVariable.VersionableVariablesHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.simplifiers.ModelSimplifiers;
 import com.powsybl.dynawo.simplifiers.ModelsRemovalSimplifier;
