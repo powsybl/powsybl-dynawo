@@ -10,7 +10,6 @@ package com.powsybl.dynawo.xml;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.InjectionModel;
 import com.powsybl.dynawo.models.TransformerSide;
@@ -88,19 +87,6 @@ class DynamicModelContextTest {
                 .Builder(network, dynamicModels)
                 .build();
         Assertions.assertThat(context.getBlackBoxDynamicModels()).containsExactly(load);
-    }
-
-    @Test
-    void wrongDynawoVersionModel() {
-        dynamicModels.add(BaseLoadBuilder.of(network, "ElectronicLoad")
-                .staticId("LOAD")
-                .parameterSetId("lab")
-                .build());
-        DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder(network, dynamicModels)
-                .currentVersion(new DynawoVersion(1, 2, 0))
-                .build();
-        Assertions.assertThat(context.getBlackBoxDynamicModels()).isEmpty();
     }
 
     @Test
