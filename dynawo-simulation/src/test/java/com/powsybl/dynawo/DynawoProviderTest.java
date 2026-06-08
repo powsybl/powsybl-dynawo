@@ -205,6 +205,7 @@ class DynawoProviderTest extends AbstractSerDeTest {
     }
 
     @AfterEach
+    @Override
     public void tearDown() throws IOException {
         super.tearDown();
         ModelConfigsHandler.getInstance().setDynawoVersion(DynawoConstants.CURRENT_VERSION);
