@@ -106,12 +106,13 @@ public class DynaFlowProvider implements LoadFlowProvider {
         DynaFlowParameters.log(loadFlowParameters, dynaFlowParameters);
         UnsupportedParametersHandler.checkCriticalParameters(loadFlowParameters);
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
+        String dumpDir = loadFlowParameters.getDebugDir();
 
-        ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX);
+        ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX, dumpDir);
         Command versionCmd = getVersionCommand(config);
         DynawoVersion version = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, computationManager, versionCmd, DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
 
-        ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX);
+        ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX, dumpDir);
         return computationManager.execute(execEnvSimulation, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, getCommand(config), version, reportNode));
     }
 
