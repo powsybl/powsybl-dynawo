@@ -34,7 +34,7 @@ class MacroConnectionsAdderTest {
     private List<BlackBoxModel> dynamicModels;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         Network network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
         gen = SynchronousGeneratorBuilder.of(network)
                 .staticId("GEN")
@@ -52,7 +52,7 @@ class MacroConnectionsAdderTest {
     }
 
     @Test
-    public void testCreateMacroConnectionsOrSkip() {
+    void testCreateMacroConnectionsOrSkip() {
         List<MacroConnector> macroConnectors = new ArrayList<>();
         MacroConnectionsAdder adder = new MacroConnectionsAdder(
                 BlackBoxModelSupplier.createFrom(dynamicModels),
@@ -67,7 +67,7 @@ class MacroConnectionsAdderTest {
     }
 
     @Test
-    public void testCreateMacroConnectionsForAll() {
+    void testCreateMacroConnectionsForAll() {
         MacroConnectionsAdder adder = new MacroConnectionsAdder(
                 BlackBoxModelSupplier.createFrom(dynamicModels),
                 mc -> { },
