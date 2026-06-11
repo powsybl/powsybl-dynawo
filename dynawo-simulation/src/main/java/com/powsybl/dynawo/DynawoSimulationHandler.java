@@ -116,7 +116,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         updateNetwork(workingDir);
         DumpFileParameters dumpFileParameters = context.getDynawoSimulationParameters().getDumpFileParameters();
         if (dumpFileParameters.exportDumpFile()) {
-            setDumpFile(outputsFolder, dumpFileParameters.dumpFileFolder(), workingDir.getFileName());
+            setDumpFile(outputsFolder, dumpFileParameters.dumpFileFolder());
         }
     }
 
@@ -151,10 +151,10 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         }
     }
 
-    private void setDumpFile(Path outputsFolder, Path dumpFileFolder, Path fileName) throws IOException {
+    private void setDumpFile(Path outputsFolder, Path dumpFileFolder) throws IOException {
         Path outputDumpFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_DUMP_FILENAME);
         if (Files.exists(outputDumpFile)) {
-            Files.copy(outputDumpFile, dumpFileFolder.resolve(fileName + "_" + OUTPUT_DUMP_FILENAME), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(outputDumpFile, dumpFileFolder.resolve(OUTPUT_DUMP_FILENAME), StandardCopyOption.REPLACE_EXISTING);
         } else {
             LOGGER.warn("Dump file {} not found, export will be skipped", OUTPUT_DUMP_FILENAME);
         }

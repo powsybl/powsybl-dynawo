@@ -51,7 +51,7 @@ public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Pa
         if (exportDumpFile && exportFolderNotFound) {
             throw new PowsyblException("Folder " + dumpFileFolder + " set in 'dumpFileFolder' property cannot be found");
         }
-        if (useDumpFile && (exportFolderNotFound || dumpFile == null || Files.notExists(dumpFileFolder.resolve(dumpFile)))) {
+        if (useDumpFile && (exportFolderNotFound || dumpFile == null)) {
             throw new PowsyblException("File " + dumpFile + " set in 'dumpFile' property cannot be found");
         }
     }
@@ -94,6 +94,11 @@ public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Pa
         mapAdder.accept(DUMP_EXPORT_FOLDER, dumpFileFolder);
         mapAdder.accept(DUMP_USE_AS_INPUT, useDumpFile);
         mapAdder.accept(DUMP_FILE_NAME, dumpFile);
+    }
+
+    @Override
+    public boolean useDumpFile() {
+        return useDumpFile && Files.exists(dumpFileFolder.resolve(dumpFile));
     }
 
     public Path getDumpFilePath() {

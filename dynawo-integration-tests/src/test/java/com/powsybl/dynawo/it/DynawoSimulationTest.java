@@ -46,7 +46,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.commons.report.ReportNode.newRootReportNode;
@@ -102,7 +101,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         Supplier<DynamicSimulationResult> resultSupplier = setupIEEE14Simulation();
         parameters.setStopTime(30);
         Path dumpDir = Files.createDirectory(localDir.resolve("dumpFiles"));
-        DumpFileParameters dumpFileParameters = DumpFileParameters.createExportDumpFileParameters(dumpDir);
+        DumpFileParameters dumpFileParameters = new DumpFileParameters(true, true, dumpDir, "outputState.dmp");
         dynawoSimulationParameters.setDumpFileParameters(dumpFileParameters);
         DynamicSimulationResult result = resultSupplier.get();
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
@@ -110,12 +109,6 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         //Use exported dump as input
         parameters.setStartTime(30);
         parameters.setStopTime(100);
-
-        String dumpFile;
-        try (Stream<Path> stream = Files.list(dumpDir)) {
-            dumpFile = stream.findFirst().map(Path::getFileName).map(Path::toString).orElseThrow();
-        }
-        dynawoSimulationParameters.setDumpFileParameters(DumpFileParameters.createImportDumpFileParameters(dumpDir, dumpFile));
 
         result = resultSupplier.get();
 
