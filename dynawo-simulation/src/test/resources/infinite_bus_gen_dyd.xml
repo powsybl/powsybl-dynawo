@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="GEN" lib="InfiniteBus" parFile="models.par" parId="g" staticId="GEN">
+        <dyn:macroStaticRef id="MSR_InfiniteBusGenerator"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnector id="MC_InfiniteBusGenerator-DefaultEquipmentConnectionPoint">
+        <dyn:connect var1="infiniteBus_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_InfiniteBusGenerator">
+        <dyn:staticRef var="infiniteBus_PPu" staticVar="p"/>
+        <dyn:staticRef var="infiniteBus_QPu" staticVar="q"/>
+        <dyn:staticRef var="infiniteBus_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_InfiniteBusGenerator-DefaultEquipmentConnectionPoint" id1="GEN" id2="NETWORK"/>
+</dyn:dynamicModelsArchitecture>
