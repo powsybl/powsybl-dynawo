@@ -90,6 +90,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
                                      String additionalDydFile, String networkParameterSetId) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "modeler");
         writer.writeAttribute("compileDir", "outputs/compilation");
+        writer.writeAttribute("symbolicJacobian", "true");
 
         writer.writeEmptyElement(DYN_URI, "network");
         writer.writeAttribute("iidmFile", NETWORK_FILENAME);
