@@ -13,33 +13,61 @@ import com.powsybl.dynawo.models.frequencysynchronizers.PowerAngleModel;
 import com.powsybl.dynawo.models.generators.SynchronousGenerator;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
+import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class MacroConnectionsAdderTest {
 
-    @Test
-    public void testCreateMacroConnectionsForAll() {
+    private SynchronousGenerator gen;
+    private List<BlackBoxModel> dynamicModels;
+
+    @BeforeEach
+    public void setUp() {
         Network network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
-        SynchronousGenerator gen = SynchronousGeneratorBuilder.of(network)
+        gen = SynchronousGeneratorBuilder.of(network)
                 .staticId("GEN")
                 .build();
-        List<BlackBoxModel> dynamicModels = List.of(
+        SynchronousGenerator gen2 = SynchronousGeneratorBuilder.of(network)
+                .staticId("GEN2")
+                .build();
+        dynamicModels = List.of(
+                gen,
+                gen2,
                 SynchronousGeneratorBuilder.of(network)
-                    .staticId("GEN2")
-                    .build(),
-                SynchronousGeneratorBuilder.of(network)
-                    .staticId("GEN3")
-                    .build()
+                        .staticId("GEN3")
+                        .build()
         );
+    }
+
+    @Test
+    public void testCreateMacroConnectionsOrSkip() {
+        List<MacroConnector> macroConnectors = new ArrayList<>();
+        MacroConnectionsAdder adder = new MacroConnectionsAdder(
+                BlackBoxModelSupplier.createFrom(dynamicModels),
+                mc -> { },
+                (mc, f) -> macroConnectors.add(f.apply(mc)),
+                ReportNode.NO_OP);
+        boolean skipped = adder.createMacroConnectionsOrSkip(gen, gen.getEquipment(), PowerAngleModel.class, m -> List.of(), "Test");
+        assertFalse(skipped);
+        assertEquals(1, macroConnectors.size());
+        assertThat(macroConnectors).hasSize(1);
+        assertThat(macroConnectors.getFirst()).usingRecursiveComparison().isEqualTo(new MacroConnector("MC_GeneratorSynchronousFourWindingsTest-GeneratorSynchronousFourWindings", List.of()));
+    }
+
+    @Test
+    public void testCreateMacroConnectionsForAll() {
         MacroConnectionsAdder adder = new MacroConnectionsAdder(
                 BlackBoxModelSupplier.createFrom(dynamicModels),
                 mc -> { },

@@ -51,7 +51,7 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
         return varConnections;
     }
 
-    public String getOmegaPuVarName() {
+    protected String getOmegaPuVarName() {
         return "converter_omegaPu";
     }
 
