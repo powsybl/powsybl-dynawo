@@ -8,8 +8,6 @@
 package com.powsybl.dynawo.commons.timeline;
 
 import com.powsybl.dynawo.commons.AbstractCsvParser;
-import com.univocity.parsers.csv.CsvParser;
-import com.univocity.parsers.csv.CsvParserSettings;
 
 import java.util.Optional;
 
@@ -25,9 +23,7 @@ public final class CsvTimeLineParser extends AbstractCsvParser<TimelineEntry> im
     }
 
     public CsvTimeLineParser(char separator) {
-        CsvParserSettings settings = setupSettings(separator, false);
-        settings.setMaxColumns(NB_COLUMNS);
-        this.csvParser = new CsvParser(settings);
+        super(separator, false, NB_COLUMNS);
     }
 
     @Override
