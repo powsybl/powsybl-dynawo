@@ -1,0 +1,44 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:WindContQIEC .
+  OPTIONAL { ?id cim:RotatingMachineDynamics.RotatingMachine          ?synchronousMachineId    . }
+  OPTIONAL { ?id cim:AsynchronousMachineDynamics.AsynchronousMachine  ?asynchronousMachineId   . }
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?excitationSystemId   . }
+  OPTIONAL { ?id cim:PowerSystemStabilizerDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:WindTurbineType3or4Dynamics.WindPlantDynamics     ?powerPlantId            . }
+  OPTIONAL { ?id cim:TurbineGovernorDynamics.SynchronousMachineDynamics ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:WindContQIEC.iqh1 ?iqh1 . }
+  OPTIONAL { ?id cim:WindContQIEC.iqmax ?iqmax . }
+  OPTIONAL { ?id cim:WindContQIEC.iqmin ?iqmin . }
+  OPTIONAL { ?id cim:WindContQIEC.iqpost ?iqpost . }
+  OPTIONAL { ?id cim:WindContQIEC.kiq ?kiq . }
+  OPTIONAL { ?id cim:WindContQIEC.kiu ?kiu . }
+  OPTIONAL { ?id cim:WindContQIEC.kpq ?kpq . }
+  OPTIONAL { ?id cim:WindContQIEC.kpu ?kpu . }
+  OPTIONAL { ?id cim:WindContQIEC.kqv ?kqv . }
+  OPTIONAL { ?id cim:WindContQIEC.rdroop ?rdroop . }
+  OPTIONAL { ?id cim:WindContQIEC.tpfilt ?tpfilt . }
+  OPTIONAL { ?id cim:WindContQIEC.tpost ?tpost . }
+  OPTIONAL { ?id cim:WindContQIEC.tqord ?tqord . }
+  OPTIONAL { ?id cim:WindContQIEC.tufilt ?tufilt . }
+  OPTIONAL { ?id cim:WindContQIEC.udb1 ?udb1 . }
+  OPTIONAL { ?id cim:WindContQIEC.udb2 ?udb2 . }
+  OPTIONAL { ?id cim:WindContQIEC.umax ?umax . }
+  OPTIONAL { ?id cim:WindContQIEC.umin ?umin . }
+  OPTIONAL { ?id cim:WindContQIEC.uqdip ?uqdip . }
+  OPTIONAL { ?id cim:WindContQIEC.uref0 ?uref0 . }
+  OPTIONAL { ?id cim:WindContQIEC.xdroop ?xdroop . }
+  OPTIONAL { ?id cim:WindContQIEC.mconq ?mconq . }
+  OPTIONAL { ?id cim:WindContQIEC.mqfrt ?mqfrt . }
+  OPTIONAL { ?id cim:WindContQIEC.mqpri ?mqpri . }
+  OPTIONAL { ?id cim:WindContQIEC.windLVRTQcontrolModeType ?windLVRTQcontrolModeType . }
+}
