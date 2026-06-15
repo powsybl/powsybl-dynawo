@@ -59,6 +59,7 @@ public final class MacroConnectionsAdder {
     /**
      * Creates macro connection from equipment and model class
      * Skip the instantiation is the equipment does not correspond to the model
+     * @return <code>true</code> if the model is skipped, <code>false</code> otherwise
      */
     public <T extends Model> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier) {
         T connectedModel = getDynamicModel(originModel, equipment, modelClass, false);
@@ -96,6 +97,7 @@ public final class MacroConnectionsAdder {
      * Creates macro connection from equipment and model class
      * Skip the instantiation is the equipment does not correspond to the model
      * Add MacroConnectAttribute "from" attributes
+     * @return <code>true</code> if the model is skipped, <code>false</code> otherwise
      */
     public <T extends Model> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, MacroConnectAttribute... connectFromAttributes) {
         T connectedModel = getDynamicModel(originModel, equipment, modelClass, false);
@@ -120,7 +122,9 @@ public final class MacroConnectionsAdder {
 
     /**
      * Creates macro connection from equipment and model class
+     * Skip the instantiation is the equipment does not correspond to the model
      * Suffixes MacroConnector id with string
+     * @return <code>true</code> if the model is skipped, <code>false</code> otherwise
      */
     public <T extends Model> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, String parametrizedName) {
         T connectedModel = getDynamicModel(originModel, equipment, modelClass, false);
@@ -196,6 +200,8 @@ public final class MacroConnectionsAdder {
 
     /**
      * Creates macro connection with pure dynamic model from dynamic id
+     * Skip the instantiation is the equipment does not correspond to the model
+     * @return <code>true</code> if the model is skipped, <code>false</code> otherwise
      */
     public <T extends Model & ConnectionStatefulModel> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, String dynamicModelId, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier) {
         T connectedModel = getPureDynamicModel(originModel, dynamicModelId, modelClass);
