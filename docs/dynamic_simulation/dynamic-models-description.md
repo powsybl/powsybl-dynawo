@@ -18,10 +18,10 @@ Simplified generator model with fixed active and reactive power.
 - `GeneratorPQ`:
 Generator with fixed active and reactive power targets. The actual outputs may however vary in order to mimic frequency and voltage regulation.
 
-- `GeneratorPV`: 
+- `GeneratorPV` ([_controllable_](base-additional-models.md#library-properties)): 
 Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation.
 
-- `GeneratorPVDiagramPQ`:
+- `GeneratorPVDiagramPQ` ([_controllable_](base-additional-models.md#library-properties)):
 Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation. Active and reactive power are within the diagram PQ.
 
 #### Synchronous generator
@@ -42,7 +42,7 @@ Four-winding synchronous generator with governor GOVSteam1 regulation and voltag
 - `GeneratorSynchronousFourWindingsGovSteamEuSt4b`: 
 Four-winding synchronous generator with governor GOVSteamEU (IEEE) and voltage regulator ST4B (IEEE).
 
-- `GeneratorSynchronousFourWindingsGoverPropVRPropInt`: 
+- `GeneratorSynchronousFourWindingsGoverPropVRPropInt` ([_controllable_](base-additional-models.md#library-properties)): 
 Four-winding synchronous generator with simplified proportional control for governor and simplified proportional integral (PI) control for voltage regulator.
 
 - `GeneratorSynchronousFourWindingsIEEEG1Ac1a`: 
@@ -120,7 +120,7 @@ Four-winding synchronous generator with constant mechanical power and voltage re
 - `GeneratorSynchronousFourWindingsPmConstVRNordicTfo`: 
 Four-winding synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system) and generator transformer.
 
-- `GeneratorSynchronousFourWindingsProportionalRegulations`: 
+- `GeneratorSynchronousFourWindingsProportionalRegulations` ([_controllable_](base-additional-models.md#library-properties)): 
 Four-winding synchronous generator with simplified proportional control for governor and simplified proportional control for voltage regulator.
 
 - `GeneratorSynchronousFourWindingsTGov1Dc1a`: 
@@ -142,7 +142,7 @@ Four-winding synchronous generator with constant mechanical power and voltage re
 - `GeneratorSynchronousFourWindingsVRKundurPssKundur`: 
 Four-winding synchronous generator with constant mechanical power and voltage regulator VRKundur (Kundur) and power system stabilizer VRKundur (Kundur).
 
-- `GeneratorSynchronousProportionalRegulationsInternalParameters`: 
+- `GeneratorSynchronousProportionalRegulationsInternalParameters` ([_controllable_](base-additional-models.md#library-properties)): 
 Synchronous generator, initialized with internal parameters with proportional control for governor and proportional control for voltage regulator.
 
 - `GeneratorSynchronousThreeWindings`:
@@ -157,7 +157,7 @@ Three-winding synchronous generator with governor GoverNordic and voltage regula
 - `GeneratorSynchronousThreeWindingsGoverNordicVRNordicTfo`:
 Three-winding synchronous generator with governor GoverNordic and voltage regulator VRNordic (for Nordic 32-bus test system) and generator transformer.
 
-- `GeneratorSynchronousThreeWindingsGoverPropVRPropInt`: 
+- `GeneratorSynchronousThreeWindingsGoverPropVRPropInt` ([_controllable_](base-additional-models.md#library-properties)): 
 Three-winding synchronous generator with simplified proportional control for governor and simplified proportional integral (PI) control for voltage regulator.
 
 - `GeneratorSynchronousThreeWindingsHyGovBbSex1`:
@@ -204,7 +204,7 @@ Three-winding synchronous generator with constant mechanical power and voltage r
 - `GeneratorSynchronousThreeWindingsPmConstVRNordicTfo`:
 Three-winding synchronous generator with constant mechanical power and voltage regulator VRNordic (for Nordic 32-bus test system) and generator transformer.
 
-- `GeneratorSynchronousThreeWindingsProportionalRegulations`: 
+- `GeneratorSynchronousThreeWindingsProportionalRegulations` ([_controllable_](base-additional-models.md#library-properties)): 
 Three-winding synchronous generator with simplified proportional control for governor and simplified proportional control for voltage regulator.
 
 
@@ -282,7 +282,7 @@ Grid forming converter model with matching control.
 - `ElectronicLoad`:
 Constant power load with disconnection and reconnections depending on the voltage.
 
-- `LoadAlphaBeta`:
+- `LoadAlphaBeta` ([_controllable_](base-additional-models.md#library-properties)):
 Voltage-dependent load.
 
 - `LoadAlphaBetaMotor`:

@@ -1,12 +1,12 @@
 # Event models configuration
-Event models configuration allows the creation of events that occurs during the simulation.
+Event models configuration allows the creation of events that occur during the simulation.
 
 ## Implementation
 Powsybl-Dynawo handles two methods of configuration:
-- **Event Models DSL**: a domain specific language written in groovy (used in iTools)
+- **Event Models DSL**: a domain-specific language written in groovy (used in iTools)
 - **Dynawo Event Models**: a JSON configuration file. 
 
-**Note**: For Json configuration, all models should be written in an `events` array.
+**Note**: For JSON configuration, all models should be written in an `events` array.
 ```json
 {
   "events":[...]
@@ -15,13 +15,18 @@ Powsybl-Dynawo handles two methods of configuration:
 In the following examples the array will be omitted.
 
 ## Event Model
-- All the models share three attributes:
+All the models share three attributes:
 - `modelName`: refers to the event model library used in Dynawo (used as a keyword in Groovy script).
 - `staticId`: identifies the equipment affected by the event.
 - `startTime`: defines when the event starts.
 
 ### Disconnect
-Disconnects a bus, a branch, an injection or an HVDC line.
+Disconnects:
+- bus
+- branch
+- injection
+- HVDC line
+
 With specific attributes:
 - `disconnectOnly`: optional attribute that specifies the side to disconnect for Branch or HVDC (by default both sides are disconnected)
 
@@ -118,7 +123,11 @@ CloseSwitch {
 ```
 
 ### Active Power Variation
-Active power variation on controllable generator or load.  
+Active power variation on:
+- [load](dynamic-models-description.md#load) (with or without a dynamic model)
+- controllable [generator](dynamic-models-description.md#generator)
+- generator without a dynamic model
+
 With specific attribute:
 - `deltaP`: active power variation.
 
@@ -155,7 +164,10 @@ ActivePowerVariation {
 ```
 
 ### Reactive Power Variation
-Reactive power variation on controllable load and generator without dynamic model.  
+Reactive power variation on:
+- [load](dynamic-models-description.md#load) (with or without a dynamic model)
+- generator without a dynamic model
+
 With specific attribute:
 - `deltaQ`: reactive power variation.
 
@@ -192,7 +204,10 @@ ReactivePowerVariation {
 ```
 
 ### Reference Voltage Variation
-Reference voltage variation on controllable synchronized/synchronous generator  
+Reference voltage variation on:
+- controllable [synchronized generator](dynamic-models-description.md#synchronized-generator)
+- controllable [synchronous generator](dynamic-models-description.md#synchronous-generator)  
+
 With specific attribute:
 - `deltaU`: reference voltage variation.
 
@@ -229,7 +244,8 @@ ReferenceVoltageVariation {
 ```
 
 ### Node Fault
-Node fault with configurable resistance, reactance and duration.  
+Node fault with configurable resistance, reactance and duration on a bus.
+
 With specific attributes:
 - `faultTime`: delta with `startTime` at which the event ends (must be > 0).
 - `rPu`: r pu variation (must be >= 0).
@@ -280,7 +296,7 @@ NodeFault {
 ```
 
 ## Event model builder list
-Ultimately, all groovy scripts or Json configuration file call the dedicated builders that can be used directly by developers in order to create a custom `EventModelsSupplier`:
+Ultimately, all groovy scripts or JSON configuration file call the dedicated builders that can be used directly by developers in order to create a custom `EventModelsSupplier`:
 - EventDisconnectionBuilder
 - EventActivePowerVariationBuilder
 - EventReactivePowerVariationBuilder
