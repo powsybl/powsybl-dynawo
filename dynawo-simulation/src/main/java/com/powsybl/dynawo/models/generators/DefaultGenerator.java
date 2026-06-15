@@ -8,12 +8,13 @@
 package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.models.defaultmodels.AbstractInjectionDefaultModel;
-import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
+import com.powsybl.dynawo.models.events.PControllableEquipmentModel;
+import com.powsybl.dynawo.models.events.QControllableEquipmentModel;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultGenerator extends AbstractInjectionDefaultModel implements ControllableEquipmentModel {
+public class DefaultGenerator extends AbstractInjectionDefaultModel implements PControllableEquipmentModel, QControllableEquipmentModel {
 
     public DefaultGenerator(String staticId) {
         super(staticId);
@@ -24,8 +25,17 @@ public class DefaultGenerator extends AbstractInjectionDefaultModel implements C
         return "DefaultGenerator";
     }
 
+    private String getDeltaVar(String suffix) {
+        return "@NAME@" + suffix;
+    }
+
     @Override
     public String getDeltaPVarName() {
-        return "@NAME@_Pc";
+        return getDeltaVar("_Pc");
+    }
+
+    @Override
+    public String getDeltaQVarName() {
+        return getDeltaVar("_Qc");
     }
 }

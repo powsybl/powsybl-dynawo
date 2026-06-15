@@ -1,0 +1,10 @@
+{
+  "version" : "1.0",
+  "transformerVoltageControlOn" : true,
+  "extensions" : {
+    "DynaFlowParameters" : {
+      "settingPath" : "path/to/settingFile",
+      "stopTime" : 150.0
+    }
+  }
+}

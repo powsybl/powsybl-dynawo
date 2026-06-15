@@ -12,14 +12,16 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
+import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.dynawo.DynawoFilesUtils;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.NetworkExporter;
 import com.powsybl.iidm.network.Network;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -48,12 +50,16 @@ public abstract class AbstractDynawoAlgorithmsHandler<R, S extends DynawoSimulat
         network.getVariantManager().setWorkingVariant(context.getWorkingVariantId());
         DynawoFilesUtils.deleteExistingFile(workingDir.resolve(OUTPUTS_FOLDER), FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
         writeInputFiles(workingDir);
+
+        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(EXEC_TMP_FILENAME);
+        Files.writeString(tmpExecFile, workingDir.toAbsolutePath().toString());
+
         return getCommandExecutions(command);
     }
 
     private void writeInputFiles(Path workingDir) {
         try {
-            DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
+            NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME), context.getCurrentDynawoVersion());
             DynawoFilesUtils.writeInputFiles(workingDir, context);
             writeMultipleJobs(workingDir);
         } catch (IOException e) {

@@ -3,5 +3,7 @@
     <set id="test">
         <par type="BOOL" name="boolean" value="true"/>
         <par type="STRING" name="string" value="aString"/>
+        <prefixPar name="Par1" componentId="GEN" type="DOUBLE" value="10"/>
+        <prefixPar name="Par1" componentId="GEN2" type="DOUBLE" value="12"/>
     </set>
 </parametersSet>

@@ -13,7 +13,7 @@
         </dyn:simulation>
         <dyn:outputs directory="outputs">
             <dyn:dumpInitValues local="false" global="false"/>
-            <dyn:timeline exportMode="TXT"/>
+            <dyn:timeline exportMode="XML"/>
             <dyn:finalState exportIIDMFile="true" exportDumpFile="false"/>
             <dyn:curves inputFile="powsybl_dynawo.crv" exportMode="CSV"/>
             <dyn:finalStateValues inputFile="powsybl_dynawo.fsv" exportMode="CSV"/>

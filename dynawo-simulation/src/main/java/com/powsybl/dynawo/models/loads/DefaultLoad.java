@@ -25,11 +25,11 @@ public class DefaultLoad extends AbstractInjectionDefaultModel implements Defaul
 
     @Override
     public String getDeltaPVarName() {
-        return "@NAME@_DeltaPc";
+        return "@NAME@_DeltaPc_value";
     }
 
     @Override
     public String getDeltaQVarName() {
-        return "@NAME@_DeltaQc";
+        return "@NAME@_DeltaQc_value";
     }
 }

@@ -25,17 +25,14 @@ import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAu
 import com.powsybl.dynawo.models.buses.InfiniteBus;
 import com.powsybl.dynawo.models.buses.StandardBus;
 import com.powsybl.dynawo.models.generators.*;
-import com.powsybl.dynawo.models.loads.*;
 import com.powsybl.dynawo.models.hvdc.BaseHvdc;
 import com.powsybl.dynawo.models.hvdc.HvdcDangling;
 import com.powsybl.dynawo.models.lines.StandardLine;
+import com.powsybl.dynawo.models.loads.*;
 import com.powsybl.dynawo.models.svarcs.BaseStaticVarCompensator;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
-import com.powsybl.iidm.network.test.HvdcTestNetwork;
-import com.powsybl.iidm.network.test.SvcTestCaseFactory;
+import com.powsybl.iidm.network.test.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -67,8 +64,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network);
         assertEquals(1, dynamicModels.size());
-        assertTrue(modelClass.isInstance(dynamicModels.get(0)));
-        assertEquipmentBlackBoxModel(modelClass.cast(dynamicModels.get(0)), staticId, parameterId, lib);
+        assertTrue(modelClass.isInstance(dynamicModels.getFirst()));
+        assertEquipmentBlackBoxModel(modelClass.cast(dynamicModels.getFirst()), staticId, parameterId, lib);
     }
 
     @ParameterizedTest(name = "{0}")
@@ -77,8 +74,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network);
         assertEquals(1, dynamicModels.size());
-        assertTrue(modelClass.isInstance(dynamicModels.get(0)));
-        assertPureDynamicBlackBoxModel(modelClass.cast(dynamicModels.get(0)), dynamicId, parameterId, lib);
+        assertTrue(modelClass.isInstance(dynamicModels.getFirst()));
+        assertPureDynamicBlackBoxModel(modelClass.cast(dynamicModels.getFirst()), dynamicId, parameterId, lib);
     }
 
     @ParameterizedTest(name = "{0}")
@@ -95,8 +92,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network, reportNode);
         assertEquals(1, dynamicModels.size());
-        assertTrue(modelClass.isInstance(dynamicModels.get(0)));
-        assertEquals(terminalVarName, modelClass.cast(dynamicModels.get(0)).getTerminalVarName());
+        assertTrue(modelClass.isInstance(dynamicModels.getFirst()));
+        assertEquals(terminalVarName, modelClass.cast(dynamicModels.getFirst()).getTerminalVarName());
         checkReportNode(report);
     }
 
@@ -147,8 +144,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/tapChanger.groovy", TapChangerAutomationSystem.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
                 Arguments.of("/dynamicModels/tapChangerBlockingBusBar.groovy", TapChangerBlockingAutomationSystem.class, FourSubstationsNodeBreakerFactory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton2"),
                 Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomationSystem.class, EurostagTutorialExample1Factory.createWithLFResults(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
-                Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomationSystem.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterI"),
-                Arguments.of("/dynamicModels/phaseShifterP.groovy", PhaseShifterPAutomationSystem.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterP"),
+                Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomationSystem.class, PhaseShifterTestCaseFactory.create(), "PS_PS1", "ps", "PhaseShifterI"),
+                Arguments.of("/dynamicModels/phaseShifterP.groovy", PhaseShifterPAutomationSystem.class, PhaseShifterTestCaseFactory.create(), "PS_PS1", "ps", "PhaseShifterP"),
                 Arguments.of("/dynamicModels/underVoltage.groovy", UnderVoltageAutomationSystem.class, EurostagTutorialExample1Factory.create(), "UV_GEN", "uv", "UnderVoltageAutomaton")
         );
     }
@@ -169,13 +166,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                               + Model LoadAlphaBeta GEN instantiation KO
                                  'staticId' field value 'GEN' not found for equipment type(s) LOAD
                         """),
-                Arguments.of("/warnings/missingDanglingProperty.groovy", HvdcTestNetwork.createVsc(),
-                        """
-                        + DSL tests
-                           + Groovy Dynamic Models Supplier
-                              + Model HvdcPV L instantiation KO
-                                 'dangling' field is set but HvdcPV does not possess this option
-                        """),
                 Arguments.of("/warnings/underVoltageMissingGenerator.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
@@ -189,6 +179,13 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                            + Groovy Dynamic Models Supplier
                               + Model PhaseShifterI PS_NGEN_NHV1 instantiation KO
                                  'transformer' field value 'NGEN' not found for equipment type(s) TWO_WINDINGS_TRANSFORMER
+                        """),
+                Arguments.of("/warnings/phaseShifterWithTransformerMissingPhaseTapChanger.groovy", EurostagTutorialExample1Factory.create(),
+                        """
+                        + DSL tests
+                           + Groovy Dynamic Models Supplier
+                              + Model PhaseShifterI PS_NGEN_NHV1 instantiation KO
+                                 'transformer' field value 'NGEN_NHV1' must have a phase tap changer
                         """),
                 Arguments.of("/warnings/claMissingMeasurement.groovy", EurostagTutorialExample1Factory.create(),
                         """
@@ -229,7 +226,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model TapChangerBlockingAutomaton ZAB instantiation KO
+                              + Model TapChangerBlockingAutomationSystem ZAB instantiation KO
                                  'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' field value 'Wrong_ID' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' list is empty
@@ -238,17 +235,17 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model TapChangerBlockingAutomaton ZAB instantiation KO
-                                 None of '[LOAD, Wrong_ID]' values from 'uMeasurements' field where found for energized and in main component equipment type(s) BUS/BUSBAR_SECTION
-                                 'uMeasurements' field value 'NGEN' should be energized and in main component
-                                 None of '[NGEN_NHV1, NGEN]' values from 'uMeasurements' field where found for energized and in main component equipment type(s) BUS/BUSBAR_SECTION
+                              + Model TapChangerBlockingAutomationSystem ZAB instantiation KO
+                                 None of '[LOAD, Wrong_ID]' values from 'uMeasurements' field where found for energized and in main connected component equipment type(s) BUS/BUSBAR_SECTION
+                                 'uMeasurements' field value 'NGEN' should be energized and in main connected component
+                                 None of '[NGEN_NHV1, NGEN]' values from 'uMeasurements' field where found for energized and in main connected component equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' list is empty
                         """),
                 Arguments.of("/warnings/tapChangerCompatible.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model TapChangerBlockingAutomaton ZAB instantiation KO
+                              + Model TapChangerBlockingAutomationSystem ZAB instantiation KO
                                  'uMeasurements' field value 'GEN' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'transformers' field value 'GEN' not found for equipment type(s) TWO_WINDINGS_TRANSFORMER/LOAD, id will be used as pure dynamic model id
                         """),
@@ -259,7 +256,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                               + Model HvdcVsc L instantiation KO
                                  'staticId' field value 'L' should be an HVDC VSC
                         """)
-                );
+        );
     }
 
     private static Stream<Arguments> provideGenerator() {

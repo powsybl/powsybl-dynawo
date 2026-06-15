@@ -11,7 +11,7 @@ package dynamicModels
 import com.powsybl.dynawo.models.TransformerSide
 
 
-TapChangerAutomaton {
+TapChangerAutomationSystem {
     dynamicModelId "TC"
     parameterSetId "tc"
     staticId "LOAD"

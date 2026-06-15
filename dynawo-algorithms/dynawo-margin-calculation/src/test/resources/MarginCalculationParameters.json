@@ -13,7 +13,8 @@
     "networkParameters" : {
       "id" : "Network",
       "parameters" : { },
-      "references" : [ ]
+      "references" : { },
+      "prefixParameters" : { }
     },
     "solverParameters" : {
       "id" : "SIM",
@@ -29,11 +30,12 @@
           "value" : "1e-4"
         }
       },
-      "references" : [ ]
+      "references" : { },
+      "prefixParameters" : { }
     },
     "solverType" : "SIM",
     "mergeLoads" : false,
-    "useModelSimplifiers" : false,
+    "modelSimplifiers" : [ ],
     "dumpFileParameters" : {
       "exportDumpFile" : false,
       "useDumpFile" : false,
@@ -41,7 +43,7 @@
       "dumpFile" : null
     },
     "precision" : 1.0E-6,
-    "timelineExportMode" : "TXT",
+    "timelineExportMode" : "XML",
     "logLevelFilter" : "INFO",
     "specificLogs" : [ ],
     "criteriaFilePath" : null,
@@ -60,7 +62,8 @@
           "value" : "aString"
         }
       },
-      "references" : [ ]
+      "references" : { },
+      "prefixParameters" : { }
     } ]
   }
 }

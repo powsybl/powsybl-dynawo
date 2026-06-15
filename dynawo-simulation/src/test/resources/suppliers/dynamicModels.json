@@ -13,7 +13,7 @@
       ]
     },
     {
-      "model": "TapChangerBlockingAutomaton",
+      "model": "TapChangerBlockingAutomationSystem",
       "group": "tcb_par",
       "properties":[
         {

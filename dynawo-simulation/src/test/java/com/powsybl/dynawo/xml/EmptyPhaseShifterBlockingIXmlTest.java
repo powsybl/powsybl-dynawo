@@ -10,7 +10,7 @@ package com.powsybl.dynawo.xml;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterBlockingIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
-import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import com.powsybl.iidm.network.test.PhaseShifterTestCaseFactory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -23,7 +23,7 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
-        network = EurostagTutorialExample1Factory.createWithLFResults();
+        network = PhaseShifterTestCaseFactory.create();
     }
 
     @Override
@@ -32,7 +32,7 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
             PhaseShifterIAutomationSystemBuilder.of(network, reportNode)
                 .dynamicModelId("BBM_PS")
                 .parameterSetId("ps")
-                .transformer("NGEN_NHV1")
+                .transformer("PS1")
                 .build(),
             PhaseShifterBlockingIAutomationSystemBuilder.of(network, reportNode)
                 .dynamicModelId("BBM_PSB")
@@ -50,6 +50,7 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "empty_phase_shifter_blocking_i_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        checkConnected("BBM_PSB", false);
         checkReport("""
                 + Test DYD
                    Model PhaseShifterI BBM_PS instantiation OK
@@ -57,7 +58,8 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
                    + Model PhaseShifterBlockingI BBM_PSB2 instantiation KO
                       'phaseShifterId' field is not set
                    + Dynawo models processing
-                      PhaseShifterBlockingI BBM_PSB equipment WRONG_ID is not a PhaseShifterIModel, the automation system will be skipped
+                      PhaseShifterBlockingI BBM_PSB requires a connection with a PhaseShifterIAutomationSystem but pure dynamic model WRONG_ID is not found
+                      PhaseShifterBlockingI BBM_PSB connections cannot be created, the model will be skipped
                 """);
     }
 }

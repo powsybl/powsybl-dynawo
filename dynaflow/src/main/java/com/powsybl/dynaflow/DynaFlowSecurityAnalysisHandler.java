@@ -15,18 +15,20 @@ import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
+import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.SidedContingencyElement;
-import com.powsybl.contingency.contingency.list.ContingencyList;
-import com.powsybl.contingency.contingency.list.DefaultContingencyList;
+import com.powsybl.contingency.list.ContingencyList;
+import com.powsybl.contingency.list.DefaultContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
+import com.powsybl.contingency.violations.LimitViolationFilter;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
-import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.commons.ExportMode;
+import com.powsybl.dynawo.commons.NetworkExporter;
 import com.powsybl.dynawo.contingency.ContingencyResultsUtils;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
-import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisReport;
 import com.powsybl.security.SecurityAnalysisResult;
@@ -41,8 +43,7 @@ import java.util.function.Predicate;
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaflowReports.createSidedContingencyReportNode;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
-import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
-import static com.powsybl.dynawo.commons.DynawoConstants.TIMELINE_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 import static com.powsybl.dynawo.contingency.ContingencyResultsUtils.createSecurityAnalysisResult;
 
@@ -57,17 +58,19 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     private final SecurityAnalysisParameters securityAnalysisParameters;
     private final List<Contingency> contingencies;
     private final LimitViolationFilter violationFilter;
+    private final DynawoVersion dynawoVersion;
     private final ReportNode reportNode;
 
     public DynaFlowSecurityAnalysisHandler(Network network, String workingVariantId, Command command,
                                            SecurityAnalysisParameters securityAnalysisParameters, List<Contingency> contingencies,
-                                           LimitViolationFilter violationFilter, ReportNode reportNode) {
+                                           LimitViolationFilter violationFilter, DynawoVersion dynawoVersion, ReportNode reportNode) {
         this.network = network;
         this.workingVariantId = workingVariantId;
         this.command = command;
         this.securityAnalysisParameters = securityAnalysisParameters;
         this.contingencies = contingencies;
         this.violationFilter = violationFilter;
+        this.dynawoVersion = dynawoVersion;
         this.reportNode = reportNode;
     }
 
@@ -75,9 +78,13 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(workingVariantId);
 
-        DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
+        NetworkExporter.writeIidm(network, workingDir.resolve(NETWORK_FILENAME), dynawoVersion);
         writeParameters(securityAnalysisParameters, workingDir);
         writeContingencies(contingencies, workingDir);
+
+        Path tmpExecFile = LocalComputationConfig.load().getLocalDir().resolve(EXEC_TMP_FILENAME);
+        Files.writeString(tmpExecFile, workingDir.toAbsolutePath().toString());
+
         return getCommandExecutions(command);
     }
 

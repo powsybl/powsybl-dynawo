@@ -34,8 +34,8 @@ public final class NetworkResultsUpdater {
         for (Line lineSource : sourceNetwork.getLines()) {
             update(targetNetwork.getLine(lineSource.getId()), lineSource);
         }
-        for (DanglingLine sourceDangling : sourceNetwork.getDanglingLines()) {
-            update(targetNetwork.getDanglingLine(sourceDangling.getId()), sourceDangling);
+        for (BoundaryLine sourceBoundaryLine : sourceNetwork.getBoundaryLines()) {
+            update(targetNetwork.getBoundaryLine(sourceBoundaryLine.getId()), sourceBoundaryLine);
         }
 
         updateHvdcLines(targetNetwork, sourceNetwork.getHvdcLines());
@@ -188,7 +188,7 @@ public final class NetworkResultsUpdater {
                 throw new PowsyblException("Missing merged load in bus " + busTarget.getId());
             }
             if (loadTerminalsGroup.size() == 1) {
-                update(loadTerminalsGroup.get(0), mergedLoadTerminal);
+                update(loadTerminalsGroup.getFirst(), mergedLoadTerminal);
             } else {
                 double groupP = loadTerminalsGroup.stream().mapToDouble(Terminal::getP).sum();
                 double groupQ = loadTerminalsGroup.stream().mapToDouble(Terminal::getQ).sum();

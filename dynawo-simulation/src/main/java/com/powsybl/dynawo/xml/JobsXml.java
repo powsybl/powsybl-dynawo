@@ -1,17 +1,17 @@
 /**
- * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ *
+ * Copyright (c) 2020-2025, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
  */
 package com.powsybl.dynawo.xml;
 
-import com.powsybl.dynawo.DumpFileParameters;
-import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.*;
 import com.powsybl.dynawo.DynawoSimulationParameters.SolverType;
-import com.powsybl.dynawo.SimulationTime;
 import com.powsybl.dynawo.commons.ExportMode;
+import com.powsybl.tools.Version;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.*;
-import static com.powsybl.dynawo.DynawoSimulationConstants.DYD_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUTS_FOLDER;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
@@ -34,28 +33,38 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
     private static final String EXPORT_MODE = "exportMode";
     private final Supplier<SimulationTime> simulationTimeSupplier;
     private final String additionalDydFile;
+    private final String networkParameterSetId;
 
-    private JobsXml(String xmlFileName, Supplier<SimulationTime> simulationTimeSupplier) {
-        this(xmlFileName, simulationTimeSupplier, null);
-    }
-
-    private JobsXml(String xmlFileName, Supplier<SimulationTime> simulationTimeSupplier, String additionalDydFile) {
+    private JobsXml(String xmlFileName, Supplier<SimulationTime> simulationTimeSupplier, String additionalDydFile, String networkParameterSetId) {
         super(xmlFileName, "jobs");
         this.simulationTimeSupplier = simulationTimeSupplier;
         this.additionalDydFile = additionalDydFile;
+        this.networkParameterSetId = networkParameterSetId;
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml(JOBS_FILENAME, context::getSimulationTime).createXmlFileFromDataSupplier(workingDir, context);
+        new JobsXml(JOBS_FILENAME, context::getSimulationTime, null, context.getNetworkParameterSetId())
+                .createXmlFileFromDataSupplier(workingDir, context);
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context, String additionalDydFile) throws IOException {
-        new JobsXml(JOBS_FILENAME, context::getSimulationTime, additionalDydFile).createXmlFileFromDataSupplier(workingDir, context);
+        new JobsXml(JOBS_FILENAME, context::getSimulationTime, additionalDydFile, context.getNetworkParameterSetId())
+                .createXmlFileFromDataSupplier(workingDir, context);
     }
 
     public static void writeFinalStep(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml(FINAL_STEP_JOBS_FILENAME, context::getFinalStepSimulationTime, FINAL_STEP_DYD_FILENAME)
+        new JobsXml(FINAL_STEP_JOBS_FILENAME, context::getFinalStepSimulationTime,
+                context.getFinalStepDydData().isPresent() ? FINAL_STEP_DYD_FILENAME : null,
+                context.getFinalStepNetworkParameterSetId())
                 .createXmlFileFromDataSupplier(workingDir, context);
+    }
+
+    @Override
+    protected void writeComments(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
+        writer.writeComment("dynawo: " + context.getCurrentDynawoVersion());
+        for (Version version : Version.list()) {
+            writer.writeComment(version.getRepositoryName() + ": " + version.getMavenProjectVersion());
+        }
     }
 
     @Override
@@ -64,7 +73,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeStartElement(DYN_URI, "job");
         writer.writeAttribute("name", context.getNetwork().getNameOrId());
         writeSolver(writer, parameters);
-        writeModeler(writer, parameters, additionalDydFile);
+        writeModeler(writer, parameters, additionalDydFile, networkParameterSetId);
         writeSimulation(writer, parameters, simulationTimeSupplier.get());
         writeOutput(writer, context);
         writer.writeEndElement();
@@ -77,14 +86,15 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("parId", parameters.getSolverParameters().getId());
     }
 
-    private static void writeModeler(XMLStreamWriter writer, DynawoSimulationParameters parameters, String additionalDydFile) throws XMLStreamException {
+    private static void writeModeler(XMLStreamWriter writer, DynawoSimulationParameters parameters,
+                                     String additionalDydFile, String networkParameterSetId) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "modeler");
         writer.writeAttribute("compileDir", "outputs/compilation");
 
         writer.writeEmptyElement(DYN_URI, "network");
         writer.writeAttribute("iidmFile", NETWORK_FILENAME);
         writer.writeAttribute("parFile", NETWORK_PARAMETERS_FILENAME);
-        writer.writeAttribute("parId", parameters.getNetworkParameters().getId());
+        writer.writeAttribute("parId", networkParameterSetId);
 
         writer.writeEmptyElement(DYN_URI, "dynModels");
         writer.writeAttribute("dydFile", DYD_FILENAME);

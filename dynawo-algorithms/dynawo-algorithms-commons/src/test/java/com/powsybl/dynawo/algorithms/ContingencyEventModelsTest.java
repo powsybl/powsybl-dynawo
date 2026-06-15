@@ -56,7 +56,7 @@ class ContingencyEventModelsTest {
         assertThat(contingencyEvents.get(2).eventModels())
                 .hasSize(1)
                 .map(BlackBoxModel::getLib).containsExactly("EventQuadripoleDisconnection");
-        ParametersSet parametersSet = contingencyEvents.get(2).eventParameters().get(0);
+        ParametersSet parametersSet = contingencyEvents.get(2).eventParameters().getFirst();
         assertTrue(parametersSet.getBool("event_disconnectOrigin"));
         assertFalse(parametersSet.getBool("event_disconnectExtremity"));
     }

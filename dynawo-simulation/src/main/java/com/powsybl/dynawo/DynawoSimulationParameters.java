@@ -48,9 +48,8 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     public static final String DEFAULT_NETWORK_PAR_ID = "Network";
     public static final String DEFAULT_SOLVER_PAR_ID = "SIM";
     public static final boolean DEFAULT_MERGE_LOADS = false;
-    public static final boolean DEFAULT_USE_MODEL_SIMPLIFIERS = false;
     public static final double DEFAULT_PRECISION = 1e-6;
-    public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.TXT;
+    public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.XML;
     public static final LogLevel DEFAULT_LOG_LEVEL_FILTER = LogLevel.INFO;
 
     private static final String PARAMETERS_FILE = "parametersFile";
@@ -60,7 +59,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private static final String SOLVER_PARAMETERS_ID = "solver.parametersId";
     private static final String SOLVER_TYPE = "solver.type";
     private static final String MERGE_LOADS = "mergeLoads";
-    private static final String USE_MODEL_SIMPLIFIERS = "useModelSimplifiers";
+    private static final String MODEL_SIMPLIFIERS = "modelSimplifiers";
     private static final String PRECISION_PROPERTY_NAME = "precision";
     private static final String TIMELINE_EXPORT_MODE = "timeline.exportMode";
     private static final String LOG_LEVEL_FILTER = "log.levelFilter";
@@ -115,7 +114,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private ParametersSet solverParameters;
     private SolverType solverType = DEFAULT_SOLVER_TYPE;
     private boolean mergeLoads = DEFAULT_MERGE_LOADS;
-    private boolean useModelSimplifiers = DEFAULT_USE_MODEL_SIMPLIFIERS;
+    private Set<String> modelSimplifiers = new LinkedHashSet<>();
     private DumpFileParameters dumpFileParameters = DumpFileParameters.createDefaultDumpFileParameters();
     private double precision = DEFAULT_PRECISION;
     private ExportMode timelineExportMode = DEFAULT_TIMELINE_EXPORT_MODE;
@@ -132,7 +131,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             new Parameter(SOLVER_PARAMETERS_ID, ParameterType.STRING, "Solver parameters set id", DEFAULT_SOLVER_PAR_ID),
             new Parameter(SOLVER_TYPE, ParameterType.STRING, "Solver used in the simulation", DEFAULT_SOLVER_TYPE.toString(), getEnumPossibleValues(SolverType.class)),
             new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", DEFAULT_MERGE_LOADS),
-            new Parameter(USE_MODEL_SIMPLIFIERS, ParameterType.BOOLEAN, "Simplifiers used before macro connection computation", DEFAULT_USE_MODEL_SIMPLIFIERS),
+            new Parameter(MODEL_SIMPLIFIERS, ParameterType.STRING, "Simplifiers used before macro connection computation", null),
             new Parameter(PRECISION_PROPERTY_NAME, ParameterType.DOUBLE, "Simulation step precision", DEFAULT_PRECISION),
             new Parameter(TIMELINE_EXPORT_MODE, ParameterType.STRING, "Timeline export file extension", DEFAULT_TIMELINE_EXPORT_MODE.toString(), getEnumPossibleValues(ExportMode.class)),
             new Parameter(LOG_LEVEL_FILTER, ParameterType.STRING, "Dynawo log level", DEFAULT_LOG_LEVEL_FILTER.toString(), getEnumPossibleValues(LogLevel.class)),
@@ -182,7 +181,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             parameters.setDumpFileParameters(DumpFileParameters.createDumpFileParametersFromConfig(c, f -> resolveFilePath(f, platformConfig, fileSystem)));
             c.getOptionalEnumProperty(SOLVER_TYPE, SolverType.class).ifPresent(parameters::setSolverType);
             c.getOptionalBooleanProperty(MERGE_LOADS).ifPresent(parameters::setMergeLoads);
-            c.getOptionalBooleanProperty(USE_MODEL_SIMPLIFIERS).ifPresent(parameters::setUseModelSimplifiers);
+            c.getOptionalStringListProperty(MODEL_SIMPLIFIERS).ifPresent(parameters::setModelSimplifiers);
             c.getOptionalDoubleProperty(PRECISION_PROPERTY_NAME).ifPresent(parameters::setPrecision);
             c.getOptionalEnumProperty(TIMELINE_EXPORT_MODE, ExportMode.class).ifPresent(parameters::setTimelineExportMode);
             c.getOptionalEnumProperty(LOG_LEVEL_FILTER, LogLevel.class).ifPresent(parameters::setLogLevelFilter);
@@ -248,7 +247,8 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         });
         Optional.ofNullable(properties.get(SOLVER_TYPE)).ifPresent(prop -> setSolverType(SolverType.valueOf(prop)));
         Optional.ofNullable(properties.get(MERGE_LOADS)).ifPresent(prop -> setMergeLoads(Boolean.parseBoolean(prop)));
-        Optional.ofNullable(properties.get(USE_MODEL_SIMPLIFIERS)).ifPresent(prop -> setUseModelSimplifiers(Boolean.parseBoolean(prop)));
+        Optional.ofNullable(properties.get(MODEL_SIMPLIFIERS)).ifPresent(prop ->
+                setModelSimplifiers(Stream.of(prop.split(PROPERTY_LIST_DELIMITER)).map(String::trim).collect(Collectors.toSet())));
         Optional.ofNullable(properties.get(PRECISION_PROPERTY_NAME)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(TIMELINE_EXPORT_MODE)).ifPresent(prop -> setTimelineExportMode(ExportMode.valueOf(prop)));
         Optional.ofNullable(properties.get(LOG_LEVEL_FILTER)).ifPresent(prop -> setLogLevelFilter(LogLevel.valueOf(prop)));
@@ -266,7 +266,9 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         addNotNullEntry("solverParameters", solverParameters, properties::put);
         addNotNullEntry(SOLVER_TYPE, solverType, properties::put);
         addNotNullEntry(MERGE_LOADS, mergeLoads, properties::put);
-        addNotNullEntry(USE_MODEL_SIMPLIFIERS, useModelSimplifiers, properties::put);
+        if (!modelSimplifiers.isEmpty()) {
+            properties.put(MODEL_SIMPLIFIERS, String.join(PROPERTY_LIST_DELIMITER, modelSimplifiers));
+        }
         addNotNullEntry(PRECISION_PROPERTY_NAME, precision, properties::put);
         addNotNullEntry(TIMELINE_EXPORT_MODE, timelineExportMode, properties::put);
         addNotNullEntry(LOG_LEVEL_FILTER, logLevelFilter, properties::put);
@@ -354,12 +356,17 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return this;
     }
 
-    public boolean isUseModelSimplifiers() {
-        return useModelSimplifiers;
+    public Set<String> getModelSimplifiers() {
+        return modelSimplifiers;
     }
 
-    public DynawoSimulationParameters setUseModelSimplifiers(boolean useModelSimplifiers) {
-        this.useModelSimplifiers = useModelSimplifiers;
+    public DynawoSimulationParameters setModelSimplifiers(Collection<String> modelSimplifiers) {
+        this.modelSimplifiers = new LinkedHashSet<>(modelSimplifiers);
+        return this;
+    }
+
+    public DynawoSimulationParameters addModelSimplifier(String modelSimplifier) {
+        modelSimplifiers.add(modelSimplifier);
         return this;
     }
 

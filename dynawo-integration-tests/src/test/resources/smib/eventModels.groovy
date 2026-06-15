@@ -7,8 +7,9 @@
  */
 package smib
 
-Step {
+ActivePowerVariation {
     staticId "SM"
     startTime 1
     deltaP 0.02
 }
+

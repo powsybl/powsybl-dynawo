@@ -32,9 +32,7 @@ public interface FrequencySynchronizedModel extends Model {
         return 0;
     }
 
-    default String getOmegaRefPuVarName() {
-        return "generator_omegaRefPu";
-    }
+    String getOmegaRefPuVarName();
 
     String getRunningVarName();
 

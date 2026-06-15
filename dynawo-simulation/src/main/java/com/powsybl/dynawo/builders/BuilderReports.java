@@ -77,6 +77,15 @@ public final class BuilderReports {
                 .add();
     }
 
+    public static void reportFieldNotSetDefaultValue(ReportNode reportNode, String fieldName, String defaultValue) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.fieldNotSetDefaultValue")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue("defaultValue", defaultValue)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
     public static void reportFieldReplacement(ReportNode reportNode, String fieldName, String replacementName, String replacement) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.fieldReplacement")
@@ -158,15 +167,6 @@ public final class BuilderReports {
                 .add();
     }
 
-    public static void reportFieldOptionNotImplemented(ReportNode reportNode, String fieldName, String defaultValue) {
-        reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynasim.fieldOptionNotImplemented")
-                .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue("defaultValue", defaultValue)
-                .withSeverity(TypedValue.WARN_SEVERITY)
-                .add();
-    }
-
     public static void reportFieldConflict(ReportNode reportNode, String firstFieldName, String secondFieldName) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.fieldConflict")
@@ -199,6 +199,15 @@ public final class BuilderReports {
     public static void reportNotEnergized(ReportNode reportNode, String fieldName, String staticId) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.notEnergized")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withTypedValue(STATIC_ID, staticId, TypedValue.ID)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportMissingPhaseTapChanger(ReportNode reportNode, String fieldName, String staticId) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.missingPhaseTapChanger")
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withTypedValue(STATIC_ID, staticId, TypedValue.ID)
                 .withSeverity(TypedValue.WARN_SEVERITY)

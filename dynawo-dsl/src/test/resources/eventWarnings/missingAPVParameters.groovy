@@ -8,7 +8,7 @@
 
 package eventWarnings
 
-Step {
+ActivePowerVariation {
     staticId "SVC2"
     startTime 2
 }

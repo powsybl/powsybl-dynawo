@@ -8,7 +8,10 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
+import com.powsybl.dynawo.models.generators.InertialGridBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
@@ -26,6 +29,21 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void setupNetwork() {
         network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
+        network.getVoltageLevel("VLHV3").newGenerator()
+                .setId("GEN4")
+                .setConnectableBus("N1")
+                .setMinP(-9999.99)
+                .setMaxP(9999.99)
+                .setVoltageRegulatorOn(true)
+                .setTargetV(24.5)
+                .setTargetP(607.0)
+                .setTargetQ(301.0)
+                .add();
+    }
+
+    @Override
+    protected DynawoSimulationContext.Builder setupDynawoContextBuilder() {
+        return super.setupDynawoContextBuilder().currentVersion(DynawoVersion.createFromString("1.7.0"));
     }
 
     @Override
@@ -37,6 +55,10 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsGoverPropVRPropInt")
                 .staticId("GEN3")
                 .parameterSetId("GSTWPR")
+                .build());
+        dynamicModels.add(InertialGridBuilder.of(network, "InertialGrid")
+                .staticId("GEN4")
+                .parameterSetId("IG")
                 .build());
         dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
                 .staticId("LOAD2")
@@ -57,7 +79,11 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
                 .startTime(1)
                 .deltaP(1.3)
                 .build());
-        // will be skipped
+        eventModels.add(EventActivePowerVariationBuilder.of(network)
+                .staticId("GEN4")
+                .startTime(1)
+                .deltaP(1.4)
+                .build());
         eventModels.add(EventActivePowerVariationBuilder.of(network)
                 .staticId("LOAD")
                 .startTime(10)
@@ -76,10 +102,6 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "apv_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "apv_par.xml", tmpDir.resolve(context.getSimulationParFile()));
-        checkReport("""
-                + Test DYD
-                   + Dynawo models processing
-                      EventActivePowerVariation Step_LOAD cannot handle connection with LOAD default model, the model will be skipped
-                """);
+        validate("parameters.xsd", "apv_network_par.xml", tmpDir.resolve("network.par"));
     }
 }

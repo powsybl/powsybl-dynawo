@@ -10,8 +10,6 @@ package com.powsybl.dynawo.commons;
 import com.google.common.io.CharStreams;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.computation.*;
-import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.serde.AbstractTreeDataExporter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,29 +17,21 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Path;
 import java.util.*;
-
-import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_EXTENSIONS;
-import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_VERSION;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
  */
 public final class DynawoUtil {
 
+    private static final Pattern REGEX_VERSION = Pattern.compile("\\b\\d+\\.\\d+\\.\\d+\\b");
+
     private DynawoUtil() {
     }
 
     public static List<CommandExecution> getCommandExecutions(Command command) {
         return Collections.singletonList(new CommandExecution(command, 1, 0));
-    }
-
-    public static void writeIidm(Network network, Path file) {
-        Objects.requireNonNull(network);
-        Objects.requireNonNull(file);
-        Properties params = new Properties();
-        params.setProperty(AbstractTreeDataExporter.VERSION, IIDM_VERSION);
-        params.setProperty(AbstractTreeDataExporter.EXTENSIONS_INCLUDED_LIST, String.join(",", IIDM_EXTENSIONS));
-        network.write("XIIDM", params, file);
     }
 
     public static DynawoVersion requireDynaMinVersion(ExecutionEnvironment env, ComputationManager computationManager,
@@ -76,7 +66,11 @@ public final class DynawoUtil {
         }).join();
     }
 
-    private static String versionSanitizer(String version) {
-        return version.split(" ")[0];
+    static String versionSanitizer(String version) {
+        Matcher matcher = REGEX_VERSION.matcher(version);
+        if (!matcher.find()) {
+            throw new PowsyblException(String.format("Dynawo version parsing error: '%s' cannot be parsed", version));
+        }
+        return matcher.group();
     }
 }

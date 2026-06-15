@@ -14,6 +14,7 @@ import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -75,14 +76,16 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
                             .build()),
                 Arguments.of("hvdc_p_dangling_dyd.xml", HvdcLine.ConvertersMode.SIDE_1_RECTIFIER_SIDE_2_INVERTER,
                         (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPVDangling")
-                            .staticId(HVDC_NAME)
-                            .parameterSetId("hv")
-                            .build()),
+                                .staticId(HVDC_NAME)
+                                .parameterSetId("hv")
+                                .dangling(TwoSides.ONE)
+                                .build()),
                 Arguments.of("hvdc_vsc_dangling_dyd.xml", HvdcLine.ConvertersMode.SIDE_1_RECTIFIER_SIDE_2_INVERTER,
                         (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVscDanglingP")
-                            .staticId(HVDC_NAME)
-                            .parameterSetId("hv")
-                            .build()),
+                                .staticId(HVDC_NAME)
+                                .parameterSetId("hv")
+                                .dangling(TwoSides.TWO)
+                                .build()),
                 Arguments.of("hvdc_p_inverted_dyd.xml", HvdcLine.ConvertersMode.SIDE_1_INVERTER_SIDE_2_RECTIFIER,
                         (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPV")
                                 .staticId(HVDC_NAME)

@@ -42,7 +42,7 @@ public class LoadsToMerge {
             loadAdder.setBus(bus.getId());
             loadAdder.setConnectableBus(bus.getId());
         } else if (TopologyKind.NODE_BREAKER.equals(topologyKind)) {
-            loadAdder.setNode(loads.get(0).getTerminal().getNodeBreakerView().getNode());
+            loadAdder.setNode(loads.getFirst().getTerminal().getNodeBreakerView().getNode());
         }
 
         return loadAdder;

@@ -30,6 +30,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
     void testDeserialize() {
 
         double expectedDsoVoltageLevelValue = 987.6;
+        double expectedTfoVoltageLevelValue = 234.5;
         String expectedSettingPath = "path/to/settingFile";
         String expectedAssemblingPath = "path/to/assemblingFile";
         double expectedStartTime = 0.;
@@ -44,10 +45,8 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         assertNotNull(dynaFlowParameters);
 
         assertTrue(dynaFlowParameters.getSvcRegulationOn());
-        assertFalse(dynaFlowParameters.getShuntRegulationOn());
-        assertTrue(dynaFlowParameters.getAutomaticSlackBusOn());
         assertEquals(expectedDsoVoltageLevelValue, dynaFlowParameters.getDsoVoltageLevel(), 0);
-        assertEquals(DynaFlowConstants.ActivePowerCompensation.P, dynaFlowParameters.getActivePowerCompensation());
+        assertEquals(expectedTfoVoltageLevelValue, dynaFlowParameters.getTfoVoltageLevel(), 0);
         assertEquals(expectedSettingPath, dynaFlowParameters.getSettingPath());
         assertEquals(expectedAssemblingPath, dynaFlowParameters.getAssemblingPath());
         assertEquals(expectedStartTime, dynaFlowParameters.getStartTime(), 0.1d);
@@ -55,7 +54,6 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         assertEquals(expectedPrecision, dynaFlowParameters.getPrecision(), 0.1d);
         assertThat(dynaFlowParameters.getChosenOutputs()).containsExactlyInAnyOrderElementsOf(expectedChosenOutputs);
         assertEquals(expectedTimeStep, dynaFlowParameters.getTimeStep(), 0.1d);
-        assertEquals(DynaFlowConstants.StartingPointMode.WARM, dynaFlowParameters.getStartingPointMode());
         assertFalse(dynaFlowParameters.isMergeLoads());
 
         assertTrue(lfParameters.isTransformerVoltageControlOn());
@@ -66,16 +64,15 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
     void roundTripParameters() throws IOException {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
 
-        LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
-        parameters.setUseReactiveLimits(false);
-        parameters.setPhaseShifterRegulationOn(false);
+        LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig)
+                .setUseReactiveLimits(false)
+                .setPhaseShifterRegulationOn(false)
+                .setVoltageInitMode(LoadFlowParameters.VoltageInitMode.PREVIOUS_VALUES);
 
         DynaFlowParameters params = new DynaFlowParameters()
             .setSvcRegulationOn(true)
-            .setShuntRegulationOn(false)
-            .setAutomaticSlackBusOn(true)
             .setDsoVoltageLevel(54.23)
-            .setActivePowerCompensation(DynaFlowConstants.ActivePowerCompensation.P)
+            .setTfoVoltageLevel(78.90)
             .setSettingPath("path/to/settingFile")
             .setAssemblingPath("path/to/assemblingFile")
             .setStartTime(0.)
@@ -83,7 +80,6 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
             .setPrecision(0.)
             .setChosenOutputs(Set.of(DynaFlowConstants.OutputTypes.STEADYSTATE))
             .setTimeStep(2.6)
-            .setStartingPointMode(DynaFlowConstants.StartingPointMode.WARM)
             .setMergeLoads(false);
 
         parameters.addExtension(DynaFlowParameters.class, params);
@@ -95,10 +91,30 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
     @Test
     void serializeWithDefaultDynaflowParameters() throws IOException {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
-
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
-
         roundTripTest(parameters, JsonLoadFlowParameters::write,
                 JsonLoadFlowParameters::read, "/dynaflow_default_serialization.json");
+    }
+
+    @Test
+    void partialUpdate() {
+        LoadFlowParameters lfParameters = LoadFlowParameters.load();
+        JsonLoadFlowParameters.update(lfParameters, getClass().getResourceAsStream("/partial_dynaflow_parameters_update.json"));
+        assertTrue(lfParameters.isTransformerVoltageControlOn());
+
+        DynaFlowParameters dynaFlowParameters = lfParameters.getExtension(DynaFlowParameters.class);
+        assertNotNull(dynaFlowParameters);
+        //set false in config.yml
+        assertFalse(dynaFlowParameters.getSvcRegulationOn());
+        assertEquals(45d, dynaFlowParameters.getDsoVoltageLevel(), 0);
+        assertEquals(100d, dynaFlowParameters.getTfoVoltageLevel(), 0);
+        assertEquals("path/to/settingFile", dynaFlowParameters.getSettingPath());
+        assertNull(dynaFlowParameters.getAssemblingPath());
+        assertEquals(0d, dynaFlowParameters.getStartTime(), 0.1d);
+        assertEquals(150d, dynaFlowParameters.getStopTime(), 0.1d);
+        assertNull(dynaFlowParameters.getPrecision());
+        assertThat(dynaFlowParameters.getChosenOutputs()).containsExactlyInAnyOrderElementsOf(EnumSet.of(DynaFlowConstants.OutputTypes.TIMELINE));
+        assertEquals(10d, dynaFlowParameters.getTimeStep(), 0.1d);
+        assertTrue(dynaFlowParameters.isMergeLoads());
     }
 }

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.lines.LineBuilder;
 import com.powsybl.iidm.network.Network;
@@ -37,7 +38,7 @@ class ModelConfigLoaderTest {
     void loadConfigTest() throws IOException {
         String json = """
                 {
-                    "synchronousGenerators": {
+                    "miscGenerators": {
                         "defaultLib": "WT4BWeccCurrentSource",
                         "libs": [
                             {
@@ -50,7 +51,19 @@ class ModelConfigLoaderTest {
                               "minVersion": "1.3.0",
                               "maxVersion": "1.4.0",
                               "endCause": "Deleted",
-                              "doc": "Photovoltaics Wecc generator"
+                              "doc": "Photovoltaics Wecc generator",
+                              "macroStaticRef": [
+                                {
+                                  "dynamicVar":"wecc_state",
+                                  "staticVar":"state"
+                                }
+                              ],
+                              "variablePrefix": [
+                                {
+                                  "variable":"terminal",
+                                  "prefix":"WT"
+                                }
+                              ]
                             },
                             {
                               "lib": "WT4BWeccCurrentSource",
@@ -74,19 +87,24 @@ class ModelConfigLoaderTest {
         objectMapper.registerModule(module);
         Map<String, ModelConfigs> configs = objectMapper.readValue(json, new TypeReference<>() {
         });
-        assertThat(configs.keySet()).containsExactly("synchronousGenerators");
-        ModelConfigs synchroGens = configs.get("synchronousGenerators");
+        assertThat(configs.keySet()).containsExactly("miscGenerators");
+        ModelConfigs synchroGens = configs.get("miscGenerators");
         assertThat(synchroGens.getModelsName()).containsExactly(
                 "WT4AWeccCurrentSource",
                 "WT4BWeccCurrentSource",
                 "Wecc");
+
+        // Expected models
         ModelConfig defaultModel = new ModelConfig("WT4BWeccCurrentSource", List.of("SYNCHRONIZED", "CONTROLLABLE"));
+        ModelConfig baseModel = new ModelConfig("WT4AWeccCurrentSource", null, null, Collections.emptyList(), "WT4A Wecc generator", new VersionInterval(new DynawoVersion(1, 6, 0)));
+        ModelConfig completeModel = new ModelConfig("PhotovoltaicsWeccCurrentSource", "Wecc", "WTG4A", List.of("SYNCHRONIZED"), "Photovoltaics Wecc generator",
+                new VersionInterval(new DynawoVersion(1, 3, 0), new DynawoVersion(1, 4, 0), "Deleted"),
+                List.of(new VarMapping("wecc_state", "state")),
+                Map.of("terminal", "WT_terminal"));
+
         assertEquals(defaultModel, synchroGens.getDefaultModelConfig());
         assertThat(synchroGens.getModelInfos())
-                .containsExactly(
-                    new ModelConfig("WT4AWeccCurrentSource", null, null, Collections.emptyList(), "WT4A Wecc generator", new VersionInterval(new DynawoVersion(1, 6, 0))),
-                    defaultModel,
-                    new ModelConfig("PhotovoltaicsWeccCurrentSource", "Wecc", "WTG4A", List.of("SYNCHRONIZED"), "Photovoltaics Wecc generator", new VersionInterval(new DynawoVersion(1, 3, 0), new DynawoVersion(1, 4, 0), "Deleted")))
+                .containsExactly(baseModel, defaultModel, completeModel)
                 // Check formatted info
                 .map(ModelInfo::formattedInfo)
                 .containsExactly(

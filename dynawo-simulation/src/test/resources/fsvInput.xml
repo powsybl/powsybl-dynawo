@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:finalStateValuesInput xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:finalStateValue model="NETWORK" variable="LOAD_load_PPu"/>
-    <dyn:finalStateValue model="NETWORK" variable="LOAD_load_QPu"/>
-    <dyn:finalStateValue model="NETWORK" variable="LOAD2_load_PPu"/>
-    <dyn:finalStateValue model="NETWORK" variable="LOAD2_load_QPu"/>
+    <dyn:finalStateValue model="LOAD" variable="load_PPu"/>
+    <dyn:finalStateValue model="LOAD" variable="load_QPu"/>
+    <dyn:finalStateValue model="LOAD2" variable="load_PPu"/>
+    <dyn:finalStateValue model="LOAD2" variable="load_QPu"/>
 </dyn:finalStateValuesInput>

@@ -8,7 +8,6 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.OutputVariable;
-import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
@@ -17,7 +16,11 @@ import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
-import com.powsybl.iidm.network.*;
+import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
+import com.powsybl.iidm.network.Bus;
+import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.TwoSides;
+import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.xml.sax.SAXException;
@@ -29,6 +32,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -36,6 +40,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
+import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -55,13 +60,13 @@ public class DynawoTestUtil extends AbstractSerDeTest {
         outputVariables = new ArrayList<>();
 
         network.getLoadStream().forEach(b -> new DynawoOutputVariablesBuilder()
-                .staticId(b.getId())
+                .id(b.getId())
                 .variables("load_PPu", "load_QPu")
                 .outputType(OutputVariable.OutputType.FINAL_STATE)
                 .add(outputVariables::add));
 
         network.getBusBreakerView().getBusStream().forEach(b -> new DynawoOutputVariablesBuilder()
-                .staticId(b.getId())
+                .id(b.getId())
                 .variables("Upu_value")
                 .outputType(OutputVariable.OutputType.CURVE)
                 .add(outputVariables::add));
@@ -69,7 +74,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
         // A curve is made up of the id of the dynamic model and the variable to plot.
         // The static id of the generator is used as the id of the dynamic model (dynamicModelId).
         network.getGeneratorStream().forEach(g -> new DynawoOutputVariablesBuilder()
-                .dynamicModelId(g.getId())
+                .id(g.getId())
                 .variables("generator_omegaPu", "generator_PGen", "generator_UStatorPu", "voltageRegulator_UcEfdP", "voltageRegulator_EfdPu")
                 .outputType(OutputVariable.OutputType.CURVE)
                 .add(outputVariables::add));
@@ -147,13 +152,23 @@ public class DynawoTestUtil extends AbstractSerDeTest {
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
+        validate(schemaDefinition, expectedResourceName, xmlFile, false);
+    }
+
+    public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile, boolean ignoreComment) throws SAXException, IOException {
+        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/" + expectedResourceName));
+        InputStream actual = Files.newInputStream(xmlFile);
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Source xml = new StreamSource(Files.newInputStream(xmlFile));
         Source xsd = new StreamSource(getClass().getResourceAsStream("/" + schemaDefinition));
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        assertTxtEquals(Objects.requireNonNull(getClass().getResourceAsStream("/" + expectedResourceName)), Files.newInputStream(xmlFile));
+        if (ignoreComment) {
+            assertXmlEquals(expected, actual);
+        } else {
+            assertTxtEquals(expected, actual);
+        }
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {

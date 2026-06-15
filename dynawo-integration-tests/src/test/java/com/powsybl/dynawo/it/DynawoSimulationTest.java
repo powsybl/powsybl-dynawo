@@ -80,9 +80,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14() {
-
         DynamicSimulationResult result = setupIEEE14Simulation().get();
 
+        testExecutionTempFile();
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
         assertEquals(27, result.getCurves().size());
@@ -93,7 +93,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu_value"));
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(23, timeLine.size());
-        checkTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
+        checkTimeLineEvent(timeLine.getFirst(), 0, "_GEN____8_SM", "PMIN : activation");
     }
 
     @Test
@@ -162,7 +162,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(1, timeLine.size());
-        checkTimeLineEvent(timeLine.get(0), 0, "G1", "PMIN : activation");
+        checkTimeLineEvent(timeLine.getFirst(), 0, "G1", "PMIN : activation");
     }
 
     @Test
@@ -193,8 +193,8 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(result.getStatusText().isEmpty());
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
-        assertEquals(7, timeLine.size());
-        checkTimeLineEvent(timeLine.get(0), 30.0, "_BUS____5-BUS____6-1_PS", "Tap position change (increment)");
+        assertEquals(22, timeLine.size());
+        checkTimeLineEvent(timeLine.getFirst(), 0.0, "PhaseShifterI", "Phase-shifter : above maximum allowed value");
     }
 
     @Test
@@ -221,7 +221,6 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
-
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
         assertEquals(35, result.getCurves().size());
@@ -282,7 +281,44 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(0, result.getCurves().size());
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(11, timeLine.size());
-        checkTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
+        checkTimeLineEvent(timeLine.getFirst(), 0, "_GEN____8_SM", "PMIN : activation");
+    }
+
+    @Test
+    void testIeee14WithWrongGroovyVariablesForCRV() {
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
+                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("IEEE14 test")
+                .build();
+
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
+                GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        GroovyOutputVariablesSupplier outputVariablesSupplier = new GroovyOutputVariablesSupplier(
+                getResourceAsStream("/error/outputWrongVariables.groovy"),
+                GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
+                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2")
+                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
+                .setTimelineExportMode(ExportMode.XML);
+
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
+                .join();
+
+        assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
+        assertEquals("CRV file is empty", result.getStatusText());
     }
 
     private void checkTimeLineEvent(TimelineEvent event, double time, String modelName, String message) {
@@ -410,7 +446,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
 
-        ReportNode eventReport = reportNode.getChildren().get(0);
+        ReportNode eventReport = reportNode.getChildren().getFirst();
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
@@ -440,7 +476,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
 
-        eventReport = reportNode.getChildren().get(0);
+        eventReport = reportNode.getChildren().getFirst();
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
@@ -465,6 +501,11 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA);
+
+        network.getTwoWindingsTransformer(EurostagTutorialExample1Factory.NHV2_NLOAD).newPhaseTapChanger()
+                .setTapPosition(0)
+                .beginStep().setR(1.0).setX(2.0).setG(3.0).setB(4.0).setAlpha(5.0).setRho(6.0).endStep()
+                .add();
 
         DynamicModelsSupplier dynamicModelsSupplier = (n, r) -> List.of(
                 DynamicOverloadManagementSystemBuilder.of(n, r)
@@ -498,7 +539,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
 
-        ReportNode eventReport = reportNode.getChildren().get(0);
+        ReportNode eventReport = reportNode.getChildren().getFirst();
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());

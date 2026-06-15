@@ -18,8 +18,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -61,6 +60,7 @@ class TapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlT
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "tap_changer_blocking_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        checkConnected("BBM_TapChangerBlocking", true);
     }
 
     @Test
@@ -72,5 +72,15 @@ class TapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlT
                 .uMeasurements("NHV1", "NHV1", "NHV1", "NHV1", "NHV1", "NHV1");
         Exception e = assertThrows(PowsyblException.class, builder::build);
         assertEquals("Tap changer blocking automation system can only handle 5 measurement points at the same time", e.getMessage());
+    }
+
+    @Test
+    void testMissingMeasurementPoint() {
+        TapChangerBlockingAutomationSystemBuilder builder = TapChangerBlockingAutomationSystemBuilder.of(network)
+                .dynamicModelId("TapChanger1")
+                .parameterSetId("TapChangerPar")
+                .transformers("NGEN_NHV1")
+                .uMeasurements("NHV1", "WRONG_ID");
+        assertNull(builder.build());
     }
 }

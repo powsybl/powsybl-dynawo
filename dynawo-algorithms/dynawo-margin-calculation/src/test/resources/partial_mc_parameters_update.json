@@ -1,0 +1,7 @@
+{
+  "version" : "1.0",
+  "startTime" : 5.0,
+  "dynawoParameters" : {
+    "mergeLoads" : true
+  }
+}

@@ -48,7 +48,7 @@ public final class FinalStepModels implements DynawoData {
         // Write macro connection
         for (BlackBoxModel bbm : dynamicModels) {
             if (!simulationModels.hasMacroStaticReference(bbm)) {
-                macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
+                macroStaticReferences.computeIfAbsent(bbm.getMacroConnectName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             }
             bbm.createMacroConnections(macroConnectionsAdder);
             bbm.createDynamicModelParameters(parametersAdder);

@@ -21,8 +21,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 import static com.powsybl.dynawo.DynawoSimulationParameters.MODULE_SPECIFIC_PARAMETERS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -79,5 +78,20 @@ class JsonMarginCalculationParametersTest extends AbstractSerDeTest {
             IllegalStateException e = assertThrows(IllegalStateException.class, () -> JsonMarginCalculationParameters.read(is));
             assertEquals("Unexpected field: unknownParameter", e.getMessage());
         }
+    }
+
+    @Test
+    void partialUpdate() {
+        MarginCalculationParameters parameters = MarginCalculationParameters.builder()
+                .setAccuracy(3)
+                .setDynawoParameters(DynawoSimulationParameters.load(platformConfig))
+                .build();
+        parameters = JsonMarginCalculationParameters.update(parameters, getClass().getResourceAsStream("/partial_mc_parameters_update.json"));
+        assertEquals(200, parameters.getStopTime());
+        assertEquals(3, parameters.getAccuracy());
+        assertEquals(5, parameters.getStartTime());
+        DynawoSimulationParameters dynawoParameters = parameters.getDynawoParameters();
+        assertEquals(1e-6, dynawoParameters.getPrecision());
+        assertTrue(dynawoParameters.isMergeLoads());
     }
 }

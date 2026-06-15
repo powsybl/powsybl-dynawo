@@ -72,7 +72,7 @@ public class DynawoLocalCommandExecutor implements LocalCommandExecutor {
     @Override
     public int execute(String program, long timeoutSeconds, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
         try {
-            if (args.get(0).equals("version")) {
+            if (args.getFirst().equals("version")) {
                 copyFile(stdOutFileRef, outFile);
             } else {
                 validateInputs(workingDir);

@@ -85,6 +85,34 @@ class MarginCalculationTest extends AbstractDynawoTest {
                         List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
                                 new ScenarioResult(GEN_ID, CONVERGENCE))));
 
+    private static final List<LoadIncreaseResult> EXPECTED_RESULTS_WITH_DEFAULT_LOADS = List.of(
+            new LoadIncreaseResult(100, CRITERIA_NON_RESPECTED, List.of(),
+                    List.of(new FailedCriterion("total load power = 206.338MW > 200MW (criteria id: Risque protection)", 56.673264))),
+            new LoadIncreaseResult(0, CONVERGENCE,
+                    List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
+                            new ScenarioResult(GEN_ID, CONVERGENCE))),
+            new LoadIncreaseResult(50, CONVERGENCE,
+                    List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
+                            new ScenarioResult(GEN_ID, CONVERGENCE))),
+            new LoadIncreaseResult(75, CRITERIA_NON_RESPECTED, List.of(),
+                    List.of(new FailedCriterion("total load power = 273.431MW > 200MW (criteria id: Risque QdE)", 85.840448))),
+            new LoadIncreaseResult(63, CRITERIA_NON_RESPECTED, List.of(),
+                    List.of(new FailedCriterion("total load power = 234.405MW > 200MW (criteria id: Risque QdE)", 79.820096))),
+            new LoadIncreaseResult(57, CONVERGENCE,
+                    List.of(new ScenarioResult(LINE_ID, CRITERIA_NON_RESPECTED,
+                                    List.of(new FailedCriterion("total load power = 225.207MW > 200MW (criteria id: Risque QdE)", 174.2))),
+                            new ScenarioResult(GEN_ID, CRITERIA_NON_RESPECTED,
+                                    List.of(new FailedCriterion("total load power = 219.895MW > 200MW (criteria id: Risque QdE)", 174.2))))),
+            new LoadIncreaseResult(54, CONVERGENCE,
+                    List.of(new ScenarioResult(LINE_ID, CRITERIA_NON_RESPECTED,
+                                    List.of(new FailedCriterion("total load power = 212.425MW > 200MW (criteria id: Risque QdE)", 172.4))),
+                            new ScenarioResult(GEN_ID, CRITERIA_NON_RESPECTED,
+                                    List.of(new FailedCriterion("total load power = 214.241MW > 200MW (criteria id: Risque QdE)", 172.4))))),
+            new LoadIncreaseResult(52, CONVERGENCE,
+                    List.of(new ScenarioResult(LINE_ID, CRITERIA_NON_RESPECTED,
+                                    List.of(new FailedCriterion("total load power = 208.677MW > 200MW (criteria id: Risque QdE)", 171.2))),
+                            new ScenarioResult(GEN_ID, CONVERGENCE))));
+
     @Override
     @BeforeEach
     void setUp() throws Exception {
@@ -105,10 +133,23 @@ class MarginCalculationTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14MC() {
+        List<LoadIncreaseResult> results = setupIeee14MC("/ieee14/dynamicModels.groovy");
+        assertThat(results).containsExactlyElementsOf(EXPECTED_RESULTS);
+        testExecutionTempFile();
+    }
+
+    @Test
+    void testIeee14MCWithDefaultLoads() {
+        List<LoadIncreaseResult> results = setupIeee14MC("/ieee14/margin-calculation/dynamicModelsFewerLoads.groovy");
+        assertThat(results).containsExactlyElementsOf(EXPECTED_RESULTS_WITH_DEFAULT_LOADS);
+        testExecutionTempFile();
+    }
+
+    private List<LoadIncreaseResult> setupIeee14MC(String dynamicModelsScript) {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/ieee14/dynamicModels.groovy"),
+                getResourceAsStream(dynamicModelsScript),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/margin-calculation/models.par"));
@@ -139,16 +180,14 @@ class MarginCalculationTest extends AbstractDynawoTest {
 
         LoadsVariationSupplier loadsVariationSupplier = (n, r) ->
                 LOADS.stream().map(load -> new LoadsVariationBuilder(n, r)
-                        .loads(load)
-                        .variationValue(10)
-                        .build())
-                .toList();
+                                .loads(load)
+                                .variationValue(10)
+                                .build())
+                        .toList();
 
-        List<LoadIncreaseResult> results = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+        return provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
                         dynamicModelsSupplier, n -> contingencies, loadsVariationSupplier, runParameters)
                 .join()
                 .getLoadIncreaseResults();
-
-        assertThat(results).containsExactlyElementsOf(EXPECTED_RESULTS);
     }
 }

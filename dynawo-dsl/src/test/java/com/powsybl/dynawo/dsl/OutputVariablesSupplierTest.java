@@ -65,7 +65,7 @@ class OutputVariablesSupplierTest extends AbstractModelSupplierTest {
     private List<OutputVariableGroovyExtension> validateGroovyExtension() {
         List<OutputVariableGroovyExtension> extensions = GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME);
         assertEquals(1, extensions.size());
-        assertInstanceOf(DynawoOutputVariableGroovyExtension.class, extensions.get(0));
+        assertInstanceOf(DynawoOutputVariableGroovyExtension.class, extensions.getFirst());
         return extensions;
     }
 
