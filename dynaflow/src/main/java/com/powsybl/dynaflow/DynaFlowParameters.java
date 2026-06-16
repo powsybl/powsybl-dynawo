@@ -255,7 +255,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             at.addRow("Name", "Value");
             at.addRule();
             for (var e : parameters.toMap().entrySet()) {
-                at.addRow(e.getKey(), e.getValue());
+                at.addRow(e.getKey(), Objects.toString(e.getValue(), ""));
             }
             for (var e : parametersExt.createMapFromParameters().entrySet()) {
                 at.addRow(e.getKey(), Objects.toString(e.getValue(), ""));
