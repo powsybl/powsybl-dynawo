@@ -35,12 +35,12 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             String category = parser.currentName();
             parser.nextToken();
-            configMap.put(category, parseModelConfigs(parser));
+            configMap.put(category, parseModelConfigs(category, parser));
         }
         return configMap;
     }
 
-    private static ModelConfigs parseModelConfigs(JsonParser parser) {
+    private static ModelConfigs parseModelConfigs(String category, JsonParser parser) {
         var parsingContext = new Object() {
             String defaultLib = null;
             final SortedMap<String, ModelConfig> libs = new TreeMap<>();
@@ -58,7 +58,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
                 default -> false;
             }
         );
-        return new ModelConfigs(parsingContext.libs, parsingContext.defaultLib);
+        return new ModelConfigs(category, parsingContext.libs, parsingContext.defaultLib);
     }
 
     private static ModelConfig parseModelConfig(JsonParser parser) {

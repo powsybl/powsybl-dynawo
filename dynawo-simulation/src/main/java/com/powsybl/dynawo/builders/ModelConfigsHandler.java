@@ -11,6 +11,8 @@ import com.google.common.collect.Lists;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.EventModel;
+import com.powsybl.dynawo.commons.DynawoConstants;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,7 @@ public final class ModelConfigsHandler {
     private final Map<String, BuilderConfig.ModelBuilderConstructor> builderConstructorByName = new HashMap<>();
     private final List<EventBuilderConfig> eventBuilderConfigs;
     private final Map<String, EventBuilderConfig.EventModelBuilderConstructor> eventBuilderConstructorByName;
+    private DynawoVersion dynawoVersion = DynawoConstants.CURRENT_VERSION;
 
     private ModelConfigsHandler() {
         List<ModelConfigLoader> modelConfigLoaders = Lists.newArrayList(ServiceLoader.load(ModelConfigLoader.class));
@@ -70,6 +73,9 @@ public final class ModelConfigsHandler {
         return eventBuilderConfigs;
     }
 
+    /**
+     * Get the ModelBuilder associated with modelName if the model is supported by the current Dynawo version
+     */
     public ModelBuilder<DynamicModel> getModelBuilder(Network network, String modelName, ReportNode reportNode) {
         BuilderConfig.ModelBuilderConstructor constructor = builderConstructorByName.get(modelName);
         if (constructor == null) {
@@ -106,5 +112,13 @@ public final class ModelConfigsHandler {
                 }
         );
 
+    }
+
+    public DynawoVersion getDynawoVersion() {
+        return dynawoVersion;
+    }
+
+    public void setDynawoVersion(DynawoVersion dynawoVersion) {
+        this.dynawoVersion = dynawoVersion;
     }
 }
