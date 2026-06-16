@@ -35,8 +35,7 @@ public final class LoadVariationModels implements DynawoData {
                                                  String simulationParFile, ReportNode reportNode) {
         List<MacroConnect> macroConnectList = new ArrayList<>();
         Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
-        MacroConnectionsAdder adder = new MacroConnectionsAdder(bbmSupplier::getEquipmentDynamicModel,
-                bbmSupplier::getPureDynamicModel, macroConnectList::add, macroConnectorsMap::computeIfAbsent, reportNode);
+        MacroConnectionsAdder adder = new MacroConnectionsAdder(bbmSupplier, macroConnectList::add, macroConnectorsMap::computeIfAbsent, reportNode);
         loadVariationArea.createMacroConnections(adder);
         loadVariationArea.createDynamicModelParameters(parametersAdder);
         loadVariationArea.createNetworkParameter(networkParameters);

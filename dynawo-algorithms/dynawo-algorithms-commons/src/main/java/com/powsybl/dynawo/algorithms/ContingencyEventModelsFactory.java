@@ -62,8 +62,7 @@ public final class ContingencyEventModelsFactory {
         List<MacroConnect> macroConnectList = new ArrayList<>();
         List<ParametersSet> eventParameters = new ArrayList<>(eventModels.size());
         // Set Contingencies connections and parameters
-        MacroConnectionsAdder macroConnectionsAdder = new MacroConnectionsAdder(bbmSupplier::getEquipmentDynamicModel,
-                bbmSupplier::getPureDynamicModel, macroConnectList::add,
+        MacroConnectionsAdder macroConnectionsAdder = new MacroConnectionsAdder(bbmSupplier, macroConnectList::add,
                 (n, f) -> {
                     if (!hasMacroConnector.test(n)) {
                         macroConnectorsMap.computeIfAbsent(n, f);

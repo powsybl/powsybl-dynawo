@@ -9,6 +9,7 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.BlackBoxModelSupplier;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
@@ -32,9 +33,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -141,10 +139,7 @@ class DynamicModelContextTest {
     }
 
     private MacroConnectionsAdder createBasicMacroConnectionsAdder() {
-        Map<String, BlackBoxModel> map = dynamicModels.stream().collect(Collectors.toMap(
-                BlackBoxModel::getDynamicModelId,
-                Function.identity()));
-        return new MacroConnectionsAdder(map::get, map::get, mc -> { },
+        return new MacroConnectionsAdder(BlackBoxModelSupplier.createFrom(dynamicModels), mc -> { },
                 (mc, f) -> { }, ReportNode.NO_OP);
     }
 }
