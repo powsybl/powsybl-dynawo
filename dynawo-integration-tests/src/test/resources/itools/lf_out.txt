@@ -1,4 +1,10 @@
 Loading network 'IEEE14.iidm'
++ Loadflow tool
+   + Check load flow parameters compatibility with DynaFlow
+      Load flow parameter 'WriteSlackBus' is not supported by DynaFlow, the parameter will be ignored
+      Load flow parameter 'ComponentMode' value MAIN_CONNECTED is not supported by DynaFlow, the value MAIN_SYNCHRONOUS will be used instead
+   + DynaFlow load flow on network 'ieee14bus'
+      Empty timeline, no event has occurred
 Loadflow results:
 +------+-----------------+------------------------------------------------------------------------------------------------------------------+
 | Ok   | Status          | Metrics                                                                                                          |
