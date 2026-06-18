@@ -9,6 +9,7 @@ package com.powsybl.dynawo.commons;
 
 import de.siegmar.fastcsv.reader.CsvReader;
 import de.siegmar.fastcsv.reader.CsvRecord;
+import de.siegmar.fastcsv.reader.FieldMismatchStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,8 +53,8 @@ public abstract class AbstractCsvParser<T> {
              CsvReader<CsvRecord> csvReader = CsvReader.builder()
                      .fieldSeparator(separator)
                      .quoteCharacter('"')
-                     .allowMissingFields(true)
-                     .allowExtraFields(true)
+                     .missingFieldStrategy(FieldMismatchStrategy.IGNORE)
+                     .extraFieldStrategy(FieldMismatchStrategy.IGNORE)
                      .trimWhitespacesAroundQuotes(true)
                      .skipEmptyLines(true)
                      .ofCsvRecord(reader)) {
