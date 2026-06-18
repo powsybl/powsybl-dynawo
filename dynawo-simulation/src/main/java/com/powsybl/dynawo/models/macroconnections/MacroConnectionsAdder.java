@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.macroconnections;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.BlackBoxModelSupplier;
 import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.models.automationsystems.ConnectionStatefulModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
@@ -32,16 +33,14 @@ import java.util.stream.Stream;
 public final class MacroConnectionsAdder {
 
     private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
-    private final Function<String, BlackBoxModel> dynamicModelGetter;
-    private final Function<String, BlackBoxModel> pureDynamicModelGetter;
+    private final BlackBoxModelSupplier blackBoxModelSupplier;
     private final Consumer<MacroConnect> macroConnectAdder;
     private final BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder;
     private final ReportNode reportNode;
 
-    public MacroConnectionsAdder(Function<String, BlackBoxModel> dynamicModelGetter, Function<String, BlackBoxModel> pureDynamicModelGetter, Consumer<MacroConnect> macroConnectAdder,
+    public MacroConnectionsAdder(BlackBoxModelSupplier blackBoxModelSupplier, Consumer<MacroConnect> macroConnectAdder,
                                  BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder, ReportNode reportNode) {
-        this.dynamicModelGetter = dynamicModelGetter;
-        this.pureDynamicModelGetter = pureDynamicModelGetter;
+        this.blackBoxModelSupplier = blackBoxModelSupplier;
         this.macroConnectAdder = macroConnectAdder;
         this.macroConnectorAdder = macroConnectorAdder;
         this.reportNode = reportNode;
@@ -59,7 +58,8 @@ public final class MacroConnectionsAdder {
 
     /**
      * Creates macro connection from equipment and model class
-     * Skip the instantiation is the equipment does not correspond to the model
+     * Skip the instantiation if the equipment does not correspond to the model
+     * @return <code>true</code> if the model is skipped, <code>false</code> otherwise
      */
     public <T extends Model> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier) {
         T connectedModel = getDynamicModel(originModel, equipment, modelClass, false);
@@ -95,8 +95,9 @@ public final class MacroConnectionsAdder {
 
     /**
      * Creates macro connection from equipment and model class
-     * Skip the instantiation is the equipment does not correspond to the model
+     * Skip the instantiation if the equipment does not correspond to the model
      * Add MacroConnectAttribute "from" attributes
+     * @return <code>true</code> if the model is skipped, <code>false</code> otherwise
      */
     public <T extends Model> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, MacroConnectAttribute... connectFromAttributes) {
         T connectedModel = getDynamicModel(originModel, equipment, modelClass, false);
@@ -117,6 +118,23 @@ public final class MacroConnectionsAdder {
         MacroConnect mc = new MacroConnect(macroConnectorId, originModel.getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
         macroConnectAdder.accept(mc);
         macroConnectorAdder.accept(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnectionsSupplier.apply(connectedModel, side)));
+    }
+
+    /**
+     * Creates macro connection from equipment and model class
+     * Skip the instantiation if the equipment does not correspond to the model
+     * Suffixes MacroConnector id with string
+     * @return <code>true</code> if the model is skipped, <code>false</code> otherwise
+     */
+    public <T extends Model> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, String parametrizedName) {
+        T connectedModel = getDynamicModel(originModel, equipment, modelClass, false);
+        if (connectedModel != null) {
+            String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getMacroConnectName(), connectedModel.getName(), parametrizedName);
+            MacroConnect mc = new MacroConnect(macroConnectorId, originModel.getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
+            addMacroConnections(connectedModel, macroConnectorId, mc, varConnectionsSupplier);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -182,6 +200,8 @@ public final class MacroConnectionsAdder {
 
     /**
      * Creates macro connection with pure dynamic model from dynamic id
+     * Skip the instantiation if the equipment does not correspond to the model
+     * @return <code>true</code> if the model is skipped, <code>false</code> otherwise
      */
     public <T extends Model & ConnectionStatefulModel> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, String dynamicModelId, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier) {
         T connectedModel = getPureDynamicModel(originModel, dynamicModelId, modelClass);
@@ -193,6 +213,20 @@ public final class MacroConnectionsAdder {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Creates macro connection for all models following modelClass except the filtered equipment
+     * Add MacroConnectAttribute "from" attributes
+     * @return the number of MacroConnections created
+     */
+    public <T extends Model> int createMacroConnectionsForAll(BlackBoxModel originModel, Class<T> modelClass, Identifiable<?> filteredEquipment, Function<T, List<VarConnection>> varConnectionsSupplier) {
+        int nbMacroConnections = 0;
+        for (T model : blackBoxModelSupplier.getAllEquipmentDynamicModels(modelClass, filteredEquipment)) {
+            createMacroConnections(originModel, model, varConnectionsSupplier.apply(model), MacroConnectAttribute.ofIndex1(nbMacroConnections));
+            nbMacroConnections++;
+        }
+        return nbMacroConnections;
     }
 
     private <T extends Model> void addMacroConnections(T connectedModel, String macroConnectorId, MacroConnect mc, Function<T, List<VarConnection>> varConnectionsSupplier) {
@@ -210,7 +244,7 @@ public final class MacroConnectionsAdder {
     }
 
     private <T extends Model> T getDynamicModel(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> connectableClass, boolean throwException) {
-        Model bbm = dynamicModelGetter.apply(equipment.getId());
+        Model bbm = blackBoxModelSupplier.getEquipmentDynamicModel(equipment.getId());
         if (bbm == null) {
             bbm = defaultModelsHandler.getDefaultModel(equipment, connectableClass);
         }
@@ -222,7 +256,7 @@ public final class MacroConnectionsAdder {
     }
 
     private <T extends Model> T getPureDynamicModel(BlackBoxModel originModel, String dynamicId, Class<T> connectableClass) {
-        BlackBoxModel bbm = pureDynamicModelGetter.apply(dynamicId);
+        BlackBoxModel bbm = blackBoxModelSupplier.getPureDynamicModel(dynamicId);
         if (bbm == null) {
             DynawoSimulationReports.reportConnectedModelNotFound(reportNode, originModel.getName(), originModel.getDynamicModelId(), connectableClass.getSimpleName(), dynamicId);
             return null;
