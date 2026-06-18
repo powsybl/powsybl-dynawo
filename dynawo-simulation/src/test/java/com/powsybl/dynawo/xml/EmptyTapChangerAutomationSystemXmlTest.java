@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -37,6 +38,18 @@ class EmptyTapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest
                 .parameterSetId("tc")
                 .staticId("LOAD")
                 .build());
+        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
+                .dynamicModelId("BBM_TC_HV")
+                .parameterSetId("tc")
+                .staticId("LOAD")
+                .side(TransformerSide.HIGH_VOLTAGE)
+                .build());
+        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
+                .dynamicModelId("BBM_TC_LV")
+                .parameterSetId("tc")
+                .staticId("LOAD")
+                .side(TransformerSide.LOW_VOLTAGE)
+                .build());
     }
 
     @Test
@@ -48,8 +61,12 @@ class EmptyTapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      TapChangerAutomationSystem BBM_TC requires a connection with a LoadWithTransformers but dynamic model LoadAlphaBeta LOAD does not implement it
+                      TapChangerAutomationSystem BBM_TC requires a connection with a LoadWithTransformerModel but dynamic model LoadAlphaBeta LOAD does not implement it
                       TapChangerAutomationSystem BBM_TC connections cannot be created, the model will be skipped
+                      TapChangerAutomationSystem BBM_TC_HV requires a connection with a LoadWithTransformersModel but dynamic model LoadAlphaBeta LOAD does not implement it
+                      TapChangerAutomationSystem BBM_TC_HV connections cannot be created, the model will be skipped
+                      TapChangerAutomationSystem BBM_TC_LV requires a connection with a LoadWithTransformersModel but dynamic model LoadAlphaBeta LOAD does not implement it
+                      TapChangerAutomationSystem BBM_TC_LV connections cannot be created, the model will be skipped
                 """);
     }
 }

@@ -12,7 +12,8 @@ import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
-import com.powsybl.dynawo.models.loads.LoadWithTransformers;
+import com.powsybl.dynawo.models.loads.LoadWithTransformerModel;
+import com.powsybl.dynawo.models.loads.LoadWithTransformersModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Load;
@@ -21,6 +22,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 import java.util.Objects;
+
+import static com.powsybl.dynawo.models.TransformerSide.HIGH_VOLTAGE;
+import static com.powsybl.dynawo.models.TransformerSide.NONE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -45,7 +49,12 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
         if (connection == null) {
-            boolean isSkipped = adder.createMacroConnectionsOrSkip(this, load, LoadWithTransformers.class, this::getVarConnectionsWith);
+            boolean isSkipped = switch (side) {
+                case HIGH_VOLTAGE -> adder.createMacroConnectionsOrSkip(this, load, LoadWithTransformersModel.class, this::getHighVoltageVarConnectionsWith);
+                case LOW_VOLTAGE -> adder.createMacroConnectionsOrSkip(this, load, LoadWithTransformersModel.class, this::getLowVoltageVarConnectionsWith);
+                case NONE -> adder.createMacroConnectionsOrSkip(this, load, LoadWithTransformerModel.class, this::getVarConnectionsWith);
+            };
+
             if (isSkipped) {
                 connection = ConnectionState.CANNOT_CONNECT;
                 DynawoSimulationReports.reportEmptyModel(adder.getReportNode(), getName(), getDynamicModelId());
@@ -55,13 +64,21 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
         }
     }
 
-    private List<VarConnection> getVarConnectionsWith(LoadWithTransformers connected) {
-        return connected.getTapChangerVarConnections(side);
+    private List<VarConnection> getVarConnectionsWith(LoadWithTransformerModel connected) {
+        return connected.getTapChangerVarConnections();
+    }
+
+    private List<VarConnection> getHighVoltageVarConnectionsWith(LoadWithTransformersModel connected) {
+        return connected.getHighVoltageTapChangerVarConnections();
+    }
+
+    private List<VarConnection> getLowVoltageVarConnectionsWith(LoadWithTransformersModel connected) {
+        return connected.getLowVoltageTapChangerVarConnections();
     }
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(getTapChangerBlockingVarName(side), "tapChanger_locked"));
+        return List.of(new VarConnection(getTapChangerBlockingVarName(NONE == side ? HIGH_VOLTAGE : side), "tapChanger_locked"));
     }
 
     @Override

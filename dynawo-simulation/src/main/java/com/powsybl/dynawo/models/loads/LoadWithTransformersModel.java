@@ -8,7 +8,6 @@
 package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.dynawo.models.Model;
-import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 
 import java.util.List;
@@ -16,7 +15,9 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface LoadWithTransformers extends Model {
+public interface LoadWithTransformersModel extends Model {
 
-    List<VarConnection> getTapChangerVarConnections(TransformerSide side);
+    List<VarConnection> getHighVoltageTapChangerVarConnections();
+
+    List<VarConnection> getLowVoltageTapChangerVarConnections();
 }

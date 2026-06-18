@@ -7,9 +7,7 @@
  */
 package com.powsybl.dynawo.models.loads;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
@@ -17,12 +15,12 @@ import com.powsybl.iidm.network.Load;
 
 import java.util.List;
 
-import static com.powsybl.dynawo.models.TransformerSide.NONE;
+import static com.powsybl.dynawo.models.TransformerSide.HIGH_VOLTAGE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class LoadOneTransformerTapChanger extends LoadOneTransformer implements TapChangerModel {
+public class LoadOneTransformerTapChanger extends AbstractLoadOneTransformer implements TapChangerModel {
 
     protected LoadOneTransformerTapChanger(Load load, String parameterSetId, ModelConfig modelConfig) {
         super(load, parameterSetId, modelConfig);
@@ -38,12 +36,7 @@ public class LoadOneTransformerTapChanger extends LoadOneTransformer implements 
     }
 
     @Override
-    public List<VarConnection> getTapChangerVarConnections(TransformerSide side) {
-        throw new PowsyblException("LoadOneTransformerTapChanger already have a tap changer");
-    }
-
-    @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), "tapChanger_locked"));
+        return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE), "tapChanger_locked"));
     }
 }

@@ -26,6 +26,7 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     private static final String TAP_CHANGER_TYPE = IdentifiableType.TWO_WINDINGS_TRANSFORMER + "/" + IdentifiableType.LOAD;
     private static final String U_MEASUREMENTS_FIELD = "uMeasurements";
     private static final String TRANSFORMER_FIELD = "transformers";
+    private static final int MAX_MEASUREMENTS = 5;
 
     private final BuilderModelEquipmentsList<Identifiable<?>> tapChangerEquipments;
     private final BuilderIdListEquipmentList<Identifiable<?>> uMeasurementPoints;
@@ -121,6 +122,11 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
         super.checkData();
         isInstantiable &= tapChangerEquipments.checkEquipmentData();
         isInstantiable &= uMeasurementPoints.checkEquipmentData();
+        int points = uMeasurementPoints.getEquipments().size();
+        if (points > MAX_MEASUREMENTS) {
+            isInstantiable = false;
+            BuilderReports.reportMeasurementPointsLimit(reportNode, MAX_MEASUREMENTS, points);
+        }
     }
 
     @Override
