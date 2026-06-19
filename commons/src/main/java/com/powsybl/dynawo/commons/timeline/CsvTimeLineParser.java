@@ -18,7 +18,8 @@ import java.util.Optional;
  */
 public final class CsvTimeLineParser extends AbstractCsvParser<TimelineEntry> implements TimeLineParser {
 
-    private static final int NB_COLUMNS = 3;
+    private static final int MIN_NB_COLUMNS = 3;
+    private static final int MAX_NB_COLUMNS = 4;
 
     public CsvTimeLineParser() {
         this(DEFAULT_SEPARATOR);
@@ -26,17 +27,21 @@ public final class CsvTimeLineParser extends AbstractCsvParser<TimelineEntry> im
 
     public CsvTimeLineParser(char separator) {
         CsvParserSettings settings = setupSettings(separator, false);
-        settings.setMaxColumns(NB_COLUMNS);
+        settings.setMaxColumns(MAX_NB_COLUMNS);
         this.csvParser = new CsvParser(settings);
     }
 
     @Override
     protected Optional<TimelineEntry> createEntry(String[] tokens) {
-        return TimeLineUtil.createEvent(tokens[0], tokens[1], tokens[2]);
+
+        if (tokens.length == MIN_NB_COLUMNS) {
+            return TimeLineUtil.createEvent(tokens[0], tokens[1], tokens[2], null);
+        }
+        return TimeLineUtil.createEvent(tokens[0], tokens[1], tokens[2], tokens[3]);
     }
 
     @Override
     protected boolean hasCorrectNbColumns(int tokensSize) {
-        return NB_COLUMNS == tokensSize;
+        return MIN_NB_COLUMNS == tokensSize || MAX_NB_COLUMNS == tokensSize;
     }
 }
