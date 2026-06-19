@@ -1,0 +1,31 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:Pss5 .
+  OPTIONAL { ?id cim:PowerSystemStabilizerDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:Pss5.deadband ?deadband . }
+  OPTIONAL { ?id cim:Pss5.isfreq ?isfreq . }
+  OPTIONAL { ?id cim:Pss5.kf ?kf . }
+  OPTIONAL { ?id cim:Pss5.kpe ?kpe . }
+  OPTIONAL { ?id cim:Pss5.kpss ?kpss . }
+  OPTIONAL { ?id cim:Pss5.ktgov ?ktgov . }
+  OPTIONAL { ?id cim:Pss5.pmin ?pmin . }
+  OPTIONAL { ?id cim:Pss5.tl1 ?tl1 . }
+  OPTIONAL { ?id cim:Pss5.tl2 ?tl2 . }
+  OPTIONAL { ?id cim:Pss5.tl3 ?tl3 . }
+  OPTIONAL { ?id cim:Pss5.tl4 ?tl4 . }
+  OPTIONAL { ?id cim:Pss5.tpe ?tpe . }
+  OPTIONAL { ?id cim:Pss5.tw1 ?tw1 . }
+  OPTIONAL { ?id cim:Pss5.tw2 ?tw2 . }
+  OPTIONAL { ?id cim:Pss5.vadat ?vadat . }
+  OPTIONAL { ?id cim:Pss5.vsmn ?vsmn . }
+  OPTIONAL { ?id cim:Pss5.vsmx ?vsmx . }
+}

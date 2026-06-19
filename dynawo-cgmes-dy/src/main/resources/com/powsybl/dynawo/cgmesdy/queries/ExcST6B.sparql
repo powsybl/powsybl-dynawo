@@ -1,0 +1,33 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:ExcST6B .
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?synchronousMachineId . }
+  OPTIONAL { ?id cim:ExcST6B.tr ?tr . }
+  OPTIONAL { ?id cim:ExcST6B.vimax ?vimax . }
+  OPTIONAL { ?id cim:ExcST6B.vimin ?vimin . }
+  OPTIONAL { ?id cim:ExcST6B.kci ?kci . }
+  OPTIONAL { ?id cim:ExcST6B.kff ?kff . }
+  OPTIONAL { ?id cim:ExcST6B.kg ?kg . }
+  OPTIONAL { ?id cim:ExcST6B.kia ?kia . }
+  OPTIONAL { ?id cim:ExcST6B.klr ?klr . }
+  OPTIONAL { ?id cim:ExcST6B.km ?km . }
+  OPTIONAL { ?id cim:ExcST6B.kpa ?kpa . }
+  OPTIONAL { ?id cim:ExcST6B.kvd ?kvd . }
+  OPTIONAL { ?id cim:ExcST6B.ilr ?ilr . }
+  OPTIONAL { ?id cim:ExcST6B.tg ?tg . }
+  OPTIONAL { ?id cim:ExcST6B.ts ?ts . }
+  OPTIONAL { ?id cim:ExcST6B.tvd ?tvd . }
+  OPTIONAL { ?id cim:ExcST6B.vamax ?vamax . }
+  OPTIONAL { ?id cim:ExcST6B.vamin ?vamin . }
+  OPTIONAL { ?id cim:ExcST6B.vrmax ?vrmax . }
+  OPTIONAL { ?id cim:ExcST6B.vrmin ?vrmin . }
+}

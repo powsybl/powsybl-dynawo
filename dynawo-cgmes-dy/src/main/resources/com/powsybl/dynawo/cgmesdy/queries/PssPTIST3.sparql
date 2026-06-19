@@ -1,0 +1,46 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:PssPTIST3 .
+  OPTIONAL { ?id cim:PowerSystemStabilizerDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:PssPTIST3.a0 ?a0 . }
+  OPTIONAL { ?id cim:PssPTIST3.a1 ?a1 . }
+  OPTIONAL { ?id cim:PssPTIST3.a2 ?a2 . }
+  OPTIONAL { ?id cim:PssPTIST3.a3 ?a3 . }
+  OPTIONAL { ?id cim:PssPTIST3.a4 ?a4 . }
+  OPTIONAL { ?id cim:PssPTIST3.a5 ?a5 . }
+  OPTIONAL { ?id cim:PssPTIST3.al ?al . }
+  OPTIONAL { ?id cim:PssPTIST3.athres ?athres . }
+  OPTIONAL { ?id cim:PssPTIST3.b0 ?b0 . }
+  OPTIONAL { ?id cim:PssPTIST3.b1 ?b1 . }
+  OPTIONAL { ?id cim:PssPTIST3.b2 ?b2 . }
+  OPTIONAL { ?id cim:PssPTIST3.b3 ?b3 . }
+  OPTIONAL { ?id cim:PssPTIST3.b4 ?b4 . }
+  OPTIONAL { ?id cim:PssPTIST3.b5 ?b5 . }
+  OPTIONAL { ?id cim:PssPTIST3.dl ?dl . }
+  OPTIONAL { ?id cim:PssPTIST3.dtc ?dtc . }
+  OPTIONAL { ?id cim:PssPTIST3.dtf ?dtf . }
+  OPTIONAL { ?id cim:PssPTIST3.dtp ?dtp . }
+  OPTIONAL { ?id cim:PssPTIST3.isfreq ?isfreq . }
+  OPTIONAL { ?id cim:PssPTIST3.k ?k . }
+  OPTIONAL { ?id cim:PssPTIST3.lthres ?lthres . }
+  OPTIONAL { ?id cim:PssPTIST3.m ?m . }
+  OPTIONAL { ?id cim:PssPTIST3.nav ?nav . }
+  OPTIONAL { ?id cim:PssPTIST3.ncl ?ncl . }
+  OPTIONAL { ?id cim:PssPTIST3.pmin ?pmin . }
+  OPTIONAL { ?id cim:PssPTIST3.t1 ?t1 . }
+  OPTIONAL { ?id cim:PssPTIST3.t2 ?t2 . }
+  OPTIONAL { ?id cim:PssPTIST3.t3 ?t3 . }
+  OPTIONAL { ?id cim:PssPTIST3.t4 ?t4 . }
+  OPTIONAL { ?id cim:PssPTIST3.tp ?tp . }
+  OPTIONAL { ?id cim:PssPTIST3.vsmn ?vsmn . }
+  OPTIONAL { ?id cim:PssPTIST3.vsmx ?vsmx . }
+}

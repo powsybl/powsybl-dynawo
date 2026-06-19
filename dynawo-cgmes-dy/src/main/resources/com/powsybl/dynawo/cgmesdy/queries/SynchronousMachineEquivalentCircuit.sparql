@@ -1,0 +1,38 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:SynchronousMachineEquivalentCircuit .
+  OPTIONAL { ?id cim:SynchronousMachineDynamics.SynchronousMachine ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.mBase ?mBase . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.damping ?damping . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.inertia ?inertia . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.statorLeakageReactance ?statorLeakageReactance . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.statorResistance ?statorResistance . }
+  OPTIONAL { ?id cim:SynchronousMachineDetailed.ifdBaseType ?ifdBaseType . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.saturationFactor ?saturationFactor . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.saturationFactor120 ?saturationFactor120 . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.r1d ?r1d . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.x1d ?x1d . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.r2d ?r2d . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.x2d ?x2d . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.rfd ?rfd . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.xfd ?xfd . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.r1q ?r1q . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.x1q ?x1q . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.r2q ?r2q . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.x2q ?x2q . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.xad ?xad . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.xaq ?xaq . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.xf1d ?xf1d . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.xmd ?xmd . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.xmq ?xmq . }
+  OPTIONAL { ?id cim:SynchronousMachineEquivalentCircuit.xl ?xl . }
+}
