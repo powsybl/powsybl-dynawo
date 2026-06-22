@@ -65,9 +65,7 @@ public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
     @Override
     public BaseLoad build() {
         if (isInstantiable()) {
-            if (modelConfig.isControllable()) {
-                return new BaseLoadControllable(getEquipment(), parameterSetId, modelConfig);
-            } else if (modelConfig.isSynchronized()) {
+            if (modelConfig.isSynchronized()) {
                 return new SynchronizedLoad(getEquipment(), parameterSetId, modelConfig);
             } else {
                 return new BaseLoad(getEquipment(), parameterSetId, modelConfig);
