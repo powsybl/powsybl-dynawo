@@ -77,6 +77,9 @@
       },
       {
         "lib": "GeneratorSynchronousProportionalRegulationsInternalParameters",
+        "properties": [
+          "CONTROLLABLE"
+        ],
         "doc": "Synchronous generator, initialized with internal parameters with proportional control for governor and proportional control for voltage regulator."
       },
       {
@@ -381,6 +384,9 @@
       },
       {
         "lib": "GeneratorPVDiagramPQ",
+        "properties": [
+          "CONTROLLABLE"
+        ],
         "doc": "Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation. Active and reactive power are within the diagram PQ."
       }
     ]
@@ -629,9 +635,6 @@
     "libs": [
       {
         "lib": "LoadAlphaBeta",
-        "properties": [
-          "CONTROLLABLE"
-        ],
         "doc": "Voltage-dependent load."
       },
       {

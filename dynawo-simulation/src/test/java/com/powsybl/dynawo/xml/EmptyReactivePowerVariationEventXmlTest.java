@@ -9,7 +9,7 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.events.EventReactivePowerVariationBuilder;
-import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
+import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -26,12 +26,12 @@ class EmptyReactivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTes
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
-                .staticId("LOAD")
-                .parameterSetId("LOT")
+        dynamicModels.add(BaseGeneratorBuilder.of(network, "GeneratorPVFixed")
+                .staticId("GEN")
+                .parameterSetId("GSTWPR")
                 .build());
         eventModels.add(EventReactivePowerVariationBuilder.of(network)
-                .staticId("LOAD")
+                .staticId("GEN")
                 .startTime(1)
                 .deltaQ(1.1)
                 .build());
@@ -46,8 +46,8 @@ class EmptyReactivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTes
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      ReactivePowerVariation ReactivePowerVariation_LOAD requires a connection with a QControllableEquipmentModel but dynamic model LoadOneTransformer LOAD does not implement it
-                      ReactivePowerVariation ReactivePowerVariation_LOAD connections cannot be created, the model will be skipped
+                      ReactivePowerVariation ReactivePowerVariation_GEN requires a connection with a QControllableEquipmentModel but dynamic model GeneratorPVFixed GEN does not implement it
+                      ReactivePowerVariation ReactivePowerVariation_GEN connections cannot be created, the model will be skipped
                 """);
     }
 }
