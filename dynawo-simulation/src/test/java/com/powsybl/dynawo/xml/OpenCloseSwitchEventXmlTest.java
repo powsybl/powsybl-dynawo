@@ -56,10 +56,10 @@ class OpenCloseSwitchEventXmlTest extends AbstractDynamicModelXmlTest {
                 + Test DYD
                    Model OpenSwitch OpenSwitch_S1VL1_LD1_BREAKER instantiation OK
                    + Model OpenSwitch OpenSwitch_S1VL1_BBS_LD1_DISCONNECTOR instantiation KO
-                      'staticId' field value 'S1VL1_BBS_LD1_DISCONNECTOR' should not be a disconnector
+                      Equipment 'S1VL1_BBS_LD1_DISCONNECTOR' in 'staticId' field should be a breaker or a load breaker switch
                    Model CloseSwitch CloseSwitch_S1VL1_LD1_BREAKER instantiation OK
                    + Model CloseSwitch CloseSwitch_S1VL1_BBS_LD1_DISCONNECTOR instantiation KO
-                      'staticId' field value 'S1VL1_BBS_LD1_DISCONNECTOR' should not be a disconnector
+                      Equipment 'S1VL1_BBS_LD1_DISCONNECTOR' in 'staticId' field should be a breaker or a load breaker switch
                    Dynawo models processing
                 """);
     }

@@ -16,12 +16,12 @@ import com.powsybl.iidm.network.*;
  */
 abstract class AbstractEventOpenCloseSwitchBuilder<R extends AbstractEventModelBuilder<Switch, R>> extends AbstractEventModelBuilder<Switch, R> {
 
-    private static final EquipmentChecker<Switch> IS_BREAKER = (eq, f, r) -> {
-        if (SwitchKind.DISCONNECTOR == eq.getKind()) {
-            BuilderReports.reportDisconnector(r, f, eq.getId());
-            return false;
+    private static final EquipmentChecker<Switch> IS_BREAKER = (eq, f, r) -> switch (eq.getKind()) {
+        case BREAKER, LOAD_BREAK_SWITCH -> true;
+        case DISCONNECTOR -> {
+            BuilderReports.reportWrongSwitchKind(r, f, eq.getId());
+            yield false;
         }
-        return true;
     };
 
     AbstractEventOpenCloseSwitchBuilder(Network network, ReportNode reportNode) {
