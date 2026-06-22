@@ -43,7 +43,7 @@ class EnergizedSimplifierTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideEquipment")
-    void testEnergizedSimplifier(Network network, Consumer<Network> equipmentConfig, Function< Network, BlackBoxModel> equipmentConstructor, String expectedReport) throws IOException {
+    void testEnergizedSimplifier(Network network, Consumer<Network> equipmentConfig, Function<Network, BlackBoxModel> equipmentConstructor, String expectedReport) throws IOException {
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)

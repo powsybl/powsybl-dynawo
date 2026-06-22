@@ -16,8 +16,8 @@ import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
 import com.powsybl.dynawo.margincalculation.results.MarginCalculationResult;
 import com.powsybl.dynawo.margincalculation.results.XmlMarginCalculationResultParser;
 import com.powsybl.dynawo.margincalculation.xml.MultipleJobsXml;
-import com.powsybl.dynawo.xml.DynawoData;
 import com.powsybl.dynawo.xml.DydXml;
+import com.powsybl.dynawo.xml.DynawoData;
 import com.powsybl.dynawo.xml.JobsXml;
 
 import javax.xml.stream.XMLStreamException;

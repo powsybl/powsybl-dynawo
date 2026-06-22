@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawo.suppliers;
 
-import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynamicModelConfig;
+import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
 
 /**
  * Configures {@link DynamicModelConfig#group()} processing in {@link DynawoModelsSupplier}

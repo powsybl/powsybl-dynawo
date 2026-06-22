@@ -83,7 +83,8 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
 
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX);
-        DynawoVersion version = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, runParameters.getComputationManager(), DynaFlowProvider.getVersionCommand(config), DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
+        DynawoVersion version = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, runParameters.getComputationManager(),
+                DynaFlowProvider.getVersionCommand(config), DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
 
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         ReportNode dfsaReportNode = DynaflowReports.createDynaFlowSecurityAnalysisReportNode(runParameters.getReportNode(), network.getId());

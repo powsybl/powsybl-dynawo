@@ -17,12 +17,12 @@ import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawo.builders.AdditionalModelConfigLoader;
 import com.powsybl.dynawo.builders.ModelConfigsHandler;
+import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.commons.ExecutionEnvironmentUtils;
+import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.dynawo.json.DynawoSimulationParametersSerializer;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
-import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 
 import java.util.*;
@@ -84,8 +84,13 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     }
 
     @Override
-    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventModelsSupplier, OutputVariablesSupplier outputVariablesSupplier, String workingVariantId,
-                                                          ComputationManager computationManager, DynamicSimulationParameters parameters, ReportNode reportNode) {
+    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier,
+                                                          EventModelsSupplier eventModelsSupplier,
+                                                          OutputVariablesSupplier outputVariablesSupplier,
+                                                          String workingVariantId,
+                                                          ComputationManager computationManager,
+                                                          DynamicSimulationParameters parameters,
+                                                          ReportNode reportNode) {
         Objects.requireNonNull(dynamicModelsSupplier);
         Objects.requireNonNull(eventModelsSupplier);
         Objects.requireNonNull(outputVariablesSupplier);

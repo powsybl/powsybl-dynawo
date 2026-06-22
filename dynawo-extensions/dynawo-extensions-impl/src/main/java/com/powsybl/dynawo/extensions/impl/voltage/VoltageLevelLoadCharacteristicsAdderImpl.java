@@ -18,7 +18,8 @@ import java.util.Objects;
 /**
  * @author Gautier Bureau {@literal <gautier.bureau at rte-france.com>}
  */
-public class VoltageLevelLoadCharacteristicsAdderImpl extends AbstractExtensionAdder<VoltageLevel, VoltageLevelLoadCharacteristics> implements VoltageLevelLoadCharacteristicsAdder, ExtensionAdder<VoltageLevel, VoltageLevelLoadCharacteristics> {
+public class VoltageLevelLoadCharacteristicsAdderImpl extends AbstractExtensionAdder<VoltageLevel, VoltageLevelLoadCharacteristics>
+        implements VoltageLevelLoadCharacteristicsAdder, ExtensionAdder<VoltageLevel, VoltageLevelLoadCharacteristics> {
 
     private VoltageLevelLoadCharacteristics.Type characteristic;
 

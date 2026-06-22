@@ -125,7 +125,12 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
 
     @Override
     public TapChangerBlockingAutomationSystem build() {
-        return isInstantiable() ? new TapChangerBlockingAutomationSystem(dynamicModelId, parameterSetId, tapChangerEquipments.getEquipments(), tapChangerEquipments.getDynamicModelIds(), uMeasurementPoints.getEquipments(), modelConfig) : null;
+        return isInstantiable() ? new TapChangerBlockingAutomationSystem(dynamicModelId, parameterSetId,
+                tapChangerEquipments.getEquipments(),
+                tapChangerEquipments.getDynamicModelIds(),
+                uMeasurementPoints.getEquipments(),
+                modelConfig)
+                : null;
     }
 
     @Override

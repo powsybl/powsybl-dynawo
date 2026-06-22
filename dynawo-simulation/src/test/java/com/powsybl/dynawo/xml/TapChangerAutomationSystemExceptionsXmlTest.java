@@ -47,7 +47,7 @@ class TapChangerAutomationSystemExceptionsXmlTest extends AbstractParametrizedDy
         network = EurostagTutorialExample1Factory.create();
     }
 
-    protected void addDynamicModels(TransformerSide side, Function< Network, BlackBoxModel> loadConstructor) {
+    protected void addDynamicModels(TransformerSide side, Function<Network, BlackBoxModel> loadConstructor) {
         dynamicModels.add(loadConstructor.apply(network));
         dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
                 .dynamicModelId("BBM_TC")
@@ -59,7 +59,7 @@ class TapChangerAutomationSystemExceptionsXmlTest extends AbstractParametrizedDy
 
     @ParameterizedTest
     @MethodSource("provideTapChangers")
-    void testExceptions(TransformerSide side, Function< Network, BlackBoxModel> loadConstructor, String exceptionMessage) {
+    void testExceptions(TransformerSide side, Function<Network, BlackBoxModel> loadConstructor, String exceptionMessage) {
         Exception e = assertThrows(PowsyblException.class, this::setupDynawoContext);
         assertEquals(exceptionMessage, e.getMessage());
     }

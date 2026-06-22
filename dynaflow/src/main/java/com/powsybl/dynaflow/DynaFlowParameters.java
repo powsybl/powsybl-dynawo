@@ -66,7 +66,10 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", DEFAULT_START_TIME),
             new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", DEFAULT_STOP_TIME),
             new Parameter(PRECISION_NAME, ParameterType.DOUBLE, "Precision", DEFAULT_PRECISION),
-            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", DEFAULT_CHOSEN_OUTPUTS.stream().map(OutputTypes::name).toList(), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
+            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs",
+                    DEFAULT_CHOSEN_OUTPUTS.stream().map(OutputTypes::name).toList(),
+                    getEnumPossibleValues(OutputTypes.class),
+                    ParameterScope.TECHNICAL),
             new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", DEFAULT_TIME_STEP),
             new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", DEFAULT_MERGE_LOADS));
 

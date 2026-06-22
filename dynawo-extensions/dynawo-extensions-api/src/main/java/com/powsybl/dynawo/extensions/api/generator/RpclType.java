@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.extensions.api.generator;
 
-
 /**
  * @author Riad Benradi {@literal <riad.benradi at rte-france.com>}
  */

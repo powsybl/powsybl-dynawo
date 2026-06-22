@@ -131,36 +131,37 @@ public final class ParametersXml {
 
     private static ParametersSet createParametersSet(XMLStreamReader xmlReader, String parameterSetId) {
         ParametersSet parametersSet = new ParametersSet(parameterSetId);
-        XmlUtil.readSubElements(xmlReader, elementName -> {
-            try {
-                String name = xmlReader.getAttributeValue(null, "name");
-                ParameterType type = ParameterType.valueOf(xmlReader.getAttributeValue(null, "type"));
-                switch (elementName) {
-                    case "par" -> {
-                        String value = xmlReader.getAttributeValue(null, VALUE_ATTRIBUTE);
-                        XmlUtil.readEndElementOrThrow(xmlReader);
-                        parametersSet.addParameter(name, type, value);
-                    }
-                    case "reference" -> {
-                        String origName = xmlReader.getAttributeValue(null, "origName");
-                        String componentId = xmlReader.getAttributeValue(null, COMPONENT_ID_ATTRIBUTE);
-                        XmlUtil.readEndElementOrThrow(xmlReader);
-                        parametersSet.addReference(name, type, origName, componentId);
-                    }
-                    case "prefixPar" -> {
-                        String componentId = xmlReader.getAttributeValue(null, COMPONENT_ID_ATTRIBUTE);
-                        String value = xmlReader.getAttributeValue(null, VALUE_ATTRIBUTE);
-                        XmlUtil.readEndElementOrThrow(xmlReader);
-                        parametersSet.addPrefixParameter(name, componentId, type, value);
-                    }
-                    default -> closeAndThrowException(xmlReader, xmlReader.getLocalName());
-                }
-            } catch (XMLStreamException e) {
-                throw new UncheckedXmlStreamException(e);
-            }
-
-        });
+        XmlUtil.readSubElements(xmlReader, elementName -> readParameters(xmlReader, elementName, parametersSet));
         return parametersSet;
+    }
+
+    private static void readParameters(XMLStreamReader xmlReader, String elementName, ParametersSet parametersSet) {
+        try {
+            String name = xmlReader.getAttributeValue(null, "name");
+            ParameterType type = ParameterType.valueOf(xmlReader.getAttributeValue(null, "type"));
+            switch (elementName) {
+                case "par" -> {
+                    String value = xmlReader.getAttributeValue(null, VALUE_ATTRIBUTE);
+                    XmlUtil.readEndElementOrThrow(xmlReader);
+                    parametersSet.addParameter(name, type, value);
+                }
+                case "reference" -> {
+                    String origName = xmlReader.getAttributeValue(null, "origName");
+                    String componentId = xmlReader.getAttributeValue(null, COMPONENT_ID_ATTRIBUTE);
+                    XmlUtil.readEndElementOrThrow(xmlReader);
+                    parametersSet.addReference(name, type, origName, componentId);
+                }
+                case "prefixPar" -> {
+                    String componentId = xmlReader.getAttributeValue(null, COMPONENT_ID_ATTRIBUTE);
+                    String value = xmlReader.getAttributeValue(null, VALUE_ATTRIBUTE);
+                    XmlUtil.readEndElementOrThrow(xmlReader);
+                    parametersSet.addPrefixParameter(name, componentId, type, value);
+                }
+                default -> closeAndThrowException(xmlReader, xmlReader.getLocalName());
+            }
+        } catch (XMLStreamException e) {
+            throw new UncheckedXmlStreamException(e);
+        }
     }
 
     private static XMLInputFactory createXmlInputFactory() {

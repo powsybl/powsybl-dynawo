@@ -398,41 +398,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .withMessageTemplate("test")
                 .build();
 
-        EventModelsSupplier eventModelsSupplier = (n, r) -> List.of(
-                EventDisconnectionBuilder.of(n, r)
-                        .staticId("GH1")
-                        .startTime(10)
-                        .build(),
-                EventDisconnectionBuilder.of(n, r)
-                        .staticId("HVDC1")
-                        .startTime(20)
-                        .build(),
-                EventDisconnectionBuilder.of(n, r)
-                        .staticId("LD5")
-                        .startTime(30)
-                        .build(),
-                EventDisconnectionBuilder.of(n, r)
-                        .staticId("SHUNT")
-                        .startTime(40)
-                        .build(),
-                EventDisconnectionBuilder.of(n, r)
-                        .staticId("SVC")
-                        .startTime(50)
-                        .build(),
-                EventDisconnectionBuilder.of(n, r)
-                        .staticId("TWT")
-                        .startTime(60)
-                        .build(),
-                EventDisconnectionBuilder.of(n, r)
-                        .staticId("LINE_S2S3")
-                        .startTime(70)
-                        .build(),
-                EventActivePowerVariationBuilder.of(n, r)
-                        .staticId("GH2")
-                        .startTime(80)
-                        .deltaP(0.5)
-                        .build()
-        );
+        EventModelsSupplier eventModelsSupplier = DynawoSimulationTest::buildEventModels;
 
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/models.par"));
         ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/network.par"), "8");
@@ -507,33 +473,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .beginStep().setR(1.0).setX(2.0).setG(3.0).setB(4.0).setAlpha(5.0).setRho(6.0).endStep()
                 .add();
 
-        DynamicModelsSupplier dynamicModelsSupplier = (n, r) -> List.of(
-                DynamicOverloadManagementSystemBuilder.of(n, r)
-                        .dynamicModelId("CLA_LINE")
-                        .parameterSetId("CLA")
-                        .iMeasurement(EurostagTutorialExample1Factory.NHV1_NHV2_2)
-                        .iMeasurementSide(TwoSides.TWO)
-                        .controlledBranch(EurostagTutorialExample1Factory.NHV1_NHV2_2)
-                        .build(),
-                DynamicOverloadManagementSystemBuilder.of(n, r)
-                        .dynamicModelId("CLA_TFO")
-                        .parameterSetId("CLA")
-                        .iMeasurement(EurostagTutorialExample1Factory.NGEN_NHV1)
-                        .iMeasurementSide(TwoSides.TWO)
-                        .controlledBranch(EurostagTutorialExample1Factory.NGEN_NHV1)
-                        .build(),
-                PhaseShifterIAutomationSystemBuilder.of(n, r)
-                        .dynamicModelId("PS")
-                        .parameterSetId("PS")
-                        .transformer(EurostagTutorialExample1Factory.NHV2_NLOAD)
-                        .build(),
-                TapChangerBlockingAutomationSystemBuilder.of(n, r)
-                        .dynamicModelId("TCB")
-                        .parameterSetId("TCB")
-                        .uMeasurements(EurostagTutorialExample1Factory.NGEN)
-                        .transformers(EurostagTutorialExample1Factory.NHV2_NLOAD)
-                        .build()
-        );
+        DynamicModelsSupplier dynamicModelsSupplier = DynawoSimulationTest::buildDynamicModels;
         EventModelsSupplier eventModelsSupplier = (n, r) -> List.of();
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
@@ -544,5 +484,73 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
         assertThat(result.getStatusText()).contains("KINSOL fails to solve the problem");
+    }
+
+    private static List<DynamicModel> buildDynamicModels(Network network, ReportNode reportNode) {
+        return List.of(
+                DynamicOverloadManagementSystemBuilder.of(network, reportNode)
+                        .dynamicModelId("CLA_LINE")
+                        .parameterSetId("CLA")
+                        .iMeasurement(EurostagTutorialExample1Factory.NHV1_NHV2_2)
+                        .iMeasurementSide(TwoSides.TWO)
+                        .controlledBranch(EurostagTutorialExample1Factory.NHV1_NHV2_2)
+                        .build(),
+                DynamicOverloadManagementSystemBuilder.of(network, reportNode)
+                        .dynamicModelId("CLA_TFO")
+                        .parameterSetId("CLA")
+                        .iMeasurement(EurostagTutorialExample1Factory.NGEN_NHV1)
+                        .iMeasurementSide(TwoSides.TWO)
+                        .controlledBranch(EurostagTutorialExample1Factory.NGEN_NHV1)
+                        .build(),
+                PhaseShifterIAutomationSystemBuilder.of(network, reportNode)
+                        .dynamicModelId("PS")
+                        .parameterSetId("PS")
+                        .transformer(EurostagTutorialExample1Factory.NHV2_NLOAD)
+                        .build(),
+                TapChangerBlockingAutomationSystemBuilder.of(network, reportNode)
+                        .dynamicModelId("TCB")
+                        .parameterSetId("TCB")
+                        .uMeasurements(EurostagTutorialExample1Factory.NGEN)
+                        .transformers(EurostagTutorialExample1Factory.NHV2_NLOAD)
+                        .build()
+        );
+    }
+
+    private static List<EventModel> buildEventModels(Network network, ReportNode reportNode) {
+        return List.of(
+                EventDisconnectionBuilder.of(network, reportNode)
+                        .staticId("GH1")
+                        .startTime(10)
+                        .build(),
+                EventDisconnectionBuilder.of(network, reportNode)
+                        .staticId("HVDC1")
+                        .startTime(20)
+                        .build(),
+                EventDisconnectionBuilder.of(network, reportNode)
+                        .staticId("LD5")
+                        .startTime(30)
+                        .build(),
+                EventDisconnectionBuilder.of(network, reportNode)
+                        .staticId("SHUNT")
+                        .startTime(40)
+                        .build(),
+                EventDisconnectionBuilder.of(network, reportNode)
+                        .staticId("SVC")
+                        .startTime(50)
+                        .build(),
+                EventDisconnectionBuilder.of(network, reportNode)
+                        .staticId("TWT")
+                        .startTime(60)
+                        .build(),
+                EventDisconnectionBuilder.of(network, reportNode)
+                        .staticId("LINE_S2S3")
+                        .startTime(70)
+                        .build(),
+                EventActivePowerVariationBuilder.of(network, reportNode)
+                        .staticId("GH2")
+                        .startTime(80)
+                        .deltaP(0.5)
+                        .build()
+        );
     }
 }

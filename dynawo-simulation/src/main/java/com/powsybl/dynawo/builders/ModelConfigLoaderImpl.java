@@ -23,10 +23,10 @@ import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.buses.StandardBusBuilder;
 import com.powsybl.dynawo.models.events.*;
 import com.powsybl.dynawo.models.generators.*;
-import com.powsybl.dynawo.models.loads.*;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawo.models.lines.LineBuilder;
+import com.powsybl.dynawo.models.loads.*;
 import com.powsybl.dynawo.models.shunts.BaseShuntBuilder;
 import com.powsybl.dynawo.models.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
@@ -45,14 +45,30 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
     private static final String MODEL_CONFIG_FILENAME = "models.json";
 
     private static final Stream<BuilderConfig> BUILDER_CONFIGS = Stream.of(
-            new BuilderConfig(DynamicOverloadManagementSystemBuilder.CATEGORY, DynamicOverloadManagementSystemBuilder::of, DynamicOverloadManagementSystemBuilder::getSupportedModelInfos),
-            new BuilderConfig(DynamicTwoLevelOverloadManagementSystemBuilder.CATEGORY, DynamicTwoLevelOverloadManagementSystemBuilder::of, DynamicTwoLevelOverloadManagementSystemBuilder::getSupportedModelInfos),
-            new BuilderConfig(TapChangerAutomationSystemBuilder.CATEGORY, TapChangerAutomationSystemBuilder::of, TapChangerAutomationSystemBuilder::getSupportedModelInfos),
-            new BuilderConfig(TapChangerBlockingAutomationSystemBuilder.CATEGORY, TapChangerBlockingAutomationSystemBuilder::of, TapChangerBlockingAutomationSystemBuilder::getSupportedModelInfos),
-            new BuilderConfig(UnderVoltageAutomationSystemBuilder.CATEGORY, UnderVoltageAutomationSystemBuilder::of, UnderVoltageAutomationSystemBuilder::getSupportedModelInfos),
-            new BuilderConfig(PhaseShifterPAutomationSystemBuilder.CATEGORY, PhaseShifterPAutomationSystemBuilder::of, PhaseShifterPAutomationSystemBuilder::getSupportedModelInfos),
-            new BuilderConfig(PhaseShifterIAutomationSystemBuilder.CATEGORY, PhaseShifterIAutomationSystemBuilder::of, PhaseShifterIAutomationSystemBuilder::getSupportedModelInfos),
-            new BuilderConfig(PhaseShifterBlockingIAutomationSystemBuilder.CATEGORY, PhaseShifterBlockingIAutomationSystemBuilder::of, PhaseShifterBlockingIAutomationSystemBuilder::getSupportedModelInfos),
+            new BuilderConfig(DynamicOverloadManagementSystemBuilder.CATEGORY,
+                    DynamicOverloadManagementSystemBuilder::of,
+                    DynamicOverloadManagementSystemBuilder::getSupportedModelInfos),
+            new BuilderConfig(DynamicTwoLevelOverloadManagementSystemBuilder.CATEGORY,
+                    DynamicTwoLevelOverloadManagementSystemBuilder::of,
+                    DynamicTwoLevelOverloadManagementSystemBuilder::getSupportedModelInfos),
+            new BuilderConfig(TapChangerAutomationSystemBuilder.CATEGORY,
+                    TapChangerAutomationSystemBuilder::of,
+                    TapChangerAutomationSystemBuilder::getSupportedModelInfos),
+            new BuilderConfig(TapChangerBlockingAutomationSystemBuilder.CATEGORY,
+                    TapChangerBlockingAutomationSystemBuilder::of,
+                    TapChangerBlockingAutomationSystemBuilder::getSupportedModelInfos),
+            new BuilderConfig(UnderVoltageAutomationSystemBuilder.CATEGORY,
+                    UnderVoltageAutomationSystemBuilder::of,
+                    UnderVoltageAutomationSystemBuilder::getSupportedModelInfos),
+            new BuilderConfig(PhaseShifterPAutomationSystemBuilder.CATEGORY,
+                    PhaseShifterPAutomationSystemBuilder::of,
+                    PhaseShifterPAutomationSystemBuilder::getSupportedModelInfos),
+            new BuilderConfig(PhaseShifterIAutomationSystemBuilder.CATEGORY,
+                    PhaseShifterIAutomationSystemBuilder::of,
+                    PhaseShifterIAutomationSystemBuilder::getSupportedModelInfos),
+            new BuilderConfig(PhaseShifterBlockingIAutomationSystemBuilder.CATEGORY,
+                    PhaseShifterBlockingIAutomationSystemBuilder::of,
+                    PhaseShifterBlockingIAutomationSystemBuilder::getSupportedModelInfos),
             new BuilderConfig(StandardBusBuilder.CATEGORY, StandardBusBuilder::of, StandardBusBuilder::getSupportedModelInfos),
             new BuilderConfig(InfiniteBusBuilder.CATEGORY, InfiniteBusBuilder::of, InfiniteBusBuilder::getSupportedModelInfos),
             new BuilderConfig(TransformerFixedRatioBuilder.CATEGORY, TransformerFixedRatioBuilder::of, TransformerFixedRatioBuilder::getSupportedModelInfos),
