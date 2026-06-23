@@ -65,7 +65,9 @@ Disconnect {
 ```
 
 ### Open Switch
-Open a breaker or a load break switch.
+Open:
+- breaker
+- load break switch
 
 **Groovy script:**
 ```groovy
@@ -94,7 +96,9 @@ OpenSwitch {
 ```
 
 ### Close Switch
-Close a breaker or a load break switch.
+Close: 
+- breaker
+- load break switch
 
 **Groovy script:**
 ```groovy
@@ -298,6 +302,8 @@ NodeFault {
 ## Event model builder list
 Ultimately, all groovy scripts or JSON configuration file call the dedicated builders that can be used directly by developers in order to create a custom `EventModelsSupplier`:
 - EventDisconnectionBuilder
+- EventOpenSwitchBuilder
+- EventCloseSwitchBuilder
 - EventActivePowerVariationBuilder
 - EventReactivePowerVariationBuilder
 - EventReferenceVoltageVariationBuilder

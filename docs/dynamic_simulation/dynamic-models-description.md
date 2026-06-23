@@ -282,7 +282,7 @@ Grid forming converter model with matching control.
 - `ElectronicLoad`:
 Constant power load with disconnection and reconnections depending on the voltage.
 
-- `LoadAlphaBeta` ([_controllable_](base-additional-models.md#library-properties)):
+- `LoadAlphaBeta`:
 Voltage-dependent load.
 
 - `LoadAlphaBetaMotor`:
