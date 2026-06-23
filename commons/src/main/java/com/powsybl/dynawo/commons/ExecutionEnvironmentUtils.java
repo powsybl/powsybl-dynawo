@@ -19,16 +19,8 @@ public final class ExecutionEnvironmentUtils {
     private ExecutionEnvironmentUtils() {
     }
 
-    public static ExecutionEnvironment createVersionEnv(AbstractDynawoConfig config, String workingDir) {
-        return createSimulationEnv(config, workingDir + VERSION_INFIX, null);
-    }
-
     public static ExecutionEnvironment createVersionEnv(AbstractDynawoConfig config, String workingDir, String dumpDir) {
         return createSimulationEnv(config, workingDir + VERSION_INFIX, dumpDir);
-    }
-
-    public static ExecutionEnvironment createSimulationEnv(AbstractDynawoConfig config, String workingDir) {
-        return createSimulationEnv(config, workingDir, null);
     }
 
     public static ExecutionEnvironment createSimulationEnv(AbstractDynawoConfig config, String workingDir, String dumpDir) {
