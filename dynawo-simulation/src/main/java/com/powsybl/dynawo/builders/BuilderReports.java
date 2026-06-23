@@ -222,4 +222,13 @@ public final class BuilderReports {
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
+
+    public static void reportMeasurementPointsLimit(ReportNode reportNode, int maxPoints, int actualPoints) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.measurementPointsLimit")
+                .withUntypedValue("maxPoints", maxPoints)
+                .withUntypedValue("actualPoints", actualPoints)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
 }

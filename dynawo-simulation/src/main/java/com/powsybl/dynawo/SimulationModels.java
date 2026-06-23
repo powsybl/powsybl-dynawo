@@ -39,8 +39,8 @@ public final class SimulationModels implements DynawoData {
         List<MacroConnect> macroConnectList = new ArrayList<>();
         Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
         Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
-        MacroConnectionsAdder adder = new MacroConnectionsAdder(bbmSupplier::getEquipmentDynamicModel,
-                bbmSupplier::getPureDynamicModel, macroConnectList::add, macroConnectorsMap::computeIfAbsent, reportNode);
+        MacroConnectionsAdder adder = new MacroConnectionsAdder(bbmSupplier, macroConnectList::add,
+                macroConnectorsMap::computeIfAbsent, reportNode);
         ParameterUpdater parameterUpdater = new ParameterUpdater() {
             @Override
             public void addParameter(String parameterSetId, String name, ParameterType type, String value) {
