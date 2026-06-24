@@ -135,7 +135,10 @@ public final class MacroConnectionsAdder {
      * Suffixes MacroConnector id with string
      * @return <code>true</code> if the model is skipped, <code>false</code> otherwise
      */
-    public <T extends Model> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, String parametrizedName) {
+    public <T extends Model> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, Identifiable<?> equipment,
+                                                                  Class<T> modelClass,
+                                                                  Function<T, List<VarConnection>> varConnectionsSupplier,
+                                                                  String parametrizedName) {
         T connectedModel = getDynamicModel(originModel, equipment, modelClass, false);
         if (connectedModel != null) {
             String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getMacroConnectName(), connectedModel.getName(), parametrizedName);
@@ -246,7 +249,9 @@ public final class MacroConnectionsAdder {
      * Add MacroConnectAttribute "from" attributes
      * @return the number of MacroConnections created
      */
-    public <T extends Model> int createMacroConnectionsForAll(BlackBoxModel originModel, Class<T> modelClass, Identifiable<?> filteredEquipment, Function<T, List<VarConnection>> varConnectionsSupplier) {
+    public <T extends Model> int createMacroConnectionsForAll(BlackBoxModel originModel, Class<T> modelClass,
+                                                              Identifiable<?> filteredEquipment,
+                                                              Function<T, List<VarConnection>> varConnectionsSupplier) {
         int nbMacroConnections = 0;
         for (T model : blackBoxModelSupplier.getAllEquipmentDynamicModels(modelClass, filteredEquipment)) {
             createMacroConnections(originModel, model, varConnectionsSupplier.apply(model), MacroConnectAttribute.ofIndex1(nbMacroConnections));

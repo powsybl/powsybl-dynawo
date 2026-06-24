@@ -86,7 +86,7 @@ public class DynawoLocalCommandExecutor implements LocalCommandExecutor {
                 validateInputs(workingDir);
                 copyOutputs(workingDir);
             }
-        } catch (Exception exception) {
+        } catch (IOException exception) {
             LOGGER.error(exception.toString(), exception);
             return -1;
         }

@@ -103,7 +103,7 @@ public final class ConstraintsReader {
             getLimitViolation(network, name, kind, limit, value, side, acceptableDuration)
                     .ifPresent(lvRead -> addOrDismiss(lvRead, limitViolations));
         } catch (XMLStreamException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedXmlStreamException(e);
         }
     }
 

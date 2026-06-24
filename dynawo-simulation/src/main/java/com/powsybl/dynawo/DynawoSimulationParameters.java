@@ -158,11 +158,14 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     public static DynawoSimulationParameters load(PlatformConfig platformConfig, FileSystem fileSystem) {
         DynawoSimulationParameters parameters = new DynawoSimulationParameters();
         platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS)
-                .ifPresent(c -> load(c, parameters,
-                        platformConfig.getConfigDir()
-                                .map(configDir -> (Function<String, Path>) configDir::resolve)
-                                .orElse(fileSystem::getPath)));
+                .ifPresent(c -> load(c, parameters, getFilePathResolver(platformConfig, fileSystem)));
         return parameters;
+    }
+
+    private static Function<String, Path> getFilePathResolver(PlatformConfig platformConfig, FileSystem fileSystem) {
+        return platformConfig.getConfigDir()
+                .map(configDir -> (Function<String, Path>) configDir::resolve)
+                .orElse(fileSystem::getPath);
     }
 
     private static void load(ModuleConfig moduleConfig, DynawoSimulationParameters parameters,
