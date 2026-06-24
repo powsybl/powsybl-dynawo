@@ -9,7 +9,7 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
-import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
+import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -27,12 +27,12 @@ class EmptyActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest 
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
-                .staticId("LOAD")
-                .parameterSetId("LOT")
+        dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousThreeWindingsPmConstVRNordic")
+                .staticId("GEN")
+                .parameterSetId("GSTWPR")
                 .build());
         eventModels.add(EventActivePowerVariationBuilder.of(network)
-                .staticId("LOAD")
+                .staticId("GEN")
                 .startTime(1)
                 .deltaP(1.1)
                 .build());
@@ -43,12 +43,12 @@ class EmptyActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest 
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "apv_empty_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
-        validate("parameters.xsd", "empty_par.xml", tmpDir.resolve(context.getSimulationParFile()));
+        validate("parameters.xsd", "empty_omega_ref_par.xml", tmpDir.resolve(context.getSimulationParFile()));
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      ActivePowerVariation ActivePowerVariation_LOAD requires a connection with a PControllableEquipmentModel but dynamic model LoadOneTransformer LOAD does not implement it
-                      ActivePowerVariation ActivePowerVariation_LOAD connections cannot be created, the model will be skipped
+                      ActivePowerVariation ActivePowerVariation_GEN requires a connection with a PControllableEquipmentModel but dynamic model GeneratorSynchronousThreeWindingsPmConstVRNordic GEN does not implement it
+                      ActivePowerVariation ActivePowerVariation_GEN connections cannot be created, the model will be skipped
                 """);
     }
 }

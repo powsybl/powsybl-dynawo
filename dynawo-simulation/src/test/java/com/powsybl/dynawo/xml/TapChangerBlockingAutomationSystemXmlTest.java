@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawo.xml;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerTapChangerBuilder;
 import com.powsybl.dynawo.models.loads.LoadTwoTransformersTapChangersBuilder;
@@ -64,14 +64,20 @@ class TapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlT
     }
 
     @Test
-    void testMonitoredEquipmentsLimit() {
-        TapChangerBlockingAutomationSystemBuilder builder = TapChangerBlockingAutomationSystemBuilder.of(network)
+    void testMonitoredEquipmentsLimit() throws IOException {
+        BlackBoxModel bbm = TapChangerBlockingAutomationSystemBuilder.of(network, reportNode)
                 .dynamicModelId("TapChanger1")
                 .parameterSetId("TapChangerPar")
                 .transformers("NGEN_NHV1")
-                .uMeasurements("NHV1", "NHV1", "NHV1", "NHV1", "NHV1", "NHV1");
-        Exception e = assertThrows(PowsyblException.class, builder::build);
-        assertEquals("Tap changer blocking automation system can only handle 5 measurement points at the same time", e.getMessage());
+                .uMeasurements("NHV1", "NHV1", "NHV1", "NHV1", "NHV1", "NHV1")
+                .build();
+        assertNull(bbm);
+        checkReport("""
+                + Test DYD
+                   Dynawo models processing
+                   + Model TapChangerBlockingAutomationSystem TapChanger1 instantiation KO
+                      The model cannot handle more than 5 measurement points but 6 points have been set
+                """);
     }
 
     @Test

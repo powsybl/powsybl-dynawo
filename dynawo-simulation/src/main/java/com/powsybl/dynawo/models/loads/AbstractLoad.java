@@ -11,6 +11,8 @@ import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.InjectionModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawo.models.events.PControllableEquipmentModel;
+import com.powsybl.dynawo.models.events.QControllableEquipmentModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Load;
 
@@ -20,7 +22,7 @@ import java.util.List;
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> implements InjectionModel {
+public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> implements InjectionModel, PControllableEquipmentModel, QControllableEquipmentModel {
 
     protected final String terminalVarName;
 
@@ -43,5 +45,15 @@ public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> 
     @Override
     public String getSwitchOffSignalEventVarName() {
         return "load_switchOffSignal2";
+    }
+
+    @Override
+    public String getDeltaPVarName() {
+        return "load_deltaP";
+    }
+
+    @Override
+    public String getDeltaQVarName() {
+        return "load_deltaQ";
     }
 }

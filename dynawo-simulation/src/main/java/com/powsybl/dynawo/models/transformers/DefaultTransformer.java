@@ -14,7 +14,7 @@ import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 
-import static com.powsybl.dynawo.models.TransformerSide.NONE;
+import static com.powsybl.dynawo.models.TransformerSide.HIGH_VOLTAGE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -62,7 +62,7 @@ public class DefaultTransformer extends AbstractDefaultModel implements Transfor
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), "@NAME@_TAP_CHANGER_locked_value"));
+        return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE), "@NAME@_TAP_CHANGER_locked_value"));
     }
 
     @Override

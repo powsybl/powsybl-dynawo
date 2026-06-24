@@ -20,14 +20,14 @@ import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlackBoxModel {
-
-    private static final int MAX_MEASUREMENTS = 5;
 
     private final List<Identifiable<?>> tapChangerEquipments;
     private final List<String> tapChangerAutomationSystemIds;
@@ -48,9 +48,6 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
         }
         if (uMeasurements.isEmpty()) {
             throw new PowsyblException("No measurement points");
-        }
-        if (uMeasurements.size() > MAX_MEASUREMENTS) {
-            throw new PowsyblException("Tap changer blocking automation system can only handle " + MAX_MEASUREMENTS + " measurement points at the same time");
         }
     }
 
