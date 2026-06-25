@@ -549,11 +549,11 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         .startTime(80)
                         .deltaP(0.5)
                         .build(),
-                EventOpenSwitchBuilder.of(n, r)
+                EventOpenSwitchBuilder.of(network, reportNode)
                         .staticId("S1VL1_LD1_BREAKER")
                         .startTime(85)
                         .build(),
-                EventCloseSwitchBuilder.of(n, r)
+                EventCloseSwitchBuilder.of(network, reportNode)
                         .staticId("S1VL1_LD1_BREAKER")
                         .startTime(87)
                         .build()
