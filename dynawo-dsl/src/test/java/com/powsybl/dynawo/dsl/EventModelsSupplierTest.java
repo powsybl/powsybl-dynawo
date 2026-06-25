@@ -18,6 +18,7 @@ import com.powsybl.dynawo.LfResultsUtils;
 import com.powsybl.dynawo.models.events.*;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -90,7 +91,13 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/eventModels/reactivePowerVariation.groovy", EventReactivePowerVariation.class,
                         EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ReactivePowerVariation_LOAD", null, 2),
                 Arguments.of("/eventModels/referenceVoltageVariation.groovy", EventReferenceVoltageVariation.class,
-                        EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "ReferenceVoltageVariation_GEN", "Step", 2)
+                        EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "ReferenceVoltageVariation_GEN", "Step", 2),
+                Arguments.of("/eventModels/openSwitch.groovy", EventSwitchOpen.class,
+                        FourSubstationsNodeBreakerFactory.create(), "S1VL1_LD1_BREAKER", "OpenSwitch_S1VL1_LD1_BREAKER",
+                        "EventConnectedStatus", 2),
+                Arguments.of("/eventModels/closeSwitch.groovy", EventSwitchOpen.class,
+                        FourSubstationsNodeBreakerFactory.create(), "S1VL1_LD1_BREAKER", "CloseSwitch_S1VL1_LD1_BREAKER",
+                        "EventConnectedStatus", 2)
         );
     }
 

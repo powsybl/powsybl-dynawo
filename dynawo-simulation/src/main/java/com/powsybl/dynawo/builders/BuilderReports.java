@@ -196,6 +196,15 @@ public final class BuilderReports {
                 .add();
     }
 
+    public static void reportWrongSwitchKind(ReportNode reportNode, String fieldName, String staticId) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.wrongSwitchKind")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue(STATIC_ID, staticId)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
     public static void reportNotEnergized(ReportNode reportNode, String fieldName, String staticId) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.notEnergized")

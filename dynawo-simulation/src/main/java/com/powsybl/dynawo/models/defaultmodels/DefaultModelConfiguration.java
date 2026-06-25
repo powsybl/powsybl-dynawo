@@ -22,6 +22,8 @@ import com.powsybl.dynawo.models.loads.DefaultLoad;
 import com.powsybl.dynawo.models.shunts.DefaultShunt;
 import com.powsybl.dynawo.models.shunts.ShuntModel;
 import com.powsybl.dynawo.models.svarcs.DefaultStaticVarCompensator;
+import com.powsybl.dynawo.models.switches.DefaultSwitch;
+import com.powsybl.dynawo.models.switches.SwitchModel;
 import com.powsybl.dynawo.models.transformers.DefaultTransformer;
 import com.powsybl.dynawo.models.transformers.TransformerModel;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -58,6 +60,9 @@ public enum DefaultModelConfiguration {
     STATIC_VAR_COMPENSATOR(IdentifiableType.STATIC_VAR_COMPENSATOR,
             InjectionModel.class,
             new DefaultModelFactory<>(DefaultStaticVarCompensator::new)),
+    SWITCH(IdentifiableType.SWITCH,
+            SwitchModel.class,
+            new DefaultModelFactory<>(DefaultSwitch::new)),
     TWO_WINDINGS_TRANSFORMER(IdentifiableType.TWO_WINDINGS_TRANSFORMER,
             TransformerModel.class,
             new DefaultModelFactory<>(DefaultTransformer::new));
