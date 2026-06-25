@@ -86,7 +86,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         private final String outputIidm;
         private final String outputResults;
 
-        public LocalCommandExecutorMock(String stdoutFileRef, String outputIidm, String outputResults) {
+        LocalCommandExecutorMock(String stdoutFileRef, String outputIidm, String outputResults) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
             this.outputIidm = Objects.requireNonNull(outputIidm);
             this.outputResults = Objects.requireNonNull(outputResults);
@@ -111,7 +111,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
 
         private final String stdOutFileRef;
 
-        public EmptyLocalCommandExecutorMock(String stdoutFileRef) {
+        EmptyLocalCommandExecutorMock(String stdoutFileRef) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
         }
 

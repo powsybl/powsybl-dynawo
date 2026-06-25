@@ -13,7 +13,7 @@
     <parent>
         <groupId>com.powsybl</groupId>
         <artifactId>powsybl-parent</artifactId>
-        <version>24</version>
+        <version>29</version>
         <relativePath />
     </parent>
 
@@ -59,8 +59,8 @@
 
     <properties>
         <java.version>21</java.version>
-        <powsybl-core.version>7.2.0</powsybl-core.version>
-        <groovy.version>4.0.26</groovy.version> <!-- used for groovy-json but also for groovydoc (dynawo-dsl) -->
+        <powsybl-core.version>7.3.0-RC2</powsybl-core.version>
+        <groovy.version>4.0.32</groovy.version> <!-- used for groovy-json but also for groovydoc (dynawo-dsl) -->
         <asciitable.version>0.3.2</asciitable.version>
         <jackson.version>2.21.1</jackson.version>
         <sonar.coverage.jacoco.xmlReportPaths>

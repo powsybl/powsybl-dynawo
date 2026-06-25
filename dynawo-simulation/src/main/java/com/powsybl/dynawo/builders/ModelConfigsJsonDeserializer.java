@@ -29,6 +29,19 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
         super(Map.class);
     }
 
+    private static final class ParsingContext {
+        String lib = null;
+        String alias = null;
+        String internalModelPrefix = null;
+        String doc = "";
+        List<String> properties = Collections.emptyList();
+        DynawoVersion minVersion = VersionInterval.MODEL_DEFAULT_MIN_VERSION;
+        DynawoVersion maxVersion = null;
+        String endCause = null;
+        final List<VarMapping> varMapping = new ArrayList<>(0);
+        final Map<String, String> varPrefix = HashMap.newHashMap(0);
+    }
+
     @Override
     public Map<String, ModelConfigs> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         Map<String, ModelConfigs> configMap = new HashMap<>();
@@ -52,7 +65,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
                     yield true;
                 }
                 case "libs" -> {
-                    JsonUtil.parseObjectArray(parser, mc -> parsingContext.libs.put(mc.name(), mc), ModelConfigsJsonDeserializer::parseModelConfig);
+                    JsonUtil.parseObjectArray(parser, mc -> parsingContext.libs.put(mc.name(), mc), ModelConfigsJsonDeserializer::createModelConfig);
                     yield true;
                 }
                 default -> false;
@@ -61,71 +74,62 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
         return new ModelConfigs(parsingContext.libs, parsingContext.defaultLib);
     }
 
-    private static ModelConfig parseModelConfig(JsonParser parser) {
-        var parsingContext = new Object() {
-            String lib = null;
-            String alias = null;
-            String internalModelPrefix = null;
-            String doc = "";
-            List<String> properties = Collections.emptyList();
-            DynawoVersion minVersion = VersionInterval.MODEL_DEFAULT_MIN_VERSION;
-            DynawoVersion maxVersion = null;
-            String endCause = null;
-            final List<VarMapping> varMapping = new ArrayList<>(0);
-            final Map<String, String> varPrefix = HashMap.newHashMap(0);
-        };
-        JsonUtil.parseObject(parser, name ->
-            switch (parser.currentName()) {
-                case "lib" -> {
-                    parsingContext.lib = parser.nextTextValue();
-                    yield true;
-                }
-                case "properties" -> {
-                    parsingContext.properties = JsonUtil.parseStringArray(parser);
-                    yield true;
-                }
-                case "internalModelPrefix" -> {
-                    parsingContext.internalModelPrefix = parser.nextTextValue();
-                    yield true;
-                }
-                case "alias" -> {
-                    parsingContext.alias = parser.nextTextValue();
-                    yield true;
-                }
-                case "doc" -> {
-                    parsingContext.doc = parser.nextTextValue();
-                    yield true;
-                }
-                case "minVersion" -> {
-                    parsingContext.minVersion = DynawoVersion.createFromString(parser.nextTextValue());
-                    yield true;
-                }
-                case "maxVersion" -> {
-                    parsingContext.maxVersion = DynawoVersion.createFromString(parser.nextTextValue());
-                    yield true;
-                }
-                case "endCause" -> {
-                    parsingContext.endCause = parser.nextTextValue();
-                    yield true;
-                }
-                case "macroStaticRef" -> {
-                    JsonUtil.parseObjectArray(parser, parsingContext.varMapping::add,
-                            ModelConfigsJsonDeserializer::parseVarMapping);
-                    yield true;
-                }
-                case "variablePrefix" -> {
-                    JsonUtil.parseObjectArray(parser,
-                            vp -> parsingContext.varPrefix.put(vp.getLeft(), vp.getRight() + "_" + vp.getLeft()),
-                            ModelConfigsJsonDeserializer::parseVarPrefix);
-                    yield true;
-                }
-                default -> false;
-            }
-        );
+    private static ModelConfig createModelConfig(JsonParser parser) {
+        ParsingContext parsingContext = new ParsingContext();
+        JsonUtil.parseObject(parser, name -> parseModelConfig(parser, parsingContext));
         return new ModelConfig(parsingContext.lib, parsingContext.alias, parsingContext.internalModelPrefix,
                 parsingContext.properties, parsingContext.doc,
                 new VersionInterval(parsingContext.minVersion, parsingContext.maxVersion, parsingContext.endCause),
                 parsingContext.varMapping, parsingContext.varPrefix);
+    }
+
+    private static boolean parseModelConfig(JsonParser parser, ParsingContext parsingContext) throws IOException {
+        return switch (parser.currentName()) {
+            case "lib" -> {
+                parsingContext.lib = parser.nextTextValue();
+                yield true;
+            }
+            case "properties" -> {
+                parsingContext.properties = JsonUtil.parseStringArray(parser);
+                yield true;
+            }
+            case "internalModelPrefix" -> {
+                parsingContext.internalModelPrefix = parser.nextTextValue();
+                yield true;
+            }
+            case "alias" -> {
+                parsingContext.alias = parser.nextTextValue();
+                yield true;
+            }
+            case "doc" -> {
+                parsingContext.doc = parser.nextTextValue();
+                yield true;
+            }
+            case "minVersion" -> {
+                parsingContext.minVersion = DynawoVersion.createFromString(parser.nextTextValue());
+                yield true;
+            }
+            case "maxVersion" -> {
+                parsingContext.maxVersion = DynawoVersion.createFromString(parser.nextTextValue());
+                yield true;
+            }
+            case "endCause" -> {
+                parsingContext.endCause = parser.nextTextValue();
+                yield true;
+            }
+            case "macroStaticRef" -> {
+                JsonUtil.parseObjectArray(parser, parsingContext.varMapping::add,
+                        ModelConfigsJsonDeserializer::parseVarMapping);
+                yield true;
+            }
+            case "variablePrefix" -> {
+                JsonUtil.parseObjectArray(parser,
+                        vp -> parsingContext.varPrefix.put(vp.getLeft(), vp.getRight() + "_" + vp.getLeft()),
+                        ModelConfigsJsonDeserializer::parseVarPrefix);
+                yield true;
+            }
+            default -> false;
+        };
     }
 
     private static VarMapping parseVarMapping(JsonParser parser) {

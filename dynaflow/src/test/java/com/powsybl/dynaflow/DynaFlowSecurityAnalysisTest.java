@@ -60,11 +60,11 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         private final List<String> constraints;
         private final String aggregatedResult;
 
-        public LocalCommandExecutorMock(String stdoutFileRef, String inputFile) {
+        LocalCommandExecutorMock(String stdoutFileRef, String inputFile) {
             this(stdoutFileRef, inputFile, null, List.of(), List.of(), null);
         }
 
-        public LocalCommandExecutorMock(String stdoutFileRef, String inputFile, String contingencyFile, List<String> contingencyIds, List<String> outputConstraints, String aggregatedResult) {
+        LocalCommandExecutorMock(String stdoutFileRef, String inputFile, String contingencyFile, List<String> contingencyIds, List<String> outputConstraints, String aggregatedResult) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
             this.inputFile = inputFile;
             this.contingencyFile = contingencyFile;

@@ -17,8 +17,8 @@ import com.powsybl.dynawo.commons.timeline.TimeLineParser;
 import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 import com.powsybl.dynawo.contingency.results.ResultsUtil;
 import com.powsybl.dynawo.contingency.results.Status;
-import com.powsybl.dynawo.contingency.xml.XmlScenarioResultParser;
 import com.powsybl.dynawo.contingency.xml.ConstraintsReader;
+import com.powsybl.dynawo.contingency.xml.XmlScenarioResultParser;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.*;
@@ -36,9 +36,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.powsybl.dynawo.contingency.ContingencyReports.createContingencyReportNode;
 import static com.powsybl.dynawo.contingency.ContingencyConstants.AGGREGATED_RESULTS;
 import static com.powsybl.dynawo.contingency.ContingencyConstants.CONSTRAINTS_FOLDER;
+import static com.powsybl.dynawo.contingency.ContingencyReports.createContingencyReportNode;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}

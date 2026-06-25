@@ -8,14 +8,18 @@
 package com.powsybl.dynawo.margincalculation;
 
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynawo.*;
+import com.powsybl.dynawo.AbstractContextBuilder;
+import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.FinalStepConfig;
+import com.powsybl.dynawo.SimulationTime;
+import com.powsybl.dynawo.algorithms.ContingencyEventModels;
+import com.powsybl.dynawo.algorithms.ContingencyEventModelsFactory;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadVariationAreaAutomationSystem;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsProportionalScalable;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.loads.AbstractLoad;
-import com.powsybl.dynawo.algorithms.ContingencyEventModels;
-import com.powsybl.dynawo.algorithms.ContingencyEventModelsFactory;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DynawoData;
 import com.powsybl.iidm.modification.scalable.Scalable;

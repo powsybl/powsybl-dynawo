@@ -8,8 +8,6 @@
 package com.powsybl.dynawo.commons.dynawologs;
 
 import com.powsybl.dynawo.commons.AbstractCsvParser;
-import com.univocity.parsers.csv.CsvParser;
-import com.univocity.parsers.csv.CsvParserSettings;
 
 import java.util.Optional;
 
@@ -27,8 +25,7 @@ public final class CsvLogParser extends AbstractCsvParser<LogEntry> {
     }
 
     public CsvLogParser(char separator) {
-        CsvParserSettings settings = setupSettings(separator, false);
-        this.csvParser = new CsvParser(settings);
+        super(separator, false);
     }
 
     @Override

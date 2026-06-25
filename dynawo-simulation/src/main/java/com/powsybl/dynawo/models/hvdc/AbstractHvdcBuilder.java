@@ -9,8 +9,8 @@ package com.powsybl.dynawo.models.hvdc;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.AbstractEquipmentModelBuilder;
-import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.builders.BuilderReports;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.iidm.network.*;
 
 /**

@@ -7,10 +7,10 @@
 package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Terminal;

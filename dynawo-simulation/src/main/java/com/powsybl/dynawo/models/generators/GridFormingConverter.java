@@ -9,12 +9,12 @@ package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;

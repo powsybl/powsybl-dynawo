@@ -30,7 +30,7 @@ public abstract class AbstractXmlAggregatedResultParser<T> extends AbstractXmlPa
     private static final String TIME = "time";
 
     protected static boolean readScenarioResult(String elementName, XMLStreamReader xmlReader, Consumer<ScenarioResult> scenarioConsumer) {
-        if (elementName.equals("scenarioResults")) {
+        if ("scenarioResults".equals(elementName)) {
             String id = xmlReader.getAttributeValue(null, ID);
             String status = xmlReader.getAttributeValue(null, STATUS);
             List<FailedCriterion> failedCriteria = new ArrayList<>();
@@ -43,7 +43,7 @@ public abstract class AbstractXmlAggregatedResultParser<T> extends AbstractXmlPa
 
     protected static void readFailedCriterion(String elementName, XMLStreamReader xmlReader, Consumer<FailedCriterion> resultConsumer) {
         try {
-            if (elementName.equals("criterionNonRespected")) {
+            if ("criterionNonRespected".equals(elementName)) {
                 String description = xmlReader.getAttributeValue(null, ID);
                 String time = xmlReader.getAttributeValue(null, TIME);
                 XmlUtil.readEndElementOrThrow(xmlReader);

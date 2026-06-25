@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class IToolsTest extends AbstractDynawoTest {
 
-    private static CommandLineTools TOOLS;
+    private static CommandLineTools tools;
     private ToolInitializationContext toolContext;
     private FileSystem fileSystem;
     private ByteArrayOutputStream bout;
@@ -44,7 +44,7 @@ class IToolsTest extends AbstractDynawoTest {
 
     @BeforeAll
     static void beforeAll() {
-        TOOLS = new CommandLineTools(List.of(
+        tools = new CommandLineTools(List.of(
                 new RunLoadFlowTool(),
                 new SecurityAnalysisTool(),
                 new DynamicSimulationTool(),
@@ -118,7 +118,7 @@ class IToolsTest extends AbstractDynawoTest {
     @Test
     void testLF() throws IOException {
         String[] args = {"loadflow", "--case-file", "IEEE14.iidm"};
-        int status = TOOLS.run(args, toolContext);
+        int status = tools.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
         String expectedOutput = new String(getResourceAsStream("/itools/lf_out.txt").readAllBytes(), StandardCharsets.UTF_8);
@@ -130,7 +130,7 @@ class IToolsTest extends AbstractDynawoTest {
     void testSA() throws IOException {
         String[] args = {"security-analysis", "--case-file", "IEEE14.iidm",
             "--contingencies-file", "contingencies.groovy"};
-        int status = TOOLS.run(args, toolContext);
+        int status = tools.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
         String expectedOutput = new String(getResourceAsStream("/itools/sa_out.txt").readAllBytes(), StandardCharsets.UTF_8);
@@ -142,7 +142,7 @@ class IToolsTest extends AbstractDynawoTest {
     void testDynaSim() throws IOException {
         String[] args = {"dynamic-simulation", "--case-file", "IEEE14.iidm",
             "--dynamic-models-file", "dynamicModels.groovy"};
-        int status = TOOLS.run(args, toolContext);
+        int status = tools.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
         String expectedOutput = new String(getResourceAsStream("/itools/dyna_sim_out.txt").readAllBytes(), StandardCharsets.UTF_8);
@@ -156,7 +156,7 @@ class IToolsTest extends AbstractDynawoTest {
             "--dynamic-models-file", "dynamicModels.groovy",
             "--event-models-file", "eventModels.groovy",
             "--output-variables-file", "outputVariables.groovy"};
-        int status = TOOLS.run(args, toolContext);
+        int status = tools.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
         String expectedOutput = new String(getResourceAsStream("/itools/dyna_sim_event_ov_out.txt").readAllBytes(), StandardCharsets.UTF_8);
@@ -167,7 +167,7 @@ class IToolsTest extends AbstractDynawoTest {
     @Test
     void testDynamicModelsList() throws IOException {
         String[] args = {"list-dynamic-simulation-models"};
-        int status = TOOLS.run(args, toolContext);
+        int status = tools.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
         String expectedOutput = new String(getResourceAsStream("/itools/list_models_out.txt").readAllBytes(), StandardCharsets.UTF_8);
@@ -180,7 +180,7 @@ class IToolsTest extends AbstractDynawoTest {
         String[] args = {"dynamic-security-analysis", "--case-file", "IEEE14.iidm",
             "--dynamic-models-file", "dynamicModels.groovy",
             "--contingencies-file", "contingencies.groovy"};
-        int status = TOOLS.run(args, toolContext);
+        int status = tools.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
         String expectedOutput = new String(getResourceAsStream("/itools/dsa_out.txt").readAllBytes(), StandardCharsets.UTF_8);
@@ -194,7 +194,7 @@ class IToolsTest extends AbstractDynawoTest {
             "--dynamic-models-file", "dynamicModels.groovy",
             "--event-models-file", "eventModels.groovy",
             "--contingencies-file", "contingencies.groovy"};
-        int status = TOOLS.run(args, toolContext);
+        int status = tools.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
         String expectedOutput = new String(getResourceAsStream("/itools/dsa_event_out.txt").readAllBytes(), StandardCharsets.UTF_8);
@@ -208,7 +208,7 @@ class IToolsTest extends AbstractDynawoTest {
             "--dynamic-models-file", "dynamicModels.groovy",
             "--contingencies-file", "contingencies.groovy",
             "--load-variations-file", "loadsVariations.json"};
-        int status = TOOLS.run(args, toolContext);
+        int status = tools.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
         String expectedOutput = new String(getResourceAsStream("/itools/mc_out.txt").readAllBytes(), StandardCharsets.UTF_8);
@@ -223,7 +223,7 @@ class IToolsTest extends AbstractDynawoTest {
             "--contingencies-file", "contingencies.groovy",
             "--load-variations-file", "loadsVariations.json",
             "--parameters-file", "MarginCalculationParameters.json"};
-        int status = TOOLS.run(args, toolContext);
+        int status = tools.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
         String expectedOutput = new String(getResourceAsStream("/itools/mc_out.txt").readAllBytes(), StandardCharsets.UTF_8);

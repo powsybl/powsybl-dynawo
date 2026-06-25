@@ -7,11 +7,12 @@
  */
 package com.powsybl.dynawo.models.buses;
 
-import java.util.List;
 import com.powsybl.dynawo.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawo.models.frequencysynchronizers.SignalNModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.xml.DynawoSimulationXmlConstants;
+
+import java.util.List;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
