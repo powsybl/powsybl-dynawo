@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawo.models.transformers;
 
-import com.powsybl.dynawo.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawo.models.VarConnection;
+import com.powsybl.dynawo.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.TwoSides;
 

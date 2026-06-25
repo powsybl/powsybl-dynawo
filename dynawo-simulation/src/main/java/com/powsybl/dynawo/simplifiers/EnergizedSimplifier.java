@@ -36,7 +36,8 @@ import java.util.function.Predicate;
 public final class EnergizedSimplifier implements ModelsRemovalSimplifier {
 
     private static final ModelSimplifierInfo MODEL_INFO = new ModelSimplifierInfo("energizedEquipment",
-            "Filter injection and hvdc with all terminals connected (except dangling sides) and terminal buses with a voltage level on and overload management systems with monitored branch and measuring point energized",
+            "Filter injection and hvdc with all terminals connected (except dangling sides)" +
+                    "and terminal buses with a voltage level on and overload management systems with monitored branch and measuring point energized",
             SIMPLIFIER_TYPE);
 
     @Override

@@ -18,11 +18,11 @@ import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.builders.AdditionalModelConfigLoader;
 import com.powsybl.dynawo.builders.ModelConfigsHandler;
+import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.commons.ExecutionEnvironmentUtils;
-import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
-import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
+import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.SecurityAnalysisReport;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
@@ -97,7 +97,12 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
                 .build();
 
         ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX, dumpDir);
-        return runParameters.getComputationManager().execute(execEnvSimulation, new DynawoSecurityAnalysisHandler(context, getCommand(config, "SA", "dynawo_dynamic_sa"), runParameters.getFilter(), runParameters.getInterceptors(), dsaReportNode));
+        return runParameters.getComputationManager().execute(execEnvSimulation,
+                new DynawoSecurityAnalysisHandler(context,
+                        getCommand(config, "SA", "dynawo_dynamic_sa"),
+                        runParameters.getFilter(),
+                        runParameters.getInterceptors(),
+                        dsaReportNode));
     }
 
     @Override

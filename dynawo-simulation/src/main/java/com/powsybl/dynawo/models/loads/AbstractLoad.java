@@ -7,13 +7,13 @@
 package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.events.PControllableEquipmentModel;
-import com.powsybl.dynawo.models.events.QControllableEquipmentModel;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.InjectionModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawo.models.events.PControllableEquipmentModel;
+import com.powsybl.dynawo.models.events.QControllableEquipmentModel;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;

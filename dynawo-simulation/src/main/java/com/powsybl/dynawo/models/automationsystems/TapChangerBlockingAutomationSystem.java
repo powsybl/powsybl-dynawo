@@ -12,9 +12,9 @@ import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.MeasurementPointSuffix;
+import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.ActionConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Identifiable;
 
@@ -34,7 +34,11 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
     private final List<Identifiable<?>> uMeasurements;
     private boolean isConnected = true;
 
-    protected TapChangerBlockingAutomationSystem(String dynamicModelId, String parameterSetId, List<Identifiable<?>> tapChangerEquipments, List<String> tapChangerAutomationSystemIds, List<Identifiable<?>> uMeasurements, ModelConfig modelConfig) {
+    protected TapChangerBlockingAutomationSystem(String dynamicModelId, String parameterSetId,
+                                                 List<Identifiable<?>> tapChangerEquipments,
+                                                 List<String> tapChangerAutomationSystemIds,
+                                                 List<Identifiable<?>> uMeasurements,
+                                                 ModelConfig modelConfig) {
         super(dynamicModelId, parameterSetId, modelConfig);
         this.tapChangerEquipments = Objects.requireNonNull(tapChangerEquipments);
         this.tapChangerAutomationSystemIds = Objects.requireNonNull(tapChangerAutomationSystemIds);

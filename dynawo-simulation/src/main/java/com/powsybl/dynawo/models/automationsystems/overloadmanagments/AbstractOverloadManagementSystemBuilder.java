@@ -9,8 +9,8 @@ package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.BuilderEquipment;
-import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.builders.BuilderReports;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.automationsystems.AbstractAutomationSystemModelBuilder;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;

@@ -9,8 +9,8 @@ package com.powsybl.dynawo.models.frequencysynchronizers;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 
 import java.util.List;
