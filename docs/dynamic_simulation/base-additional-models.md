@@ -14,7 +14,7 @@ The list is statically loaded via [ModelConfigLoader](https://javadoc.io/doc/com
 * `alias`: name used in powsybl-dynawo instead of `lib`
 * `properties`: dynamic model properties
     * `AUXILIARY`: the model possesses an auxiliary (for [synchronous generator](dynamic-models-description.md#synchronous-generator))
-    * `CONTROLLABLE`: the model can be subjected to a [variation event](event-models-configuration.md#active-power-variation) (for [generator](dynamic-models-description.md#generator))
+    * `CONTROLLABLE`: the model can be subjected to an [active power](event-models-configuration.md#active-power-variation) or a [reference voltage](event-models-configuration.md#reference-voltage-variation) variation event (for [generator](dynamic-models-description.md#generator))
     * `DANGLING`: the model has a dangling side (for [HVDC](dynamic-models-description.md#hvdc))
     * `SYNCHRONIZED`: the specific model is synchronized but not in a synchronized category (for [base load](dynamic-models-description.md#base-load) or [WECC](dynamic-models-description.md#wecc))
     * `TRANSFORMER`: the model possesses a transformer (for [synchronous generator](dynamic-models-description.md#synchronous-generator))
