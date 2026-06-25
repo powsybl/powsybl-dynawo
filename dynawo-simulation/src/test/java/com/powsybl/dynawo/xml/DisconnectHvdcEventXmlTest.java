@@ -10,10 +10,10 @@ package com.powsybl.dynawo.xml;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.LfResultsUtils;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
-import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
@@ -38,8 +38,8 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
     private static final DynawoVersion DYNAWO_VERSION = new DynawoVersion(1, 6, 0);
 
     @BeforeEach
-    void setup(String dydName, String parName, Function< Network, BlackBoxModel> hvdcConstructor,
-               Function< Network, BlackBoxModel> disconnectConstructor) {
+    void setup(String dydName, String parName, Function<Network, BlackBoxModel> hvdcConstructor,
+               Function<Network, BlackBoxModel> disconnectConstructor) {
         setupNetwork();
         addDynamicModels(hvdcConstructor, disconnectConstructor);
         context = setupDynawoContextBuilder()
@@ -52,7 +52,7 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
         network.getHvdcLine(HVDC_NAME).setConvertersMode(HvdcLine.ConvertersMode.SIDE_1_RECTIFIER_SIDE_2_INVERTER);
     }
 
-    protected void addDynamicModels(Function< Network, BlackBoxModel> hvdcConstructor, Function< Network, BlackBoxModel> disconnectConstructor) {
+    protected void addDynamicModels(Function<Network, BlackBoxModel> hvdcConstructor, Function<Network, BlackBoxModel> disconnectConstructor) {
         if (hvdcConstructor != null) {
             dynamicModels.add(hvdcConstructor.apply(network));
         }
@@ -61,8 +61,8 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideModels")
-    void writeModel(String dydName, String parName, Function< Network, BlackBoxModel> hvdcConstructor,
-                    Function< Network, BlackBoxModel> disconnectConstructor) throws SAXException, IOException {
+    void writeModel(String dydName, String parName, Function<Network, BlackBoxModel> hvdcConstructor,
+                    Function<Network, BlackBoxModel> disconnectConstructor) throws SAXException, IOException {
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));

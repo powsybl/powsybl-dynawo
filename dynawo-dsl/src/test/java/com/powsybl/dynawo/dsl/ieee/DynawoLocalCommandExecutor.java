@@ -49,14 +49,22 @@ public class DynawoLocalCommandExecutor implements LocalCommandExecutor {
     }
 
     protected void validateInputs(Path workingDir) throws IOException {
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.xiidm"), Files.newInputStream(workingDir.resolve(NETWORK_FILENAME)));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.jobs"), Files.newInputStream(workingDir.resolve(JOBS_FILENAME)));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.dyd"), Files.newInputStream(workingDir.resolve(DYD_FILENAME)));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/models.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(MODELS_PARAMETERS_FILENAME).getFileName().toString())));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/network.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(NETWORK_PARAMETERS_FILENAME).getFileName().toString())));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/solvers.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(SOLVER_PARAMETERS_FILENAME).getFileName().toString())));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/" + networkId + ".par"), Files.newInputStream(workingDir.resolve(networkId + ".par")));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.crv"), Files.newInputStream(workingDir.resolve(CRV_FILENAME)));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.xiidm"),
+                Files.newInputStream(workingDir.resolve(NETWORK_FILENAME)));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.jobs"),
+                Files.newInputStream(workingDir.resolve(JOBS_FILENAME)));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.dyd"),
+                Files.newInputStream(workingDir.resolve(DYD_FILENAME)));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/models.par"),
+                Files.newInputStream(workingDir.resolve(fileSystem.getPath(MODELS_PARAMETERS_FILENAME).getFileName().toString())));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/network.par"),
+                Files.newInputStream(workingDir.resolve(fileSystem.getPath(NETWORK_PARAMETERS_FILENAME).getFileName().toString())));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/solvers.par"),
+                Files.newInputStream(workingDir.resolve(fileSystem.getPath(SOLVER_PARAMETERS_FILENAME).getFileName().toString())));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/" + networkId + ".par"),
+                Files.newInputStream(workingDir.resolve(networkId + ".par")));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.crv"),
+                Files.newInputStream(workingDir.resolve(CRV_FILENAME)));
     }
 
     protected void copyOutputs(Path workingDir) throws IOException {
@@ -78,8 +86,8 @@ public class DynawoLocalCommandExecutor implements LocalCommandExecutor {
                 validateInputs(workingDir);
                 copyOutputs(workingDir);
             }
-        } catch (Throwable throwable) {
-            LOGGER.error(throwable.toString(), throwable);
+        } catch (IOException exception) {
+            LOGGER.error(exception.toString(), exception);
             return -1;
         }
         return 0;

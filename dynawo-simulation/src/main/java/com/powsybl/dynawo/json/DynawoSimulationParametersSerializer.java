@@ -6,8 +6,6 @@
  */
 package com.powsybl.dynawo.json;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -22,6 +20,8 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters.ExtensionSerializer;
 import com.powsybl.dynawo.DynawoSimulationParameters;
+
+import java.io.IOException;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}

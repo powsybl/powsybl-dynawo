@@ -7,10 +7,10 @@
  */
 package com.powsybl.dynawo.margincalculation.xml;
 
+import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 import com.powsybl.dynawo.algorithms.xml.XmlUtil;
 import com.powsybl.dynawo.margincalculation.MarginCalculationContext;
 import com.powsybl.dynawo.margincalculation.MarginCalculationParameters;
-import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -19,8 +19,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
-import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
 import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
 import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
 import static com.powsybl.dynawo.margincalculation.xml.MarginCalculationConstant.LOAD_VARIATION_AREA_ID;
 

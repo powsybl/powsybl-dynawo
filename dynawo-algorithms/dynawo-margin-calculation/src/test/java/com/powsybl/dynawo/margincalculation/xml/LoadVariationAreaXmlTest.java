@@ -7,11 +7,11 @@
  */
 package com.powsybl.dynawo.margincalculation.xml;
 
-import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.dynawo.margincalculation.MarginCalculationContext;
 import com.powsybl.dynawo.margincalculation.MarginCalculationParameters;
-import com.powsybl.dynawo.xml.DydXml;
+import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.dynawo.xml.AbstractDynamicModelXmlTest;
+import com.powsybl.dynawo.xml.DydXml;
 import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;

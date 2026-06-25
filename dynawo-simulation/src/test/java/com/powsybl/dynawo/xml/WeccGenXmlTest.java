@@ -8,8 +8,8 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.models.generators.GridFormingConverterBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.generators.GridFormingConverterBuilder;
 import com.powsybl.dynawo.models.generators.WeccBuilder;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -33,7 +33,7 @@ class WeccGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     private static final String STATIC_ID = "GEN";
 
     @BeforeEach
-    void setup(String dydName, String parName, Function< Network, BlackBoxModel> loadConstructor) {
+    void setup(String dydName, String parName, Function<Network, BlackBoxModel> loadConstructor) {
         setupNetwork();
         addDynamicModels(loadConstructor);
         setupDynawoContext();
@@ -43,13 +43,13 @@ class WeccGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
         network = EurostagTutorialExample1Factory.create();
     }
 
-    protected void addDynamicModels(Function< Network, BlackBoxModel> constructor) {
+    protected void addDynamicModels(Function<Network, BlackBoxModel> constructor) {
         dynamicModels.add(constructor.apply(network));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideWecc")
-    void writeModel(String dydName, String parName, Function< Network, BlackBoxModel> constructor) throws SAXException, IOException {
+    void writeModel(String dydName, String parName, Function<Network, BlackBoxModel> constructor) throws SAXException, IOException {
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));

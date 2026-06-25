@@ -251,11 +251,15 @@ class DynawoParametersTest extends AbstractSerDeTest {
         String dumpFile = "dumpFile.dmp";
         String additionalModelsFileName = "additionalModels.json";
 
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, modelSimplifiers, precision, timelinExportMode, logLevel, specificLogs, criteriaFileName, additionalModelsFileName);
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, modelSimplifiers, precision,
+                timelinExportMode, logLevel, specificLogs, criteriaFileName, additionalModelsFileName);
         initDumpFilePlatformConfig(dumpFolder, dumpFile);
         Map<String, String> expectedProperties = Map.ofEntries(
                 Map.entry("modelParameters",
-                        "{test=test,{boolean=Parameter[name=boolean, type=BOOL, value=true], string=Parameter[name=string, type=STRING, value=aString]},{},{Par1={GEN=PrefixParameter[name=Par1, componentId=GEN, type=DOUBLE, value=10], GEN2=PrefixParameter[name=Par1, componentId=GEN2, type=DOUBLE, value=12]}}}"),
+                        "{test=test,{boolean=Parameter[name=boolean, type=BOOL, value=true],"
+                                + " string=Parameter[name=string, type=STRING, value=aString]},{},"
+                                + "{Par1={GEN=PrefixParameter[name=Par1, componentId=GEN, type=DOUBLE, value=10],"
+                                + " GEN2=PrefixParameter[name=Par1, componentId=GEN2, type=DOUBLE, value=12]}}}"),
                 Map.entry("networkParameters",
                         "networkParametersId,{load_Tp=Parameter[name=load_Tp, type=DOUBLE, value=90], load_isControllable=Parameter[name=load_isControllable, type=BOOL, value=false]},{},{}"),
                 Map.entry("solverParameters",

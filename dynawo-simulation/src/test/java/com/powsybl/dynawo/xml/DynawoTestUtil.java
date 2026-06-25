@@ -17,10 +17,7 @@ import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
 import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
-import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.TwoSides;
-import com.powsybl.iidm.network.VoltageLevel;
+import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.xml.sax.SAXException;
@@ -94,39 +91,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
                         .build());
             }
         });
-        network.getGeneratorStream().forEach(g -> {
-            if (g.getId().equals("GEN2")) {
-                dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsProportionalRegulations")
-                        .equipment(g)
-                        .parameterSetId("GSFWPR")
-                        .build());
-            } else if (g.getId().equals("GEN3")) {
-                dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindings")
-                        .equipment(g)
-                        .parameterSetId("GSFW")
-                        .build());
-            } else if (g.getId().equals("GEN4")) {
-                dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousThreeWindings")
-                        .equipment(g)
-                        .parameterSetId("GSTW")
-                        .build());
-            } else if (g.getId().equals("GEN6")) {
-                dynamicModels.add(BaseGeneratorBuilder.of(network)
-                        .equipment(g)
-                        .parameterSetId("GF")
-                        .build());
-            } else if (g.getId().equals("GEN7")) {
-                dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
-                        .equipment(g)
-                        .parameterSetId("GPQ")
-                        .build());
-            } else {
-                dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousThreeWindingsProportionalRegulations")
-                        .equipment(g)
-                        .parameterSetId("GSTWPR")
-                        .build());
-            }
-        });
+        network.getGeneratorStream().forEach(this::mapGenerator);
 
         // Events
         eventModels = new ArrayList<>();
@@ -149,6 +114,35 @@ public class DynawoTestUtil extends AbstractSerDeTest {
                         .iMeasurement(l.getId())
                         .iMeasurementSide(TwoSides.ONE)
                         .build()));
+    }
+
+    private void mapGenerator(Generator generator) {
+        switch (generator.getId()) {
+            case "GEN2" -> dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsProportionalRegulations")
+                    .equipment(generator)
+                    .parameterSetId("GSFWPR")
+                    .build());
+            case "GEN3" -> dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindings")
+                    .equipment(generator)
+                    .parameterSetId("GSFW")
+                    .build());
+            case "GEN4" -> dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousThreeWindings")
+                    .equipment(generator)
+                    .parameterSetId("GSTW")
+                    .build());
+            case "GEN6" -> dynamicModels.add(BaseGeneratorBuilder.of(network)
+                    .equipment(generator)
+                    .parameterSetId("GF")
+                    .build());
+            case "GEN7" -> dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
+                    .equipment(generator)
+                    .parameterSetId("GPQ")
+                    .build());
+            default -> dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousThreeWindingsProportionalRegulations")
+                    .equipment(generator)
+                    .parameterSetId("GSTWPR")
+                    .build());
+        }
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
