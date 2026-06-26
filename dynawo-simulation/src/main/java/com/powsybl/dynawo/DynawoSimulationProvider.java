@@ -99,6 +99,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX, dumpDir);
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, computationManager, getVersionCommand(config), DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME, false);
 
+        ModelConfigsHandler.getInstance().setDynawoVersion(currentVersion);
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(parameters);
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
                 ModelConfigsHandler.getInstance().addModels(new AdditionalModelConfigLoader(additionalModelPath)));
