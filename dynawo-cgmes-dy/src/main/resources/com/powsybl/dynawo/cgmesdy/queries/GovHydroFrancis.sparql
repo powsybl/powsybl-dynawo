@@ -1,0 +1,41 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:GovHydroFrancis .
+  OPTIONAL { ?id cim:TurbineGovernorDynamics.SynchronousMachineDynamics ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:GovHydroFrancis.mwbase ?mwbase . }
+  OPTIONAL { ?id cim:GovHydroFrancis.rs ?rs . }
+  OPTIONAL { ?id cim:GovHydroFrancis.tg ?tg . }
+  OPTIONAL { ?id cim:GovHydroFrancis.tp ?tp . }
+  OPTIONAL { ?id cim:GovHydroFrancis.bp ?bp . }
+  OPTIONAL { ?id cim:GovHydroFrancis.td ?td . }
+  OPTIONAL { ?id cim:GovHydroFrancis.ta ?ta . }
+  OPTIONAL { ?id cim:GovHydroFrancis.ts ?ts . }
+  OPTIONAL { ?id cim:GovHydroFrancis.twnc ?twnc . }
+  OPTIONAL { ?id cim:GovHydroFrancis.twng ?twng . }
+  OPTIONAL { ?id cim:GovHydroFrancis.qn ?qn . }
+  OPTIONAL { ?id cim:GovHydroFrancis.h0 ?h0 . }
+  OPTIONAL { ?id cim:GovHydroFrancis.am ?am . }
+  OPTIONAL { ?id cim:GovHydroFrancis.av0 ?av0 . }
+  OPTIONAL { ?id cim:GovHydroFrancis.avsmnx ?avsmnx . }
+  OPTIONAL { ?id cim:GovHydroFrancis.avsmx ?avsmx . }
+  OPTIONAL { ?id cim:GovHydroFrancis.hn ?hn . }
+  OPTIONAL { ?id cim:GovHydroFrancis.kc ?kc . }
+  OPTIONAL { ?id cim:GovHydroFrancis.kg ?kg . }
+  OPTIONAL { ?id cim:GovHydroFrancis.ki ?ki . }
+  OPTIONAL { ?id cim:GovHydroFrancis.knl ?knl . }
+  OPTIONAL { ?id cim:GovHydroFrancis.qc0 ?qc0 . }
+  OPTIONAL { ?id cim:GovHydroFrancis.va ?va . }
+  OPTIONAL { ?id cim:GovHydroFrancis.valvmax ?valvmax . }
+  OPTIONAL { ?id cim:GovHydroFrancis.valvmin ?valvmin . }
+  OPTIONAL { ?id cim:GovHydroFrancis.vc ?vc . }
+  OPTIONAL { ?id cim:GovHydroFrancis.waterTunnelSurgeChamberSimulation ?waterTunnelSurgeChamberSimulation . }
+}

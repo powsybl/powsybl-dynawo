@@ -1,0 +1,29 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:LoadGenericNonLinear .
+  OPTIONAL { ?id cim:RotatingMachineDynamics.RotatingMachine          ?synchronousMachineId    . }
+  OPTIONAL { ?id cim:AsynchronousMachineDynamics.AsynchronousMachine  ?asynchronousMachineId   . }
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?excitationSystemId   . }
+  OPTIONAL { ?id cim:PowerSystemStabilizerDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:WindTurbineType3or4Dynamics.WindPlantDynamics     ?powerPlantId            . }
+  OPTIONAL { ?id cim:TurbineGovernorDynamics.SynchronousMachineDynamics ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:LoadGenericNonLinear.energyConsumerId ?energyConsumerId . }
+  OPTIONAL { ?id cim:LoadGenericNonLinear.genericNonLinearLoadModelType ?genericNonLinearLoadModelType . }
+  OPTIONAL { ?id cim:LoadGenericNonLinear.bs ?bs . }
+  OPTIONAL { ?id cim:LoadGenericNonLinear.bt ?bt . }
+  OPTIONAL { ?id cim:LoadGenericNonLinear.ls ?ls . }
+  OPTIONAL { ?id cim:LoadGenericNonLinear.lt ?lt . }
+  OPTIONAL { ?id cim:LoadGenericNonLinear.pt ?pt . }
+  OPTIONAL { ?id cim:LoadGenericNonLinear.qt ?qt . }
+  OPTIONAL { ?id cim:LoadGenericNonLinear.tp ?tp . }
+  OPTIONAL { ?id cim:LoadGenericNonLinear.tq ?tq . }
+}

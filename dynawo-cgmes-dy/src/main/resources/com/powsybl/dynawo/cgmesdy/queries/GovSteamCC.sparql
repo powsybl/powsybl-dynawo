@@ -1,0 +1,31 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:GovSteamCC .
+  OPTIONAL { ?id cim:TurbineGovernorDynamics.SynchronousMachineDynamics ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:GovSteamCC.mwbase ?mwbase . }
+  OPTIONAL { ?id cim:GovSteamCC.r ?r . }
+  OPTIONAL { ?id cim:GovSteamCC.t1 ?t1 . }
+  OPTIONAL { ?id cim:GovSteamCC.t2 ?t2 . }
+  OPTIONAL { ?id cim:GovSteamCC.t3 ?t3 . }
+  OPTIONAL { ?id cim:GovSteamCC.t4 ?t4 . }
+  OPTIONAL { ?id cim:GovSteamCC.pmax ?pmax . }
+  OPTIONAL { ?id cim:GovSteamCC.pmin ?pmin . }
+  OPTIONAL { ?id cim:GovSteamCC.uc ?uc . }
+  OPTIONAL { ?id cim:GovSteamCC.uo ?uo . }
+  OPTIONAL { ?id cim:GovSteamCC.dhp ?dhp . }
+  OPTIONAL { ?id cim:GovSteamCC.dlp ?dlp . }
+  OPTIONAL { ?id cim:GovSteamCC.fhp ?fhp . }
+  OPTIONAL { ?id cim:GovSteamCC.flp ?flp . }
+  OPTIONAL { ?id cim:GovSteamCC.fip ?fip . }
+  OPTIONAL { ?id cim:GovSteamCC.tip ?tip . }
+  OPTIONAL { ?id cim:GovSteamCC.tlp ?tlp . }
+}

@@ -1,0 +1,30 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:ExcDC1A .
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?synchronousMachineId . }
+  OPTIONAL { ?id cim:ExcDC1A.tr ?tr . }
+  OPTIONAL { ?id cim:ExcDC1A.ka ?ka . }
+  OPTIONAL { ?id cim:ExcDC1A.ta ?ta . }
+  OPTIONAL { ?id cim:ExcDC1A.tb ?tb . }
+  OPTIONAL { ?id cim:ExcDC1A.tc ?tc . }
+  OPTIONAL { ?id cim:ExcDC1A.vrmax ?vrmax . }
+  OPTIONAL { ?id cim:ExcDC1A.vrmin ?vrmin . }
+  OPTIONAL { ?id cim:ExcDC1A.ke ?ke . }
+  OPTIONAL { ?id cim:ExcDC1A.te ?te . }
+  OPTIONAL { ?id cim:ExcDC1A.kf ?kf . }
+  OPTIONAL { ?id cim:ExcDC1A.tf ?tf . }
+  OPTIONAL { ?id cim:ExcDC1A.efd1 ?efd1 . }
+  OPTIONAL { ?id cim:ExcDC1A.seefd1 ?seefd1 . }
+  OPTIONAL { ?id cim:ExcDC1A.efd2 ?efd2 . }
+  OPTIONAL { ?id cim:ExcDC1A.seefd2 ?seefd2 . }
+  OPTIONAL { ?id cim:ExcDC1A.exclim ?exclim . }
+}
