@@ -11,6 +11,7 @@ import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Injection;
 
@@ -30,7 +31,7 @@ public class EventReactivePowerVariation extends AbstractVariationEvent {
 
     private List<VarConnection> getVarConnectionsWith(QControllableEquipmentModel connected) {
         if (equipmentModelType.getValue().isStep()) {
-            return List.of(new VarConnection("step_step_value", connected.getDeltaQVarName()));
+            return List.of(new VarConnection(VersionableVariables.getCurrentValue("STEP"), connected.getDeltaQVarName()));
         }
         return List.of(new VarConnection("event_state1", connected.getDeltaQVarName()));
     }

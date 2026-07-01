@@ -12,7 +12,9 @@ import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
@@ -30,12 +32,17 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
     }
 
     @Override
-    protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
-        List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        adder.createTerminalMacroConnections(this, equipment.getTerminal(), this::getVarConnectionsWithResolver);
+    }
+
+    protected List<VarConnection> getVarConnectionsWithResolver(EquipmentConnectionPoint connected) {
+        List<VarConnection> varConnections = getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {
-                    varConnections.add(new VarConnection(getSwitchOffSignal(HIGH_VOLTAGE), switchOff));
-                    varConnections.add(new VarConnection(getSwitchOffSignal(LOW_VOLTAGE), switchOff));
+                    String switchOffVar = VersionableVariables.getCurrentValue("TC_SWITCH_OFF");
+                    varConnections.add(new VarConnection(String.format(switchOffVar, HIGH_VOLTAGE.getSideSuffix()), switchOff));
+                    varConnections.add(new VarConnection(String.format(switchOffVar, LOW_VOLTAGE.getSideSuffix()), switchOff));
                 });
         return varConnections;
     }
@@ -47,15 +54,12 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(getTapChangerBlockerVarConnection(LOW_VOLTAGE),
-                getTapChangerBlockerVarConnection(HIGH_VOLTAGE));
+        String lockedVar = VersionableVariables.getCurrentValue("TC_LOCKED");
+        return List.of(getTapChangerBlockerVarConnection(LOW_VOLTAGE, lockedVar),
+                getTapChangerBlockerVarConnection(HIGH_VOLTAGE, lockedVar));
     }
 
-    private VarConnection getTapChangerBlockerVarConnection(TransformerSide side) {
-        return new VarConnection(getTapChangerBlockingVarName(side), "tapChanger" + side.getSideSuffix() + "_locked");
-    }
-
-    private String getSwitchOffSignal(TransformerSide side) {
-        return "tapChanger" + side.getSideSuffix() + "_switchOffSignal1";
+    private VarConnection getTapChangerBlockerVarConnection(TransformerSide side, String lockedVar) {
+        return new VarConnection(getTapChangerBlockingVarName(side), String.format(lockedVar, side.getSideSuffix()));
     }
 }

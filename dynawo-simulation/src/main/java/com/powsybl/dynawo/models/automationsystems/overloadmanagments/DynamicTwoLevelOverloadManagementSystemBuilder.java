@@ -40,12 +40,8 @@ public class DynamicTwoLevelOverloadManagementSystemBuilder extends AbstractOver
     }
 
     public static DynamicTwoLevelOverloadManagementSystemBuilder of(Network network, String modelName, ReportNode reportNode) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
-        if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
-            return null;
-        }
-        return new DynamicTwoLevelOverloadManagementSystemBuilder(network, modelConfig, reportNode);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName, reportNode);
+        return modelConfig != null ? new DynamicTwoLevelOverloadManagementSystemBuilder(network, modelConfig, reportNode) : null;
     }
 
     public static ModelInfo getDefaultModelInfo() {
