@@ -12,6 +12,7 @@ import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -22,23 +23,33 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R
 
     protected String parameterSetId;
     protected final ModelConfig modelConfig;
-    protected final BuilderEquipment<T> builderEquipment;
+    protected final BuilderIdListEquipment<T> builderEquipment;
 
     protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, ReportNode parentReportNode) {
         super(network, parentReportNode);
         this.modelConfig = Objects.requireNonNull(modelConfig);
-        this.builderEquipment = new BuilderEquipment<>(equipmentType.toString(), reportNode);
+        this.builderEquipment = new BuilderIdListEquipment<>(equipmentType.toString(), reportNode);
     }
 
     protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode parentReportNode) {
         super(network, parentReportNode);
         this.modelConfig = modelConfig;
-        this.builderEquipment = new BuilderEquipment<>(equipmentType, reportNode);
+        this.builderEquipment = new BuilderIdListEquipment<>(equipmentType, reportNode);
     }
 
     @Override
     public R staticId(String staticId) {
         builderEquipment.addEquipment(staticId, this::findEquipment);
+        return self();
+    }
+
+    public R staticId(String... staticIds) {
+        builderEquipment.addEquipment(staticIds, this::findEquipment);
+        return self();
+    }
+
+    public R staticId(Collection<String> staticIds) {
+        builderEquipment.addEquipment(staticIds, this::findEquipment);
         return self();
     }
 
@@ -57,7 +68,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R
     @Override
     protected void checkData() {
         isInstantiable = builderEquipment.checkEquipmentData();
-        if (parameterSetId == null) {
+        if (isInstantiable && parameterSetId == null) {
             String id = getModelId();
             BuilderReports.reportFieldReplacement(reportNode, "parameterSetId", "dynamicModelId", id);
             parameterSetId = id;

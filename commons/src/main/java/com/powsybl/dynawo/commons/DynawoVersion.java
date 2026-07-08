@@ -39,7 +39,7 @@ public class DynawoVersion implements Comparable<DynawoVersion> {
         try {
             Integer[] ints = Arrays.stream(version.split(separator)).map(Integer::parseInt).toArray(Integer[]::new);
             return new DynawoVersion(ints);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | ArrayStoreException e) {
             throw new PowsyblException(CREATION_ERROR + e.getMessage(), e);
         }
     }
