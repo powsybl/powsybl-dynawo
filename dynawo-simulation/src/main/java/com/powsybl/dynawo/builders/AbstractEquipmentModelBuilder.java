@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.builders;
 
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
@@ -19,7 +20,7 @@ import java.util.Objects;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R extends AbstractEquipmentModelBuilder<T, R>>
-        extends AbstractDynamicModelBuilder implements EquipmentModelBuilder<T, R> {
+        extends AbstractDynamicModelBuilder<DynamicModel> implements EquipmentModelBuilder<T, R> {
 
     protected String parameterSetId;
     protected final ModelConfig modelConfig;

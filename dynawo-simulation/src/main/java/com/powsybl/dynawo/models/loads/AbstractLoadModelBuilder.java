@@ -38,11 +38,13 @@ public abstract class AbstractLoadModelBuilder<R extends AbstractEquipmentModelB
         return self();
     }
 
+    @Override
     public R staticId(String... staticIds) {
         builderEquipment.addEquipment(staticIds, this::findEquipment, IS_NOT_FICTITIOUS, BuilderReports::reportNotFictitiousStaticIdListUnknown);
         return self();
     }
 
+    @Override
     public R staticId(Collection<String> staticIds) {
         builderEquipment.addEquipment(staticIds, this::findEquipment, IS_NOT_FICTITIOUS, BuilderReports::reportNotFictitiousStaticIdListUnknown);
         return self();

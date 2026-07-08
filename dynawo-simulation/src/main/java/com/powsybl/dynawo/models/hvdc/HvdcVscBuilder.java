@@ -76,11 +76,13 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
         return self();
     }
 
+    @Override
     public HvdcVscBuilder staticId(String... staticIds) {
         builderEquipment.addEquipment(staticIds, this::findEquipment, IS_VSC);
         return self();
     }
 
+    @Override
     public HvdcVscBuilder staticId(Collection<String> staticIds) {
         builderEquipment.addEquipment(staticIds, this::findEquipment, IS_VSC);
         return self();
