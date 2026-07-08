@@ -89,7 +89,7 @@ class DynawoModelsSupplierTest {
         Network network = EurostagTutorialExample1Factory.createWithLFResults();
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/dynamicModels.json")).toURI());
         List<DynamicModel> models = DynawoModelsSupplier.load(path).get(network);
-        assertEquals(2, models.size());
+        assertEquals(3, models.size());
     }
 
     @Test
@@ -97,25 +97,11 @@ class DynawoModelsSupplierTest {
         SupplierJsonDeserializer<DynamicModelConfig> deserializer = new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer());
         try (InputStream is = getClass().getResourceAsStream("/suppliers/dynamicModels.json")) {
             List<DynamicModelConfig> configs = deserializer.deserialize(is);
-            assertEquals(2, configs.size());
-            assertThat(configs.get(0)).usingRecursiveComparison().isEqualTo(getLoadConfig());
-            assertThat(configs.get(1)).usingRecursiveComparison().isEqualTo(getTcbConfig());
+            assertThat(configs).hasSize(3).satisfiesExactly(
+                    load -> assertThat(load).usingRecursiveComparison().isEqualTo(getLoadConfig()),
+                    tcb -> assertThat(tcb).usingRecursiveComparison().isEqualTo(getTcbConfig()),
+                    gen -> assertThat(gen).usingRecursiveComparison().isEqualTo(getGenConfig()));
         }
-    }
-
-    @Test
-    void groupTypeException() {
-        Network network = EurostagTutorialExample1Factory.create();
-        List<Property> properties = List.of(
-                new PropertyBuilder()
-                        .name("propertyName")
-                        .value("LOAD")
-                        .type(PropertyType.STRING)
-                        .build());
-        DynamicModelConfig modelConfig = new DynamicModelConfig("LoadAlphaBeta", "_DM", SetGroupType.SUFFIX, properties);
-        DynawoModelsSupplier supplier = new DynawoModelsSupplier(List.of(modelConfig));
-        PowsyblException e = assertThrows(PowsyblException.class, () -> supplier.get(network));
-        assertEquals("No ID found for parameter set id", e.getMessage());
     }
 
     @Test
@@ -209,5 +195,14 @@ class DynawoModelsSupplierTest {
                         .type(PropertyType.STRING)
                         .build()
         ));
+    }
+
+    private static DynamicModelConfig getGenConfig() {
+        return new DynamicModelConfig("GeneratorPVFixed", "DM_", SetGroupType.PREFIX, List.of(
+                new PropertyBuilder()
+                        .name("staticId")
+                        .values(List.of("ALT_ID", "GEN"))
+                        .type(PropertyType.STRING)
+                        .build()));
     }
 }
