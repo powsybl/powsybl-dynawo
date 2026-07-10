@@ -27,9 +27,11 @@ import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
 import com.powsybl.dynawo.suppliers.events.DynawoEventModelsSupplier;
 import com.powsybl.dynawo.xml.ParametersXml;
+import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.VariantManagerConstants;
+import com.powsybl.iidm.network.extensions.DynamicModelInfo;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
@@ -136,6 +138,31 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         ReportNode dynawoLog = reportNode.getChildren().get(2);
         assertEquals("dynawo.commons.dynawoLog", dynawoLog.getMessageKey());
         assertTrue(dynawoLog.getChildren().stream().anyMatch(r -> r.getMessage().contains("one simulation's criteria is not respected")));
+    }
+
+    @Test
+    void testIeee14AddModels() {
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
+                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testIEEE14")
+                .build();
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
+                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2");
+
+        ((DynawoSimulationProvider) provider).addDynamicModelsToNetwork(network, dynamicModelsSupplier,
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode);
+
+        DynamicModelInfo<Generator> dynamicModelInfo = network.getGenerator("_GEN____6_SM").getExtension(DynamicModelInfo.class);
+        assertEquals("GeneratorSynchronousThreeWindingsProportionalRegulations", dynamicModelInfo.getModelName());
     }
 
     @Test

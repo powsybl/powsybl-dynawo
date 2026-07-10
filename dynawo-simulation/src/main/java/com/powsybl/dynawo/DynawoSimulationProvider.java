@@ -122,6 +122,28 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         return computationManager.execute(execEnvSimulation, new DynawoSimulationHandler(context, getCommand(config), reportNode));
     }
 
+    public void addDynamicModelsToNetwork(Network network, DynamicModelsSupplier dynamicModelsSupplier,
+                                          String workingVariantId, ComputationManager computationManager,
+                                          DynamicSimulationParameters parameters, ReportNode reportNode) {
+        Objects.requireNonNull(dynamicModelsSupplier);
+        Objects.requireNonNull(workingVariantId);
+        Objects.requireNonNull(parameters);
+        Objects.requireNonNull(reportNode);
+
+        ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX, null);
+        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, computationManager, getVersionCommand(config), DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+        ReportNode dsReportNode = DynawoSimulationReports.createModelExtensionsAdderReportNode(reportNode, network.getId());
+        network.getVariantManager().setWorkingVariant(workingVariantId);
+        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(parameters);
+        dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
+                ModelConfigsHandler.getInstance().addModels(new AdditionalModelConfigLoader(additionalModelPath)));
+        new ModelExtensionsAdder(network, BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsReportNode))
+                .workingVariantId(workingVariantId)
+                .currentVersion(currentVersion)
+                .reportNode(reportNode)
+                .addDynamicModelExtensions();
+    }
+
     @Override
     public Optional<Class<? extends Extension<DynamicSimulationParameters>>> getSpecificParametersClass() {
         return Optional.of(DynawoSimulationParameters.class);
