@@ -54,7 +54,7 @@ public interface BlackBoxModel extends Model {
 
     void createDynamicModelInfoExtension();
 
-    void createDynawoModelInfoExtension();
+    void createDynawoModelExtension();
 
     boolean isConnected();
 }

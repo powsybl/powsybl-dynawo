@@ -107,7 +107,7 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
-    public void createDynawoModelInfoExtension() {
+    public void createDynawoModelExtension() {
         // method empty by default to be redefined by specific models
     }
 

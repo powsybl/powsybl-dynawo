@@ -19,7 +19,7 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
-import com.powsybl.dynawo.extensions.api.info.DynawoEquipmentModelInfo;
+import com.powsybl.dynawo.extensions.api.model.DynawoEquipmentModel;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
@@ -161,7 +161,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         ((DynawoSimulationProvider) provider).addDynamicModelsToNetwork(network, dynamicModelsSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode);
 
-        DynawoEquipmentModelInfo<Generator> equipmentModelInfo = network.getGenerator("_GEN____6_SM").getExtension(DynawoEquipmentModelInfo.class);
+        DynawoEquipmentModel<Generator> equipmentModelInfo = network.getGenerator("_GEN____6_SM").getExtension(DynawoEquipmentModel.class);
         assertEquals("GeneratorSynchronousThreeWindingsProportionalRegulations", equipmentModelInfo.getModelName());
         assertEquals("GSTWPR_GEN____6_SM", equipmentModelInfo.getParameterSetId());
     }

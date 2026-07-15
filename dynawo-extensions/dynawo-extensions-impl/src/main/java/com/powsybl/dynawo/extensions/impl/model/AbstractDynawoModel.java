@@ -5,9 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.extensions.impl.info;
+package com.powsybl.dynawo.extensions.impl.model;
 
-import com.powsybl.dynawo.extensions.api.info.DynawoModelInfoExtension;
+import com.powsybl.dynawo.extensions.api.model.DynawoModelExtension;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.impl.AbstractMultiVariantIdentifiableExtension;
 import com.powsybl.iidm.network.impl.NetworkImpl;
@@ -20,14 +20,14 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractDynawoModelInfo<I extends Identifiable<I>, E extends DynawoModelInfoExtension<I, E>>
-        extends AbstractMultiVariantIdentifiableExtension<I> implements DynawoModelInfoExtension<I, E> {
+public abstract class AbstractDynawoModel<I extends Identifiable<I>, E extends DynawoModelExtension<I, E>>
+        extends AbstractMultiVariantIdentifiableExtension<I> implements DynawoModelExtension<I, E> {
 
     private final ArrayList<String> modelNamePerVariant;
     private final ArrayList<String> parameterSetIdPerVariant;
     protected final List<ArrayList<String>> perVariantList = new ArrayList<>();
 
-    public AbstractDynawoModelInfo(I extendable, String modelName, String parameterSetId) {
+    public AbstractDynawoModel(I extendable, String modelName, String parameterSetId) {
         super(extendable);
         this.modelNamePerVariant = new ArrayList<>(Collections.nCopies(
                 getVariantManagerHolder().getVariantManager().getVariantArraySize(), null));

@@ -9,7 +9,7 @@
 package com.powsybl.dynawo.extensions.serde;
 
 import com.powsybl.commons.test.AbstractSerDeTest;
-import com.powsybl.dynawo.extensions.api.info.DynawoEquipmentModelInfoAdder;
+import com.powsybl.dynawo.extensions.api.model.DynawoEquipmentModelAdder;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -21,14 +21,14 @@ import java.io.IOException;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class DynawoEquipmentModelInfoSerDeTest extends AbstractSerDeTest {
+class DynawoEquipmentModelSerDeTest extends AbstractSerDeTest {
 
     @Test
     void testXmlSerializer() throws IOException {
         Network network = EurostagTutorialExample1Factory.create();
         Load load = network.getLoad("LOAD");
 
-        load.newExtension(DynawoEquipmentModelInfoAdder.class)
+        load.newExtension(DynawoEquipmentModelAdder.class)
                 .setModelName("LoadAlphaBeta")
                 .setParameterSetId("lab")
                 .add();

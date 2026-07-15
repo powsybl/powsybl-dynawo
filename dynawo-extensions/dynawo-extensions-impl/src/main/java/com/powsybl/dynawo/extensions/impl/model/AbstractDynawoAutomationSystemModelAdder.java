@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.extensions.impl.info;
+package com.powsybl.dynawo.extensions.impl.model;
 
 import com.powsybl.commons.extensions.Extension;
 import com.powsybl.iidm.network.Identifiable;
@@ -13,12 +13,12 @@ import com.powsybl.iidm.network.Identifiable;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractDynawoAutomationSystemModelInfoAdder<I extends Identifiable<I>, E extends Extension<I>, A extends AbstractDynawoAutomationSystemModelInfoAdder<I, E, A>>
-        extends AbstractDynawoModelInfoAdder<I, E, A> {
+public abstract class AbstractDynawoAutomationSystemModelAdder<I extends Identifiable<I>, E extends Extension<I>, A extends AbstractDynawoAutomationSystemModelAdder<I, E, A>>
+        extends AbstractDynawoModelAdder<I, E, A> {
 
     protected String dynamicModelId;
 
-    public AbstractDynawoAutomationSystemModelInfoAdder(I identifiable) {
+    public AbstractDynawoAutomationSystemModelAdder(I identifiable) {
         super(identifiable);
     }
 

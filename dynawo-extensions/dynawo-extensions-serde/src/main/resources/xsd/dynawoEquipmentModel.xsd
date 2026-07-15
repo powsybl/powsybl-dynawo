@@ -8,9 +8,9 @@
   -->
 <xs:schema version="1.0"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           targetNamespace="http://www.powsybl.org/schema/iidm/ext/dynawo_equipment_model_info/1_0"
+           targetNamespace="http://www.powsybl.org/schema/iidm/ext/dynawo_equipment_model/1_0"
            elementFormDefault="qualified">
-    <xs:element name="dynawoEquipmentModelInfo">
+    <xs:element name="dynawoEquipmentModel">
         <xs:complexType>
             <xs:attribute name="modelName" use="required" type="xs:string"/>
             <xs:attribute name="parameterSetId" use="required" type="xs:string"/>

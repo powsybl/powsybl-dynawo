@@ -9,7 +9,7 @@
 package com.powsybl.dynawo.extensions.serde;
 
 import com.powsybl.commons.test.AbstractSerDeTest;
-import com.powsybl.dynawo.extensions.api.info.DynawoUnderVoltageModelInfoAdder;
+import com.powsybl.dynawo.extensions.api.model.DynawoUnderVoltageModelAdder;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -28,7 +28,7 @@ class DynawoUnderVoltageModelInfoSerDeTest extends AbstractSerDeTest {
         Network network = EurostagTutorialExample1Factory.create();
         Generator gen = network.getGenerator("GEN");
 
-        gen.newExtension(DynawoUnderVoltageModelInfoAdder.class)
+        gen.newExtension(DynawoUnderVoltageModelAdder.class)
                 .setDynamicModelId("UVA")
                 .setModelName("UnderVoltage")
                 .setParameterSetId("uva")

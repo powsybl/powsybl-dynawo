@@ -5,18 +5,27 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.extensions.api.info;
+package com.powsybl.dynawo.extensions.api.model;
 
 import com.powsybl.commons.extensions.Extension;
-import com.powsybl.commons.extensions.ExtensionAdder;
 import com.powsybl.iidm.network.Identifiable;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface DynawoModelInfoAdder<I extends Identifiable<I>, E extends Extension<I>, A extends DynawoModelInfoAdder<I, E, A>> extends ExtensionAdder<I, E> {
+public interface DynawoModelExtension<I extends Identifiable<I>, T extends DynawoModelExtension<I, T>> extends Extension<I> {
 
-    A setModelName(String modelName);
+    /**
+     * The dynamic model name used in the simulation
+     */
+    String getModelName();
 
-    A setParameterSetId(String parameterSetId);
+    T setModelName(String modelName);
+
+    /**
+     * The parameter set id associated with this model
+     */
+    String getParameterSetId();
+
+    T setParameterSetId(String parameterSetId);
 }

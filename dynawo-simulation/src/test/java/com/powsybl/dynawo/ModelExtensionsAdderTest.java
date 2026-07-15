@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawo;
 
-import com.powsybl.dynawo.extensions.api.info.DynawoEquipmentModelInfo;
+import com.powsybl.dynawo.extensions.api.model.DynawoEquipmentModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.iidm.network.Generator;
@@ -32,7 +32,7 @@ class ModelExtensionsAdderTest {
                         .staticId("GEN")
                         .build());
         new ModelExtensionsAdder(network, dynamicModels).addModelExtensions();
-        DynawoEquipmentModelInfo<Generator> modelInfo = network.getGenerator("GEN").getExtension(DynawoEquipmentModelInfo.class);
+        DynawoEquipmentModel<Generator> modelInfo = network.getGenerator("GEN").getExtension(DynawoEquipmentModel.class);
         assertEquals("GeneratorPQ", modelInfo.getModelName());
     }
 }

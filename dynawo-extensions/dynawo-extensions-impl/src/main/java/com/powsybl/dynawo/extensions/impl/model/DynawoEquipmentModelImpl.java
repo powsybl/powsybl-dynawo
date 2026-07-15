@@ -5,22 +5,22 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.extensions.impl.info;
+package com.powsybl.dynawo.extensions.impl.model;
 
-import com.powsybl.dynawo.extensions.api.info.DynawoEquipmentModelInfo;
+import com.powsybl.dynawo.extensions.api.model.DynawoEquipmentModel;
 import com.powsybl.iidm.network.Identifiable;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynawoEquipmentModelInfoImpl<I extends Identifiable<I>> extends AbstractDynawoModelInfo<I, DynawoEquipmentModelInfo<I>> implements DynawoEquipmentModelInfo<I> {
+public class DynawoEquipmentModelImpl<I extends Identifiable<I>> extends AbstractDynawoModel<I, DynawoEquipmentModel<I>> implements DynawoEquipmentModel<I> {
 
-    public DynawoEquipmentModelInfoImpl(I extendable, String modelName, String parameterSetId) {
+    public DynawoEquipmentModelImpl(I extendable, String modelName, String parameterSetId) {
         super(extendable, modelName, parameterSetId);
     }
 
     @Override
-    protected DynawoEquipmentModelInfoImpl<I> self() {
+    protected DynawoEquipmentModelImpl<I> self() {
         return this;
     }
 }

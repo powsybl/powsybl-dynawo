@@ -135,6 +135,6 @@ public class ModelExtensionsAdder {
 
     public void addModelExtensions() {
         setupData();
-        dynamicModels.forEach(BlackBoxModel::createDynawoModelInfoExtension);
+        dynamicModels.forEach(BlackBoxModel::createDynawoModelExtension);
     }
 }

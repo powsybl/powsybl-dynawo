@@ -13,36 +13,36 @@ import com.powsybl.commons.extensions.AbstractExtensionSerDe;
 import com.powsybl.commons.extensions.ExtensionSerDe;
 import com.powsybl.commons.io.DeserializerContext;
 import com.powsybl.commons.io.SerializerContext;
-import com.powsybl.dynawo.extensions.api.info.DynawoEquipmentModelInfo;
-import com.powsybl.dynawo.extensions.api.info.DynawoEquipmentModelInfoAdder;
+import com.powsybl.dynawo.extensions.api.model.DynawoEquipmentModel;
+import com.powsybl.dynawo.extensions.api.model.DynawoEquipmentModelAdder;
 import com.powsybl.iidm.network.Identifiable;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(ExtensionSerDe.class)
-public class DynawoEquipmentModelInfoSerDe<I extends Identifiable<I>> extends AbstractExtensionSerDe<I, DynawoEquipmentModelInfo<I>> {
+public class DynawoEquipmentModelSerDe<I extends Identifiable<I>> extends AbstractExtensionSerDe<I, DynawoEquipmentModel<I>> {
 
     private static final String MODEL_NAME = "modelName";
     private static final String PARAMETER_SET_ID = "parameterSetId";
 
-    public DynawoEquipmentModelInfoSerDe() {
-        super(DynawoEquipmentModelInfo.NAME, "network", DynawoEquipmentModelInfo.class, "dynawoEquipmentModelInfo.xsd",
-                "http://www.powsybl.org/schema/iidm/ext/dynawo_equipment_model_info/1_0", "demi");
+    public DynawoEquipmentModelSerDe() {
+        super(DynawoEquipmentModel.NAME, "network", DynawoEquipmentModel.class, "dynawoEquipmentModel.xsd",
+                "http://www.powsybl.org/schema/iidm/ext/dynawo_equipment_model/1_0", "dem");
     }
 
     @Override
-    public void write(DynawoEquipmentModelInfo<I> dynawoEquipmentModelInfo, SerializerContext context) {
-        context.getWriter().writeStringAttribute(MODEL_NAME, dynawoEquipmentModelInfo.getModelName());
-        context.getWriter().writeStringAttribute(PARAMETER_SET_ID, dynawoEquipmentModelInfo.getParameterSetId());
+    public void write(DynawoEquipmentModel<I> dynawoEquipmentModel, SerializerContext context) {
+        context.getWriter().writeStringAttribute(MODEL_NAME, dynawoEquipmentModel.getModelName());
+        context.getWriter().writeStringAttribute(PARAMETER_SET_ID, dynawoEquipmentModel.getParameterSetId());
     }
 
     @Override
-    public DynawoEquipmentModelInfo<I> read(I identifiable, DeserializerContext context) {
+    public DynawoEquipmentModel<I> read(I identifiable, DeserializerContext context) {
         String modelName = context.getReader().readStringAttribute(MODEL_NAME);
         String parameterSetId = context.getReader().readStringAttribute(PARAMETER_SET_ID);
         context.getReader().readEndNode();
-        DynawoEquipmentModelInfoAdder<I> adder = identifiable.newExtension(DynawoEquipmentModelInfoAdder.class);
+        DynawoEquipmentModelAdder<I> adder = identifiable.newExtension(DynawoEquipmentModelAdder.class);
         return adder.setModelName(modelName)
                 .setParameterSetId(parameterSetId)
                 .add();

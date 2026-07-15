@@ -5,12 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.extensions.impl.info;
+package com.powsybl.dynawo.extensions.impl.model;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawo.extensions.api.info.DynawoUnderVoltageModelInfo;
-import com.powsybl.dynawo.extensions.api.info.DynawoUnderVoltageModelInfoAdder;
+import com.powsybl.dynawo.extensions.api.model.DynawoEquipmentModel;
+import com.powsybl.dynawo.extensions.api.model.DynawoEquipmentModelAdder;
 import com.powsybl.iidm.network.Generator;
+import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManager;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -24,21 +25,19 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class DynawoUnderVoltageModelInfoTest {
+class DynawoEquipmentModelTest {
 
     @Test
     void addExtension() {
         Network network = EurostagTutorialExample1Factory.create();
-        Generator gen = network.getGenerator("GEN");
-        gen.newExtension(DynawoUnderVoltageModelInfoAdder.class)
-                .setDynamicModelId("UVA")
-                .setModelName("UnderVoltage")
-                .setParameterSetId("uva")
+        Load load = network.getLoad("LOAD");
+        load.newExtension(DynawoEquipmentModelAdder.class)
+                .setModelName("LoadAlphaBeta")
+                .setParameterSetId("lab")
                 .add();
-        DynawoUnderVoltageModelInfo info = gen.getExtension(DynawoUnderVoltageModelInfo.class);
-        assertEquals("UVA", info.getDynamicModelId());
-        assertEquals("UnderVoltage", info.getModelName());
-        assertEquals("uva", info.getParameterSetId());
+        DynawoEquipmentModel<Load> info = load.getExtension(DynawoEquipmentModel.class);
+        assertEquals("LoadAlphaBeta", info.getModelName());
+        assertEquals("lab", info.getParameterSetId());
     }
 
     @Test
@@ -49,12 +48,11 @@ class DynawoUnderVoltageModelInfoTest {
 
         Network network = EurostagTutorialExample1Factory.create();
         Generator generator = network.getGenerator("GEN");
-        generator.newExtension(DynawoUnderVoltageModelInfoAdder.class)
-                .setModelName("UnderVoltage")
-                .setDynamicModelId("UVA")
-                .setParameterSetId("uva")
+        generator.newExtension(DynawoEquipmentModelAdder.class)
+                .setModelName("GeneratorPQ")
+                .setParameterSetId("gpq")
                 .add();
-        DynawoUnderVoltageModelInfo ext = generator.getExtension(DynawoUnderVoltageModelInfo.class);
+        DynawoEquipmentModel<Generator> ext = generator.getExtension(DynawoEquipmentModel.class);
         assertNotNull(ext);
 
         // Testing variant cloning
@@ -62,21 +60,21 @@ class DynawoUnderVoltageModelInfoTest {
         variantManager.cloneVariant(INITIAL_VARIANT_ID, variant1);
         variantManager.cloneVariant(variant1, variant2);
         variantManager.setWorkingVariant(variant1);
-        assertEquals("uva", ext.getParameterSetId());
+        assertEquals("gpq", ext.getParameterSetId());
 
         // Testing setting different values in the cloned variant and going back to the initial one
-        ext.setParameterSetId("uva2");
-        assertEquals("uva2", ext.getParameterSetId());
+        ext.setParameterSetId("gpq2");
+        assertEquals("gpq2", ext.getParameterSetId());
         variantManager.setWorkingVariant(INITIAL_VARIANT_ID);
-        assertEquals("uva", ext.getParameterSetId());
+        assertEquals("gpq", ext.getParameterSetId());
 
         // Removes a variant then adds another variant to test variant recycling (hence calling allocateVariantArrayElement)
         variantManager.removeVariant(variant1);
         variantManager.cloneVariant(INITIAL_VARIANT_ID, List.of(variant1, variant3));
         variantManager.setWorkingVariant(variant1);
-        assertEquals("uva", ext.getParameterSetId());
+        assertEquals("gpq", ext.getParameterSetId());
         variantManager.setWorkingVariant(variant3);
-        assertEquals("uva", ext.getParameterSetId());
+        assertEquals("gpq", ext.getParameterSetId());
 
         // Test removing current variant
         variantManager.removeVariant(variant3);

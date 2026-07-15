@@ -9,17 +9,16 @@ package com.powsybl.dynawo.extensions.impl.providers;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.extensions.ExtensionAdderProvider;
-import com.powsybl.dynawo.extensions.api.info.DynawoUnderVoltageModelInfo;
-import com.powsybl.dynawo.extensions.impl.info.DynawoUnderVoltageModelInfoAdderImpl;
-import com.powsybl.iidm.network.Generator;
+import com.powsybl.dynawo.extensions.api.model.DynawoEquipmentModel;
+import com.powsybl.dynawo.extensions.impl.model.DynawoEquipmentModelAdderImpl;
 import com.powsybl.iidm.network.Identifiable;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(ExtensionAdderProvider.class)
-public class DynawoUnderVoltageModelInfoAdderImplProvider<I extends Identifiable<I>> implements
-        ExtensionAdderProvider<Generator, DynawoUnderVoltageModelInfo, DynawoUnderVoltageModelInfoAdderImpl> {
+public class DynawoEquipmentModelAdderImplProvider<I extends Identifiable<I>> implements
+        ExtensionAdderProvider<I, DynawoEquipmentModel<I>, DynawoEquipmentModelAdderImpl<I>> {
 
     @Override
     public String getImplementationName() {
@@ -28,16 +27,16 @@ public class DynawoUnderVoltageModelInfoAdderImplProvider<I extends Identifiable
 
     @Override
     public String getExtensionName() {
-        return DynawoUnderVoltageModelInfo.NAME;
+        return DynawoEquipmentModel.NAME;
     }
 
     @Override
-    public Class<DynawoUnderVoltageModelInfoAdderImpl> getAdderClass() {
-        return DynawoUnderVoltageModelInfoAdderImpl.class;
+    public Class<DynawoEquipmentModelAdderImpl> getAdderClass() {
+        return DynawoEquipmentModelAdderImpl.class;
     }
 
     @Override
-    public DynawoUnderVoltageModelInfoAdderImpl newAdder(Generator extendable) {
-        return new DynawoUnderVoltageModelInfoAdderImpl(extendable);
+    public DynawoEquipmentModelAdderImpl<I> newAdder(I extendable) {
+        return new DynawoEquipmentModelAdderImpl<>(extendable);
     }
 }

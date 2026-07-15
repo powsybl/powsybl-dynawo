@@ -5,19 +5,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.extensions.api.info;
+package com.powsybl.dynawo.extensions.api.model;
 
-import com.powsybl.iidm.network.Generator;
+import com.powsybl.iidm.network.Identifiable;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface DynawoUnderVoltageModelInfo extends DynawoAutomationSystemModelInfoExtension<Generator, DynawoUnderVoltageModelInfo> {
-
-    String NAME = "dynawoUnderVoltageModelInfo";
+public interface DynawoEquipmentModelAdder<I extends Identifiable<I>> extends DynawoModelAdder<I, DynawoEquipmentModel<I>, DynawoEquipmentModelAdder<I>> {
 
     @Override
-    default String getName() {
-        return NAME;
+    default Class<DynawoEquipmentModel> getExtensionClass() {
+        return DynawoEquipmentModel.class;
     }
 }
