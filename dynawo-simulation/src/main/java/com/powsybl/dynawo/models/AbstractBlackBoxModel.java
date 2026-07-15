@@ -107,6 +107,11 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
+    public void createDynawoModelInfoExtension() {
+        // method empty by default to be redefined by specific models
+    }
+
+    @Override
     public boolean isConnected() {
         return true;
     }

@@ -7,11 +7,11 @@
  */
 package com.powsybl.dynawo;
 
+import com.powsybl.dynawo.extensions.api.info.DynawoEquipmentModelInfo;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.extensions.DynamicModelInfo;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 
@@ -31,8 +31,8 @@ class ModelExtensionsAdderTest {
                 SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
                         .staticId("GEN")
                         .build());
-        new ModelExtensionsAdder(network, dynamicModels).addDynamicModelExtensions();
-        DynamicModelInfo<Generator> dynamicModelInfo = network.getGenerator("GEN").getExtension(DynamicModelInfo.class);
+        new ModelExtensionsAdder(network, dynamicModels).addModelExtensions();
+        DynawoEquipmentModelInfo<Generator> dynamicModelInfo = network.getGenerator("GEN").getExtension(DynawoEquipmentModelInfo.class);
         assertEquals("GeneratorPQ", dynamicModelInfo.getModelName());
     }
 }

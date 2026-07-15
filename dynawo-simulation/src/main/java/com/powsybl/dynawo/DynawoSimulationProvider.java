@@ -141,7 +141,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                 .workingVariantId(workingVariantId)
                 .currentVersion(currentVersion)
                 .reportNode(reportNode)
-                .addDynamicModelExtensions();
+                .addModelExtensions();
     }
 
     @Override

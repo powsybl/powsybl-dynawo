@@ -9,6 +9,8 @@ package com.powsybl.dynawo.models;
 
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.builders.VersionInterval;
+import com.powsybl.dynawo.extensions.api.info.DynawoEquipmentModelInfo;
+import com.powsybl.dynawo.extensions.api.info.DynawoEquipmentModelInfoAdder;
 import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.extensions.DynamicModelInfo;
@@ -78,6 +80,20 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<T>> 
             equipment.newExtension(DynamicModelInfoAdder.class).setModelName(modelConfig.name()).add();
         } else {
             extension.setModelName(modelConfig.name());
+        }
+    }
+
+    @Override
+    public void createDynawoModelInfoExtension() {
+        DynawoEquipmentModelInfo<T> extension = equipment.getExtension(DynawoEquipmentModelInfo.class);
+        if (extension == null) {
+            equipment.newExtension(DynawoEquipmentModelInfoAdder.class)
+                    .setModelName(modelConfig.name())
+                    .setParameterSetId(getParameterSetId())
+                    .add();
+        } else {
+            extension.setModelName(modelConfig.name());
+            extension.setParameterSetId(getParameterSetId());
         }
     }
 }

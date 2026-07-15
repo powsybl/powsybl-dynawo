@@ -133,9 +133,8 @@ public class ModelExtensionsAdder {
         };
     }
 
-    public void addDynamicModelExtensions() {
+    public void addModelExtensions() {
         setupData();
-        //TODO return specific extensions (use another method to avoid BR)
-        dynamicModels.forEach(BlackBoxModel::createDynamicModelInfoExtension);
+        dynamicModels.forEach(BlackBoxModel::createDynawoModelInfoExtension);
     }
 }

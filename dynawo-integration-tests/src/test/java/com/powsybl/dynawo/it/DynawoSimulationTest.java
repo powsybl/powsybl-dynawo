@@ -19,6 +19,7 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
+import com.powsybl.dynawo.extensions.api.info.DynawoEquipmentModelInfo;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
@@ -31,7 +32,6 @@ import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.VariantManagerConstants;
-import com.powsybl.iidm.network.extensions.DynamicModelInfo;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
@@ -161,8 +161,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         ((DynawoSimulationProvider) provider).addDynamicModelsToNetwork(network, dynamicModelsSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode);
 
-        DynamicModelInfo<Generator> dynamicModelInfo = network.getGenerator("_GEN____6_SM").getExtension(DynamicModelInfo.class);
-        assertEquals("GeneratorSynchronousThreeWindingsProportionalRegulations", dynamicModelInfo.getModelName());
+        DynawoEquipmentModelInfo<Generator> equipmentModelInfo = network.getGenerator("_GEN____6_SM").getExtension(DynawoEquipmentModelInfo.class);
+        assertEquals("GeneratorSynchronousThreeWindingsProportionalRegulations", equipmentModelInfo.getModelName());
+        assertEquals("GSTWPR_GEN____6_SM", equipmentModelInfo.getParameterSetId());
     }
 
     @Test
