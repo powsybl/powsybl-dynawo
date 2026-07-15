@@ -7,13 +7,12 @@
  */
 package com.powsybl.dynawo.extensions.api.info;
 
-import com.powsybl.commons.extensions.ExtensionAdder;
 import com.powsybl.iidm.network.Identifiable;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface DynawoEquipmentModelInfoAdder<I extends Identifiable<I>> extends ExtensionAdder<I, DynawoEquipmentModelInfo<I>> {
+public interface DynawoEquipmentModelInfoAdder<I extends Identifiable<I>> extends DynawoModelInfoAdder<I, DynawoEquipmentModelInfo<I>, DynawoEquipmentModelInfoAdder<I>> {
 
     @Override
     default Class<DynawoEquipmentModelInfo> getExtensionClass() {

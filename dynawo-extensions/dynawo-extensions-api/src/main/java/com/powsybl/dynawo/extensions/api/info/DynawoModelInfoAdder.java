@@ -7,17 +7,16 @@
  */
 package com.powsybl.dynawo.extensions.api.info;
 
+import com.powsybl.commons.extensions.Extension;
+import com.powsybl.commons.extensions.ExtensionAdder;
 import com.powsybl.iidm.network.Identifiable;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface DynawoEquipmentModelInfo<I extends Identifiable<I>> extends DynawoModelInfoExtension<I, DynawoEquipmentModelInfo<I>> {
+public interface DynawoModelInfoAdder<I extends Identifiable<I>, E extends Extension<I>, A extends DynawoModelInfoAdder<I, E, A>> extends ExtensionAdder<I, E> {
 
-    String NAME = "dynawoEquipmentModelInfo";
+    A setModelName(String modelName);
 
-    @Override
-    default String getName() {
-        return NAME;
-    }
+    A setParameterSetId(String parameterSetId);
 }

@@ -32,7 +32,7 @@ class ModelExtensionsAdderTest {
                         .staticId("GEN")
                         .build());
         new ModelExtensionsAdder(network, dynamicModels).addModelExtensions();
-        DynawoEquipmentModelInfo<Generator> dynamicModelInfo = network.getGenerator("GEN").getExtension(DynawoEquipmentModelInfo.class);
-        assertEquals("GeneratorPQ", dynamicModelInfo.getModelName());
+        DynawoEquipmentModelInfo<Generator> modelInfo = network.getGenerator("GEN").getExtension(DynawoEquipmentModelInfo.class);
+        assertEquals("GeneratorPQ", modelInfo.getModelName());
     }
 }

@@ -92,8 +92,8 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<T>> 
                     .setParameterSetId(getParameterSetId())
                     .add();
         } else {
-            extension.setModelName(modelConfig.name());
-            extension.setParameterSetId(getParameterSetId());
+            extension.setModelName(modelConfig.name())
+                    .setParameterSetId(getParameterSetId());
         }
     }
 }

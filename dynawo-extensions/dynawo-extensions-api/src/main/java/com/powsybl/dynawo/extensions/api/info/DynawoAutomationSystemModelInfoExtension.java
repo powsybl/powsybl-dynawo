@@ -12,12 +12,13 @@ import com.powsybl.iidm.network.Identifiable;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface DynawoEquipmentModelInfo<I extends Identifiable<I>> extends DynawoModelInfoExtension<I, DynawoEquipmentModelInfo<I>> {
+public interface DynawoAutomationSystemModelInfoExtension<I extends Identifiable<I>, T extends DynawoAutomationSystemModelInfoExtension<I, T>>
+        extends DynawoModelInfoExtension<I, T> {
 
-    String NAME = "dynawoEquipmentModelInfo";
+    /**
+     * The dynamic model id
+     */
+    String getDynamicModelId();
 
-    @Override
-    default String getName() {
-        return NAME;
-    }
+    T setDynamicModelId(String dynamicModelId);
 }

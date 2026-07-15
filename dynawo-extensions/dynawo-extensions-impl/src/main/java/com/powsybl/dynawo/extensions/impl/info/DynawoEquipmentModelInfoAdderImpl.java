@@ -10,12 +10,11 @@ package com.powsybl.dynawo.extensions.impl.info;
 import com.powsybl.dynawo.extensions.api.info.DynawoEquipmentModelInfo;
 import com.powsybl.dynawo.extensions.api.info.DynawoEquipmentModelInfoAdder;
 import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.iidm.network.impl.extensions.AbstractIidmExtensionAdder;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynawoEquipmentModelInfoAdderImpl<I extends Identifiable<I>> extends AbstractIidmExtensionAdder<I, DynawoEquipmentModelInfo<I>>
+public class DynawoEquipmentModelInfoAdderImpl<I extends Identifiable<I>> extends AbstractDynawoModelInfoAdder<I, DynawoEquipmentModelInfo<I>, DynawoEquipmentModelInfoAdderImpl<I>>
         implements DynawoEquipmentModelInfoAdder<I> {
 
     private String modelName;
@@ -31,14 +30,19 @@ public class DynawoEquipmentModelInfoAdderImpl<I extends Identifiable<I>> extend
     }
 
     @Override
-    public DynawoEquipmentModelInfoAdder<I> setModelName(String modelName) {
+    public DynawoEquipmentModelInfoAdderImpl<I> setModelName(String modelName) {
         this.modelName = modelName;
         return this;
     }
 
     @Override
-    public DynawoEquipmentModelInfoAdder<I> setParameterSetId(String parameterSetId) {
+    public DynawoEquipmentModelInfoAdderImpl<I> setParameterSetId(String parameterSetId) {
         this.parameterSetId = parameterSetId;
+        return this;
+    }
+
+    @Override
+    protected DynawoEquipmentModelInfoAdderImpl<I> self() {
         return this;
     }
 }

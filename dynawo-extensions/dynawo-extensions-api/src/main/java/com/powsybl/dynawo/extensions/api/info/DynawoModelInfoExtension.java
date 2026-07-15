@@ -7,17 +7,25 @@
  */
 package com.powsybl.dynawo.extensions.api.info;
 
+import com.powsybl.commons.extensions.Extension;
 import com.powsybl.iidm.network.Identifiable;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface DynawoEquipmentModelInfo<I extends Identifiable<I>> extends DynawoModelInfoExtension<I, DynawoEquipmentModelInfo<I>> {
+public interface DynawoModelInfoExtension<I extends Identifiable<I>, T extends DynawoModelInfoExtension<I, T>> extends Extension<I> {
 
-    String NAME = "dynawoEquipmentModelInfo";
+    /**
+     * The dynamic model name used in the simulation
+     */
+    String getModelName();
 
-    @Override
-    default String getName() {
-        return NAME;
-    }
+    T setModelName(String modelName);
+
+    /**
+     * The parameter set id associated with this model
+     */
+    String getParameterSetId();
+
+    T setParameterSetId(String parameterSetId);
 }

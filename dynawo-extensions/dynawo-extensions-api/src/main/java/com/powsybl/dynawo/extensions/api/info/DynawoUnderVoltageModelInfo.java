@@ -7,14 +7,14 @@
  */
 package com.powsybl.dynawo.extensions.api.info;
 
-import com.powsybl.iidm.network.Identifiable;
+import com.powsybl.iidm.network.Generator;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface DynawoEquipmentModelInfo<I extends Identifiable<I>> extends DynawoModelInfoExtension<I, DynawoEquipmentModelInfo<I>> {
+public interface DynawoUnderVoltageModelInfo extends DynawoAutomationSystemModelInfoExtension<Generator, DynawoUnderVoltageModelInfo> {
 
-    String NAME = "dynawoEquipmentModelInfo";
+    String NAME = "dynawoUnderVoltageModelInfo";
 
     @Override
     default String getName() {
