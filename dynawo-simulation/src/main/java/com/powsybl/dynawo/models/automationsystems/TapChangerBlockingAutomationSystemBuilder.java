@@ -13,6 +13,7 @@ import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.*;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static com.powsybl.dynawo.builders.BuildersUtil.*;
 
@@ -74,23 +75,43 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     }
 
     public TapChangerBlockingAutomationSystemBuilder transformers(String staticId) {
-        tapChangerEquipments.addEquipment(staticId, id -> this.getTapChangerEquipment(network, id));
+        tapChangerEquipments.addEquipment(staticId, this::getTapChangerEquipment);
         return self();
     }
 
     public TapChangerBlockingAutomationSystemBuilder transformers(String... staticIds) {
-        tapChangerEquipments.addEquipments(staticIds, id -> this.getTapChangerEquipment(network, id));
+        tapChangerEquipments.addEquipments(staticIds, this::getTapChangerEquipment);
         return self();
     }
 
     public TapChangerBlockingAutomationSystemBuilder transformers(Collection<String> staticIds) {
-        tapChangerEquipments.addEquipments(staticIds, id -> this.getTapChangerEquipment(network, id));
+        tapChangerEquipments.addEquipments(staticIds, this::getTapChangerEquipment);
         return self();
     }
 
-    private Identifiable<?> getTapChangerEquipment(Network network, String staticId) {
+    public TapChangerBlockingAutomationSystemBuilder transformersVoltageLevels(String staticId) {
+        tapChangerEquipments.addVoltageLevelEquipments(staticId, network::getVoltageLevel, this::getTapChangerEquipmentStream);
+        return self();
+    }
+
+    public TapChangerBlockingAutomationSystemBuilder transformersVoltageLevels(String... staticIds) {
+        tapChangerEquipments.addVoltageLevelEquipments(staticIds, network::getVoltageLevel, this::getTapChangerEquipmentStream);
+        return self();
+    }
+
+    public TapChangerBlockingAutomationSystemBuilder transformersVoltageLevels(Collection<String> staticIds) {
+        tapChangerEquipments.addVoltageLevelEquipments(staticIds, network::getVoltageLevel, this::getTapChangerEquipmentStream);
+        return self();
+    }
+
+    private Identifiable<?> getTapChangerEquipment(String staticId) {
         Identifiable<?> tapChangerEquipment = network.getTwoWindingsTransformer(staticId);
         return tapChangerEquipment != null ? tapChangerEquipment : network.getLoad(staticId);
+    }
+
+    private Stream<Identifiable<?>> getTapChangerEquipmentStream(VoltageLevel voltageLevel) {
+        return Stream.concat(voltageLevel.getTwoWindingsTransformerStream().map(tfo -> (Identifiable<?>) tfo),
+                voltageLevel.getLoadStream().map(l -> (Identifiable<?>) l));
     }
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(String staticId) {
