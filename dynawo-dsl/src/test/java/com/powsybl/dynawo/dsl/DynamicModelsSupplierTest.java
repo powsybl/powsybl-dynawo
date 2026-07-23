@@ -168,6 +168,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         FourSubstationsNodeBreakerFactory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton2"),
                 Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomationSystem.class,
                         EurostagTutorialExample1Factory.createWithLFResults(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
+                Arguments.of("/dynamicModels/tapChangerBlockingVoltageLevels.groovy", TapChangerBlockingAutomationSystem.class,
+                        EurostagTutorialExample1Factory.createWithLFResults(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
                 Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomationSystem.class,
                         PhaseShifterTestCaseFactory.create(), "PS_PS1", "ps", "PhaseShifterI"),
                 Arguments.of("/dynamicModels/phaseShifterP.groovy", PhaseShifterPAutomationSystem.class,
