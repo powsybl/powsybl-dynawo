@@ -14,8 +14,8 @@ import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.builders.ModelBuilder;
 import com.powsybl.dynawo.builders.ModelConfigsHandler;
+import com.powsybl.dynawo.suppliers.DynamicSupplierJsonDeserializer;
 import com.powsybl.dynawo.suppliers.Property;
-import com.powsybl.dynawo.suppliers.SupplierJsonDeserializer;
 import com.powsybl.iidm.network.Network;
 
 import java.io.InputStream;
@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static com.powsybl.dynawo.DynawoSimulationReports.createDynawoModelSupplierReportNode;
 
@@ -34,18 +35,26 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
 
     private static final String PARAMETER_ID_FIELD = "parameterSetId";
 
-    private final List<DynamicModelConfig> dynamicModelConfigs;
+    private final DynamicModelConfigs dynamicModelConfigs;
 
     public static DynawoModelsSupplier load(InputStream is) {
-        return new DynawoModelsSupplier(new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer()).deserialize(is));
+        return new DynawoModelsSupplier(
+                new DynamicSupplierJsonDeserializer<>(DynamicModelConfigs.class,
+                        new DynamicModelConfigsJsonDeserializer()).deserialize(is));
     }
 
     public static DynawoModelsSupplier load(Path path) {
-        return new DynawoModelsSupplier(new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer()).deserialize(path));
+        return new DynawoModelsSupplier(
+                new DynamicSupplierJsonDeserializer<>(DynamicModelConfigs.class,
+                        new DynamicModelConfigsJsonDeserializer()).deserialize(path));
     }
 
-    public DynawoModelsSupplier(List<DynamicModelConfig> dynamicModelConfigs) {
+    public DynawoModelsSupplier(DynamicModelConfigs dynamicModelConfigs) {
         this.dynamicModelConfigs = dynamicModelConfigs;
+    }
+
+    public DynawoModelsSupplier(List<DynamicModelConfig> dynamicModelConfigList) {
+        this.dynamicModelConfigs = new DynamicModelConfigs(dynamicModelConfigList);
     }
 
     @Override
@@ -56,10 +65,21 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
     @Override
     public List<DynamicModel> get(Network network, ReportNode reportNode) {
         ReportNode supplierReportNode = createDynawoModelSupplierReportNode(reportNode);
-        return dynamicModelConfigs.stream()
+        return Stream.concat(dynamicModelConfigs.dynamicModelConfigList().stream(), getAlternativeModelsStream(network))
                 .map(dynamicModelConfig -> buildDynamicModel(dynamicModelConfig, network, supplierReportNode))
                 .filter(Objects::nonNull)
                 .toList();
+    }
+
+    private Stream<DynamicModelConfig> getAlternativeModelsStream(Network network) {
+        if (dynamicModelConfigs.hasDynamicAlternativeModels()) {
+            ModelResolvers resolvers = new ModelResolvers();
+            return dynamicModelConfigs.dynamicAlternativeModelsConfiglist().stream()
+                    .map(am ->
+                            resolvers.getModelResolver(am.modelResolverName()).resolveAlternativeModels(network, am.alternativeModelConfigs(), am.groupType(), am.properties())
+                    );
+        }
+        return Stream.empty();
     }
 
     private static DynamicModel buildDynamicModel(DynamicModelConfig dynamicModelConfig, Network network, ReportNode reportNode) {

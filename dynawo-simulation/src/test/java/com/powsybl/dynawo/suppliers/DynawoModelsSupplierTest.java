@@ -15,6 +15,7 @@ import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBui
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynamicModelConfig;
+import com.powsybl.dynawo.suppliers.dynamicmodels.DynamicModelConfigs;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynamicModelConfigsJsonDeserializer;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
 import com.powsybl.iidm.network.Network;
@@ -94,12 +95,12 @@ class DynawoModelsSupplierTest {
 
     @Test
     void testModelConfigDeserializer() throws IOException {
-        SupplierJsonDeserializer<DynamicModelConfig> deserializer = new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer());
+        DynamicSupplierJsonDeserializer<DynamicModelConfigs> deserializer = new DynamicSupplierJsonDeserializer<>(DynamicModelConfigs.class, new DynamicModelConfigsJsonDeserializer());
         try (InputStream is = getClass().getResourceAsStream("/suppliers/dynamicModels.json")) {
-            List<DynamicModelConfig> configs = deserializer.deserialize(is);
-            assertEquals(2, configs.size());
-            assertThat(configs.get(0)).usingRecursiveComparison().isEqualTo(getLoadConfig());
-            assertThat(configs.get(1)).usingRecursiveComparison().isEqualTo(getTcbConfig());
+            DynamicModelConfigs configs = deserializer.deserialize(is);
+            assertEquals(2, configs.dynamicModelConfigList().size());
+            assertThat(configs.dynamicModelConfigList().get(0)).usingRecursiveComparison().isEqualTo(getLoadConfig());
+            assertThat(configs.dynamicModelConfigList().get(1)).usingRecursiveComparison().isEqualTo(getTcbConfig());
         }
     }
 
