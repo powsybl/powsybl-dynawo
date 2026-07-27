@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.suppliers.dynamicmodels;
 
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.suppliers.Property;
 import com.powsybl.dynawo.suppliers.SetGroupType;
 import com.powsybl.iidm.network.Network;
@@ -21,5 +22,10 @@ public interface ModelResolver {
     String getName();
 
     DynamicModelConfig resolveAlternativeModels(Network network, List<AlternativeModelConfig> alternativeModelConfigs,
-                                   SetGroupType groupType, List<Property> properties);
+                                                SetGroupType groupType, List<Property> properties, ReportNode reportNode);
+
+    default DynamicModelConfig resolveAlternativeModels(Network network, List<AlternativeModelConfig> alternativeModelConfigs,
+                                                SetGroupType groupType, List<Property> properties) {
+        return resolveAlternativeModels(network, alternativeModelConfigs, groupType, properties, ReportNode.NO_OP);
+    }
 }

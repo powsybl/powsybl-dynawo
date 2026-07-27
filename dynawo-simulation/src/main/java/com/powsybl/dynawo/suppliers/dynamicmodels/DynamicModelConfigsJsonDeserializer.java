@@ -66,22 +66,22 @@ public class DynamicModelConfigsJsonDeserializer extends StdDeserializer<Dynamic
     private static DynamicAlternativeModelsConfig parseAlternativeModelConfig(JsonParser parser) {
         var parsingContext = new Object() {
             final List<AlternativeModelConfig> alternativeModels = new ArrayList<>();
-            String rule = null;
+            String resolverName = null;
             SetGroupType groupType = SetGroupType.FIXED;
             final List<Property> properties = new ArrayList<>();
         };
         JsonUtil.parseObject(parser, name -> {
             boolean handled = true;
             switch (name) {
-                case "alternativeModels" -> JsonUtil.parseObjectArray(parser, parsingContext.alternativeModels::add, DynamicModelConfigsJsonDeserializer::parseAlternativeModel);
-                case "rule" -> parsingContext.rule = parser.nextTextValue();
+                case "alternativeConfigurations" -> JsonUtil.parseObjectArray(parser, parsingContext.alternativeModels::add, DynamicModelConfigsJsonDeserializer::parseAlternativeModel);
+                case "resolverName" -> parsingContext.resolverName = parser.nextTextValue();
                 case "groupType" -> parsingContext.groupType = SetGroupType.valueOf(parser.nextTextValue());
                 case "properties" -> JsonUtil.parseObjectArray(parser, parsingContext.properties::add, PropertyParserUtils::parseProperty);
                 default -> handled = false;
             }
             return handled;
         });
-        return new DynamicAlternativeModelsConfig(parsingContext.alternativeModels, parsingContext.rule,
+        return new DynamicAlternativeModelsConfig(parsingContext.alternativeModels, parsingContext.resolverName,
                 parsingContext.groupType, parsingContext.properties);
     }
 

@@ -12,17 +12,20 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynawo.DynawoSimulationProvider;
+import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.ModelBuilder;
 import com.powsybl.dynawo.builders.ModelConfigsHandler;
-import com.powsybl.dynawo.suppliers.DynamicSupplierJsonDeserializer;
+import com.powsybl.dynawo.suppliers.DynawoSupplierJsonDeserializer;
 import com.powsybl.dynawo.suppliers.Property;
 import com.powsybl.iidm.network.Network;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.powsybl.dynawo.DynawoSimulationReports.createDynawoModelSupplierReportNode;
@@ -38,15 +41,11 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
     private final DynamicModelConfigs dynamicModelConfigs;
 
     public static DynawoModelsSupplier load(InputStream is) {
-        return new DynawoModelsSupplier(
-                new DynamicSupplierJsonDeserializer<>(DynamicModelConfigs.class,
-                        new DynamicModelConfigsJsonDeserializer()).deserialize(is));
+        return new DynawoModelsSupplier(new DynawoSupplierJsonDeserializer().deserialize(is));
     }
 
     public static DynawoModelsSupplier load(Path path) {
-        return new DynawoModelsSupplier(
-                new DynamicSupplierJsonDeserializer<>(DynamicModelConfigs.class,
-                        new DynamicModelConfigsJsonDeserializer()).deserialize(path));
+        return new DynawoModelsSupplier(new DynawoSupplierJsonDeserializer().deserialize(path));
     }
 
     public DynawoModelsSupplier(DynamicModelConfigs dynamicModelConfigs) {
@@ -65,19 +64,30 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
     @Override
     public List<DynamicModel> get(Network network, ReportNode reportNode) {
         ReportNode supplierReportNode = createDynawoModelSupplierReportNode(reportNode);
-        return Stream.concat(dynamicModelConfigs.dynamicModelConfigList().stream(), getAlternativeModelsStream(network))
+        return Stream.concat(dynamicModelConfigs.dynamicModelConfigList().stream(), getAlternativeModelsStream(network, reportNode))
                 .map(dynamicModelConfig -> buildDynamicModel(dynamicModelConfig, network, supplierReportNode))
                 .filter(Objects::nonNull)
                 .toList();
     }
 
-    private Stream<DynamicModelConfig> getAlternativeModelsStream(Network network) {
+    private Stream<DynamicModelConfig> getAlternativeModelsStream(Network network, ReportNode reportNode) {
         if (dynamicModelConfigs.hasDynamicAlternativeModels()) {
+            Set<String> missingResolvers = new HashSet<>();
             ModelResolvers resolvers = new ModelResolvers();
             return dynamicModelConfigs.dynamicAlternativeModelsConfiglist().stream()
-                    .map(am ->
-                            resolvers.getModelResolver(am.modelResolverName()).resolveAlternativeModels(network, am.alternativeModelConfigs(), am.groupType(), am.properties())
-                    );
+                    .map(am -> {
+                        ModelResolver resolver = resolvers.getModelResolver(am.modelResolverName());
+                        if (resolver == null) {
+                            if (missingResolvers.add(am.modelResolverName())) {
+                                DynawoSimulationReports.reportModelResolverNotFound(reportNode, am.modelResolverName());
+                            }
+                            return null;
+                        }
+                        return resolver.resolveAlternativeModels(network, am.alternativeModelConfigs(), am.groupType(),
+                                am.properties(), reportNode);
+                    }
+                    )
+                    .filter(Objects::nonNull);
         }
         return Stream.empty();
     }

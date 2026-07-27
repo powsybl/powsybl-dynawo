@@ -47,6 +47,14 @@ public final class DynawoSimulationReports {
                 .add();
     }
 
+    public static void reportModelResolverNotFound(ReportNode reportNode, String resolverName) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.modelResolverNotFound")
+                .withUntypedValue("resolverName", resolverName)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
     public static void reportDuplicateDynamicId(ReportNode reportNode, String duplicateId, String modelName) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.duplicateDynamicId")
