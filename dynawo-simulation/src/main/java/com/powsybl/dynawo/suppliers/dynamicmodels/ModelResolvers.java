@@ -24,13 +24,13 @@ public class ModelResolvers {
                     .map(ServiceLoader.Provider::get)
                     .collect(Collectors.toMap(ModelResolver::getName, modelResolver -> modelResolver)));
 
-    private final Map<String, ModelResolver> modelResolvers;
+    private final Map<String, ModelResolver> modelResolverMap;
 
     public ModelResolvers() {
-        this.modelResolvers = MODEL_RESOLVER_SUPPLIER.get();
+        this.modelResolverMap = MODEL_RESOLVER_SUPPLIER.get();
     }
 
     public ModelResolver getModelResolver(String name) {
-        return modelResolvers.get(name);
+        return modelResolverMap.get(name);
     }
 }
