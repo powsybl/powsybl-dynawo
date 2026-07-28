@@ -26,6 +26,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -156,44 +157,49 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
 
     public static DynawoSimulationParameters load(PlatformConfig platformConfig, FileSystem fileSystem) {
         DynawoSimulationParameters parameters = new DynawoSimulationParameters();
-        Optional<ModuleConfig> config = platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS);
-        config.ifPresent(c -> {
-            c.getOptionalStringProperty(PARAMETERS_FILE).ifPresent(f -> {
-                Path path = resolveFilePath(f, platformConfig, fileSystem);
-                if (Files.exists(path)) {
-                    parameters.setModelsParameters(ParametersXml.load(path));
-                }
-            });
-            c.getOptionalStringProperty(NETWORK_PARAMETERS_FILE).ifPresent(f -> {
-                Path path = resolveFilePath(f, platformConfig, fileSystem);
-                if (Files.exists(path)) {
-                    parameters.setNetworkParameters(ParametersXml.load(path,
-                            c.getOptionalStringProperty(NETWORK_PARAMETERS_ID).orElse(DEFAULT_NETWORK_PAR_ID)));
-                }
-            });
-            c.getOptionalStringProperty(SOLVER_PARAMETERS_FILE).ifPresent(f -> {
-                Path path = resolveFilePath(f, platformConfig, fileSystem);
-                if (Files.exists(path)) {
-                    parameters.setSolverParameters(ParametersXml.load(path,
-                            c.getOptionalStringProperty(SOLVER_PARAMETERS_ID).orElse(DEFAULT_SOLVER_PAR_ID)));
-                }
-            });
-            parameters.setDumpFileParameters(DumpFileParameters.createDumpFileParametersFromConfig(c, f -> resolveFilePath(f, platformConfig, fileSystem)));
-            c.getOptionalEnumProperty(SOLVER_TYPE, SolverType.class).ifPresent(parameters::setSolverType);
-            c.getOptionalBooleanProperty(MERGE_LOADS).ifPresent(parameters::setMergeLoads);
-            c.getOptionalStringListProperty(MODEL_SIMPLIFIERS).ifPresent(parameters::setModelSimplifiers);
-            c.getOptionalDoubleProperty(PRECISION_PROPERTY_NAME).ifPresent(parameters::setPrecision);
-            c.getOptionalEnumProperty(TIMELINE_EXPORT_MODE, ExportMode.class).ifPresent(parameters::setTimelineExportMode);
-            c.getOptionalEnumProperty(LOG_LEVEL_FILTER, LogLevel.class).ifPresent(parameters::setLogLevelFilter);
-            c.getOptionalEnumSetProperty(LOG_SPECIFIC_LOGS, SpecificLog.class).ifPresent(parameters::setSpecificLogs);
-            c.getOptionalStringProperty(CRITERIA_FILE).ifPresent(cf -> parameters.setCriteriaFilePath(resolveFilePath(cf, platformConfig, fileSystem)));
-            c.getOptionalStringProperty(ADDITIONAL_MODELS_FILE).ifPresent(am -> parameters.setAdditionalModelsPath(resolveFilePath(am, platformConfig, fileSystem)));
-        });
+        platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS)
+                .ifPresent(c -> load(c, parameters, getFilePathResolver(platformConfig, fileSystem)));
         return parameters;
     }
 
-    private static Path resolveFilePath(String fileName, PlatformConfig platformConfig, FileSystem fileSystem) {
-        return platformConfig.getConfigDir().map(configDir -> configDir.resolve(fileName)).orElse(fileSystem.getPath(fileName));
+    private static Function<String, Path> getFilePathResolver(PlatformConfig platformConfig, FileSystem fileSystem) {
+        return platformConfig.getConfigDir()
+                .map(configDir -> (Function<String, Path>) configDir::resolve)
+                .orElse(fileSystem::getPath);
+    }
+
+    private static void load(ModuleConfig moduleConfig, DynawoSimulationParameters parameters,
+                                                   Function<String, Path> filePathResolver) {
+        moduleConfig.getOptionalStringProperty(PARAMETERS_FILE).ifPresent(f -> {
+            Path path = filePathResolver.apply(f);
+            if (Files.exists(path)) {
+                parameters.setModelsParameters(ParametersXml.load(path));
+            }
+        });
+        moduleConfig.getOptionalStringProperty(NETWORK_PARAMETERS_FILE).ifPresent(f -> {
+            Path path = filePathResolver.apply(f);
+            if (Files.exists(path)) {
+                parameters.setNetworkParameters(ParametersXml.load(path,
+                        moduleConfig.getOptionalStringProperty(NETWORK_PARAMETERS_ID).orElse(DEFAULT_NETWORK_PAR_ID)));
+            }
+        });
+        moduleConfig.getOptionalStringProperty(SOLVER_PARAMETERS_FILE).ifPresent(f -> {
+            Path path = filePathResolver.apply(f);
+            if (Files.exists(path)) {
+                parameters.setSolverParameters(ParametersXml.load(path,
+                        moduleConfig.getOptionalStringProperty(SOLVER_PARAMETERS_ID).orElse(DEFAULT_SOLVER_PAR_ID)));
+            }
+        });
+        parameters.setDumpFileParameters(DumpFileParameters.createDumpFileParametersFromConfig(moduleConfig, filePathResolver));
+        moduleConfig.getOptionalEnumProperty(SOLVER_TYPE, SolverType.class).ifPresent(parameters::setSolverType);
+        moduleConfig.getOptionalBooleanProperty(MERGE_LOADS).ifPresent(parameters::setMergeLoads);
+        moduleConfig.getOptionalStringListProperty(MODEL_SIMPLIFIERS).ifPresent(parameters::setModelSimplifiers);
+        moduleConfig.getOptionalDoubleProperty(PRECISION_PROPERTY_NAME).ifPresent(parameters::setPrecision);
+        moduleConfig.getOptionalEnumProperty(TIMELINE_EXPORT_MODE, ExportMode.class).ifPresent(parameters::setTimelineExportMode);
+        moduleConfig.getOptionalEnumProperty(LOG_LEVEL_FILTER, LogLevel.class).ifPresent(parameters::setLogLevelFilter);
+        moduleConfig.getOptionalEnumSetProperty(LOG_SPECIFIC_LOGS, SpecificLog.class).ifPresent(parameters::setSpecificLogs);
+        moduleConfig.getOptionalStringProperty(CRITERIA_FILE).ifPresent(cf -> parameters.setCriteriaFilePath(filePathResolver.apply(cf)));
+        moduleConfig.getOptionalStringProperty(ADDITIONAL_MODELS_FILE).ifPresent(am -> parameters.setAdditionalModelsPath(filePathResolver.apply(am)));
     }
 
     public static DynawoSimulationParameters load(Map<String, String> properties) {

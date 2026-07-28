@@ -13,9 +13,6 @@ import com.powsybl.dynawo.models.VarConnection;
 
 import java.util.List;
 
-import static com.powsybl.dynawo.models.TransformerSide.HIGH_VOLTAGE;
-import static com.powsybl.dynawo.models.TransformerSide.NONE;
-
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -24,7 +21,7 @@ public interface TapChangerModel extends Model {
     List<VarConnection> getTapChangerBlockerVarConnections();
 
     default String getTapChangerBlockingVarName(TransformerSide side) {
-        return "tapChangerBlocking_blocked" + (NONE == side ? HIGH_VOLTAGE.getSideSuffix() : side.getSideSuffix());
+        return "tapChangerBlocking_blocked" + side.getSideSuffix();
     }
 
 }

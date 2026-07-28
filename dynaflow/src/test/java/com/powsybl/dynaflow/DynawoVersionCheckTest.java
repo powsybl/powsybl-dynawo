@@ -52,7 +52,7 @@ class DynawoVersionCheckTest {
 
         private final String stdOutFileRef;
 
-        public LocalCommandExecutorMock(String stdoutFileRef) {
+        LocalCommandExecutorMock(String stdoutFileRef) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
         }
 

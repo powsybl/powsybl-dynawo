@@ -10,9 +10,9 @@ package com.powsybl.dynawo.models.automationsystems;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.builders.AbstractDynamicModelBuilder;
+import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.dynawo.builders.ModelBuilder;
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Objects;

@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawo.security.xml;
 
-import com.powsybl.dynawo.algorithms.xml.XmlUtil;
 import com.powsybl.dynawo.algorithms.ContingencyEventModels;
+import com.powsybl.dynawo.algorithms.xml.XmlUtil;
 import com.powsybl.dynawo.security.SecurityAnalysisContext;
 
 import javax.xml.stream.XMLStreamException;

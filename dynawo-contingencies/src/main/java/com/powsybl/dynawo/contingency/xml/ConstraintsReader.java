@@ -78,29 +78,30 @@ public final class ConstraintsReader {
             if (!CONSTRAINTS_ELEMENT_NAME.equals(reader.getLocalName())) {
                 throw new PowsyblException("Unknown element name '" + reader.getLocalName() + "' in constraints file");
             }
-            XmlUtil.readSubElements(reader, elementName -> {
-                try {
-                    if (!elementName.equals(CONSTRAINT_ELEMENT_NAME)) {
-                        throw new PowsyblException("Unknown element name '" + elementName + "' in constraints tag");
-                    }
-                    String name = reader.getAttributeValue(null, MODEL_NAME);
-                    reader.getAttributeValue(null, DESCRIPTION); // description: unused
-                    reader.getAttributeValue(null, TYPE); // type: unused
-                    String kind = reader.getAttributeValue(null, KIND);
-                    double limit = XmlUtil.readDoubleAttribute(reader, LIMIT, Double.NaN);
-                    double value = XmlUtil.readDoubleAttribute(reader, VALUE, Double.NaN);
-                    Integer side = XmlUtil.readIntegerAttribute(reader, SIDE);
-                    int acceptableDuration = XmlUtil.readIntAttribute(reader, ACCEPTABLE_DURATION, Integer.MAX_VALUE);
-                    XmlUtil.readEndElementOrThrow(reader);
-
-                    getLimitViolation(network, name, kind, limit, value, side, acceptableDuration)
-                            .ifPresent(lvRead -> addOrDismiss(lvRead, limitViolations));
-
-                } catch (XMLStreamException e) {
-                    throw new UncheckedXmlStreamException(e);
-                }
-            });
+            XmlUtil.readSubElements(reader, elementName -> readLimitViolations(elementName, reader, network, limitViolations));
             return limitViolations;
+        } catch (XMLStreamException e) {
+            throw new UncheckedXmlStreamException(e);
+        }
+    }
+
+    private static void readLimitViolations(String elementName, XMLStreamReader reader, Network network, List<LimitViolation> limitViolations) {
+
+        try {
+            if (!elementName.equals(CONSTRAINT_ELEMENT_NAME)) {
+                throw new PowsyblException("Unknown element name '" + elementName + "' in constraints tag");
+            }
+            String name = reader.getAttributeValue(null, MODEL_NAME);
+            reader.getAttributeValue(null, DESCRIPTION); // description: unused
+            reader.getAttributeValue(null, TYPE); // type: unused
+            String kind = reader.getAttributeValue(null, KIND);
+            double limit = XmlUtil.readDoubleAttribute(reader, LIMIT, Double.NaN);
+            double value = XmlUtil.readDoubleAttribute(reader, VALUE, Double.NaN);
+            Integer side = XmlUtil.readIntegerAttribute(reader, SIDE);
+            int acceptableDuration = XmlUtil.readIntAttribute(reader, ACCEPTABLE_DURATION, Integer.MAX_VALUE);
+            XmlUtil.readEndElementOrThrow(reader);
+            getLimitViolation(network, name, kind, limit, value, side, acceptableDuration)
+                    .ifPresent(lvRead -> addOrDismiss(lvRead, limitViolations));
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);
         }
@@ -145,7 +146,8 @@ public final class ConstraintsReader {
     private static Optional<Identifiable<?>> getLimitViolationIdentifiable(Network network, String name) {
         if (DYN_CALCULATED_BUS_PATTERN.matcher(name).matches()) {
             // FIXME: the voltage level information should be directly referenced
-            // The naming corresponds to buses which are calculated in dynawo: https://github.com/dynawo/dynawo/blob/8f1e20e43db7ec4d2e4982deac8307dfa8d0dbec/dynawo/sources/Modeler/DataInterface/PowSyblIIDM/DYNVoltageLevelInterfaceIIDM.cpp#L290
+            // The naming corresponds to buses which are calculated in dynawo:
+            // https://github.com/dynawo/dynawo/blob/8f1e20e43db7ec4d2e4982deac8307dfa8d0dbec/dynawo/sources/Modeler/DataInterface/PowSyblIIDM/DYNVoltageLevelInterfaceIIDM.cpp#L290
             String vlId = name.substring(DYN_CALCULATED_BUS_PREFIX.length(), name.lastIndexOf("_"));
             VoltageLevel vl = network.getVoltageLevel(vlId); // Limit violation on buses are identified by their voltage level id
             if (vl == null) {

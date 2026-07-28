@@ -15,8 +15,8 @@ import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawo.builders.ModelConfigsHandler;
-import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import com.powsybl.dynawo.commons.DynawoConstants;
+import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.Substation;
 import com.powsybl.iidm.network.TopologyKind;
@@ -67,7 +67,7 @@ class DynawoProviderTest extends AbstractSerDeTest {
         private final String stdOutFileRef;
         private final String outputIidm;
 
-        public LocalCommandExecutorMock(String stdOutFileRef, String outputIidm) {
+        LocalCommandExecutorMock(String stdOutFileRef, String outputIidm) {
             this.stdOutFileRef = stdOutFileRef;
             this.outputIidm = outputIidm;
         }

@@ -7,9 +7,7 @@
  */
 package com.powsybl.dynawo.models.loads;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
@@ -19,20 +17,16 @@ import com.powsybl.iidm.network.Load;
 
 import java.util.List;
 
+import static com.powsybl.dynawo.models.TransformerSide.HIGH_VOLTAGE;
 import static com.powsybl.dynawo.models.TransformerSide.NONE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class LoadOneTransformerTapChanger extends LoadOneTransformer implements TapChangerModel {
+public class LoadOneTransformerTapChanger extends AbstractLoadOneTransformer implements TapChangerModel {
 
     protected LoadOneTransformerTapChanger(Load load, String parameterSetId, ModelConfig modelConfig) {
         super(load, parameterSetId, modelConfig);
-    }
-
-    @Override
-    public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createTerminalMacroConnections(this, equipment.getTerminal(), this::getVarConnectionsWithResolver);
     }
 
     protected List<VarConnection> getVarConnectionsWithResolver(EquipmentConnectionPoint connected) {
@@ -44,12 +38,7 @@ public class LoadOneTransformerTapChanger extends LoadOneTransformer implements 
     }
 
     @Override
-    public List<VarConnection> getTapChangerVarConnections(TransformerSide side) {
-        throw new PowsyblException("LoadOneTransformerTapChanger already have a tap changer");
-    }
-
-    @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), String.format(VersionableVariables.getCurrentValue("TC_LOCKED"), NONE.getSideSuffix())));
+        return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE), String.format(VersionableVariables.getCurrentValue("TC_LOCKED"), NONE.getSideSuffix())));
     }
 }

@@ -38,15 +38,24 @@ class MarginCalculationParametersTest {
 
     private static Stream<Arguments> provideMarginCalculationTimes() {
         return Stream.of(
-                Arguments.of(-1, 200, 100, 20, 70, 150, "Start time (%.2f) should be zero or positive".formatted(-1f)),
-                Arguments.of(10, 5, 100, 20, 70, 150, "Stop time (%.2f) should be greater than start time (%.2f)".formatted(5f, 10f)),
-                Arguments.of(10, 200, 5, 20, 70, 150, "Margin calculation start time (%.2f) should be between start (%.2f) and stop time (%.2f)".formatted(5f, 10f, 200f)),
-                Arguments.of(10, 200, 205, 20, 70, 150, "Margin calculation start time (%.2f) should be between start (%.2f) and stop time (%.2f)".formatted(205f, 10f, 200f)),
-                Arguments.of(10, 200, 100, 20, 70, 90, "Contingencies start time (%.2f) should be between margin calculation start time (%.2f) and stop time (%.2f)".formatted(90f, 100f, 200f)),
-                Arguments.of(10, 200, 100, 20, 70, 210, "Contingencies start time (%.2f) should be between margin calculation start time (%.2f) and stop time (%.2f)".formatted(210f, 100f, 200f)),
-                Arguments.of(10, 200, 100, 5, 70, 150, "Load increase start time (%.2f) should be greater than start time (%.2f)".formatted(5f, 10f)),
-                Arguments.of(10, 200, 100, 20, 15, 150, "Load increase stop time (%.2f) should be between load increase start time (%.2f) and margin calculation start time (%.2f)".formatted(15f, 20f, 100f)),
-                Arguments.of(10, 200, 100, 20, 110, 150, "Load increase stop time (%.2f) should be between load increase start time (%.2f) and margin calculation start time (%.2f)".formatted(110f, 20f, 100f))
+                Arguments.of(-1, 200, 100, 20, 70, 150,
+                        "Start time (%.2f) should be zero or positive".formatted(-1f)),
+                Arguments.of(10, 5, 100, 20, 70, 150,
+                        "Stop time (%.2f) should be greater than start time (%.2f)".formatted(5f, 10f)),
+                Arguments.of(10, 200, 5, 20, 70, 150,
+                        "Margin calculation start time (%.2f) should be between start (%.2f) and stop time (%.2f)".formatted(5f, 10f, 200f)),
+                Arguments.of(10, 200, 205, 20, 70, 150,
+                        "Margin calculation start time (%.2f) should be between start (%.2f) and stop time (%.2f)".formatted(205f, 10f, 200f)),
+                Arguments.of(10, 200, 100, 20, 70, 90,
+                        "Contingencies start time (%.2f) should be between margin calculation start time (%.2f) and stop time (%.2f)".formatted(90f, 100f, 200f)),
+                Arguments.of(10, 200, 100, 20, 70, 210,
+                        "Contingencies start time (%.2f) should be between margin calculation start time (%.2f) and stop time (%.2f)".formatted(210f, 100f, 200f)),
+                Arguments.of(10, 200, 100, 5, 70, 150,
+                        "Load increase start time (%.2f) should be greater than start time (%.2f)".formatted(5f, 10f)),
+                Arguments.of(10, 200, 100, 20, 15, 150,
+                        "Load increase stop time (%.2f) should be between load increase start time (%.2f) and margin calculation start time (%.2f)".formatted(15f, 20f, 100f)),
+                Arguments.of(10, 200, 100, 20, 110, 150,
+                        "Load increase stop time (%.2f) should be between load increase start time (%.2f) and margin calculation start time (%.2f)".formatted(110f, 20f, 100f))
         );
     }
 }

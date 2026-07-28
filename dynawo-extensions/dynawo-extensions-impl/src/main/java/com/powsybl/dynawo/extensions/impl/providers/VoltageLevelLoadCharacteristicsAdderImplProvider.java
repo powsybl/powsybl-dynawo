@@ -10,8 +10,8 @@ package com.powsybl.dynawo.extensions.impl.providers;
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.extensions.ExtensionAdderProvider;
 import com.powsybl.dynawo.extensions.api.voltage.VoltageLevelLoadCharacteristics;
-import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.dynawo.extensions.impl.voltage.VoltageLevelLoadCharacteristicsAdderImpl;
+import com.powsybl.iidm.network.VoltageLevel;
 
 /**
  * @author Gautier Bureau {@literal <gautier.bureau at rte-france.com>}

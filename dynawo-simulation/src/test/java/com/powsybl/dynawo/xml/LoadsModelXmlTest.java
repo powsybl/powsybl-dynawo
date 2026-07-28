@@ -32,7 +32,7 @@ class LoadsModelXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     private static final String LOAD_NAME = "LOAD";
 
     @BeforeEach
-    void setup(String dydName, Function< Network, BlackBoxModel> loadConstructor) {
+    void setup(String dydName, Function<Network, BlackBoxModel> loadConstructor) {
         setupNetwork();
         addDynamicModels(loadConstructor);
         setupDynawoContext();
@@ -42,13 +42,13 @@ class LoadsModelXmlTest extends AbstractParametrizedDynamicModelXmlTest {
         network = EurostagTutorialExample1Factory.create();
     }
 
-    protected void addDynamicModels(Function< Network, BlackBoxModel> loadConstructor) {
+    protected void addDynamicModels(Function<Network, BlackBoxModel> loadConstructor) {
         dynamicModels.add(loadConstructor.apply(network));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideLoads")
-    void writeLoadModel(String dydName, Function< Network, BlackBoxModel> loadConstructor) throws SAXException, IOException {
+    void writeLoadModel(String dydName, Function<Network, BlackBoxModel> loadConstructor) throws SAXException, IOException {
         DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }

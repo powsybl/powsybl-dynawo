@@ -18,6 +18,7 @@ import com.powsybl.dynawo.LfResultsUtils;
 import com.powsybl.dynawo.models.events.*;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -76,13 +77,25 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static Stream<Arguments> provideEventModelData() {
         return Stream.of(
-                Arguments.of("/eventModels/branchDisconnection.groovy", EventBranchDisconnection.class, EurostagTutorialExample1Factory.createWithLFResults(), "NHV1_NHV2_1", "Disconnect_NHV1_NHV2_1", "EventQuadripoleDisconnection", 4),
-                Arguments.of("/eventModels/equipmentDisconnection.groovy", EventInjectionDisconnection.class, EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "Disconnect_GEN", null, 1),
-                Arguments.of("/eventModels/hvdcDisconnection.groovy", EventHvdcDisconnection.class, LfResultsUtils.createHvdcTestNetworkVscWithLFResults(), "L", "Disconnect_L", null, 2),
-                Arguments.of("/eventModels/nodeFault.groovy", NodeFaultEvent.class, EurostagTutorialExample1Factory.createWithLFResults(), "NGEN", "NodeFault_NGEN", "NodeFault", 1),
-                Arguments.of("/eventModels/activePowerVariation.groovy", EventActivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ActivePowerVariation_LOAD", null, 2),
-                Arguments.of("/eventModels/reactivePowerVariation.groovy", EventReactivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ReactivePowerVariation_LOAD", null, 2),
-                Arguments.of("/eventModels/referenceVoltageVariation.groovy", EventReferenceVoltageVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "ReferenceVoltageVariation_GEN", "Step", 2)
+                Arguments.of("/eventModels/branchDisconnection.groovy", EventBranchDisconnection.class,
+                        EurostagTutorialExample1Factory.createWithLFResults(), "NHV1_NHV2_1", "Disconnect_NHV1_NHV2_1",
+                        "EventQuadripoleDisconnection", 4),
+                Arguments.of("/eventModels/equipmentDisconnection.groovy", EventInjectionDisconnection.class,
+                        EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "Disconnect_GEN", null, 1),
+                Arguments.of("/eventModels/hvdcDisconnection.groovy", EventHvdcDisconnection.class,
+                        LfResultsUtils.createHvdcTestNetworkVscWithLFResults(), "L", "Disconnect_L", null, 2),
+                Arguments.of("/eventModels/nodeFault.groovy", NodeFaultEvent.class,
+                        EurostagTutorialExample1Factory.createWithLFResults(), "NGEN", "NodeFault_NGEN", "NodeFault", 1),
+                Arguments.of("/eventModels/activePowerVariation.groovy", EventActivePowerVariation.class,
+                        EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ActivePowerVariation_LOAD", null, 2),
+                Arguments.of("/eventModels/reactivePowerVariation.groovy", EventReactivePowerVariation.class,
+                        EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ReactivePowerVariation_LOAD", null, 2),
+                Arguments.of("/eventModels/referenceVoltageVariation.groovy", EventReferenceVoltageVariation.class,
+                        EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "ReferenceVoltageVariation_GEN", "Step", 2),
+                Arguments.of("/eventModels/openSwitch.groovy", EventSwitchOpen.class,
+                        FourSubstationsNodeBreakerFactory.create(), "S1VL1_LD1_BREAKER", "OpenSwitch_S1VL1_LD1_BREAKER", "EventConnectedStatus", 2),
+                Arguments.of("/eventModels/closeSwitch.groovy", EventSwitchOpen.class,
+                        FourSubstationsNodeBreakerFactory.create(), "S1VL1_LD1_BREAKER", "CloseSwitch_S1VL1_LD1_BREAKER", "EventConnectedStatus", 2)
         );
     }
 

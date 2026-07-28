@@ -8,9 +8,9 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
-import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
@@ -35,7 +35,7 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     private static final String HVDC_NAME = "L";
 
     @BeforeEach
-    void setup(String dydName, HvdcLine.ConvertersMode convertersMode, Function< Network, BlackBoxModel> constructor) {
+    void setup(String dydName, HvdcLine.ConvertersMode convertersMode, Function<Network, BlackBoxModel> constructor) {
         setupNetwork(convertersMode);
         addDynamicModels(constructor);
         setupDynawoContext();
@@ -46,14 +46,14 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
         network.getHvdcLine(HVDC_NAME).setConvertersMode(convertersMode);
     }
 
-    protected void addDynamicModels(Function< Network, BlackBoxModel> constructor) {
+    protected void addDynamicModels(Function<Network, BlackBoxModel> constructor) {
         dynamicModels.add(constructor.apply(network));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideHvdc")
     void writeHvdcModel(String dydName, HvdcLine.ConvertersMode convertersMode,
-                        Function< Network, BlackBoxModel> constructor) throws SAXException, IOException {
+                        Function<Network, BlackBoxModel> constructor) throws SAXException, IOException {
         DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }

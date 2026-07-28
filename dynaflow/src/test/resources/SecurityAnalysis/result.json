@@ -14,7 +14,6 @@
         "side" : "ONE"
       }, {
         "subjectId" : "NHV1_NHV2_1",
-        "subjectName" : "null",
         "operationalLimitsGroupId" : "DEFAULT",
         "limitType" : "CURRENT",
         "limitName" : "permanent",

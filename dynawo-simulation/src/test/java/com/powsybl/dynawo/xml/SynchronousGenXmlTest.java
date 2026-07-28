@@ -32,7 +32,7 @@ class SynchronousGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     private static final String STATIC_ID = "GEN";
 
     @BeforeEach
-    void setup(String dydName, Function< Network, BlackBoxModel> loadConstructor) {
+    void setup(String dydName, Function<Network, BlackBoxModel> loadConstructor) {
         setupNetwork();
         addDynamicModels(loadConstructor);
         setupDynawoContext();
@@ -42,13 +42,13 @@ class SynchronousGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
         network = EurostagTutorialExample1Factory.create();
     }
 
-    protected void addDynamicModels(Function< Network, BlackBoxModel> constructor) {
+    protected void addDynamicModels(Function<Network, BlackBoxModel> constructor) {
         dynamicModels.add(constructor.apply(network));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideGen")
-    void writeModel(String dydName, Function< Network, BlackBoxModel> constructor) throws SAXException, IOException {
+    void writeModel(String dydName, Function<Network, BlackBoxModel> constructor) throws SAXException, IOException {
         DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }

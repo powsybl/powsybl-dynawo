@@ -8,9 +8,9 @@
 package com.powsybl.dynawo.margincalculation.results;
 
 import com.powsybl.commons.xml.XmlUtil;
-import com.powsybl.dynawo.contingency.xml.AbstractXmlAggregatedResultParser;
 import com.powsybl.dynawo.contingency.results.FailedCriterion;
 import com.powsybl.dynawo.contingency.results.ScenarioResult;
+import com.powsybl.dynawo.contingency.xml.AbstractXmlAggregatedResultParser;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -36,7 +36,7 @@ public final class XmlMarginCalculationResultParser extends AbstractXmlAggregate
     }
 
     private static void readLoadIncreaseResult(String elementName, XMLStreamReader xmlReader, Consumer<LoadIncreaseResult> resultConsumer) {
-        if (elementName.equals("loadIncreaseResults")) {
+        if ("loadIncreaseResults".equals(elementName)) {
             String loadLevel = xmlReader.getAttributeValue(null, LOAD_LEVEL);
             String status = xmlReader.getAttributeValue(null, STATUS);
             List<ScenarioResult> scenarioResults = new ArrayList<>();

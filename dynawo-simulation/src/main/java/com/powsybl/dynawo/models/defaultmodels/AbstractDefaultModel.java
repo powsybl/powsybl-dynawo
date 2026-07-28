@@ -1,7 +1,7 @@
 package com.powsybl.dynawo.models.defaultmodels;
 
-import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.models.Model;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.xml.DynawoSimulationXmlConstants;
 
 import java.util.List;

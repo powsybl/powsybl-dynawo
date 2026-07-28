@@ -8,9 +8,9 @@
 package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Terminal;
@@ -31,7 +31,10 @@ public class DynamicTwoLevelOverloadManagementSystem extends DynamicOverloadMana
     private final Branch<?> secondMeasuredBranch;
     private final TwoSides secondMeasuredSide;
 
-    protected DynamicTwoLevelOverloadManagementSystem(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch, TwoSides measuredSide, Branch<?> secondMeasuredBranch, TwoSides secondMeasuredSide, Branch<?> controlledBranch, ModelConfig modelConfig) {
+    protected DynamicTwoLevelOverloadManagementSystem(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch,
+                                                      TwoSides measuredSide, Branch<?> secondMeasuredBranch,
+                                                      TwoSides secondMeasuredSide, Branch<?> controlledBranch,
+                                                      ModelConfig modelConfig) {
         super(dynamicModelId, parameterSetId, measuredBranch, measuredSide, controlledBranch, modelConfig);
         this.secondMeasuredBranch = Objects.requireNonNull(secondMeasuredBranch);
         this.secondMeasuredSide = Objects.requireNonNull(secondMeasuredSide);
@@ -39,9 +42,15 @@ public class DynamicTwoLevelOverloadManagementSystem extends DynamicOverloadMana
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this, measuredBranch, BranchModel.class, this::getVarConnectionsWithFirstMeasuredBranch, FIRST_MEASURE_SUFFIX + SideUtils.getSideSuffix(measuredSide));
-        adder.createMacroConnections(this, secondMeasuredBranch, BranchModel.class, this::getVarConnectionsWithSecondMeasuredBranch, SECOND_MEASURE_SUFFIX + SideUtils.getSideSuffix(secondMeasuredSide));
-        adder.createMacroConnections(this, controlledBranch, BranchModel.class, this::getVarConnectionsWithControlledBranch, CONTROL_SUFFIX);
+        adder.createMacroConnections(this, measuredBranch, BranchModel.class,
+                this::getVarConnectionsWithFirstMeasuredBranch,
+                FIRST_MEASURE_SUFFIX + SideUtils.getSideSuffix(measuredSide));
+        adder.createMacroConnections(this, secondMeasuredBranch, BranchModel.class,
+                this::getVarConnectionsWithSecondMeasuredBranch,
+                SECOND_MEASURE_SUFFIX + SideUtils.getSideSuffix(secondMeasuredSide));
+        adder.createMacroConnections(this, controlledBranch, BranchModel.class,
+                this::getVarConnectionsWithControlledBranch,
+                CONTROL_SUFFIX);
     }
 
     public Terminal getSecondMeasuredTerminal() {

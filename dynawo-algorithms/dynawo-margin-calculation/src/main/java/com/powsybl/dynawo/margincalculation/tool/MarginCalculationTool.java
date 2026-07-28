@@ -13,10 +13,10 @@ import com.powsybl.commons.io.table.*;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.dsl.GroovyDslContingenciesProviderFactory;
-import com.powsybl.dynawo.contingency.results.FailedCriterion;
-import com.powsybl.dynawo.contingency.results.ScenarioResult;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.DynamicSimulationSupplierFactory;
+import com.powsybl.dynawo.contingency.results.FailedCriterion;
+import com.powsybl.dynawo.contingency.results.ScenarioResult;
 import com.powsybl.dynawo.margincalculation.MarginCalculation;
 import com.powsybl.dynawo.margincalculation.MarginCalculationParameters;
 import com.powsybl.dynawo.margincalculation.MarginCalculationRunParameters;
@@ -80,45 +80,52 @@ public class MarginCalculationTool implements Tool {
             @Override
             public Options getOptions() {
                 return new Options()
-                        .addOption(Option.builder().longOpt(CASE_FILE)
+                        .addOption(Option.builder()
+                                .longOpt(CASE_FILE)
                                 .desc("the case path")
                                 .hasArg()
                                 .argName("FILE")
                                 .required()
-                                .build())
-                        .addOption(Option.builder().longOpt(DYNAMIC_MODELS_FILE)
+                                .get())
+                        .addOption(Option.builder()
+                                .longOpt(DYNAMIC_MODELS_FILE)
                                 .desc("dynamic models description as a Groovy file: defines the dynamic models to be associated to chosen equipments of the network")
                                 .hasArg()
                                 .argName("FILE")
                                 .required()
-                                .build())
-                        .addOption(Option.builder().longOpt(CONTINGENCIES_FILE)
+                                .get())
+                        .addOption(Option.builder()
+                                .longOpt(CONTINGENCIES_FILE)
                                 .desc("contingencies description as a Groovy file")
                                 .hasArg()
                                 .argName("FILE")
                                 .required()
-                                .build())
-                        .addOption(Option.builder().longOpt(LOAD_VARIATIONS_FILE)
+                                .get())
+                        .addOption(Option.builder()
+                                .longOpt(LOAD_VARIATIONS_FILE)
                                 .desc("load variations description as a JSON file")
                                 .hasArg()
                                 .argName("FILE")
                                 .required()
-                                .build())
-                        .addOption(Option.builder().longOpt(PARAMETERS_FILE)
+                                .get())
+                        .addOption(Option.builder()
+                                .longOpt(PARAMETERS_FILE)
                                 .desc("margin calculation parameters as a JSON file")
                                 .hasArg()
                                 .argName("FILE")
-                                .build())
-                        .addOption(Option.builder().longOpt(OUTPUT_FILE)
+                                .get())
+                        .addOption(Option.builder()
+                                .longOpt(OUTPUT_FILE)
                                 .desc("margin calculation results output path")
                                 .hasArg()
                                 .argName("FILE")
-                                .build())
-                        .addOption(Option.builder().longOpt(OUTPUT_LOG_FILE)
+                                .get())
+                        .addOption(Option.builder()
+                                .longOpt(OUTPUT_LOG_FILE)
                                 .desc("margin calculation logs output path")
                                 .hasArg()
                                 .argName("FILE")
-                                .build())
+                                .get())
                         .addOption(ConversionToolUtils.createImportParametersFileOption())
                         .addOption(ConversionToolUtils.createImportParameterOption());
             }

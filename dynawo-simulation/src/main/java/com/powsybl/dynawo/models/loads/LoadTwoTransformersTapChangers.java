@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.loads;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
@@ -25,7 +24,7 @@ import static com.powsybl.dynawo.models.TransformerSide.LOW_VOLTAGE;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implements TapChangerModel {
+public class LoadTwoTransformersTapChangers extends AbstractLoadTwoTransformers implements TapChangerModel {
 
     protected LoadTwoTransformersTapChangers(Load load, String parameterSetId, ModelConfig modelConfig) {
         super(load, parameterSetId, modelConfig);
@@ -45,11 +44,6 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
                     varConnections.add(new VarConnection(String.format(switchOffVar, LOW_VOLTAGE.getSideSuffix()), switchOff));
                 });
         return varConnections;
-    }
-
-    @Override
-    public List<VarConnection> getTapChangerVarConnections(TransformerSide side) {
-        throw new PowsyblException("LoadTwoTransformersTapChangers already have a tap changer");
     }
 
     @Override
