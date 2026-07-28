@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.hvdc;
 
 import com.powsybl.dynawo.models.defaultmodels.AbstractDefaultModel;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
 import com.powsybl.iidm.network.TwoSides;
 
 /**
@@ -26,6 +27,6 @@ public class DefaultHvdc extends AbstractDefaultModel implements HvdcModel {
 
     @Override
     public String getSwitchOffSignalEventVarName(TwoSides side) {
-        return "@NAME@_state" + side.getNum() + "_value";
+        return String.format(VersionableVariables.getCurrentValue("SIDED_STATE"), "@NAME@", side.getNum());
     }
 }

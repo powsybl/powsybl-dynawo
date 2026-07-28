@@ -92,13 +92,13 @@
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
     <dyn:macroStaticReference id="MSR_LoadOneTransformerTapChanger">
-        <dyn:staticRef var="transformer_P1Pu_value" staticVar="p"/>
-        <dyn:staticRef var="transformer_Q1Pu_value" staticVar="q"/>
+        <dyn:staticRef var="transformer_P1Pu" staticVar="p"/>
+        <dyn:staticRef var="transformer_Q1Pu" staticVar="q"/>
         <dyn:staticRef var="transformer_state" staticVar="state"/>
     </dyn:macroStaticReference>
     <dyn:macroStaticReference id="MSR_LoadTwoTransformersTapChangers">
-        <dyn:staticRef var="transformerT_P1Pu_value" staticVar="p"/>
-        <dyn:staticRef var="transformerT_Q1Pu_value" staticVar="q"/>
+        <dyn:staticRef var="transformerT_P1Pu" staticVar="p"/>
+        <dyn:staticRef var="transformerT_Q1Pu" staticVar="q"/>
         <dyn:staticRef var="transformerT_state" staticVar="state"/>
     </dyn:macroStaticReference>
     <dyn:macroStaticReference id="MSR_LoadAlphaBetaMotorSimplified">

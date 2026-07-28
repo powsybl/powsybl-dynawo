@@ -36,6 +36,10 @@ public final class VersionableVariables implements VersionableVariablesResolver 
             new VersionableVariable.VariableStep("tapChanger%s_locked"),
             new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "transformer%s_locked"));
 
+    private static final VersionableVariable TCB_LOCKED = new VersionableVariable(
+            new VersionableVariable.VariableStep("%s_TAP_CHANGER_locked_value"),
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "%s_TAP_CHANGER_locked"));
+
     private static final VersionableVariable TC_SWITCH_OFF = new VersionableVariable(
             new VersionableVariable.VariableStep("tapChanger%s_switchOffSignal1"),
             new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "transformer%s_tapChanger_switchOffSignal1"));
@@ -68,9 +72,37 @@ public final class VersionableVariables implements VersionableVariablesResolver 
             new VersionableVariable.VariableStep("load_omegaRefPu_value"),
             new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "load_omegaRefPu"));
 
+    private static final VersionableVariable PHI = new VersionableVariable(
+            new VersionableVariable.VariableStep("@@NAME@@@NODE@_phi_value"),
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "@@NAME@@@NODE@_phi"));
+
+    private static final VersionableVariable STATE = new VersionableVariable(
+            new VersionableVariable.VariableStep("%s_state_value"),
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "%s_state_value"));
+
+    private static final VersionableVariable SIDED_STATE = new VersionableVariable(
+            new VersionableVariable.VariableStep("%s_state%s_value"),
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "%s_state%s_value"));
+
+    private static final VersionableVariable SIDED_UPU = new VersionableVariable(
+            new VersionableVariable.VariableStep("%s@_Upu_value"),
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "%s@_Upu"));
+
     private static final VersionableVariable SVARC_MODE_HANDLING = new VersionableVariable(
             new VersionableVariable.VariableStep("SVarC_modeHandling_mode_value"),
             new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "SVarC_modeHandling_mode"));
+
+    private static final VersionableVariable TRANSFORMER_P1PU = new VersionableVariable(
+            new VersionableVariable.VariableStep("transformer%s_P1Pu_value"),
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "transformer%s_P1Pu"));
+
+    private static final VersionableVariable TRANSFORMER_Q1PU = new VersionableVariable(
+            new VersionableVariable.VariableStep("transformer%s_Q1Pu_value"),
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "transformer%s_Q1Pu"));
+
+    private static final VersionableVariable TRANSFORMER_U2PU = new VersionableVariable(
+            new VersionableVariable.VariableStep("transformer_U2Pu_value"),
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "transformer_U2Pu"));
 
     private static final Map<String, VersionableVariable> VERSIONABLE_VARIABLES_MAP = Map.ofEntries(
             Map.entry("DELTA_PC", DELTA_PC),
@@ -80,12 +112,20 @@ public final class VersionableVariables implements VersionableVariablesResolver 
             Map.entry("DELTA_P_GEN", DELTA_P_GEN),
             Map.entry("EVENT_STATE", EVENT_STATE),
             Map.entry("LOAD_OMEGA_REF_PU", LOAD_OMEGA_REF_PU),
-            Map.entry("STEP", STEP),
-            Map.entry("SVARC_MODE_HANDLING", SVARC_MODE_HANDLING),
             Map.entry("OMEGA_GRP", OMEGA_GRP),
             Map.entry("OMEGA_REF_GRP", OMEGA_REF_GRP),
+            Map.entry("PHI", PHI),
+            Map.entry("SIDED_STATE", SIDED_STATE),
+            Map.entry("SIDED_UPU", SIDED_UPU),
+            Map.entry("STATE", STATE),
+            Map.entry("STEP", STEP),
+            Map.entry("SVARC_MODE_HANDLING", SVARC_MODE_HANDLING),
             Map.entry("TC_LOCKED", TC_LOCKED),
-            Map.entry("TC_SWITCH_OFF", TC_SWITCH_OFF));
+            Map.entry("TCB_LOCKED", TCB_LOCKED),
+            Map.entry("TC_SWITCH_OFF", TC_SWITCH_OFF),
+            Map.entry("TRANSFORMER_P1PU", TRANSFORMER_P1PU),
+            Map.entry("TRANSFORMER_Q1PU", TRANSFORMER_Q1PU),
+            Map.entry("TRANSFORMER_U2PU", TRANSFORMER_U2PU));
 
     public static String getCurrentValue(String name) {
         return VERSIONABLE_VARIABLES_MAP.get(name).getCurrentValue();

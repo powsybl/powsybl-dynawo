@@ -11,20 +11,18 @@ import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
 import com.powsybl.iidm.network.Load;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.powsybl.dynawo.models.TransformerSide.NONE;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractLoadOneTransformer extends AbstractLoad {
-
-    protected static final List<VarMapping> VAR_MAPPING = List.of(
-            new VarMapping("transformer_P1Pu_value", "p"),
-            new VarMapping("transformer_Q1Pu_value", "q"),
-            new VarMapping("transformer_state", "state"));
 
     protected AbstractLoadOneTransformer(Load load, String parameterSetId, ModelConfig modelConfig) {
         super(load, parameterSetId, modelConfig, "transformer_terminal1");
@@ -32,7 +30,10 @@ public abstract class AbstractLoadOneTransformer extends AbstractLoad {
 
     @Override
     public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
+        return List.of(
+                new VarMapping(String.format(VersionableVariables.getCurrentValue("TRANSFORMER_P1PU"), NONE.getSideSuffix()), "p"),
+                new VarMapping(String.format(VersionableVariables.getCurrentValue("TRANSFORMER_Q1PU"), NONE.getSideSuffix()), "q"),
+                new VarMapping("transformer_state", "state"));
     }
 
     @Override
