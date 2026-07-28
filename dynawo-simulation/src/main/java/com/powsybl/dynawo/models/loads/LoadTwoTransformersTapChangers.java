@@ -11,7 +11,6 @@ import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
 import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
 import com.powsybl.iidm.network.Load;
@@ -31,12 +30,8 @@ public class LoadTwoTransformersTapChangers extends AbstractLoadTwoTransformers 
     }
 
     @Override
-    public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createTerminalMacroConnections(this, equipment.getTerminal(), this::getVarConnectionsWithResolver);
-    }
-
-    protected List<VarConnection> getVarConnectionsWithResolver(EquipmentConnectionPoint connected) {
-        List<VarConnection> varConnections = getVarConnectionsWith(connected);
+    protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
+        List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {
                     String switchOffVar = VersionableVariables.getCurrentValue("TC_SWITCH_OFF");

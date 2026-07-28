@@ -10,7 +10,6 @@ package com.powsybl.dynawo.models.loads;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
 import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
 import com.powsybl.iidm.network.Load;
@@ -29,7 +28,7 @@ public class LoadOneTransformerTapChanger extends AbstractLoadOneTransformer imp
         super(load, parameterSetId, modelConfig);
     }
 
-    protected List<VarConnection> getVarConnectionsWithResolver(EquipmentConnectionPoint connected) {
+    protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
                 .map(switchOff -> new VarConnection(String.format(VersionableVariables.getCurrentValue("TC_SWITCH_OFF"), NONE.getSideSuffix()), switchOff))
