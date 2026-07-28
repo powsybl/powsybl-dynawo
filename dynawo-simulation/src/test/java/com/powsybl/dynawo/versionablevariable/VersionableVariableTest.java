@@ -32,6 +32,17 @@ class VersionableVariableTest {
     }
 
     @Test
+    void testVariableExactVersion() {
+        VersionableVariable variable = new VersionableVariable(
+                new VersionableVariable.VariableStep(DynawoVersion.createFromString("1.5.0"), "variable1"),
+                new VersionableVariable.VariableStep(DynawoVersion.createFromString("1.6.0"), "variable2"),
+                new VersionableVariable.VariableStep(DynawoVersion.createFromString("1.7.0"), "variable3")
+        );
+        variable.setCurrentValue(DynawoVersion.createFromString("1.6.0"));
+        assertEquals("variable2", variable.getCurrentValue());
+    }
+
+    @Test
     void testVersionNotFound() {
         VersionableVariable variable = new VersionableVariable(
                 new VersionableVariable.VariableStep(DynawoVersion.createFromString("1.5.0"), "variable1"),
