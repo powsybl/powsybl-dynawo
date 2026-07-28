@@ -14,7 +14,9 @@ import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationS
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawo.models.events.EventReactivePowerVariationBuilder;
 import com.powsybl.dynawo.models.events.EventReferenceVoltageVariationBuilder;
+import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
+import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerTapChangerBuilder;
 import com.powsybl.dynawo.models.loads.LoadTwoTransformersTapChangersBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -47,6 +49,10 @@ class Dynawo18VersionXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("GEN")
                 .parameterSetId("GSFWPR")
                 .build());
+        dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPV")
+                .staticId("GEN2")
+                .parameterSetId("GPV")
+                .build());
         dynamicModels.add(LoadOneTransformerTapChangerBuilder.of(network, "LoadOneTransformerTapChanger")
                 .staticId("LOAD")
                 .parameterSetId("LOT")
@@ -55,6 +61,10 @@ class Dynawo18VersionXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("LOAD2")
                 .parameterSetId("LOT")
                 .build());
+        dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBetaMotorSimplified")
+                .staticId("LOAD3")
+                .parameterSetId("LAB")
+                .build());
         dynamicModels.add(TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem")
                 .dynamicModelId("TCB")
                 .parameterSetId("TCB")
@@ -62,7 +72,7 @@ class Dynawo18VersionXmlTest extends AbstractDynamicModelXmlTest {
                 .uMeasurements("NLOAD")
                 .build());
         eventModels.add(EventActivePowerVariationBuilder.of(network)
-                .staticId("GEN")
+                .staticId("GEN2")
                 .startTime(1)
                 .deltaP(1.1)
                 .build());
@@ -76,7 +86,6 @@ class Dynawo18VersionXmlTest extends AbstractDynamicModelXmlTest {
                 .startTime(1)
                 .deltaU(1.1)
                 .build());
-
     }
 
     @Test

@@ -9,8 +9,11 @@ package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.utils.ImmutableLateInit;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Identifiable;
+
+import java.util.function.Supplier;
 
 import static com.powsybl.dynawo.parameters.ParameterType.BOOL;
 import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
@@ -22,16 +25,16 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
 
     protected enum EquipmentModelType {
 
-        SPECIFIED("EventSetPointBoolean", "event_state1", "event_stateEvent1"),
-        DEFAULT("EventConnectedStatus", "event_state1_value", "event_open"),;
+        SPECIFIED("EventSetPointBoolean", () -> "event_state1", "event_stateEvent1"),
+        DEFAULT("EventConnectedStatus", () -> VersionableVariables.getCurrentValue("EVENT_STATE"), "event_open");
 
         private final String lib;
-        private final String varConnection;
+        private final Supplier<String> varConnectionSupplier;
         private final String parameterName;
 
-        EquipmentModelType(String lib, String varConnection, String parameterName) {
+        EquipmentModelType(String lib, Supplier<String> varConnectionSupplier, String parameterName) {
             this.lib = lib;
-            this.varConnection = varConnection;
+            this.varConnectionSupplier = varConnectionSupplier;
             this.parameterName = parameterName;
         }
 
@@ -40,7 +43,7 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
         }
 
         public String getVarConnection() {
-            return varConnection;
+            return varConnectionSupplier.get();
         }
 
         public String getParameterName() {
