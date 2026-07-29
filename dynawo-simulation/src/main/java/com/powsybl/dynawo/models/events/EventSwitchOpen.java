@@ -11,7 +11,7 @@ import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.switches.SwitchModel;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Switch;
 
@@ -38,7 +38,7 @@ public class EventSwitchOpen extends AbstractEvent {
     }
 
     private List<VarConnection> getVarConnectionsWith(SwitchModel connected) {
-        return List.of(new VarConnection(VersionableVariables.getCurrentValue("EVENT_STATE"), connected.getStateValueVarName()));
+        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("EVENT_STATE"), connected.getStateValueVarName()));
     }
 
     @Override

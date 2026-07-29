@@ -10,10 +10,8 @@ package com.powsybl.dynawo.algorithms;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.BlackBoxModelSupplier;
-import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -34,7 +32,6 @@ class ContingencyEventModelsTest {
     @Test
     void test() {
         Network network = EurostagTutorialExample1Factory.createWithLFResults();
-        new VersionableVariablesHandler().setCurrentValues(DynawoConstants.CURRENT_VERSION);
         BlackBoxModelSupplier bbmSupplier = BlackBoxModelSupplier.createFrom(List.of(
                 BaseGeneratorBuilder.of(network)
                         .staticId("GEN")

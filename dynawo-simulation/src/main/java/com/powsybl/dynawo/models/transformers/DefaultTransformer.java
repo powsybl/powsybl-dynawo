@@ -10,7 +10,7 @@ package com.powsybl.dynawo.models.transformers;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawo.models.utils.SideUtils;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class DefaultTransformer extends AbstractDefaultModel implements Transfor
 
     @Override
     public String getStateValueVarName() {
-        return VersionableVariables.getCurrentValue("STATE", "@NAME@");
+        return VersionableVariablesHandler.getInstance().getCurrentValue("STATE", "@NAME@");
     }
 
     @Override
@@ -58,13 +58,13 @@ public class DefaultTransformer extends AbstractDefaultModel implements Transfor
 
     @Override
     public String getUPuVarName(TwoSides sides) {
-        return VersionableVariables.getCurrentValue("SIDED_UPU", "@@NAME@@@NODE" + sides.getNum());
+        return VersionableVariablesHandler.getInstance().getCurrentValue("SIDED_UPU", "@@NAME@@@NODE" + sides.getNum());
     }
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
         return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE),
-                VersionableVariables.getCurrentValue("TCB_LOCKED", "@NAME@")));
+                VersionableVariablesHandler.getInstance().getCurrentValue("TCB_LOCKED", "@NAME@")));
     }
 
     @Override

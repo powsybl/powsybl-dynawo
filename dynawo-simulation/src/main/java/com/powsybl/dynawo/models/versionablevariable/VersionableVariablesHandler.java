@@ -7,31 +7,56 @@
  */
 package com.powsybl.dynawo.models.versionablevariable;
 
-import com.google.common.base.Suppliers;
+import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
+ * Resolve all VarConnection variable with a value dependent of the Dynawo version
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class VersionableVariablesHandler {
+public final class VersionableVariablesHandler {
 
-    private static final Supplier<List<VersionableVariablesResolver>> RESOLVER_SUPPLIER =
-            Suppliers.memoize(() -> ServiceLoader.load(VersionableVariablesResolver.class).stream()
-                    .map(ServiceLoader.Provider::get)
-                    .collect(Collectors.toList()));
+    private static final VersionableVariablesHandler INSTANCE = new VersionableVariablesHandler();
 
-    private final List<VersionableVariablesResolver> resolvers;
+    private final List<VersionableVariable> versionableVariables;
+    private final Map<String, String> currentValues = new HashMap<>();
 
-    public VersionableVariablesHandler() {
-        this.resolvers = RESOLVER_SUPPLIER.get();
+    private DynawoVersion currentVersion = DynawoConstants.CURRENT_VERSION;
+
+    private VersionableVariablesHandler() {
+        this.versionableVariables = ServiceLoader.load(VersionableVariablesProvider.class).stream()
+                .map(ServiceLoader.Provider::get)
+                .flatMap(p -> p.getVersionableVariables().stream())
+                .collect(Collectors.toList());
+        setCurrentValues();
+    }
+
+    public static VersionableVariablesHandler getInstance() {
+        return INSTANCE;
+    }
+
+    public String getCurrentValue(String name) {
+        return currentValues.get(name);
+    }
+
+    public String getCurrentValue(String name, Object... args) {
+        return String.format(currentValues.get(name), args);
     }
 
     public void setCurrentValues(DynawoVersion currentVersion) {
-        resolvers.forEach(p -> p.setCurrentValues(currentVersion));
+        if (this.currentVersion.compareTo(currentVersion) != 0) {
+            this.currentVersion = currentVersion;
+            setCurrentValues();
+        }
+    }
+
+    private void setCurrentValues() {
+        versionableVariables.forEach(vv -> currentValues.put(vv.name(), vv.getCurrentValue(currentVersion)));
     }
 }

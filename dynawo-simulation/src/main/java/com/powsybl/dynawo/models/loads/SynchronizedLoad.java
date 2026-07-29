@@ -11,7 +11,7 @@ import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Load;
 
@@ -36,7 +36,7 @@ public class SynchronizedLoad extends BaseLoad implements FrequencySynchronizedM
 
     @Override
     public String getOmegaRefPuVarName() {
-        return VersionableVariables.getCurrentValue("LOAD_OMEGA_REF_PU");
+        return VersionableVariablesHandler.getInstance().getCurrentValue("LOAD_OMEGA_REF_PU");
     }
 
     @Override

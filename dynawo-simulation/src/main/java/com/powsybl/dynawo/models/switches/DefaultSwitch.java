@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.models.switches;
 
 import com.powsybl.dynawo.models.defaultmodels.AbstractDefaultModel;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -21,7 +21,7 @@ public class DefaultSwitch extends AbstractDefaultModel implements SwitchModel {
 
     @Override
     public String getStateValueVarName() {
-        return VersionableVariables.getCurrentValue("STATE", "@NAME@");
+        return VersionableVariablesHandler.getInstance().getCurrentValue("STATE", "@NAME@");
     }
 
     @Override

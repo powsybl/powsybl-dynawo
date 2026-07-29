@@ -11,7 +11,7 @@ import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.iidm.network.Load;
 
 import java.util.ArrayList;
@@ -31,8 +31,8 @@ public abstract class AbstractLoadOneTransformer extends AbstractLoad {
     @Override
     public List<VarMapping> getVarsMapping() {
         return List.of(
-                new VarMapping(VersionableVariables.getCurrentValue("TRANSFORMER_P1PU", NONE.getSideSuffix()), "p"),
-                new VarMapping(VersionableVariables.getCurrentValue("TRANSFORMER_Q1PU", NONE.getSideSuffix()), "q"),
+                new VarMapping(VersionableVariablesHandler.getInstance().getCurrentValue("TRANSFORMER_P1PU", NONE.getSideSuffix()), "p"),
+                new VarMapping(VersionableVariablesHandler.getInstance().getCurrentValue("TRANSFORMER_Q1PU", NONE.getSideSuffix()), "q"),
                 new VarMapping("transformer_state", "state"));
     }
 

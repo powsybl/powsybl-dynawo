@@ -14,7 +14,7 @@ import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.utils.SideUtils;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
@@ -59,7 +59,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
 
     @Override
     public String getStateValueVarName() {
-        return VersionableVariables.getCurrentValue("STATE", "transformer");
+        return VersionableVariablesHandler.getInstance().getCurrentValue("STATE", "transformer");
     }
 
     @Override
@@ -85,7 +85,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
         return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE),
-                VersionableVariables.getCurrentValue("TCB_LOCKED", "transformer")));
+                VersionableVariablesHandler.getInstance().getCurrentValue("TCB_LOCKED", "transformer")));
     }
 
     @Override
@@ -105,7 +105,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
 
     @Override
     public String getUPuVarName(TwoSides sides) {
-        return VersionableVariables.getCurrentValue("SIDED_UPU", "@STATIC_ID@@NODE" + sides.getNum());
+        return VersionableVariablesHandler.getInstance().getCurrentValue("SIDED_UPU", "@STATIC_ID@@NODE" + sides.getNum());
     }
 
     @Override

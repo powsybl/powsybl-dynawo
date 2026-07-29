@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class VersionableVariable {
+public record VersionableVariable(String name, List<VariableStep> steps) {
 
     public record VariableStep(DynawoVersion versionMin, String variable) {
         public VariableStep(String variable) {
@@ -24,25 +24,15 @@ public class VersionableVariable {
         }
     }
 
-    private final List<VariableStep> steps;
-
-    private String currentValue;
-
-    public VersionableVariable(VariableStep... steps) {
-        this.steps = List.of(steps);
-        this.currentValue = steps[0].variable;
+    public VersionableVariable(String name, VariableStep... steps) {
+        this(name, List.of(steps));
     }
 
-    public String getCurrentValue() {
-        return currentValue;
-    }
-
-    public void setCurrentValue(DynawoVersion currentVersion) {
+    public String getCurrentValue(DynawoVersion currentVersion) {
         for (int i = steps.size() - 1; i >= 0; i--) {
             VariableStep step = steps.get(i);
             if (step.versionMin().compareTo(currentVersion) <= 0) {
-                currentValue = step.variable();
-                return;
+                return step.variable();
             }
         }
         throw new PowsyblException("No VersionableVariable value found for Dynawo version %s".formatted(currentVersion));

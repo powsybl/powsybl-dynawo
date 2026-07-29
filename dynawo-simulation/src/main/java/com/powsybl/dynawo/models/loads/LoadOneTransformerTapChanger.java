@@ -11,7 +11,7 @@ import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariables;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
@@ -31,13 +31,13 @@ public class LoadOneTransformerTapChanger extends AbstractLoadOneTransformer imp
     protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
-                .map(switchOff -> new VarConnection(VersionableVariables.getCurrentValue("TC_SWITCH_OFF", NONE.getSideSuffix()), switchOff))
+                .map(switchOff -> new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("TC_SWITCH_OFF", NONE.getSideSuffix()), switchOff))
                 .ifPresent(varConnections::add);
         return varConnections;
     }
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE), VersionableVariables.getCurrentValue("TC_LOCKED", NONE.getSideSuffix())));
+        return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE), VersionableVariablesHandler.getInstance().getCurrentValue("TC_LOCKED", NONE.getSideSuffix())));
     }
 }

@@ -12,8 +12,6 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.BlackBoxModelSupplier;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
-import com.powsybl.dynawo.commons.DynawoConstants;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.dynawo.xml.DynawoTestUtil;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -30,7 +28,6 @@ class ContingenciesXmlTest extends DynawoTestUtil {
     @Test
     void writeDyds() throws SAXException, IOException, XMLStreamException {
 
-        new VersionableVariablesHandler().setCurrentValues(DynawoConstants.CURRENT_VERSION);
         List<Contingency> contingencies = List.of(
                 Contingency.load("LOAD"),
                 Contingency.builder("DisconnectLineGenerator")
