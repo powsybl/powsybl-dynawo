@@ -30,6 +30,7 @@ public class VersionableVariable {
 
     public VersionableVariable(VariableStep... steps) {
         this.steps = List.of(steps);
+        this.currentValue = steps[0].variable;
     }
 
     public String getCurrentValue() {
