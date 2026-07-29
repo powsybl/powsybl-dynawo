@@ -9,6 +9,8 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.builders.ModelConfigsHandler;
+import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
@@ -20,6 +22,8 @@ import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerTapChangerBuilder;
 import com.powsybl.dynawo.models.loads.LoadTwoTransformersTapChangersBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -29,6 +33,15 @@ import java.io.IOException;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class Dynawo18VersionXmlTest extends AbstractDynamicModelXmlTest {
+
+    private static final DynawoVersion DYNAWO_VERSION = DynawoVersion.createFromString("1.8.0");
+
+    @BeforeEach
+    @Override
+    public void setup() {
+        super.setup();
+        ModelConfigsHandler.getInstance().setDynawoVersion(DYNAWO_VERSION);
+    }
 
     @Override
     protected void setupNetwork() {
@@ -93,5 +106,12 @@ class Dynawo18VersionXmlTest extends AbstractDynamicModelXmlTest {
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "dynawo_1_8_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+    }
+
+    @AfterEach
+    @Override
+    public void tearDown() throws IOException {
+        super.tearDown();
+        ModelConfigsHandler.getInstance().setDynawoVersion(DynawoConstants.CURRENT_VERSION);
     }
 }
