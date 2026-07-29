@@ -28,6 +28,7 @@ public class LoadOneTransformerTapChanger extends AbstractLoadOneTransformer imp
         super(load, parameterSetId, modelConfig);
     }
 
+    @Override
     protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
