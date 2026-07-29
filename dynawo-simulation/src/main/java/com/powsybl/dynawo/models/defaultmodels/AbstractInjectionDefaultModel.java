@@ -20,7 +20,7 @@ public abstract class AbstractInjectionDefaultModel extends AbstractDefaultModel
     }
 
     public String getStateValueVarName() {
-        return String.format(VersionableVariables.getCurrentValue("STATE"), "@NAME@");
+        return VersionableVariables.getCurrentValue("STATE", "@NAME@");
     }
 
     @Override

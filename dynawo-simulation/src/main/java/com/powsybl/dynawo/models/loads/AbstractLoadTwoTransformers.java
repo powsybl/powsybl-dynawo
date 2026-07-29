@@ -34,8 +34,8 @@ public abstract class AbstractLoadTwoTransformers extends AbstractLoad {
     @Override
     public List<VarMapping> getVarsMapping() {
         return List.of(
-                new VarMapping(String.format(VersionableVariables.getCurrentValue("TRANSFORMER_P1PU"), HIGH_VOLTAGE.getSideSuffix()), "p"),
-                new VarMapping(String.format(VersionableVariables.getCurrentValue("TRANSFORMER_Q1PU"), HIGH_VOLTAGE.getSideSuffix()), "q"),
+                new VarMapping(VersionableVariables.getCurrentValue("TRANSFORMER_P1PU", HIGH_VOLTAGE.getSideSuffix()), "p"),
+                new VarMapping(VersionableVariables.getCurrentValue("TRANSFORMER_Q1PU", HIGH_VOLTAGE.getSideSuffix()), "q"),
                 new VarMapping(getTransformerVar(HIGH_VOLTAGE, "state"), "state"));
     }
 

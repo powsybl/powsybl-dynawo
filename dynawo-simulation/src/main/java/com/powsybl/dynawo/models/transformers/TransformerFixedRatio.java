@@ -59,7 +59,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
 
     @Override
     public String getStateValueVarName() {
-        return String.format(VersionableVariables.getCurrentValue("STATE"), "transformer");
+        return VersionableVariables.getCurrentValue("STATE", "transformer");
     }
 
     @Override
@@ -85,7 +85,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
         return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE),
-                String.format(VersionableVariables.getCurrentValue("TCB_LOCKED"), "transformer")));
+                VersionableVariables.getCurrentValue("TCB_LOCKED", "transformer")));
     }
 
     @Override
@@ -105,7 +105,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
 
     @Override
     public String getUPuVarName(TwoSides sides) {
-        return String.format(VersionableVariables.getCurrentValue("SIDED_UPU"), "@STATIC_ID@@NODE" + sides.getNum());
+        return VersionableVariables.getCurrentValue("SIDED_UPU", "@STATIC_ID@@NODE" + sides.getNum());
     }
 
     @Override

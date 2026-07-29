@@ -131,6 +131,10 @@ public final class VersionableVariables implements VersionableVariablesResolver 
         return VERSIONABLE_VARIABLES_MAP.get(name).getCurrentValue();
     }
 
+    public static String getCurrentValue(String name, Object... args) {
+        return String.format(VERSIONABLE_VARIABLES_MAP.get(name).getCurrentValue(), args);
+    }
+
     @Override
     public void setCurrentValues(DynawoVersion currentVersion) {
         VERSIONABLE_VARIABLES_MAP.values().forEach(vv -> vv.setCurrentValue(currentVersion));

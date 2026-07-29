@@ -44,6 +44,6 @@ public class DefaultActionConnectionPoint extends AbstractDefaultModel implement
 
     @Override
     public Optional<String> getStateValueVarName() {
-        return Optional.of(String.format(VersionableVariables.getCurrentValue("STATE"), "@NAME@"));
+        return Optional.of(VersionableVariables.getCurrentValue("STATE", "@NAME@"));
     }
 }

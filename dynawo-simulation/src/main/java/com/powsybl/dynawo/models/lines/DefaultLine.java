@@ -37,7 +37,7 @@ public class DefaultLine extends AbstractDefaultModel implements LineModel {
 
     @Override
     public String getStateValueVarName() {
-        return String.format(VersionableVariables.getCurrentValue("STATE"), "@NAME@");
+        return VersionableVariables.getCurrentValue("STATE", "@NAME@");
     }
 
     @Override

@@ -31,13 +31,13 @@ public class LoadOneTransformerTapChanger extends AbstractLoadOneTransformer imp
     protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
-                .map(switchOff -> new VarConnection(String.format(VersionableVariables.getCurrentValue("TC_SWITCH_OFF"), NONE.getSideSuffix()), switchOff))
+                .map(switchOff -> new VarConnection(VersionableVariables.getCurrentValue("TC_SWITCH_OFF", NONE.getSideSuffix()), switchOff))
                 .ifPresent(varConnections::add);
         return varConnections;
     }
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE), String.format(VersionableVariables.getCurrentValue("TC_LOCKED"), NONE.getSideSuffix())));
+        return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE), VersionableVariables.getCurrentValue("TC_LOCKED", NONE.getSideSuffix())));
     }
 }

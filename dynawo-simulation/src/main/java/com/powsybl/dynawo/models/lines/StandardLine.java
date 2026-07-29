@@ -61,7 +61,7 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
 
     @Override
     public String getStateValueVarName() {
-        return String.format(VersionableVariables.getCurrentValue("STATE"), "line");
+        return VersionableVariables.getCurrentValue("STATE", "line");
     }
 
     @Override
