@@ -14,7 +14,7 @@
         <xs:complexType>
             <xs:attribute name="dynamicModelId" use="required" type="xs:string"/>
             <xs:attribute name="modelName" use="required" type="xs:string"/>
-            <xs:attribute name="parameterSetId" use="required" type="xs:string"/>
+            <xs:attribute name="parameterSetId" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>

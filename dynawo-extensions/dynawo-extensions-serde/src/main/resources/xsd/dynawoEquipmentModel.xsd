@@ -13,7 +13,7 @@
     <xs:element name="dynawoEquipmentModel">
         <xs:complexType>
             <xs:attribute name="modelName" use="required" type="xs:string"/>
-            <xs:attribute name="parameterSetId" use="required" type="xs:string"/>
+            <xs:attribute name="parameterSetId" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>
