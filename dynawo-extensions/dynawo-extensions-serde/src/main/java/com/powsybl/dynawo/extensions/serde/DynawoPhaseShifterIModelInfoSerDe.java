@@ -33,10 +33,10 @@ public class DynawoPhaseShifterIModelInfoSerDe extends AbstractExtensionSerDe<Tw
     }
 
     @Override
-    public void write(DynawoPhaseShifterIModel DynawoPhaseShifterIModelInfo, SerializerContext context) {
-        context.getWriter().writeStringAttribute(DYNAMIC_MODEL_ID, DynawoPhaseShifterIModelInfo.getDynamicModelId());
-        context.getWriter().writeStringAttribute(MODEL_NAME, DynawoPhaseShifterIModelInfo.getModelName());
-        context.getWriter().writeStringAttribute(PARAMETER_SET_ID, DynawoPhaseShifterIModelInfo.getParameterSetId());
+    public void write(DynawoPhaseShifterIModel dynawoPhaseShifterIModelInfo, SerializerContext context) {
+        context.getWriter().writeStringAttribute(DYNAMIC_MODEL_ID, dynawoPhaseShifterIModelInfo.getDynamicModelId());
+        context.getWriter().writeStringAttribute(MODEL_NAME, dynawoPhaseShifterIModelInfo.getModelName());
+        context.getWriter().writeStringAttribute(PARAMETER_SET_ID, dynawoPhaseShifterIModelInfo.getParameterSetId());
     }
 
     @Override

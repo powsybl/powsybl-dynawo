@@ -20,6 +20,7 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
+//TODO rajouter une couche automate
 public abstract class AbstractDynawoModel<I extends Identifiable<I>, E extends DynawoModelExtension<I, E>>
         extends AbstractMultiVariantIdentifiableExtension<I> implements DynawoModelExtension<I, E> {
 

@@ -7,15 +7,14 @@
  */
 package com.powsybl.dynawo.extensions.api.model;
 
-import com.powsybl.iidm.network.Generator;
+import com.powsybl.commons.extensions.Extension;
+import com.powsybl.iidm.network.Identifiable;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface DynawoUnderVoltageModelAdder extends DynawoAutomationSystemModelAdder<Generator, DynawoUnderVoltageModel, DynawoUnderVoltageModelAdder> {
+public interface DynawoAutomationSystemModelAdder<I extends Identifiable<I>, E extends Extension<I>, A extends DynawoAutomationSystemModelAdder<I, E, A>>
+        extends DynawoModelAdder<I, E, A> {
 
-    @Override
-    default Class<DynawoUnderVoltageModel> getExtensionClass() {
-        return DynawoUnderVoltageModel.class;
-    }
+    A setDynamicModelId(String dynamicModelId);
 }

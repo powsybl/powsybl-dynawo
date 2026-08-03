@@ -12,12 +12,10 @@ import com.powsybl.iidm.network.TwoWindingsTransformer;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface DynawoPhaseShifterIModelAdder extends DynawoModelAdder<TwoWindingsTransformer, DynawoPhaseShifterIModel, DynawoPhaseShifterIModelAdder> {
+public interface DynawoPhaseShifterIModelAdder extends DynawoAutomationSystemModelAdder<TwoWindingsTransformer, DynawoPhaseShifterIModel, DynawoPhaseShifterIModelAdder> {
 
     @Override
     default Class<DynawoPhaseShifterIModel> getExtensionClass() {
         return DynawoPhaseShifterIModel.class;
     }
-
-    DynawoPhaseShifterIModelAdder setDynamicModelId(String dynamicModelId);
 }
