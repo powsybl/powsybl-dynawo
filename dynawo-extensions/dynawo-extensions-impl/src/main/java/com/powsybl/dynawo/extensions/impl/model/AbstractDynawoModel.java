@@ -73,8 +73,6 @@ public abstract class AbstractDynawoModel<I extends Identifiable<I>, E extends D
         }
     }
 
-    protected abstract E self();
-
     @Override
     public void extendVariantArraySize(int initVariantArraySize, int number, int sourceIndex) {
         perVariantList.forEach(list -> list.ensureCapacity(list.size() + number));
@@ -104,4 +102,6 @@ public abstract class AbstractDynawoModel<I extends Identifiable<I>, E extends D
             }
         });
     }
+
+    protected abstract E self();
 }

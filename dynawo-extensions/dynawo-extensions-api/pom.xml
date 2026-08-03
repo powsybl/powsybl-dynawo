@@ -28,5 +28,9 @@
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-iidm-extensions</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-dynawo-commons</artifactId>
+        </dependency>
     </dependencies>
 </project>

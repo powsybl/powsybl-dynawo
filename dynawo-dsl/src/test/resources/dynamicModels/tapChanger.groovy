@@ -8,7 +8,7 @@
 
 package dynamicModels
 
-import com.powsybl.dynawo.models.TransformerSide
+import com.powsybl.dynawo.commons.TransformerSide
 
 
 TapChangerAutomationSystem {

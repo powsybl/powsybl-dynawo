@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.models.TransformerSide;
+import com.powsybl.dynawo.commons.TransformerSide;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
 import com.powsybl.dynawo.models.loads.LoadTwoTransformersBuilder;
