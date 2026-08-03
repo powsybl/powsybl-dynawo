@@ -20,5 +20,5 @@ public interface DynawoTapChangerModelAdder extends DynawoAutomationSystemModelA
         return DynawoTapChangerModel.class;
     }
 
-    DynawoTapChangerModelAdder setSide(TransformerSide side);
+    DynawoTapChangerModelAdder withSide(TransformerSide side);
 }

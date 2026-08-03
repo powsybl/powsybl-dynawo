@@ -32,10 +32,10 @@ class DynawoTapChangerModelTest {
         Network network = EurostagTutorialExample1Factory.create();
         Load load = network.getLoad("LOAD");
         load.newExtension(DynawoTapChangerModelAdder.class)
-                .setDynamicModelId("TC")
-                .setModelName("TapChangerAutomationSystem")
-                .setParameterSetId("tc")
-                .setSide(TransformerSide.LOW_VOLTAGE)
+                .withDynamicModelId("TC")
+                .withModelName("TapChangerAutomationSystem")
+                .withParameterSetId("tc")
+                .withSide(TransformerSide.LOW_VOLTAGE)
                 .add();
         DynawoTapChangerModel info = load.getExtension(DynawoTapChangerModel.class);
         assertEquals("TC", info.getDynamicModelId());
@@ -53,10 +53,10 @@ class DynawoTapChangerModelTest {
         Network network = EurostagTutorialExample1Factory.create();
         Load load = network.getLoad("LOAD");
         load.newExtension(DynawoTapChangerModelAdder.class)
-                .setModelName("TapChangerAutomationSystem")
-                .setDynamicModelId("TC")
-                .setParameterSetId("tc")
-                .setSide(TransformerSide.LOW_VOLTAGE)
+                .withModelName("TapChangerAutomationSystem")
+                .withDynamicModelId("TC")
+                .withParameterSetId("tc")
+                .withSide(TransformerSide.LOW_VOLTAGE)
                 .add();
         DynawoTapChangerModel ext = load.getExtension(DynawoTapChangerModel.class);
         assertNotNull(ext);

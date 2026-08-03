@@ -25,7 +25,7 @@ public class DynawoTapChangerModelAdderImpl extends AbstractDynawoAutomationSyst
     }
 
     @Override
-    public DynawoTapChangerModelAdder setSide(TransformerSide side) {
+    public DynawoTapChangerModelAdder withSide(TransformerSide side) {
         this.side = side;
         return self();
     }

@@ -31,9 +31,9 @@ class DynawoUnderVoltageModelTest {
         Network network = EurostagTutorialExample1Factory.create();
         Generator gen = network.getGenerator("GEN");
         gen.newExtension(DynawoUnderVoltageModelAdder.class)
-                .setDynamicModelId("UVA")
-                .setModelName("UnderVoltage")
-                .setParameterSetId("uva")
+                .withDynamicModelId("UVA")
+                .withModelName("UnderVoltage")
+                .withParameterSetId("uva")
                 .add();
         DynawoUnderVoltageModel info = gen.getExtension(DynawoUnderVoltageModel.class);
         assertEquals("UVA", info.getDynamicModelId());
@@ -50,9 +50,9 @@ class DynawoUnderVoltageModelTest {
         Network network = EurostagTutorialExample1Factory.create();
         Generator generator = network.getGenerator("GEN");
         generator.newExtension(DynawoUnderVoltageModelAdder.class)
-                .setModelName("UnderVoltage")
-                .setDynamicModelId("UVA")
-                .setParameterSetId("uva")
+                .withModelName("UnderVoltage")
+                .withDynamicModelId("UVA")
+                .withParameterSetId("uva")
                 .add();
         DynawoUnderVoltageModel ext = generator.getExtension(DynawoUnderVoltageModel.class);
         assertNotNull(ext);

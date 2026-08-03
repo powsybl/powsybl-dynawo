@@ -46,9 +46,9 @@ public class DynawoPhaseShifterIModelInfoSerDe extends AbstractExtensionSerDe<Tw
         String parameterSetId = context.getReader().readStringAttribute(PARAMETER_SET_ID);
         context.getReader().readEndNode();
         return twoWindingsTransformer.newExtension(DynawoPhaseShifterIModelAdder.class)
-                .setModelName(modelName)
-                .setParameterSetId(parameterSetId)
-                .setDynamicModelId(dynamicModelId)
+                .withModelName(modelName)
+                .withParameterSetId(parameterSetId)
+                .withDynamicModelId(dynamicModelId)
                 .add();
     }
 }

@@ -31,9 +31,9 @@ class DynawoPhaseShifterIModelTest {
         Network network = EurostagTutorialExample1Factory.create();
         TwoWindingsTransformer tfo = network.getTwoWindingsTransformer("NGEN_NHV1");
         tfo.newExtension(DynawoPhaseShifterIModelAdder.class)
-                .setDynamicModelId("PSI")
-                .setModelName("PhaseShifterI")
-                .setParameterSetId("psi")
+                .withDynamicModelId("PSI")
+                .withModelName("PhaseShifterI")
+                .withParameterSetId("psi")
                 .add();
         DynawoPhaseShifterIModel info = tfo.getExtension(DynawoPhaseShifterIModel.class);
         assertEquals("PSI", info.getDynamicModelId());
@@ -50,9 +50,9 @@ class DynawoPhaseShifterIModelTest {
         Network network = EurostagTutorialExample1Factory.create();
         TwoWindingsTransformer tfo = network.getTwoWindingsTransformer("NGEN_NHV1");
         tfo.newExtension(DynawoPhaseShifterIModelAdder.class)
-                .setModelName("PhaseShifterI")
-                .setDynamicModelId("PSI")
-                .setParameterSetId("psi")
+                .withModelName("PhaseShifterI")
+                .withDynamicModelId("PSI")
+                .withParameterSetId("psi")
                 .add();
         DynawoPhaseShifterIModel ext = tfo.getExtension(DynawoPhaseShifterIModel.class);
         assertNotNull(ext);

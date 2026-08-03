@@ -30,10 +30,10 @@ class DynawoTapChangerModelInfoSerDeTest extends AbstractSerDeTest {
         Load load = network.getLoad("LOAD");
 
         load.newExtension(DynawoTapChangerModelAdder.class)
-                .setDynamicModelId("TC")
-                .setModelName("TapChangerAutomationSystem")
-                .setParameterSetId("tc")
-                .setSide(TransformerSide.HIGH_VOLTAGE)
+                .withDynamicModelId("TC")
+                .withModelName("TapChangerAutomationSystem")
+                .withParameterSetId("tc")
+                .withSide(TransformerSide.HIGH_VOLTAGE)
                 .add();
 
         network.setCaseDate(java.time.ZonedDateTime.parse("2016-12-07T11:18:52.881+01:00"));

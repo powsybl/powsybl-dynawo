@@ -43,8 +43,8 @@ public class DynawoEquipmentModelSerDe<I extends Identifiable<I>> extends Abstra
         String parameterSetId = context.getReader().readStringAttribute(PARAMETER_SET_ID);
         context.getReader().readEndNode();
         DynawoEquipmentModelAdder<I> adder = identifiable.newExtension(DynawoEquipmentModelAdder.class);
-        return adder.setModelName(modelName)
-                .setParameterSetId(parameterSetId)
+        return adder.withModelName(modelName)
+                .withParameterSetId(parameterSetId)
                 .add();
     }
 }

@@ -16,7 +16,7 @@ import com.powsybl.iidm.network.Identifiable;
  */
 public interface DynawoModelAdder<I extends Identifiable<I>, E extends Extension<I>, A extends DynawoModelAdder<I, E, A>> extends ExtensionAdder<I, E> {
 
-    A setModelName(String modelName);
+    A withModelName(String modelName);
 
-    A setParameterSetId(String parameterSetId);
+    A withParameterSetId(String parameterSetId);
 }

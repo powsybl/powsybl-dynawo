@@ -29,9 +29,9 @@ class DynawoPhaseShifterPModelInfoSerDeTest extends AbstractSerDeTest {
         TwoWindingsTransformer tfo = network.getTwoWindingsTransformer("NGEN_NHV1");
 
         tfo.newExtension(DynawoPhaseShifterPModelAdder.class)
-                .setDynamicModelId("PSP")
-                .setModelName("PhaseShifterP")
-                .setParameterSetId("psp")
+                .withDynamicModelId("PSP")
+                .withModelName("PhaseShifterP")
+                .withParameterSetId("psp")
                 .add();
 
         network.setCaseDate(java.time.ZonedDateTime.parse("2016-12-07T11:18:52.881+01:00"));

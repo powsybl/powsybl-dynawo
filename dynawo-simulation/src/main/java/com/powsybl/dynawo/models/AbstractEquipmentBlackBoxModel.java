@@ -88,8 +88,8 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<T>> 
         DynawoEquipmentModel<T> extension = equipment.getExtension(DynawoEquipmentModel.class);
         if (extension == null) {
             equipment.newExtension(DynawoEquipmentModelAdder.class)
-                    .setModelName(modelConfig.name())
-                    .setParameterSetId(getParameterSetId())
+                    .withModelName(modelConfig.name())
+                    .withParameterSetId(getParameterSetId())
                     .add();
         } else {
             extension.setModelName(modelConfig.name())

@@ -22,7 +22,7 @@ public abstract class AbstractDynawoAutomationSystemModelAdder<I extends Identif
         super(identifiable);
     }
 
-    public A setDynamicModelId(String dynamicModelId) {
+    public A withDynamicModelId(String dynamicModelId) {
         this.dynamicModelId = dynamicModelId;
         return self();
     }

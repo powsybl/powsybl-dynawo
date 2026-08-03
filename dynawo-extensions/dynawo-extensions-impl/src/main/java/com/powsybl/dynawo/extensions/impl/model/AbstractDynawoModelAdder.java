@@ -24,12 +24,12 @@ public abstract class AbstractDynawoModelAdder<I extends Identifiable<I>, E exte
         super(identifiable);
     }
 
-    public A setModelName(String modelName) {
+    public A withModelName(String modelName) {
         this.modelName = modelName;
         return self();
     }
 
-    public A setParameterSetId(String parameterSetId) {
+    public A withParameterSetId(String parameterSetId) {
         this.parameterSetId = parameterSetId;
         return self();
     }

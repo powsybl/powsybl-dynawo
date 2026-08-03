@@ -50,10 +50,10 @@ public class DynawoTapChangerModelInfoSerDe extends AbstractExtensionSerDe<Load,
         TransformerSide side = context.getReader().readEnumAttribute(SIDE, TransformerSide.class);
         context.getReader().readEndNode();
         return load.newExtension(DynawoTapChangerModelAdder.class)
-                .setModelName(modelName)
-                .setParameterSetId(parameterSetId)
-                .setDynamicModelId(dynamicModelId)
-                .setSide(side)
+                .withModelName(modelName)
+                .withParameterSetId(parameterSetId)
+                .withDynamicModelId(dynamicModelId)
+                .withSide(side)
                 .add();
     }
 }

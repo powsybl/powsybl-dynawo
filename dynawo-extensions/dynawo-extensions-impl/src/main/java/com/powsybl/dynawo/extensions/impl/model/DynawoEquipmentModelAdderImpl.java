@@ -30,13 +30,13 @@ public class DynawoEquipmentModelAdderImpl<I extends Identifiable<I>> extends Ab
     }
 
     @Override
-    public DynawoEquipmentModelAdderImpl<I> setModelName(String modelName) {
+    public DynawoEquipmentModelAdderImpl<I> withModelName(String modelName) {
         this.modelName = modelName;
         return this;
     }
 
     @Override
-    public DynawoEquipmentModelAdderImpl<I> setParameterSetId(String parameterSetId) {
+    public DynawoEquipmentModelAdderImpl<I> withParameterSetId(String parameterSetId) {
         this.parameterSetId = parameterSetId;
         return this;
     }

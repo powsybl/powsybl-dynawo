@@ -32,8 +32,8 @@ class DynawoEquipmentModelTest {
         Network network = EurostagTutorialExample1Factory.create();
         Load load = network.getLoad("LOAD");
         load.newExtension(DynawoEquipmentModelAdder.class)
-                .setModelName("LoadAlphaBeta")
-                .setParameterSetId("lab")
+                .withModelName("LoadAlphaBeta")
+                .withParameterSetId("lab")
                 .add();
         DynawoEquipmentModel<Load> info = load.getExtension(DynawoEquipmentModel.class);
         assertEquals("LoadAlphaBeta", info.getModelName());
@@ -49,8 +49,8 @@ class DynawoEquipmentModelTest {
         Network network = EurostagTutorialExample1Factory.create();
         Generator generator = network.getGenerator("GEN");
         generator.newExtension(DynawoEquipmentModelAdder.class)
-                .setModelName("GeneratorPQ")
-                .setParameterSetId("gpq")
+                .withModelName("GeneratorPQ")
+                .withParameterSetId("gpq")
                 .add();
         DynawoEquipmentModel<Generator> ext = generator.getExtension(DynawoEquipmentModel.class);
         assertNotNull(ext);

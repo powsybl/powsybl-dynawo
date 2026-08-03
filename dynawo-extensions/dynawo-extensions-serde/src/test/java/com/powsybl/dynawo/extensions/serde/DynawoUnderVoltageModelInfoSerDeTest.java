@@ -29,9 +29,9 @@ class DynawoUnderVoltageModelInfoSerDeTest extends AbstractSerDeTest {
         Generator gen = network.getGenerator("GEN");
 
         gen.newExtension(DynawoUnderVoltageModelAdder.class)
-                .setDynamicModelId("UVA")
-                .setModelName("UnderVoltage")
-                .setParameterSetId("uva")
+                .withDynamicModelId("UVA")
+                .withModelName("UnderVoltage")
+                .withParameterSetId("uva")
                 .add();
         network.setCaseDate(java.time.ZonedDateTime.parse("2016-12-07T11:18:52.881+01:00"));
 

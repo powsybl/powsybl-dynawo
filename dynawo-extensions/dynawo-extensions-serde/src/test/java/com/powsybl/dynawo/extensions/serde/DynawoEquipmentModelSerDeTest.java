@@ -29,8 +29,8 @@ class DynawoEquipmentModelSerDeTest extends AbstractSerDeTest {
         Load load = network.getLoad("LOAD");
 
         load.newExtension(DynawoEquipmentModelAdder.class)
-                .setModelName("LoadAlphaBeta")
-                .setParameterSetId("lab")
+                .withModelName("LoadAlphaBeta")
+                .withParameterSetId("lab")
                 .add();
         network.setCaseDate(java.time.ZonedDateTime.parse("2016-12-07T11:18:52.881+01:00"));
 
