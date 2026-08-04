@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.extensions.api.model;
 
 import com.powsybl.iidm.network.Branch;
+import com.powsybl.iidm.network.TwoSides;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -26,7 +27,7 @@ public interface DynawoOverloadManagementSystemModel<B extends Branch<B>>
 
     DynawoOverloadManagementSystemModel<B> setIMeasurement(String iMeasurement);
 
-    String getIMeasurementSide();
+    TwoSides getIMeasurementSide();
 
-    DynawoOverloadManagementSystemModel<B> setIMeasurementSide(String iMeasurementSide);
+    DynawoOverloadManagementSystemModel<B> setIMeasurementSide(TwoSides iMeasurementSide);
 }
