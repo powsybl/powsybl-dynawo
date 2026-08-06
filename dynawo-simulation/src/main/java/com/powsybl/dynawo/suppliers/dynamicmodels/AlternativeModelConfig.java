@@ -7,8 +7,15 @@
  */
 package com.powsybl.dynawo.suppliers.dynamicmodels;
 
+import java.util.Objects;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public record AlternativeModelConfig(String model, String group) {
+
+    public AlternativeModelConfig(String model, String group) {
+        this.model = Objects.requireNonNull(model, "Model must be not null");
+        this.group = group;
+    }
 }

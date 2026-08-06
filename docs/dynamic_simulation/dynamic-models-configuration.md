@@ -453,10 +453,10 @@ TapChangerBlockingAutomationSystem {
 
 ## JSON-specific features
 ### Alternative models
-Contrary to normal models, alternative allows the users to definie several model configurations that will be resolved by a `ModelResolver` implementation.
+Contrary to normal models, alternative allows the users to define several model configurations that will be resolved by a `ModelResolver` implementation.
 With specific attributes:
 - `resolverName` : name of the resolver used to find the correct model configuration.
-- `alternativeConfigurations` : list of model configuration containing a pair of `model` and `group` fields
+- `alternativeConfigurations` : list of model configurations containing a pair of `model` and `group` fields
 
 These models are added in a specific `alternativeModels` array.
 For example:
