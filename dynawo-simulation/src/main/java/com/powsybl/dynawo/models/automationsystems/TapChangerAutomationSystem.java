@@ -10,6 +10,8 @@ package com.powsybl.dynawo.models.automationsystems;
 import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.commons.TransformerSide;
+import com.powsybl.dynawo.extensions.api.model.DynawoTapChangerModel;
+import com.powsybl.dynawo.extensions.api.model.DynawoTapChangerModelAdder;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.loads.LoadWithTransformerModel;
@@ -102,5 +104,25 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
     @Override
     public boolean isConnected() {
         return ConnectionState.CONNECTED == getConnectionState();
+    }
+
+    @Override
+    public void createDynawoModelExtension() {
+        if (isConnected()) {
+            DynawoTapChangerModel extension = load.getExtension(DynawoTapChangerModel.class);
+            if (extension == null) {
+                load.newExtension(DynawoTapChangerModelAdder.class)
+                        .withModelName(modelConfig.name())
+                        .withDynamicModelId(getDynamicModelId())
+                        .withParameterSetId(getParameterSetId())
+                        .withSide(side)
+                        .add();
+            } else {
+                extension.setModelName(modelConfig.name())
+                        .setDynamicModelId(getDynamicModelId())
+                        .setParameterSetId(getParameterSetId())
+                        .setSide(side);
+            }
+        }
     }
 }

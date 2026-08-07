@@ -15,6 +15,7 @@ import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.frequencysynchronizers.*;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 
@@ -67,11 +68,13 @@ public class ModelExtensionsAdder {
     private void setupDynamicModels() {
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId(reportNode).and(supportedVersion(dynawoVersion, reportNode)));
-
         dynamicModels = uniqueIdsDynamicModels.collect(Collectors.toCollection(ArrayList::new));
         checkFrequencySynchronizer();
         blackBoxModelSupplier = BlackBoxModelSupplier.createFrom(dynamicModels);
         checkForbiddenDefaultModels();
+        MacroConnectionsAdder adder = new MacroConnectionsAdder(blackBoxModelSupplier, mc -> {},
+                (s, f) -> f.apply(s), reportNode);
+        dynamicModels.forEach(bbm -> bbm.createMacroConnections(adder));
     }
 
     private void checkForbiddenDefaultModels() {

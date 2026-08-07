@@ -9,6 +9,8 @@ package com.powsybl.dynawo.models.automationsystems;
 
 import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.extensions.api.model.DynawoUnderVoltageModel;
+import com.powsybl.dynawo.extensions.api.model.DynawoUnderVoltageModelAdder;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.generators.SpecifiedGeneratorModel;
@@ -59,5 +61,23 @@ public class UnderVoltageAutomationSystem extends AbstractPureDynamicBlackBoxMod
     @Override
     public boolean isConnected() {
         return isConnected;
+    }
+
+    @Override
+    public void createDynawoModelExtension() {
+        if (isConnected()) {
+            DynawoUnderVoltageModel extension = generator.getExtension(DynawoUnderVoltageModel.class);
+            if (extension == null) {
+                generator.newExtension(DynawoUnderVoltageModelAdder.class)
+                        .withModelName(modelConfig.name())
+                        .withDynamicModelId(getDynamicModelId())
+                        .withParameterSetId(getParameterSetId())
+                        .add();
+            } else {
+                extension.setModelName(modelConfig.name())
+                        .setDynamicModelId(getDynamicModelId())
+                        .setParameterSetId(getParameterSetId());
+            }
+        }
     }
 }
