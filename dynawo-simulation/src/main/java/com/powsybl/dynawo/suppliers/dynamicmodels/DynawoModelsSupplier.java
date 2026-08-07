@@ -96,8 +96,8 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
         ModelBuilder<DynamicModel> builder = ModelConfigsHandler.getInstance().getModelBuilder(network, dynamicModelConfig.model(), reportNode);
         if (builder != null) {
             Class<? extends ModelBuilder> builderClass = builder.getClass();
-            invokeParameterIdMethod(builderClass, builder, getParameterSetId(dynamicModelConfig));
             dynamicModelConfig.properties().forEach(p -> invokeMethod(builderClass, builder, p));
+            invokeParameterIdMethod(builderClass, builder, getParameterSetId(dynamicModelConfig, builder.getModelId()));
             return builder.build();
         }
         return null;
@@ -119,27 +119,11 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
         }
     }
 
-    private static String getParameterSetId(DynamicModelConfig config) {
+    private static String getParameterSetId(DynamicModelConfig config, String modelId) {
         return switch (config.groupType()) {
             case FIXED -> config.group();
-            case PREFIX -> config.group() + getDynamicModelIdProperty(config.properties());
-            case SUFFIX -> getDynamicModelIdProperty(config.properties()) + config.group();
+            case PREFIX -> config.group() + modelId;
+            case SUFFIX -> modelId + config.group();
         };
-    }
-
-    private static String getDynamicModelIdProperty(List<Property> properties) {
-        return properties.stream()
-                .filter(p -> p.name().equalsIgnoreCase("dynamicModelId"))
-                .map(p -> (String) p.value())
-                .findFirst()
-                .orElseGet(() -> getStaticIdProperty(properties));
-    }
-
-    private static String getStaticIdProperty(List<Property> properties) {
-        return properties.stream()
-                .filter(p -> p.name().equalsIgnoreCase("staticId"))
-                .map(p -> (String) p.value())
-                .findFirst()
-                .orElseThrow(() -> new PowsyblException("No ID found for parameter set id"));
     }
 }

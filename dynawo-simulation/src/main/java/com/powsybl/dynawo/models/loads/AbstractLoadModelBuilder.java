@@ -13,6 +13,8 @@ import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 
+import java.util.Collection;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -33,6 +35,18 @@ public abstract class AbstractLoadModelBuilder<R extends AbstractEquipmentModelB
     @Override
     public R staticId(String staticId) {
         builderEquipment.addEquipment(staticId, this::findEquipment, IS_NOT_FICTITIOUS);
+        return self();
+    }
+
+    @Override
+    public R staticId(String... staticIds) {
+        builderEquipment.addEquipment(staticIds, this::findEquipment, IS_NOT_FICTITIOUS, BuilderReports::reportNotFictitiousStaticIdListUnknown);
+        return self();
+    }
+
+    @Override
+    public R staticId(Collection<String> staticIds) {
+        builderEquipment.addEquipment(staticIds, this::findEquipment, IS_NOT_FICTITIOUS, BuilderReports::reportNotFictitiousStaticIdListUnknown);
         return self();
     }
 

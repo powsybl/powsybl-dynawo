@@ -32,6 +32,18 @@
           "type": "STRING"
         }
       ]
+    },
+    {
+      "model":"GeneratorPVFixed",
+      "group": "DM_",
+      "groupType": "PREFIX",
+      "properties":[
+        {
+          "name":"staticId",
+          "values": ["ALT_ID", "GEN"],
+          "type":"STRING"
+        }
+      ]
     }
   ],
   "alternativeModels":[
