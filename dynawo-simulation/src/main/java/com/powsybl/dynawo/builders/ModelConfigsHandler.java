@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +30,7 @@ public final class ModelConfigsHandler {
     private final Map<String, ModelConfigs> modelConfigsCat = new HashMap<>();
     private final List<BuilderConfig> builderConfigs;
     private final Map<String, BuilderConfig.ModelBuilderConstructor> builderConstructorByName = new HashMap<>();
+    private final Map<String, ModelConfig> modelConfigByName;
     private final List<EventBuilderConfig> eventBuilderConfigs;
     private final Map<String, EventBuilderConfig.EventModelBuilderConstructor> eventBuilderConstructorByName;
 
@@ -46,6 +48,9 @@ public final class ModelConfigsHandler {
                 .toList();
         builderConfigs.forEach(bc -> modelConfigsCat.get(bc.getCategory()).getModelsName()
                 .forEach(lib -> builderConstructorByName.put(lib, bc.getBuilderConstructor())));
+        modelConfigByName = modelConfigsCat.values().stream()
+                .flatMap(mcc -> mcc.getModelConfigs().stream())
+                .collect(Collectors.toMap(ModelConfig::name, Function.identity()));
         eventBuilderConfigs = modelConfigLoaders.stream()
                 .flatMap(ModelConfigLoader::loadEventBuilderConfigs)
                 .sorted(Comparator.comparing(e -> e.getEventModelInfo().name()))
@@ -105,6 +110,9 @@ public final class ModelConfigsHandler {
                     }
                 }
         );
+    }
 
+    public ModelConfig getModelConfig(String modelName) {
+        return modelConfigByName.get(modelName);
     }
 }

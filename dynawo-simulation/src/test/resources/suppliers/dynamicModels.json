@@ -45,5 +45,28 @@
         }
       ]
     }
+  ],
+  "alternativeModels":[
+    {
+      "alternativeConfigurations" : [
+        {
+          "model":"GeneratorPQ",
+          "group":"GPQ_"
+        },
+        {
+          "model":"GeneratorPV",
+          "group":"GPV_"
+        }
+      ],
+      "resolverName": "ControllableModel",
+      "groupType": "PREFIX",
+      "properties":[
+        {
+          "name":"staticId",
+          "value":"GEN",
+          "type":"STRING"
+        }
+      ]
+    }
   ]
 }
