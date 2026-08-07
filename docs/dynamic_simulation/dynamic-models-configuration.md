@@ -381,6 +381,13 @@ With specific attributes:
   - transformer
   - load mapped to a dynamic model with transformer
   - tap changer automation system (referenced by its dynamic model id)
+
+or
+- `transformersVoltageLevels`: voltage levels static ids handling the two types of equipment found in the given voltage levels:
+  - transformer
+  - load mapped to a dynamic model with transformer
+
+
 - `uMeasurements`: up to five bus or busbar section ids, can be defined in two ways:
   - a simple list of ids, one id for each measurement point
   - a list of list of ids, each list containing a probable measurement point id, the first one found in the network will be used
@@ -402,6 +409,13 @@ TapChangerBlockingAutomationSystem {
     parameterSetId "TCB"
     uMeasurements measurementsTCB2
     transformers "NGEN_NHV1", "NHV2_NLOAD", "LOAD"
+}
+
+TapChangerBlockingAutomationSystem {
+  dynamicModelId "TCB3"
+  parameterSetId "TCB"
+  uMeasurements "NGEN"
+  transformersVoltageLevels "VL1", "VL2"
 }
 ```
 **Json configuration:**
@@ -445,6 +459,27 @@ TapChangerBlockingAutomationSystem {
       {
         "name": "uMeasurements",
         "arrays": [["OldId", "NGEN", "NHV1"], ["NHV1", "OldId"], ["NHV2"]],
+        "type": "STRING"
+      }
+    ]
+  },
+  {
+    "model":"TapChangerBlockingAutomationSystem",
+    "group": "TCB",
+    "properties":[
+      {
+        "name": "dynamicModelId",
+        "value": "TCB3",
+        "type": "STRING"
+      },
+      {
+        "name": "transformersVoltageLevels",
+        "values": ["VL1, VL2"],
+        "type": "STRING"
+      },
+      {
+        "name": "uMeasurements",
+        "value": "NGEN",
         "type": "STRING"
       }
     ]

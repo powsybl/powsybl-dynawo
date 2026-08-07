@@ -9,11 +9,12 @@ package com.powsybl.dynawo.builders;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.Identifiable;
+import com.powsybl.iidm.network.IdentifiableType;
+import com.powsybl.iidm.network.VoltageLevel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Represents an equipment list field identified by a list of static ID in a builder
@@ -43,6 +44,39 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
     public void addEquipments(Iterable<String> staticIds, Function<String, T> equipmentsSupplier) {
         staticIds.forEach(id -> addEquipment(id, equipmentsSupplier));
         reportIfEmptyList();
+    }
+
+    public void addVoltageLevelEquipments(String voltageLevelId, Function<String, VoltageLevel> voltageLevelsSupplier,
+                                          Function<VoltageLevel, Stream<T>> equipmentsSupplier) {
+        addVoltageLevelEquipments(List.of(voltageLevelId), voltageLevelsSupplier, equipmentsSupplier);
+    }
+
+    public void addVoltageLevelEquipments(String[] voltageLevelIds, Function<String, VoltageLevel> voltageLevelsSupplier,
+                                          Function<VoltageLevel, Stream<T>> equipmentsSupplier) {
+        addVoltageLevelEquipments(Arrays.asList(voltageLevelIds), voltageLevelsSupplier, equipmentsSupplier);
+    }
+
+    public void addVoltageLevelEquipments(Collection<String> voltageLevelIds, Function<String, VoltageLevel> voltageLevelsSupplier,
+                                          Function<VoltageLevel, Stream<T>> equipmentsSupplier) {
+        voltageLevelIds.stream()
+                .map(vlId -> {
+                    VoltageLevel vl = voltageLevelsSupplier.apply(vlId);
+                    if (vl == null) {
+                        missingEquipmentIds.add(vlId);
+                        BuilderReports.reportStaticIdUnknown(reportNode, fieldName + "VoltageLevels", vlId,
+                                IdentifiableType.VOLTAGE_LEVEL.toString());
+                    }
+                    return vl;
+                })
+                .filter(Objects::nonNull)
+                .flatMap(equipmentsSupplier)
+                .forEach(eq -> equipments.add(eq));
+        if (equipments.isEmpty()) {
+            BuilderReports.reportEmptyList(reportNode, fieldName);
+            if (missingEquipmentIds.isEmpty()) {
+                missingEquipmentIds.addAll(voltageLevelIds);
+            }
+        }
     }
 
     public void addEquipments(String[] staticIds, Function<String, T> equipmentsSupplier,
