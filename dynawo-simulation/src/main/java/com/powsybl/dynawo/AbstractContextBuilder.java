@@ -194,7 +194,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
                 .toList();
     }
 
-    protected static Predicate<BlackBoxModel> distinctByDynamicId(ReportNode reportNode) {
+    static Predicate<BlackBoxModel> distinctByDynamicId(ReportNode reportNode) {
         Set<String> seen = new HashSet<>();
         return bbm -> {
             if (!seen.add(bbm.getDynamicModelId())) {
@@ -205,7 +205,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         };
     }
 
-    protected static Predicate<BlackBoxModel> supportedVersion(DynawoVersion currentVersion, ReportNode reportNode) {
+    static Predicate<BlackBoxModel> supportedVersion(DynawoVersion currentVersion, ReportNode reportNode) {
         return bbm -> {
             VersionInterval versionInterval = bbm.getVersionInterval();
             if (currentVersion.compareTo(versionInterval.min()) < 0) {

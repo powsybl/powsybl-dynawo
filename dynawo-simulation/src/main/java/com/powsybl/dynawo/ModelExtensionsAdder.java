@@ -9,26 +9,26 @@ package com.powsybl.dynawo;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
-import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.frequencysynchronizers.*;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.powsybl.dynawo.AbstractContextBuilder.distinctByDynamicId;
+import static com.powsybl.dynawo.AbstractContextBuilder.supportedVersion;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-//TODO mutualize code with context builder
-//TODO handle simplifiers
+//TODO mutualize checkForbiddenDefaultModels context builder ?
+//TODO Handle simplifiers ?
 public class ModelExtensionsAdder {
 
     protected final Network network;
@@ -94,46 +94,11 @@ public class ModelExtensionsAdder {
     }
 
     private void checkFrequencySynchronizer() {
-        List<SignalNModel> signalNModels = filterDynamicModels(SignalNModel.class);
-        List<FrequencySynchronizedModel> frequencySynchronizedModels = filterDynamicModels(FrequencySynchronizedModel.class);
-        boolean hasFrequencySynchronizedModels = !frequencySynchronizedModels.isEmpty();
-        boolean hasSignalNModels = !signalNModels.isEmpty();
+        boolean hasFrequencySynchronizedModels = dynamicModels.stream().anyMatch(FrequencySynchronizedModel.class::isInstance);
+        boolean hasSignalNModels = dynamicModels.stream().anyMatch(SignalNModel.class::isInstance);
         if (hasFrequencySynchronizedModels && hasSignalNModels) {
             throw new PowsyblException("Signal N and frequency synchronized generators cannot be used with one another");
         }
-    }
-
-    private <R extends Model> List<R> filterDynamicModels(Class<R> modelClass) {
-        return dynamicModels.stream()
-                .filter(modelClass::isInstance)
-                .map(modelClass::cast)
-                .toList();
-    }
-
-    protected static Predicate<BlackBoxModel> distinctByDynamicId(ReportNode reportNode) {
-        Set<String> seen = new HashSet<>();
-        return bbm -> {
-            if (!seen.add(bbm.getDynamicModelId())) {
-                DynawoSimulationReports.reportDuplicateDynamicId(reportNode, bbm.getDynamicModelId(), bbm.getName());
-                return false;
-            }
-            return true;
-        };
-    }
-
-    protected static Predicate<BlackBoxModel> supportedVersion(DynawoVersion currentVersion, ReportNode reportNode) {
-        return bbm -> {
-            VersionInterval versionInterval = bbm.getVersionInterval();
-            if (currentVersion.compareTo(versionInterval.min()) < 0) {
-                DynawoSimulationReports.reportDynawoVersionTooHigh(reportNode, bbm.getName(), bbm.getDynamicModelId(), versionInterval.min(), currentVersion);
-                return false;
-            }
-            if (versionInterval.max() != null && currentVersion.compareTo(versionInterval.max()) >= 0) {
-                DynawoSimulationReports.reportDynawoVersionTooLow(reportNode, bbm.getName(), bbm.getDynamicModelId(), versionInterval.max(), currentVersion, versionInterval.endCause());
-                return false;
-            }
-            return true;
-        };
     }
 
     public void addModelExtensions() {
