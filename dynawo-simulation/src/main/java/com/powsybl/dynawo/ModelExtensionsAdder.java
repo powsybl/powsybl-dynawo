@@ -72,7 +72,7 @@ public class ModelExtensionsAdder {
         checkFrequencySynchronizer();
         blackBoxModelSupplier = BlackBoxModelSupplier.createFrom(dynamicModels);
         checkForbiddenDefaultModels();
-        MacroConnectionsAdder adder = new MacroConnectionsAdder(blackBoxModelSupplier, mc -> {},
+        MacroConnectionsAdder adder = new MacroConnectionsAdder(blackBoxModelSupplier, mc -> { },
                 (s, f) -> f.apply(s), reportNode);
         dynamicModels.forEach(bbm -> bbm.createMacroConnections(adder));
     }

@@ -9,8 +9,6 @@ package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.extensions.api.model.DynawoOverloadManagementSystemModel;
 import com.powsybl.dynawo.extensions.api.model.DynawoOverloadManagementSystemModelAdder;
-import com.powsybl.dynawo.extensions.api.model.DynawoPhaseShifterBlockingIModel;
-import com.powsybl.dynawo.extensions.api.model.DynawoPhaseShifterBlockingIModelAdder;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
