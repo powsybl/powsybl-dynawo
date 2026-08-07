@@ -89,7 +89,7 @@ class DynawoModelsSupplierTest {
         Network network = EurostagTutorialExample1Factory.createWithLFResults();
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/dynamicModels.json")).toURI());
         List<DynamicModel> models = DynawoModelsSupplier.load(path).get(network);
-        assertEquals(3, models.size());
+        assertEquals(4, models.size());
     }
 
     @Test
@@ -97,9 +97,10 @@ class DynawoModelsSupplierTest {
         DynawoSupplierJsonDeserializer deserializer = new DynawoSupplierJsonDeserializer();
         try (InputStream is = getClass().getResourceAsStream("/suppliers/dynamicModels.json")) {
             DynamicModelConfigs configs = deserializer.deserialize(is);
-            assertThat(configs.dynamicModelConfigList()).hasSize(2).satisfiesExactly(
+            assertThat(configs.dynamicModelConfigList()).hasSize(3).satisfiesExactly(
                     l -> assertThat(l).usingRecursiveComparison().isEqualTo(getLoadConfig()),
-                    tcb -> assertThat(tcb).usingRecursiveComparison().isEqualTo(getTcbConfig()));
+                    tcb -> assertThat(tcb).usingRecursiveComparison().isEqualTo(getTcbConfig()),
+                    gen -> assertThat(gen).usingRecursiveComparison().isEqualTo(getGenConfig()));
             assertThat(configs.dynamicAlternativeModelsConfiglist()).hasSize(1).satisfiesExactly(
                     gen -> assertThat(gen).usingRecursiveComparison().isEqualTo(getAlternativeModelGenConfig()));
         }
@@ -266,7 +267,7 @@ class DynawoModelsSupplierTest {
                         .type(PropertyType.STRING)
                         .build()));
     }
-  
+
     private static DynamicAlternativeModelsConfig getAlternativeModelGenConfig() {
         List<AlternativeModelConfig> genConfig = List.of(
                 new AlternativeModelConfig("GeneratorPQ", "GPQ_"),
