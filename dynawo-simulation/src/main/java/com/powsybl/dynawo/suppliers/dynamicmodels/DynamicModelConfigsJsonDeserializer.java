@@ -11,9 +11,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.powsybl.commons.json.JsonUtil;
-import com.powsybl.dynawo.suppliers.Property;
-import com.powsybl.dynawo.suppliers.PropertyParserUtils;
-import com.powsybl.dynawo.suppliers.SetGroupType;
+import com.powsybl.dynawo.suppliers.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,23 +19,27 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynamicModelConfigsJsonDeserializer extends StdDeserializer<List<DynamicModelConfig>> {
+public class DynamicModelConfigsJsonDeserializer extends StdDeserializer<DynamicModelConfigs> {
 
     public DynamicModelConfigsJsonDeserializer() {
-        super(List.class);
+        super(DynamicModelConfigs.class);
     }
 
     @Override
-    public List<DynamicModelConfig> deserialize(JsonParser parser, DeserializationContext context) {
+    public DynamicModelConfigs deserialize(JsonParser parser, DeserializationContext context) {
         List<DynamicModelConfig> modelConfigList = new ArrayList<>();
+        List<DynamicAlternativeModelsConfig> altModelConfigList = new ArrayList<>();
         JsonUtil.parseObject(parser, name -> {
             if (name.equals("models")) {
                 JsonUtil.parseObjectArray(parser, modelConfigList::add, DynamicModelConfigsJsonDeserializer::parseModelConfig);
                 return true;
+            } else if (name.equals("alternativeModels")) {
+                JsonUtil.parseObjectArray(parser, altModelConfigList::add, DynamicModelConfigsJsonDeserializer::parseAlternativeModelConfig);
+                return true;
             }
             return false;
         });
-        return modelConfigList;
+        return new DynamicModelConfigs(modelConfigList, altModelConfigList);
     }
 
     private static DynamicModelConfig parseModelConfig(JsonParser parser) {
@@ -59,5 +61,44 @@ public class DynamicModelConfigsJsonDeserializer extends StdDeserializer<List<Dy
             return handled;
         });
         return new DynamicModelConfig(parsingContext.model, parsingContext.group, parsingContext.groupType, parsingContext.properties);
+    }
+
+    private static DynamicAlternativeModelsConfig parseAlternativeModelConfig(JsonParser parser) {
+        var parsingContext = new Object() {
+            final List<AlternativeModelConfig> alternativeModels = new ArrayList<>();
+            String resolverName = null;
+            SetGroupType groupType = SetGroupType.FIXED;
+            final List<Property> properties = new ArrayList<>();
+        };
+        JsonUtil.parseObject(parser, name -> {
+            boolean handled = true;
+            switch (name) {
+                case "alternativeConfigurations" -> JsonUtil.parseObjectArray(parser, parsingContext.alternativeModels::add, DynamicModelConfigsJsonDeserializer::parseAlternativeModel);
+                case "resolverName" -> parsingContext.resolverName = parser.nextTextValue();
+                case "groupType" -> parsingContext.groupType = SetGroupType.valueOf(parser.nextTextValue());
+                case "properties" -> JsonUtil.parseObjectArray(parser, parsingContext.properties::add, PropertyParserUtils::parseProperty);
+                default -> handled = false;
+            }
+            return handled;
+        });
+        return new DynamicAlternativeModelsConfig(parsingContext.alternativeModels, parsingContext.resolverName,
+                parsingContext.groupType, parsingContext.properties);
+    }
+
+    public static AlternativeModelConfig parseAlternativeModel(JsonParser parser) {
+        var parsingContext = new Object() {
+            String model = null;
+            String group = null;
+        };
+        JsonUtil.parseObject(parser, name -> {
+            boolean handled = true;
+            switch (name) {
+                case "model" -> parsingContext.model = parser.nextTextValue();
+                case "group" -> parsingContext.group = parser.nextTextValue();
+                default -> handled = false;
+            }
+            return handled;
+        });
+        return new AlternativeModelConfig(parsingContext.model, parsingContext.group);
     }
 }

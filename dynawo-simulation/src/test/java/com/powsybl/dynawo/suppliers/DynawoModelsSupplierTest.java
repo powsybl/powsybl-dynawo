@@ -7,16 +7,16 @@
  */
 package com.powsybl.dynawo.suppliers;
 
+import com.google.auto.service.AutoService;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
-import com.powsybl.dynawo.suppliers.dynamicmodels.DynamicModelConfig;
-import com.powsybl.dynawo.suppliers.dynamicmodels.DynamicModelConfigsJsonDeserializer;
-import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
+import com.powsybl.dynawo.suppliers.dynamicmodels.*;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -89,17 +89,19 @@ class DynawoModelsSupplierTest {
         Network network = EurostagTutorialExample1Factory.createWithLFResults();
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/dynamicModels.json")).toURI());
         List<DynamicModel> models = DynawoModelsSupplier.load(path).get(network);
-        assertEquals(2, models.size());
+        assertEquals(3, models.size());
     }
 
     @Test
     void testModelConfigDeserializer() throws IOException {
-        SupplierJsonDeserializer<DynamicModelConfig> deserializer = new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer());
+        DynawoSupplierJsonDeserializer deserializer = new DynawoSupplierJsonDeserializer();
         try (InputStream is = getClass().getResourceAsStream("/suppliers/dynamicModels.json")) {
-            List<DynamicModelConfig> configs = deserializer.deserialize(is);
-            assertEquals(2, configs.size());
-            assertThat(configs.get(0)).usingRecursiveComparison().isEqualTo(getLoadConfig());
-            assertThat(configs.get(1)).usingRecursiveComparison().isEqualTo(getTcbConfig());
+            DynamicModelConfigs configs = deserializer.deserialize(is);
+            assertThat(configs.dynamicModelConfigList()).hasSize(2).satisfiesExactly(
+                    l -> assertThat(l).usingRecursiveComparison().isEqualTo(getLoadConfig()),
+                    tcb -> assertThat(tcb).usingRecursiveComparison().isEqualTo(getTcbConfig()));
+            assertThat(configs.dynamicAlternativeModelsConfiglist()).hasSize(1).satisfiesExactly(
+                    gen -> assertThat(gen).usingRecursiveComparison().isEqualTo(getAlternativeModelGenConfig()));
         }
     }
 
@@ -131,6 +133,66 @@ class DynawoModelsSupplierTest {
         DynawoModelsSupplier supplier = new DynawoModelsSupplier(List.of(modelConfig));
         Exception e = assertThrows(PowsyblException.class, () -> supplier.get(network, ReportNode.NO_OP));
         assertEquals("Method wrongName not found for parameter LOAD on builder BaseLoadBuilder", e.getMessage());
+    }
+
+    @Test
+    void testAlternativeModels() {
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
+        DynamicModelConfigs configs = new DynamicModelConfigs(Collections.emptyList(), List.of(getAlternativeModelGenConfig()));
+        List<DynamicModel> models = new DynawoModelsSupplier(configs).get(network, ReportNode.NO_OP);
+
+        DynamicModel gen = SynchronizedGeneratorBuilder.of(network, "GeneratorPV")
+                .staticId("GEN")
+                .parameterSetId("GPV_GEN")
+                .build();
+        assertThat(models).hasSize(1).satisfiesExactly(
+                g -> assertThat(g).usingRecursiveComparison().isEqualTo(gen));
+    }
+
+    @Test
+    void testResolverNotFound() {
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
+        List<AlternativeModelConfig> genConfig = List.of(
+                new AlternativeModelConfig("GeneratorPQ", "GPQ_"),
+                new AlternativeModelConfig("GeneratorPV", "GPV_")
+        );
+        DynamicAlternativeModelsConfig altModelGen = new DynamicAlternativeModelsConfig(
+                genConfig,
+                "WrongResolverName",
+                SetGroupType.PREFIX,
+                List.of(
+                        new PropertyBuilder()
+                                .name("staticId")
+                                .value("GEN")
+                                .type(PropertyType.STRING)
+                                .build()));
+        DynamicModelConfigs configs = new DynamicModelConfigs(Collections.emptyList(), List.of(altModelGen));
+        List<DynamicModel> models = new DynawoModelsSupplier(configs).get(network, ReportNode.NO_OP);
+
+        assertThat(models).isEmpty();
+    }
+
+    @Test
+    void testAlternativeModelNotFound() {
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
+        List<AlternativeModelConfig> genConfig = List.of(
+                new AlternativeModelConfig("GeneratorFictitious", "GF_"),
+                new AlternativeModelConfig("GeneratorPVFixed", "GPVF_")
+        );
+        DynamicAlternativeModelsConfig altModelGen = new DynamicAlternativeModelsConfig(
+                genConfig,
+                "ControllableModel",
+                SetGroupType.PREFIX,
+                List.of(
+                        new PropertyBuilder()
+                                .name("staticId")
+                                .value("GEN")
+                                .type(PropertyType.STRING)
+                                .build()));
+        DynamicModelConfigs configs = new DynamicModelConfigs(Collections.emptyList(), List.of(altModelGen));
+        List<DynamicModel> models = new DynawoModelsSupplier(configs).get(network, ReportNode.NO_OP);
+
+        assertThat(models).isEmpty();
     }
 
     private static List<DynamicModelConfig> getModelConfigs() {
@@ -209,5 +271,44 @@ class DynawoModelsSupplierTest {
                         .type(PropertyType.STRING)
                         .build()
         ));
+    }
+
+    private static DynamicAlternativeModelsConfig getAlternativeModelGenConfig() {
+        List<AlternativeModelConfig> genConfig = List.of(
+                new AlternativeModelConfig("GeneratorPQ", "GPQ_"),
+                new AlternativeModelConfig("GeneratorPV", "GPV_")
+        );
+        return new DynamicAlternativeModelsConfig(
+                genConfig,
+                "ControllableModel",
+                SetGroupType.PREFIX,
+                List.of(new PropertyBuilder()
+                        .name("staticId")
+                        .value("GEN")
+                        .type(PropertyType.STRING)
+                        .build()));
+    }
+
+    @AutoService(ModelResolver.class)
+    public static class ControllableModelResolver implements ModelResolver {
+
+        @Override
+        public String getName() {
+            return "ControllableModel";
+        }
+
+        @Override
+        public DynamicModelConfig resolveAlternativeModels(Network network, List<AlternativeModelConfig> alternativeModelConfigs,
+                                                           SetGroupType groupType, List<Property> properties, ReportNode reportNode) {
+            ModelConfigsHandler handler = ModelConfigsHandler.getInstance();
+            AlternativeModelConfig config = alternativeModelConfigs.stream()
+                    .filter(mc -> handler.getModelConfig(mc.model()).isControllable())
+                    .findFirst()
+                    .orElse(null);
+            if (config == null) {
+                return null;
+            }
+            return new DynamicModelConfig(config.model(), config.group(), groupType, properties);
+        }
     }
 }
