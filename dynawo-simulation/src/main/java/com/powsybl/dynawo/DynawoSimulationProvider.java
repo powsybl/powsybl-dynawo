@@ -83,22 +83,19 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                 .build();
     }
 
-    @Override
-    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier,
-                                                          EventModelsSupplier eventModelsSupplier,
-                                                          OutputVariablesSupplier outputVariablesSupplier,
-                                                          String workingVariantId,
-                                                          ComputationManager computationManager,
-                                                          DynamicSimulationParameters parameters,
-                                                          ReportNode reportNode) {
-        Objects.requireNonNull(dynamicModelsSupplier);
-        Objects.requireNonNull(eventModelsSupplier);
-        Objects.requireNonNull(outputVariablesSupplier);
-        Objects.requireNonNull(workingVariantId);
-        Objects.requireNonNull(parameters);
-        Objects.requireNonNull(reportNode);
+    public CompletableFuture<DynamicSimulationResult> run(Network network, String workingVariantId,
+                                                          DynamicModelsSupplier dynamicModelsSupplier,
+                                                          DynamicSimulationRunParameters runParameters) {
 
+        Objects.requireNonNull(dynamicModelsSupplier);
+        Objects.requireNonNull(workingVariantId);
+        Objects.requireNonNull(runParameters);
+
+        DynamicSimulationParameters parameters = runParameters.getDynamicSimulationParameters();
+        ComputationManager computationManager = runParameters.getComputationManager();
+        ReportNode reportNode = runParameters.getReportNode();
         ReportNode dsReportNode = DynawoSimulationReports.createDynawoSimulationReportNode(reportNode, network.getId());
+
         network.getVariantManager().setWorkingVariant(workingVariantId);
         String dumpDir = parameters.getDebugDir();
         ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX, dumpDir);
@@ -112,8 +109,8 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                 .workingVariantId(workingVariantId)
                 .dynamicSimulationParameters(parameters)
                 .dynawoParameters(dynawoParameters)
-                .eventModels(BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsReportNode))
-                .outputVariables(outputVariablesSupplier.get(network))
+                .eventModels(BlackBoxSupplierUtils.getBlackBoxModelList(runParameters.getEventModelsSupplier(), network, dsReportNode))
+                .outputVariables(runParameters.getOutputVariablesSupplier().get(network))
                 .currentVersion(currentVersion)
                 .reportNode(reportNode)
                 .build();
