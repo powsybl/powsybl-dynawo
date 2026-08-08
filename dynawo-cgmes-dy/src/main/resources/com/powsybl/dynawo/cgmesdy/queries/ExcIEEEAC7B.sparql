@@ -1,0 +1,45 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:ExcIEEEAC7B .
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?synchronousMachineId . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.tr ?tr . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kpr ?kpr . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kir ?kir . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kdr ?kdr . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.tdr ?tdr . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.vrmax ?vrmax . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.vrmin ?vrmin . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kpa ?kpa . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kia ?kia . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kda ?kda . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.tda ?tda . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.vamax ?vamax . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.vamin ?vamin . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kp ?kp . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kl ?kl . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.te ?te . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.ke ?ke . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.vfemax ?vfemax . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.vemin ?vemin . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kc ?kc . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kd ?kd . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kf1 ?kf1 . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kf2 ?kf2 . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.kf3 ?kf3 . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.tf ?tf . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.e1 ?e1 . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.se1 ?se1 . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.e2 ?e2 . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.se2 ?se2 . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.uelin ?uelin . }
+  OPTIONAL { ?id cim:ExcIEEEAC7B.oelin ?oelin . }
+}

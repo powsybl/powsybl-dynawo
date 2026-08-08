@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Minimal CGMES DY profile sample for unit testing.
+    Namespace: CIM16 (IEC 61970-302).
+-->
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:cim="http://iec.ch/TC57/2013/CIM-schema-cim16#"
+    xmlns:md="http://iec.ch/TC57/61970-552/ModelDescription/1#">
+
+    <!-- ======================================================
+         Synchronous Machine (reference to EQ profile)
+         ====================================================== -->
+    <cim:SynchronousMachineTimeConstantReactance rdf:ID="_sync_machine_dyn_1">
+        <cim:IdentifiedObject.name>SM1_Dyn</cim:IdentifiedObject.name>
+        <cim:SynchronousMachineDynamics.SynchronousMachine rdf:resource="#_sync_machine_1"/>
+        <cim:SynchronousMachineDetailed.ifdBaseType>ifag</cim:SynchronousMachineDetailed.ifdBaseType>
+        <cim:RotatingMachineDynamics.saturationFactor>0.05</cim:RotatingMachineDynamics.saturationFactor>
+        <cim:RotatingMachineDynamics.saturationFactor120>0.3</cim:RotatingMachineDynamics.saturationFactor120>
+        <cim:SynchronousMachineTimeConstantReactance.modelType>subtransient</cim:SynchronousMachineTimeConstantReactance.modelType>
+        <cim:SynchronousMachineTimeConstantReactance.ks>0.0</cim:SynchronousMachineTimeConstantReactance.ks>
+        <cim:SynchronousMachineTimeConstantReactance.xDirectSync>1.81</cim:SynchronousMachineTimeConstantReactance.xDirectSync>
+        <cim:SynchronousMachineTimeConstantReactance.xDirectTrans>0.3</cim:SynchronousMachineTimeConstantReactance.xDirectTrans>
+        <cim:SynchronousMachineTimeConstantReactance.xDirectSubtrans>0.23</cim:SynchronousMachineTimeConstantReactance.xDirectSubtrans>
+        <cim:SynchronousMachineTimeConstantReactance.xQuadSync>1.76</cim:SynchronousMachineTimeConstantReactance.xQuadSync>
+        <cim:SynchronousMachineTimeConstantReactance.xQuadTrans>0.65</cim:SynchronousMachineTimeConstantReactance.xQuadTrans>
+        <cim:SynchronousMachineTimeConstantReactance.xQuadSubtrans>0.25</cim:SynchronousMachineTimeConstantReactance.xQuadSubtrans>
+        <cim:SynchronousMachineTimeConstantReactance.tpdo>1.01</cim:SynchronousMachineTimeConstantReactance.tpdo>
+        <cim:SynchronousMachineTimeConstantReactance.tppdo>0.053</cim:SynchronousMachineTimeConstantReactance.tppdo>
+        <cim:SynchronousMachineTimeConstantReactance.tpqo>0.32</cim:SynchronousMachineTimeConstantReactance.tpqo>
+        <cim:SynchronousMachineTimeConstantReactance.tppqo>0.05</cim:SynchronousMachineTimeConstantReactance.tppqo>
+        <cim:SynchronousMachineTimeConstantReactance.xl>0.15</cim:SynchronousMachineTimeConstantReactance.xl>
+    </cim:SynchronousMachineTimeConstantReactance>
+
+    <!-- ======================================================
+         Governor – Steam: GovSteam0
+         ====================================================== -->
+    <cim:GovSteam0 rdf:ID="_gov_steam0_1">
+        <cim:IdentifiedObject.name>GovSteam0_G1</cim:IdentifiedObject.name>
+        <cim:TurbineGovernorDynamics.SynchronousMachineDynamics rdf:resource="#_sync_machine_dyn_1"/>
+        <cim:GovSteam0.mwbase>900.0</cim:GovSteam0.mwbase>
+        <cim:GovSteam0.r>0.05</cim:GovSteam0.r>
+        <cim:GovSteam0.t1>0.5</cim:GovSteam0.t1>
+        <cim:GovSteam0.vmax>1.0</cim:GovSteam0.vmax>
+        <cim:GovSteam0.vmin>0.0</cim:GovSteam0.vmin>
+        <cim:GovSteam0.t2>3.0</cim:GovSteam0.t2>
+        <cim:GovSteam0.t3>10.0</cim:GovSteam0.t3>
+        <cim:GovSteam0.dt>0.0</cim:GovSteam0.dt>
+    </cim:GovSteam0>
+
+    <!-- ======================================================
+         Exciter – IEEE DC1A
+         ====================================================== -->
+    <cim:ExcIEEEDC1A rdf:ID="_exc_dc1a_1">
+        <cim:IdentifiedObject.name>ExcDC1A_G1</cim:IdentifiedObject.name>
+        <cim:ExcitationSystemDynamics.SynchronousMachineDynamics rdf:resource="#_sync_machine_dyn_1"/>
+        <cim:ExcIEEEDC1A.tr>0.0</cim:ExcIEEEDC1A.tr>
+        <cim:ExcIEEEDC1A.ka>46.0</cim:ExcIEEEDC1A.ka>
+        <cim:ExcIEEEDC1A.ta>0.06</cim:ExcIEEEDC1A.ta>
+        <cim:ExcIEEEDC1A.tb>0.0</cim:ExcIEEEDC1A.tb>
+        <cim:ExcIEEEDC1A.tc>0.0</cim:ExcIEEEDC1A.tc>
+        <cim:ExcIEEEDC1A.vrmax>1.0</cim:ExcIEEEDC1A.vrmax>
+        <cim:ExcIEEEDC1A.vrmin>-0.9</cim:ExcIEEEDC1A.vrmin>
+        <cim:ExcIEEEDC1A.ke>-0.17</cim:ExcIEEEDC1A.ke>
+        <cim:ExcIEEEDC1A.te>0.46</cim:ExcIEEEDC1A.te>
+        <cim:ExcIEEEDC1A.kf>0.1</cim:ExcIEEEDC1A.kf>
+        <cim:ExcIEEEDC1A.tf>1.0</cim:ExcIEEEDC1A.tf>
+        <cim:ExcIEEEDC1A.kc>0.0</cim:ExcIEEEDC1A.kc>
+        <cim:ExcIEEEDC1A.kd>0.0</cim:ExcIEEEDC1A.kd>
+        <cim:ExcIEEEDC1A.ki>0.0</cim:ExcIEEEDC1A.ki>
+        <cim:ExcIEEEDC1A.efd1>3.1</cim:ExcIEEEDC1A.efd1>
+        <cim:ExcIEEEDC1A.seefd1>0.33</cim:ExcIEEEDC1A.seefd1>
+        <cim:ExcIEEEDC1A.efd2>2.3</cim:ExcIEEEDC1A.efd2>
+        <cim:ExcIEEEDC1A.seefd2>0.1</cim:ExcIEEEDC1A.seefd2>
+        <cim:ExcIEEEDC1A.uelin>false</cim:ExcIEEEDC1A.uelin>
+        <cim:ExcIEEEDC1A.exclim>false</cim:ExcIEEEDC1A.exclim>
+    </cim:ExcIEEEDC1A>
+
+    <!-- ======================================================
+         PSS – PssIEEE2B
+         ====================================================== -->
+    <cim:PssIEEE2B rdf:ID="_pss_ieee2b_1">
+        <cim:IdentifiedObject.name>PSS2B_G1</cim:IdentifiedObject.name>
+        <cim:PowerSystemStabilizerDynamics.ExcitationSystemDynamics rdf:resource="#_exc_dc1a_1"/>
+        <cim:PssIEEE2B.inputSignal1Type>rotorSpeed</cim:PssIEEE2B.inputSignal1Type>
+        <cim:PssIEEE2B.inputSignal2Type>generatorElectricalPower</cim:PssIEEE2B.inputSignal2Type>
+        <cim:PssIEEE2B.ks1>1.0</cim:PssIEEE2B.ks1>
+        <cim:PssIEEE2B.ks2>0.1</cim:PssIEEE2B.ks2>
+        <cim:PssIEEE2B.ks3>1.0</cim:PssIEEE2B.ks3>
+        <cim:PssIEEE2B.tw1>10.0</cim:PssIEEE2B.tw1>
+        <cim:PssIEEE2B.tw2>10.0</cim:PssIEEE2B.tw2>
+        <cim:PssIEEE2B.tw3>2.0</cim:PssIEEE2B.tw3>
+        <cim:PssIEEE2B.tw4>0.0</cim:PssIEEE2B.tw4>
+        <cim:PssIEEE2B.t1>0.12</cim:PssIEEE2B.t1>
+        <cim:PssIEEE2B.t2>0.02</cim:PssIEEE2B.t2>
+        <cim:PssIEEE2B.t3>0.3</cim:PssIEEE2B.t3>
+        <cim:PssIEEE2B.t4>0.02</cim:PssIEEE2B.t4>
+        <cim:PssIEEE2B.t6>0.0</cim:PssIEEE2B.t6>
+        <cim:PssIEEE2B.t7>2.0</cim:PssIEEE2B.t7>
+        <cim:PssIEEE2B.t8>0.2</cim:PssIEEE2B.t8>
+        <cim:PssIEEE2B.t9>0.1</cim:PssIEEE2B.t9>
+        <cim:PssIEEE2B.t10>0.0</cim:PssIEEE2B.t10>
+        <cim:PssIEEE2B.t11>0.0</cim:PssIEEE2B.t11>
+        <cim:PssIEEE2B.n>2</cim:PssIEEE2B.n>
+        <cim:PssIEEE2B.m>5</cim:PssIEEE2B.m>
+        <cim:PssIEEE2B.vstmax>0.1</cim:PssIEEE2B.vstmax>
+        <cim:PssIEEE2B.vstmin>-0.1</cim:PssIEEE2B.vstmin>
+    </cim:PssIEEE2B>
+
+    <!-- ======================================================
+         IEEE AC1A Exciter (second machine)
+         ====================================================== -->
+    <cim:SynchronousMachineSimplified rdf:ID="_sync_machine_dyn_2">
+        <cim:IdentifiedObject.name>SM2_Dyn</cim:IdentifiedObject.name>
+        <cim:SynchronousMachineDynamics.SynchronousMachine rdf:resource="#_sync_machine_2"/>
+        <cim:RotatingMachineDynamics.mBase>900.0</cim:RotatingMachineDynamics.mBase>
+        <cim:RotatingMachineDynamics.damping>0.0</cim:RotatingMachineDynamics.damping>
+        <cim:RotatingMachineDynamics.inertia>6.5</cim:RotatingMachineDynamics.inertia>
+        <cim:RotatingMachineDynamics.statorLeakageReactance>0.14</cim:RotatingMachineDynamics.statorLeakageReactance>
+        <cim:RotatingMachineDynamics.statorResistance>0.003</cim:RotatingMachineDynamics.statorResistance>
+    </cim:SynchronousMachineSimplified>
+
+    <cim:ExcIEEEAC1A rdf:ID="_exc_ac1a_1">
+        <cim:IdentifiedObject.name>ExcAC1A_G2</cim:IdentifiedObject.name>
+        <cim:ExcitationSystemDynamics.SynchronousMachineDynamics rdf:resource="#_sync_machine_dyn_2"/>
+        <cim:ExcIEEEAC1A.tr>0.0</cim:ExcIEEEAC1A.tr>
+        <cim:ExcIEEEAC1A.tb>0.0</cim:ExcIEEEAC1A.tb>
+        <cim:ExcIEEEAC1A.tc>0.0</cim:ExcIEEEAC1A.tc>
+        <cim:ExcIEEEAC1A.ka>400.0</cim:ExcIEEEAC1A.ka>
+        <cim:ExcIEEEAC1A.ta>0.02</cim:ExcIEEEAC1A.ta>
+        <cim:ExcIEEEAC1A.vamax>14.5</cim:ExcIEEEAC1A.vamax>
+        <cim:ExcIEEEAC1A.vamin>-14.5</cim:ExcIEEEAC1A.vamin>
+        <cim:ExcIEEEAC1A.te>0.8</cim:ExcIEEEAC1A.te>
+        <cim:ExcIEEEAC1A.kf>0.03</cim:ExcIEEEAC1A.kf>
+        <cim:ExcIEEEAC1A.tf>1.0</cim:ExcIEEEAC1A.tf>
+        <cim:ExcIEEEAC1A.kc>0.2</cim:ExcIEEEAC1A.kc>
+        <cim:ExcIEEEAC1A.kd>0.38</cim:ExcIEEEAC1A.kd>
+        <cim:ExcIEEEAC1A.ke>1.0</cim:ExcIEEEAC1A.ke>
+        <cim:ExcIEEEAC1A.vfemax>6.9</cim:ExcIEEEAC1A.vfemax>
+        <cim:ExcIEEEAC1A.vrmax>6.03</cim:ExcIEEEAC1A.vrmax>
+        <cim:ExcIEEEAC1A.vrmin>-5.43</cim:ExcIEEEAC1A.vrmin>
+        <cim:ExcIEEEAC1A.e1>4.18</cim:ExcIEEEAC1A.e1>
+        <cim:ExcIEEEAC1A.se1>0.1</cim:ExcIEEEAC1A.se1>
+        <cim:ExcIEEEAC1A.e2>3.14</cim:ExcIEEEAC1A.e2>
+        <cim:ExcIEEEAC1A.se2>0.03</cim:ExcIEEEAC1A.se2>
+    </cim:ExcIEEEAC1A>
+
+    <!-- ======================================================
+         Wind – Type 4A
+         ====================================================== -->
+    <cim:WindGenTurbineType4aIEC rdf:ID="_wind_type4a_1">
+        <cim:IdentifiedObject.name>WT4a_WF1</cim:IdentifiedObject.name>
+        <cim:WindTurbineType3or4Dynamics.WindPlantDynamics rdf:resource="#_wind_plant_1"/>
+        <cim:WindTurbineType3or4IEC.WindContCurrLimIEC rdf:resource="#_wind_curr_lim_1"/>
+        <cim:WindTurbineType3or4IEC.WindContQIEC rdf:resource="#_wind_contq_1"/>
+        <cim:WindTurbineType3or4IEC.WindProtectionIEC rdf:resource="#_wind_protection_1"/>
+        <cim:WindGenTurbineType4aIEC.WindContPType4aIEC rdf:resource="#_wind_ptype4a_1"/>
+        <cim:WindGenTurbineType4aIEC.dipmax>0.9</cim:WindGenTurbineType4aIEC.dipmax>
+        <cim:WindGenTurbineType4aIEC.diqmax>0.9</cim:WindGenTurbineType4aIEC.diqmax>
+        <cim:WindGenTurbineType4aIEC.tg>0.01</cim:WindGenTurbineType4aIEC.tg>
+    </cim:WindGenTurbineType4aIEC>
+
+    <!-- OEL -->
+    <cim:OverexcLimIEEE rdf:ID="_oel_ieee_1">
+        <cim:IdentifiedObject.name>OEL_G1</cim:IdentifiedObject.name>
+        <cim:OverexcitationLimiterDynamics.ExcitationSystemDynamics rdf:resource="#_exc_dc1a_1"/>
+        <cim:OverexcLimIEEE.ifdmax>1.5</cim:OverexcLimIEEE.ifdmax>
+        <cim:OverexcLimIEEE.ifdlim>1.3</cim:OverexcLimIEEE.ifdlim>
+        <cim:OverexcLimIEEE.itfpu>1.2</cim:OverexcLimIEEE.itfpu>
+        <cim:OverexcLimIEEE.hyst>0.03</cim:OverexcLimIEEE.hyst>
+        <cim:OverexcLimIEEE.kcd>1.0</cim:OverexcLimIEEE.kcd>
+        <cim:OverexcLimIEEE.kramp>10.0</cim:OverexcLimIEEE.kramp>
+    </cim:OverexcLimIEEE>
+
+</rdf:RDF>

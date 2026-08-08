@@ -1,0 +1,29 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:DiscExcContIEEEDEC1A .
+  OPTIONAL { ?id cim:DiscontinuousExcitationControlDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.vtlmt ?vtlmt . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.vomax ?vomax . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.vomin ?vomin . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.vdis ?vdis . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.vethr ?vethr . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.vanmax ?vanmax . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.vtm ?vtm . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.vtn ?vtn . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.vsmin ?vsmin . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.escrv ?escrv . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.kan ?kan . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.td ?td . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.vsmax ?vsmax . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.tan ?tan . }
+  OPTIONAL { ?id cim:DiscExcContIEEEDEC1A.esc ?esc . }
+}

@@ -1,0 +1,43 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:GovHydroPelton .
+  OPTIONAL { ?id cim:TurbineGovernorDynamics.SynchronousMachineDynamics ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:GovHydroPelton.mwbase ?mwbase . }
+  OPTIONAL { ?id cim:GovHydroPelton.av0 ?av0 . }
+  OPTIONAL { ?id cim:GovHydroPelton.av1 ?av1 . }
+  OPTIONAL { ?id cim:GovHydroPelton.bp ?bp . }
+  OPTIONAL { ?id cim:GovHydroPelton.db1 ?db1 . }
+  OPTIONAL { ?id cim:GovHydroPelton.db2 ?db2 . }
+  OPTIONAL { ?id cim:GovHydroPelton.h1 ?h1 . }
+  OPTIONAL { ?id cim:GovHydroPelton.h2 ?h2 . }
+  OPTIONAL { ?id cim:GovHydroPelton.hn ?hn . }
+  OPTIONAL { ?id cim:GovHydroPelton.kc ?kc . }
+  OPTIONAL { ?id cim:GovHydroPelton.kg ?kg . }
+  OPTIONAL { ?id cim:GovHydroPelton.qc0 ?qc0 . }
+  OPTIONAL { ?id cim:GovHydroPelton.qn ?qn . }
+  OPTIONAL { ?id cim:GovHydroPelton.simplifiedPelton ?simplifiedPelton . }
+  OPTIONAL { ?id cim:GovHydroPelton.staticCompensating ?staticCompensating . }
+  OPTIONAL { ?id cim:GovHydroPelton.ta ?ta . }
+  OPTIONAL { ?id cim:GovHydroPelton.td ?td . }
+  OPTIONAL { ?id cim:GovHydroPelton.ts ?ts . }
+  OPTIONAL { ?id cim:GovHydroPelton.twnc ?twnc . }
+  OPTIONAL { ?id cim:GovHydroPelton.twng ?twng . }
+  OPTIONAL { ?id cim:GovHydroPelton.tx ?tx . }
+  OPTIONAL { ?id cim:GovHydroPelton.va ?va . }
+  OPTIONAL { ?id cim:GovHydroPelton.valvmax ?valvmax . }
+  OPTIONAL { ?id cim:GovHydroPelton.valvmin ?valvmin . }
+  OPTIONAL { ?id cim:GovHydroPelton.vav ?vav . }
+  OPTIONAL { ?id cim:GovHydroPelton.vc ?vc . }
+  OPTIONAL { ?id cim:GovHydroPelton.vcv ?vcv . }
+  OPTIONAL { ?id cim:GovHydroPelton.cfrac ?cfrac . }
+  OPTIONAL { ?id cim:GovHydroPelton.sfrac ?sfrac . }
+}

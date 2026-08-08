@@ -1,0 +1,33 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:WindPlantReactiveControlIEC .
+  OPTIONAL { ?id cim:RotatingMachineDynamics.RotatingMachine          ?synchronousMachineId    . }
+  OPTIONAL { ?id cim:AsynchronousMachineDynamics.AsynchronousMachine  ?asynchronousMachineId   . }
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?excitationSystemId   . }
+  OPTIONAL { ?id cim:PowerSystemStabilizerDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:WindTurbineType3or4Dynamics.WindPlantDynamics     ?powerPlantId            . }
+  OPTIONAL { ?id cim:TurbineGovernorDynamics.SynchronousMachineDynamics ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.ki ?ki . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.kp ?kp . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.kqi ?kqi . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.kqp ?kqp . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.kuu ?kuu . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.twpfiltp ?twpfiltp . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.twppfilt ?twppfilt . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.twpqfilt ?twpqfilt . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.twpufilt ?twpufilt . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.txfp ?txfp . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.txft ?txft . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.uwpqdip ?uwpqdip . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.xrefmax ?xrefmax . }
+  OPTIONAL { ?id cim:WindPlantReactiveControlIEC.xrefmin ?xrefmin . }
+}

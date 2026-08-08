@@ -1,0 +1,28 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:GovGAST4 .
+  OPTIONAL { ?id cim:TurbineGovernorDynamics.SynchronousMachineDynamics ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:GovGAST4.mwbase ?mwbase . }
+  OPTIONAL { ?id cim:GovGAST4.r ?r . }
+  OPTIONAL { ?id cim:GovGAST4.t1 ?t1 . }
+  OPTIONAL { ?id cim:GovGAST4.t2 ?t2 . }
+  OPTIONAL { ?id cim:GovGAST4.t3 ?t3 . }
+  OPTIONAL { ?id cim:GovGAST4.at ?at . }
+  OPTIONAL { ?id cim:GovGAST4.kt ?kt . }
+  OPTIONAL { ?id cim:GovGAST4.vmax ?vmax . }
+  OPTIONAL { ?id cim:GovGAST4.vmin ?vmin . }
+  OPTIONAL { ?id cim:GovGAST4.dturb ?dturb . }
+  OPTIONAL { ?id cim:GovGAST4.bp ?bp . }
+  OPTIONAL { ?id cim:GovGAST4.tr ?tr . }
+  OPTIONAL { ?id cim:GovGAST4.rLimMax ?rLimMax . }
+  OPTIONAL { ?id cim:GovGAST4.rLimMin ?rLimMin . }
+}

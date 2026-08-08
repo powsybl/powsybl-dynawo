@@ -1,0 +1,35 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:ExcPIC .
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?synchronousMachineId . }
+  OPTIONAL { ?id cim:ExcPIC.ka ?ka . }
+  OPTIONAL { ?id cim:ExcPIC.ta ?ta . }
+  OPTIONAL { ?id cim:ExcPIC.kf ?kf . }
+  OPTIONAL { ?id cim:ExcPIC.tf1 ?tf1 . }
+  OPTIONAL { ?id cim:ExcPIC.tf2 ?tf2 . }
+  OPTIONAL { ?id cim:ExcPIC.e1 ?e1 . }
+  OPTIONAL { ?id cim:ExcPIC.se1 ?se1 . }
+  OPTIONAL { ?id cim:ExcPIC.e2 ?e2 . }
+  OPTIONAL { ?id cim:ExcPIC.se2 ?se2 . }
+  OPTIONAL { ?id cim:ExcPIC.efdmax ?efdmax . }
+  OPTIONAL { ?id cim:ExcPIC.efdmin ?efdmin . }
+  OPTIONAL { ?id cim:ExcPIC.ka2 ?ka2 . }
+  OPTIONAL { ?id cim:ExcPIC.vr1 ?vr1 . }
+  OPTIONAL { ?id cim:ExcPIC.vr2 ?vr2 . }
+  OPTIONAL { ?id cim:ExcPIC.t1 ?t1 . }
+  OPTIONAL { ?id cim:ExcPIC.t2 ?t2 . }
+  OPTIONAL { ?id cim:ExcPIC.t3 ?t3 . }
+  OPTIONAL { ?id cim:ExcPIC.t4 ?t4 . }
+  OPTIONAL { ?id cim:ExcPIC.t5 ?t5 . }
+  OPTIONAL { ?id cim:ExcPIC.vrmax ?vrmax . }
+  OPTIONAL { ?id cim:ExcPIC.vrmin ?vrmin . }
+}
