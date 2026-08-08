@@ -12,6 +12,7 @@ import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.ActionConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -40,7 +41,7 @@ public class EventBusDisconnection extends AbstractEvent implements ContextDepen
 
     private List<VarConnection> getVarConnectionsWith(ActionConnectionPoint connected) {
         return connected.getStateValueVarName()
-                .map(sv -> List.of(new VarConnection("event_state1_value", sv)))
+                .map(sv -> List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("EVENT_STATE"), sv)))
                 .orElse(Collections.emptyList());
     }
 

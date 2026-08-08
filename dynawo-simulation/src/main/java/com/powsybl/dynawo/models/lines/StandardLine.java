@@ -13,6 +13,7 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.TwoSides;
 
@@ -60,7 +61,7 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
 
     @Override
     public String getStateValueVarName() {
-        return "line_state_value";
+        return VersionableVariablesHandler.getInstance().getCurrentValue("STATE", "line");
     }
 
     @Override

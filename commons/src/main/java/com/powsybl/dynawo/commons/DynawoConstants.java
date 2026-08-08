@@ -19,6 +19,8 @@ public final class DynawoConstants {
 
     public static final DynawoVersion VERSION_MIN = new DynawoVersion(1, 5, 0);
 
+    public static final DynawoVersion CURRENT_VERSION = new DynawoVersion(1, 7, 0);
+
     public static final String NETWORK_FILENAME = "powsybl_dynawo.xiidm";
 
     public static final String OUTPUTS_FOLDER = "outputs";

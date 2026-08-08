@@ -8,8 +8,6 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.GridFormingConverterBuilder;
@@ -53,11 +51,6 @@ class DisconnectInjectionEventXmlTest extends AbstractDynamicModelXmlTest {
         network.getGenerator(genId).getTerminal()
                 .setP(-605.558349609375)
                 .setQ(-225.2825164794922);
-    }
-
-    @Override
-    protected DynawoSimulationContext.Builder setupDynawoContextBuilder() {
-        return super.setupDynawoContextBuilder().currentVersion(DynawoVersion.createFromString("1.7.0"));
     }
 
     @Override

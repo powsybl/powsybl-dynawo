@@ -120,11 +120,11 @@ class ModelConfigLoaderTest {
     @Test
     void mergeModelConfigs() {
         ModelConfig defaultModel = new ModelConfig("AA");
-        ModelConfigs modelConfigs1 = new ModelConfigs(new TreeMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel.name());
+        ModelConfigs modelConfigs1 = new ModelConfigs("CAT_1", new TreeMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel.name());
 
         ModelConfig mc1 = new ModelConfig("BB");
         ModelConfig mc2 = new ModelConfig("CC");
-        ModelConfigs modelConfigs2 = new ModelConfigs(new TreeMap<>(Map.of(mc1.name(), mc1, mc2.name(), mc2)), mc1.name());
+        ModelConfigs modelConfigs2 = new ModelConfigs("CAT_2", new TreeMap<>(Map.of(mc1.name(), mc1, mc2.name(), mc2)), mc1.name());
 
         modelConfigs1.addModelConfigs(modelConfigs2);
         assertThat(modelConfigs1.getModelInfos()).containsExactly(
@@ -133,8 +133,8 @@ class ModelConfigLoaderTest {
                 mc2);
         assertEquals(defaultModel, modelConfigs1.getDefaultModelConfig());
 
-        ModelConfigs modelConfigs3 = new ModelConfigs(new TreeMap<>(Map.of(mc2.name(), mc2)), null);
-        ModelConfigs modelConfigs4 = new ModelConfigs(new TreeMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel.name());
+        ModelConfigs modelConfigs3 = new ModelConfigs("CAT_3", new TreeMap<>(Map.of(mc2.name(), mc2)), null);
+        ModelConfigs modelConfigs4 = new ModelConfigs("CAT_4", new TreeMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel.name());
         modelConfigs3.addModelConfigs(modelConfigs4);
         assertEquals(defaultModel, modelConfigs3.getDefaultModelConfig());
     }

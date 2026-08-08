@@ -66,6 +66,7 @@ public class MarginCalculationProvider implements Versionable {
         ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX, dumpDir);
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
 
+        ModelConfigsHandler.getInstance().setDynawoVersion(currentVersion);
         MarginCalculationParameters parameters = runParameters.getMarginCalculationParameters();
         DynawoSimulationParameters dynawoParameters = parameters.getDynawoParameters();
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
