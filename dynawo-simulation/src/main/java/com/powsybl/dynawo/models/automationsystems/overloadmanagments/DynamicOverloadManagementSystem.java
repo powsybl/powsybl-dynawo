@@ -7,6 +7,8 @@
 package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.extensions.api.model.DynawoOverloadManagementSystemModel;
+import com.powsybl.dynawo.extensions.api.model.DynawoOverloadManagementSystemModelAdder;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
@@ -63,5 +65,25 @@ public class DynamicOverloadManagementSystem extends AbstractPureDynamicBlackBox
 
     protected List<VarConnection> getVarConnectionsWithControlledBranch(BranchModel connected) {
         return List.of(new VarConnection("currentLimitAutomaton_order", connected.getStateVarName()));
+    }
+
+    @Override
+    public void createDynawoModelExtension() {
+        DynawoOverloadManagementSystemModel extension = controlledBranch.getExtension(DynawoOverloadManagementSystemModel.class);
+        if (extension == null) {
+            controlledBranch.newExtension(DynawoOverloadManagementSystemModelAdder.class)
+                    .withIMeasurement(measuredBranch.getId())
+                    .withIMeasurementSide(measuredSide)
+                    .withDynamicModelId(getDynamicModelId())
+                    .withParameterSetId(getParameterSetId())
+                    .withModelName(modelConfig.name())
+                    .add();
+        } else {
+            extension.setIMeasurement(measuredBranch.getId())
+                    .setIMeasurementSide(measuredSide)
+                    .setDynamicModelId(getDynamicModelId())
+                    .setParameterSetId(getParameterSetId())
+                    .setModelName(modelConfig.name());
+        }
     }
 }

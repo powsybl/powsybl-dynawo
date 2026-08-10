@@ -24,7 +24,7 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
  */
 public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxModel {
 
-    private final ModelConfig modelConfig;
+    protected final ModelConfig modelConfig;
 
     protected AbstractPureDynamicBlackBoxModel(String dynamicModelId, String parameterSetId, ModelConfig modelConfig) {
         super(dynamicModelId, parameterSetId);

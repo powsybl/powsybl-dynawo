@@ -14,7 +14,7 @@ import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 
-import static com.powsybl.dynawo.models.TransformerSide.HIGH_VOLTAGE;
+import static com.powsybl.dynawo.commons.TransformerSide.HIGH_VOLTAGE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
