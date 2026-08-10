@@ -27,7 +27,7 @@ public abstract class AbstractDynawoModel<I extends Identifiable<I>, E extends D
     private final ArrayList<String> parameterSetIdPerVariant;
     protected final List<ArrayList<String>> perVariantList = new ArrayList<>();
 
-    public AbstractDynawoModel(I extendable, String modelName, String parameterSetId) {
+    protected AbstractDynawoModel(I extendable, String modelName, String parameterSetId) {
         super(extendable);
         this.modelNamePerVariant = new ArrayList<>(Collections.nCopies(
                 getVariantManagerHolder().getVariantManager().getVariantArraySize(), null));

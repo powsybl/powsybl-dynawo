@@ -17,9 +17,6 @@ import com.powsybl.iidm.network.Identifiable;
 public class DynawoEquipmentModelAdderImpl<I extends Identifiable<I>> extends AbstractDynawoModelAdder<I, DynawoEquipmentModel<I>, DynawoEquipmentModelAdderImpl<I>>
         implements DynawoEquipmentModelAdder<I> {
 
-    private String modelName;
-    private String parameterSetId;
-
     public DynawoEquipmentModelAdderImpl(I identifiable) {
         super(identifiable);
     }
@@ -27,18 +24,6 @@ public class DynawoEquipmentModelAdderImpl<I extends Identifiable<I>> extends Ab
     @Override
     protected DynawoEquipmentModel<I> createExtension(I extendable) {
         return new DynawoEquipmentModelImpl<>(extendable, modelName, parameterSetId);
-    }
-
-    @Override
-    public DynawoEquipmentModelAdderImpl<I> withModelName(String modelName) {
-        this.modelName = modelName;
-        return this;
-    }
-
-    @Override
-    public DynawoEquipmentModelAdderImpl<I> withParameterSetId(String parameterSetId) {
-        this.parameterSetId = parameterSetId;
-        return this;
     }
 
     @Override

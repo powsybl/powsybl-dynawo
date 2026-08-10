@@ -20,7 +20,7 @@ public abstract class AbstractDynawoModelAdder<I extends Identifiable<I>, E exte
     protected String modelName;
     protected String parameterSetId;
 
-    public AbstractDynawoModelAdder(I identifiable) {
+    protected AbstractDynawoModelAdder(I identifiable) {
         super(identifiable);
     }
 

@@ -18,7 +18,7 @@ public abstract class AbstractDynawoAutomationSystemModelAdder<I extends Identif
 
     protected String dynamicModelId;
 
-    public AbstractDynawoAutomationSystemModelAdder(I identifiable) {
+    protected AbstractDynawoAutomationSystemModelAdder(I identifiable) {
         super(identifiable);
     }
 

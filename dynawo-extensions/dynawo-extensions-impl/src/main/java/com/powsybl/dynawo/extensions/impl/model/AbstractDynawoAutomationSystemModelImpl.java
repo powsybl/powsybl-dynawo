@@ -21,7 +21,7 @@ public abstract class AbstractDynawoAutomationSystemModelImpl<I extends Identifi
 
     private final ArrayList<String> dynamicModelIdPerVariant;
 
-    public AbstractDynawoAutomationSystemModelImpl(I extendable, String modelName, String parameterSetId, String dynamicModelId) {
+    protected AbstractDynawoAutomationSystemModelImpl(I extendable, String modelName, String parameterSetId, String dynamicModelId) {
         super(extendable, modelName, parameterSetId);
         this.dynamicModelIdPerVariant = new ArrayList<>(Collections.nCopies(
                 getVariantManagerHolder().getVariantManager().getVariantArraySize(), null));
