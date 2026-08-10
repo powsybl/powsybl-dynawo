@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.extensions.serde;
 
 import com.powsybl.commons.test.AbstractSerDeTest;
-import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelsOverloadManagementSystemModelAdder;
+import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelOverloadManagementSystemModelAdder;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
@@ -21,16 +21,16 @@ import java.io.IOException;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class DynawoTwoLevelsOverloadManagementSystemModelInfoSerDeTest extends AbstractSerDeTest {
+class DynawoTwoLevelOverloadManagementSystemModelInfoSerDeTest extends AbstractSerDeTest {
 
     @Test
     void testXmlSerializer() throws IOException {
         Network network = EurostagTutorialExample1Factory.create();
         TwoWindingsTransformer tfo = network.getTwoWindingsTransformer("NGEN_NHV1");
 
-        DynawoTwoLevelsOverloadManagementSystemModelAdder<TwoWindingsTransformer> adder = tfo.newExtension(DynawoTwoLevelsOverloadManagementSystemModelAdder.class);
+        DynawoTwoLevelOverloadManagementSystemModelAdder<TwoWindingsTransformer> adder = tfo.newExtension(DynawoTwoLevelOverloadManagementSystemModelAdder.class);
         adder.withDynamicModelId("TLOMS")
-                .withModelName("TwoLevelsOverloadManagementSystem")
+                .withModelName("TwoLevelOverloadManagementSystem")
                 .withParameterSetId("tloms")
                 .withIMeasurement1("NHV2_NLOAD")
                 .withIMeasurement1Side(TwoSides.TWO)
@@ -44,6 +44,6 @@ class DynawoTwoLevelsOverloadManagementSystemModelInfoSerDeTest extends Abstract
                 (n, p) -> n,
                 NetworkSerDe::write,
                 NetworkSerDe::validateAndRead,
-                "/dynawoTwoLevelsOverloadManagementSystemModelInfo.xml");
+                "/dynawoTwoLevelOverloadManagementSystemModelInfo.xml");
     }
 }

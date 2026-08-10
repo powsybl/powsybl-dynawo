@@ -8,8 +8,8 @@
   -->
 <xs:schema version="1.0"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:dtwoms="http://www.powsybl.org/schema/iidm/ext/dynawo_two_levels_overload_management_system_model/1_0"
-           targetNamespace="http://www.powsybl.org/schema/iidm/ext/dynawo_two_levels_overload_management_system_model/1_0"
+           xmlns:dtwoms="http://www.powsybl.org/schema/iidm/ext/dynawo_two_level_overload_management_system_model/1_0"
+           targetNamespace="http://www.powsybl.org/schema/iidm/ext/dynawo_two_level_overload_management_system_model/1_0"
            elementFormDefault="qualified">
 
     <xs:simpleType name="TwoSides">
@@ -19,7 +19,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:element name="dynawoTwoLevelsOverloadManagementSystemModel">
+    <xs:element name="dynawoTwoLevelOverloadManagementSystemModel">
         <xs:complexType>
             <xs:attribute name="dynamicModelId" use="required" type="xs:string"/>
             <xs:attribute name="modelName" use="required" type="xs:string"/>

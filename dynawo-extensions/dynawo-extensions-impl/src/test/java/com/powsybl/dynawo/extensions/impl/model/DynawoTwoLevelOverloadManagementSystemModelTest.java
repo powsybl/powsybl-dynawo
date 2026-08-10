@@ -8,8 +8,8 @@
 package com.powsybl.dynawo.extensions.impl.model;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelsOverloadManagementSystemModel;
-import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelsOverloadManagementSystemModelAdder;
+import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelOverloadManagementSystemModel;
+import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelOverloadManagementSystemModelAdder;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -22,24 +22,24 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class DynawoTwoLevelsOverloadManagementSystemModelTest {
+class DynawoTwoLevelOverloadManagementSystemModelTest {
 
     @Test
     void addExtension() {
         Network network = EurostagTutorialExample1Factory.create();
         TwoWindingsTransformer tfo = network.getTwoWindingsTransformer("NGEN_NHV1");
-        DynawoTwoLevelsOverloadManagementSystemModelAdder<TwoWindingsTransformer> adder = tfo.newExtension(DynawoTwoLevelsOverloadManagementSystemModelAdder.class);
+        DynawoTwoLevelOverloadManagementSystemModelAdder<TwoWindingsTransformer> adder = tfo.newExtension(DynawoTwoLevelOverloadManagementSystemModelAdder.class);
         adder.withDynamicModelId("TWOMS")
-                .withModelName("TwoLevelsOverloadManagementSystem")
+                .withModelName("TwoLevelOverloadManagementSystem")
                 .withParameterSetId("twoms")
                 .withIMeasurement1("NHV1_NHV2_1")
                 .withIMeasurement1Side(TwoSides.ONE)
                 .withIMeasurement2("NHV1_NHV2_2")
                 .withIMeasurement2Side(TwoSides.TWO)
                 .add();
-        DynawoTwoLevelsOverloadManagementSystemModel<TwoWindingsTransformer> info = tfo.getExtension(DynawoTwoLevelsOverloadManagementSystemModel.class);
+        DynawoTwoLevelOverloadManagementSystemModel<TwoWindingsTransformer> info = tfo.getExtension(DynawoTwoLevelOverloadManagementSystemModel.class);
         assertEquals("TWOMS", info.getDynamicModelId());
-        assertEquals("TwoLevelsOverloadManagementSystem", info.getModelName());
+        assertEquals("TwoLevelOverloadManagementSystem", info.getModelName());
         assertEquals("twoms", info.getParameterSetId());
         assertEquals("NHV1_NHV2_1", info.getIMeasurement1());
         assertEquals(TwoSides.ONE, info.getIMeasurement1Side());
@@ -55,7 +55,7 @@ class DynawoTwoLevelsOverloadManagementSystemModelTest {
 
         Network network = EurostagTutorialExample1Factory.create();
         Line line = network.getLine("NHV1_NHV2_1");
-        DynawoTwoLevelsOverloadManagementSystemModelAdder<Line> adder = line.newExtension(DynawoTwoLevelsOverloadManagementSystemModelAdder.class);
+        DynawoTwoLevelOverloadManagementSystemModelAdder<Line> adder = line.newExtension(DynawoTwoLevelOverloadManagementSystemModelAdder.class);
         adder.withDynamicModelId("OMS")
                 .withModelName("OverloadManagementSystem")
                 .withParameterSetId("oms")
@@ -64,7 +64,7 @@ class DynawoTwoLevelsOverloadManagementSystemModelTest {
                 .withIMeasurement2("NGEN_NHV2")
                 .withIMeasurement2Side(TwoSides.TWO)
                 .add();
-        DynawoTwoLevelsOverloadManagementSystemModel<Line> ext = line.getExtension(DynawoTwoLevelsOverloadManagementSystemModel.class);
+        DynawoTwoLevelOverloadManagementSystemModel<Line> ext = line.getExtension(DynawoTwoLevelOverloadManagementSystemModel.class);
         assertNotNull(ext);
 
         // Testing variant cloning

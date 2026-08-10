@@ -13,10 +13,10 @@ import com.powsybl.iidm.network.TwoSides;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface DynawoTwoLevelsOverloadManagementSystemModel<B extends Branch<B>>
-        extends DynawoAutomationSystemModelExtension<B, DynawoTwoLevelsOverloadManagementSystemModel<B>> {
+public interface DynawoTwoLevelOverloadManagementSystemModel<B extends Branch<B>>
+        extends DynawoAutomationSystemModelExtension<B, DynawoTwoLevelOverloadManagementSystemModel<B>> {
 
-    String NAME = "dynawoTwoLevelsOverloadManagementSystemModel";
+    String NAME = "dynawoTwoLevelOverloadManagementSystemModel";
 
     @Override
     default String getName() {
@@ -25,17 +25,17 @@ public interface DynawoTwoLevelsOverloadManagementSystemModel<B extends Branch<B
 
     String getIMeasurement1();
 
-    DynawoTwoLevelsOverloadManagementSystemModel<B> setIMeasurement1(String iMeasurement);
+    DynawoTwoLevelOverloadManagementSystemModel<B> setIMeasurement1(String iMeasurement);
 
     TwoSides getIMeasurement1Side();
 
-    DynawoTwoLevelsOverloadManagementSystemModel<B> setIMeasurement1Side(TwoSides iMeasurementSide);
+    DynawoTwoLevelOverloadManagementSystemModel<B> setIMeasurement1Side(TwoSides iMeasurementSide);
 
     String getIMeasurement2();
 
-    DynawoTwoLevelsOverloadManagementSystemModel<B> setIMeasurement2(String iMeasurement);
+    DynawoTwoLevelOverloadManagementSystemModel<B> setIMeasurement2(String iMeasurement);
 
     TwoSides getIMeasurement2Side();
 
-    DynawoTwoLevelsOverloadManagementSystemModel<B> setIMeasurement2Side(TwoSides iMeasurementSide);
+    DynawoTwoLevelOverloadManagementSystemModel<B> setIMeasurement2Side(TwoSides iMeasurementSide);
 }

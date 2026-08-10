@@ -190,7 +190,7 @@ class ModelExtensionsAdderTest {
                         .iMeasurementSide(TwoSides.ONE)
                         .build(),
                 DynamicTwoLevelOverloadManagementSystemBuilder.of(network, "TwoLevelOverloadManagementSystem")
-                        .dynamicModelId("BBM_CLA_TWO_LEVELS")
+                        .dynamicModelId("BBM_CLA_TWO_LEVEL")
                         .parameterSetId("cla")
                         .controlledBranch("NHV1_NHV2_1")
                         .iMeasurement1("NHV1_NHV2_1")
@@ -204,8 +204,8 @@ class ModelExtensionsAdderTest {
         Line line = network.getLine("NHV1_NHV2_1");
         DynawoOverloadManagementSystemModel<Line> overloadManagementSystemModel = line.getExtension(DynawoOverloadManagementSystemModel.class);
         assertEquals("BBM_CLA", overloadManagementSystemModel.getDynamicModelId());
-        DynawoTwoLevelsOverloadManagementSystemModel<Line> twoLevelsOverloadManagementSystemModel = line.getExtension(DynawoTwoLevelsOverloadManagementSystemModel.class);
-        assertEquals("BBM_CLA_TWO_LEVELS", twoLevelsOverloadManagementSystemModel.getDynamicModelId());
+        DynawoTwoLevelOverloadManagementSystemModel<Line> twoLevelOverloadManagementSystemModel = line.getExtension(DynawoTwoLevelOverloadManagementSystemModel.class);
+        assertEquals("BBM_CLA_TWO_LEVEL", twoLevelOverloadManagementSystemModel.getDynamicModelId());
 
         // Update models
         dynamicModels = List.of(
@@ -217,7 +217,7 @@ class ModelExtensionsAdderTest {
                         .iMeasurementSide(TwoSides.ONE)
                         .build(),
                 DynamicTwoLevelOverloadManagementSystemBuilder.of(network, "TwoLevelOverloadManagementSystem")
-                        .dynamicModelId("BBM_CLA_TWO_LEVELS2")
+                        .dynamicModelId("BBM_CLA_TWO_LEVEL2")
                         .parameterSetId("cla")
                         .controlledBranch("NHV1_NHV2_1")
                         .iMeasurement1("NHV1_NHV2_1")
@@ -229,6 +229,6 @@ class ModelExtensionsAdderTest {
         new ModelExtensionsAdder(network, dynamicModels).addModelExtensions();
 
         assertEquals("BBM_CLA2", overloadManagementSystemModel.getDynamicModelId());
-        assertEquals("BBM_CLA_TWO_LEVELS2", twoLevelsOverloadManagementSystemModel.getDynamicModelId());
+        assertEquals("BBM_CLA_TWO_LEVEL2", twoLevelOverloadManagementSystemModel.getDynamicModelId());
     }
 }

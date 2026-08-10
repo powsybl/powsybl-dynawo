@@ -12,8 +12,8 @@ import com.powsybl.commons.extensions.AbstractExtensionSerDe;
 import com.powsybl.commons.extensions.ExtensionSerDe;
 import com.powsybl.commons.io.DeserializerContext;
 import com.powsybl.commons.io.SerializerContext;
-import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelsOverloadManagementSystemModel;
-import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelsOverloadManagementSystemModelAdder;
+import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelOverloadManagementSystemModel;
+import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelOverloadManagementSystemModelAdder;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.TwoSides;
 
@@ -21,8 +21,8 @@ import com.powsybl.iidm.network.TwoSides;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(ExtensionSerDe.class)
-public class DynawoTwoLevelsOverloadManagementSystemModelInfoSerDe<B extends Branch<B>>
-        extends AbstractExtensionSerDe<B, DynawoTwoLevelsOverloadManagementSystemModel<B>> {
+public class DynawoTwoLevelOverloadManagementSystemModelInfoSerDe<B extends Branch<B>>
+        extends AbstractExtensionSerDe<B, DynawoTwoLevelOverloadManagementSystemModel<B>> {
 
     private static final String DYNAMIC_MODEL_ID = "dynamicModelId";
     private static final String MODEL_NAME = "modelName";
@@ -32,24 +32,24 @@ public class DynawoTwoLevelsOverloadManagementSystemModelInfoSerDe<B extends Bra
     private static final String I_MEASUREMENT_2 = "iMeasurement2";
     private static final String I_MEASUREMENT_2_SIDE = "iMeasurement2Side";
 
-    public DynawoTwoLevelsOverloadManagementSystemModelInfoSerDe() {
-        super(DynawoTwoLevelsOverloadManagementSystemModel.NAME, "network", DynawoTwoLevelsOverloadManagementSystemModel.class, "dynawoTwoLevelsOverloadManagementSystemModel.xsd",
-                "http://www.powsybl.org/schema/iidm/ext/dynawo_two_levels_overload_management_system_model/1_0", "dtloms");
+    public DynawoTwoLevelOverloadManagementSystemModelInfoSerDe() {
+        super(DynawoTwoLevelOverloadManagementSystemModel.NAME, "network", DynawoTwoLevelOverloadManagementSystemModel.class, "dynawoTwoLevelOverloadManagementSystemModel.xsd",
+                "http://www.powsybl.org/schema/iidm/ext/dynawo_two_level_overload_management_system_model/1_0", "dtloms");
     }
 
     @Override
-    public void write(DynawoTwoLevelsOverloadManagementSystemModel dynawoTwoLevelsOverloadManagementSystemModelInfo, SerializerContext context) {
-        context.getWriter().writeStringAttribute(DYNAMIC_MODEL_ID, dynawoTwoLevelsOverloadManagementSystemModelInfo.getDynamicModelId());
-        context.getWriter().writeStringAttribute(MODEL_NAME, dynawoTwoLevelsOverloadManagementSystemModelInfo.getModelName());
-        context.getWriter().writeStringAttribute(PARAMETER_SET_ID, dynawoTwoLevelsOverloadManagementSystemModelInfo.getParameterSetId());
-        context.getWriter().writeStringAttribute(I_MEASUREMENT_1, dynawoTwoLevelsOverloadManagementSystemModelInfo.getIMeasurement1());
-        context.getWriter().writeEnumAttribute(I_MEASUREMENT_1_SIDE, dynawoTwoLevelsOverloadManagementSystemModelInfo.getIMeasurement1Side());
-        context.getWriter().writeStringAttribute(I_MEASUREMENT_2, dynawoTwoLevelsOverloadManagementSystemModelInfo.getIMeasurement2());
-        context.getWriter().writeEnumAttribute(I_MEASUREMENT_2_SIDE, dynawoTwoLevelsOverloadManagementSystemModelInfo.getIMeasurement2Side());
+    public void write(DynawoTwoLevelOverloadManagementSystemModel dynawoTwoLevelOverloadManagementSystemModelInfo, SerializerContext context) {
+        context.getWriter().writeStringAttribute(DYNAMIC_MODEL_ID, dynawoTwoLevelOverloadManagementSystemModelInfo.getDynamicModelId());
+        context.getWriter().writeStringAttribute(MODEL_NAME, dynawoTwoLevelOverloadManagementSystemModelInfo.getModelName());
+        context.getWriter().writeStringAttribute(PARAMETER_SET_ID, dynawoTwoLevelOverloadManagementSystemModelInfo.getParameterSetId());
+        context.getWriter().writeStringAttribute(I_MEASUREMENT_1, dynawoTwoLevelOverloadManagementSystemModelInfo.getIMeasurement1());
+        context.getWriter().writeEnumAttribute(I_MEASUREMENT_1_SIDE, dynawoTwoLevelOverloadManagementSystemModelInfo.getIMeasurement1Side());
+        context.getWriter().writeStringAttribute(I_MEASUREMENT_2, dynawoTwoLevelOverloadManagementSystemModelInfo.getIMeasurement2());
+        context.getWriter().writeEnumAttribute(I_MEASUREMENT_2_SIDE, dynawoTwoLevelOverloadManagementSystemModelInfo.getIMeasurement2Side());
     }
 
     @Override
-    public DynawoTwoLevelsOverloadManagementSystemModel<B> read(B branch, DeserializerContext context) {
+    public DynawoTwoLevelOverloadManagementSystemModel<B> read(B branch, DeserializerContext context) {
         String dynamicModelId = context.getReader().readStringAttribute(DYNAMIC_MODEL_ID);
         String modelName = context.getReader().readStringAttribute(MODEL_NAME);
         String parameterSetId = context.getReader().readStringAttribute(PARAMETER_SET_ID);
@@ -58,7 +58,7 @@ public class DynawoTwoLevelsOverloadManagementSystemModelInfoSerDe<B extends Bra
         String iMeasurement2 = context.getReader().readStringAttribute(I_MEASUREMENT_2);
         TwoSides iMeasurement2Side = context.getReader().readEnumAttribute(I_MEASUREMENT_2_SIDE, TwoSides.class);
         context.getReader().readEndNode();
-        DynawoTwoLevelsOverloadManagementSystemModelAdder<B> adder = branch.newExtension(DynawoTwoLevelsOverloadManagementSystemModelAdder.class);
+        DynawoTwoLevelOverloadManagementSystemModelAdder<B> adder = branch.newExtension(DynawoTwoLevelOverloadManagementSystemModelAdder.class);
         return adder.withModelName(modelName)
                 .withParameterSetId(parameterSetId)
                 .withDynamicModelId(dynamicModelId)

@@ -8,8 +8,8 @@
 package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelsOverloadManagementSystemModel;
-import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelsOverloadManagementSystemModelAdder;
+import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelOverloadManagementSystemModel;
+import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelOverloadManagementSystemModelAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
@@ -72,9 +72,9 @@ public class DynamicTwoLevelOverloadManagementSystem extends DynamicOverloadMana
 
     @Override
     public void createDynawoModelExtension() {
-        DynawoTwoLevelsOverloadManagementSystemModel extension = controlledBranch.getExtension(DynawoTwoLevelsOverloadManagementSystemModel.class);
+        DynawoTwoLevelOverloadManagementSystemModel extension = controlledBranch.getExtension(DynawoTwoLevelOverloadManagementSystemModel.class);
         if (extension == null) {
-            controlledBranch.newExtension(DynawoTwoLevelsOverloadManagementSystemModelAdder.class)
+            controlledBranch.newExtension(DynawoTwoLevelOverloadManagementSystemModelAdder.class)
                     .withIMeasurement1(measuredBranch.getId())
                     .withIMeasurement1Side(measuredSide)
                     .withIMeasurement1(secondMeasuredBranch.getId())

@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawo.extensions.impl.model;
 
-import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelsOverloadManagementSystemModel;
+import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelOverloadManagementSystemModel;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.impl.NetworkImpl;
@@ -18,18 +18,18 @@ import java.util.Collections;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynawoTwoLevelsOverloadManagementSystemModelImpl<B extends Branch<B>>
-        extends AbstractDynawoAutomationSystemModelImpl<B, DynawoTwoLevelsOverloadManagementSystemModel<B>>
-        implements DynawoTwoLevelsOverloadManagementSystemModel<B> {
+public class DynawoTwoLevelOverloadManagementSystemModelImpl<B extends Branch<B>>
+        extends AbstractDynawoAutomationSystemModelImpl<B, DynawoTwoLevelOverloadManagementSystemModel<B>>
+        implements DynawoTwoLevelOverloadManagementSystemModel<B> {
 
     private final ArrayList<String> iMeasurement1PerVariant;
     private final ArrayList<TwoSides> iMeasurement1SidePerVariant;
     private final ArrayList<String> iMeasurement2PerVariant;
     private final ArrayList<TwoSides> iMeasurement2SidePerVariant;
 
-    public DynawoTwoLevelsOverloadManagementSystemModelImpl(B extendable, String modelName, String parameterSetId,
-                                                            String dynamicModelId, String iMeasurement1, TwoSides iMeasurement1Side,
-                                                            String iMeasurement2, TwoSides iMeasurement2Side) {
+    public DynawoTwoLevelOverloadManagementSystemModelImpl(B extendable, String modelName, String parameterSetId,
+                                                           String dynamicModelId, String iMeasurement1, TwoSides iMeasurement1Side,
+                                                           String iMeasurement2, TwoSides iMeasurement2Side) {
         super(extendable, modelName, parameterSetId, dynamicModelId);
         this.iMeasurement1PerVariant = new ArrayList<>(Collections.nCopies(
                 getVariantManagerHolder().getVariantManager().getVariantArraySize(), null));
@@ -54,7 +54,7 @@ public class DynawoTwoLevelsOverloadManagementSystemModelImpl<B extends Branch<B
     }
 
     @Override
-    public DynawoTwoLevelsOverloadManagementSystemModel<B> setIMeasurement1(String iMeasurement1) {
+    public DynawoTwoLevelOverloadManagementSystemModel<B> setIMeasurement1(String iMeasurement1) {
         setAttribute(iMeasurement1PerVariant, iMeasurement1, "iMeasurement1");
         return self();
     }
@@ -65,7 +65,7 @@ public class DynawoTwoLevelsOverloadManagementSystemModelImpl<B extends Branch<B
     }
 
     @Override
-    public DynawoTwoLevelsOverloadManagementSystemModel<B> setIMeasurement1Side(TwoSides iMeasurement1Side) {
+    public DynawoTwoLevelOverloadManagementSystemModel<B> setIMeasurement1Side(TwoSides iMeasurement1Side) {
         int variantIndex = getVariantIndex();
         TwoSides oldSide = iMeasurement1SidePerVariant.get(variantIndex);
         if (oldSide != iMeasurement1Side) {
@@ -83,7 +83,7 @@ public class DynawoTwoLevelsOverloadManagementSystemModelImpl<B extends Branch<B
     }
 
     @Override
-    public DynawoTwoLevelsOverloadManagementSystemModel<B> setIMeasurement2(String iMeasurement2) {
+    public DynawoTwoLevelOverloadManagementSystemModel<B> setIMeasurement2(String iMeasurement2) {
         setAttribute(iMeasurement2PerVariant, iMeasurement2, "iMeasurement2");
         return self();
     }
@@ -94,7 +94,7 @@ public class DynawoTwoLevelsOverloadManagementSystemModelImpl<B extends Branch<B
     }
 
     @Override
-    public DynawoTwoLevelsOverloadManagementSystemModel<B> setIMeasurement2Side(TwoSides iMeasurement2Side) {
+    public DynawoTwoLevelOverloadManagementSystemModel<B> setIMeasurement2Side(TwoSides iMeasurement2Side) {
         int variantIndex = getVariantIndex();
         TwoSides oldSide = iMeasurement2SidePerVariant.get(variantIndex);
         if (oldSide != iMeasurement2Side) {
@@ -148,7 +148,7 @@ public class DynawoTwoLevelsOverloadManagementSystemModelImpl<B extends Branch<B
     }
 
     @Override
-    protected DynawoTwoLevelsOverloadManagementSystemModelImpl<B> self() {
+    protected DynawoTwoLevelOverloadManagementSystemModelImpl<B> self() {
         return this;
     }
 }
