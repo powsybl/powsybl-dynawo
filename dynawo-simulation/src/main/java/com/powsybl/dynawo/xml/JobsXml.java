@@ -141,8 +141,8 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("directory", OUTPUTS_FOLDER);
 
         writer.writeEmptyElement(DYN_URI, "dumpInitValues");
-        writer.writeAttribute("local", Boolean.toString(false));
-        writer.writeAttribute("global", Boolean.toString(false));
+        writer.writeAttribute("local", Boolean.toString(parameters.getDumpInitValuesParameters().useDumpInit()));
+        writer.writeAttribute("global", Boolean.toString(parameters.getDumpInitValuesParameters().useDumpInit()));
 
         if (context.withConstraints()) {
             writer.writeEmptyElement(DYN_URI, "constraints");
