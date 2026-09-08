@@ -16,8 +16,9 @@
                 <iidm:bus id="b2"/>
                 <iidm:switch id="c1" kind="BREAKER" retained="true" open="false" bus1="b1" bus2="b2"/>
             </iidm:busBreakerTopology>
-            <iidm:generator id="g1" energySource="OTHER" minP="0.0" maxP="150.0" voltageRegulatorOn="true" targetP="101.0" targetV="390.0" bus="b1" connectableBus="b1">
+            <iidm:generator id="g1" energySource="OTHER" minP="0.0" maxP="150.0" targetP="101.0" localTargetV="390.0" bus="b1" connectableBus="b1">
                 <iidm:minMaxReactiveLimits minQ="-1.7976931348623157E308" maxQ="1.7976931348623157E308"/>
+                <iidm:voltageRegulation mode="VOLTAGE" regulating="true"/>
             </iidm:generator>
             <iidm:load id="merged_load_.b2.pppq" loadType="UNDEFINED" p0="46.3" q0="11.5" bus="b2" connectableBus="b2" p="46.2" q="11.2"/>
         </iidm:voltageLevel>
