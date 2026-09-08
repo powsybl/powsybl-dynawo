@@ -5,15 +5,14 @@
         <dyn:modeler compileDir="outputs/compilation">
             <dyn:network iidmFile="powsybl_dynawo.xiidm" parFile="network.par" parId="1"/>
             <dyn:dynModels dydFile="powsybl_dynawo.dyd"/>
-            <dyn:initialState file="dump.dmp"/>
             <dyn:precompiledModels useStandardModels="true"/>
             <dyn:modelicaModels useStandardModels="false"/>
         </dyn:modeler>
         <dyn:simulation startTime="1.0" stopTime="100.0" precision="1.0E-6"/>
         <dyn:outputs directory="outputs">
-            <dyn:dumpInitValues local="false" global="false" init="false"/>
+            <dyn:dumpInitValues local="true" global="true" init="true"/>
             <dyn:timeline exportMode="XML"/>
-            <dyn:finalState exportIIDMFile="true" exportDumpFile="true"/>
+            <dyn:finalState exportIIDMFile="true" exportDumpFile="false"/>
             <dyn:curves inputFile="powsybl_dynawo.crv" exportMode="CSV"/>
             <dyn:finalStateValues inputFile="powsybl_dynawo.fsv" exportMode="CSV"/>
             <dyn:logs>

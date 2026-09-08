@@ -10,7 +10,7 @@
         </dyn:modeler>
         <dyn:simulation startTime="0" stopTime="50"/>
         <dyn:outputs directory="outputs">
-            <dyn:dumpInitValues local="false" global="false"/>
+            <dyn:dumpInitValues local="false" global="false" init="false"/>
             <dyn:timeline exportMode="TXT"/>
             <dyn:finalState exportIIDMFile="true" exportDumpFile="false"/>
             <dyn:curves inputFile="powsybl_dynawo.crv" exportMode="CSV"/>

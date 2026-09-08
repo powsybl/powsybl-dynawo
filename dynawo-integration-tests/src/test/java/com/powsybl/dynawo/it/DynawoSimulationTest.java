@@ -13,10 +13,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
-import com.powsybl.dynawo.DumpFileParameters;
-import com.powsybl.dynawo.DynawoSimulationConfig;
-import com.powsybl.dynawo.DynawoSimulationParameters;
-import com.powsybl.dynawo.DynawoSimulationProvider;
+import com.powsybl.dynawo.*;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
@@ -118,6 +115,22 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         result = resultSupplier.get();
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
+    }
+
+    @Test
+    void testIeee14WithDumpInitValues() throws IOException {
+        Supplier<DynamicSimulationResult> resultSupplier = setupIEEE14Simulation();
+        parameters.setStopTime(30);
+        Path dumpInitFolder = Files.createDirectory(localDir.resolve("dumpInitValues"));
+        DumpInitValuesParameters dumpInitParameters = DumpInitValuesParameters.createDumpInitValuesParameters(true, dumpInitFolder);
+        dynawoSimulationParameters.setDumpInitValuesParameters(dumpInitParameters);
+        DynamicSimulationResult result = resultSupplier.get();
+        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
+
+        for (String name : List.of("globalInit", "localInit", "initModel")) {
+            Path sub = dumpInitFolder.resolve(name);
+            assertTrue(Files.isDirectory(sub));
+        }
     }
 
     @Test

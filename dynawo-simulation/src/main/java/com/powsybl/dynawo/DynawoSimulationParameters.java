@@ -123,8 +123,9 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private EnumSet<SpecificLog> specificLogs = EnumSet.noneOf(SpecificLog.class);
     private Path criteriaFilePath = null;
     private Path additionalModelsPath = null;
+    private DumpInitValuesParameters dumpInitValuesParameters = DumpInitValuesParameters.createDefaultDumpInitValuesParameters();
 
-    public static final List<Parameter> SPECIFIC_PARAMETERS = Stream.concat(Stream.of(
+    public static final List<Parameter> SPECIFIC_PARAMETERS = Stream.concat(Stream.concat(Stream.of(
             new Parameter(PARAMETERS_FILE, ParameterType.STRING, "Main parameters file path", DEFAULT_INPUT_PARAMETERS_FILE),
             new Parameter(NETWORK_PARAMETERS_FILE, ParameterType.STRING, "Network parameters file path", DEFAULT_INPUT_NETWORK_PARAMETERS_FILE),
             new Parameter(NETWORK_PARAMETERS_ID, ParameterType.STRING, "Network parameters set id", DEFAULT_NETWORK_PAR_ID),
@@ -139,7 +140,9 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             new Parameter(LOG_SPECIFIC_LOGS, ParameterType.STRING, "List specific logs returned", null, getEnumPossibleValues(SpecificLog.class)),
             new Parameter(CRITERIA_FILE, ParameterType.STRING, "Simulation criteria file path", null),
             new Parameter(ADDITIONAL_MODELS_FILE, ParameterType.STRING, "Additional models file path", null)),
-            DumpFileParameters.SPECIFIC_PARAMETERS.stream()).toList();
+            DumpFileParameters.SPECIFIC_PARAMETERS.stream()),
+            DumpInitValuesParameters.SPECIFIC_PARAMETERS.stream()
+    ).toList();
 
     /**
      * Loads parameters from the default platform configuration.
@@ -200,6 +203,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         moduleConfig.getOptionalEnumSetProperty(LOG_SPECIFIC_LOGS, SpecificLog.class).ifPresent(parameters::setSpecificLogs);
         moduleConfig.getOptionalStringProperty(CRITERIA_FILE).ifPresent(cf -> parameters.setCriteriaFilePath(filePathResolver.apply(cf)));
         moduleConfig.getOptionalStringProperty(ADDITIONAL_MODELS_FILE).ifPresent(am -> parameters.setAdditionalModelsPath(filePathResolver.apply(am)));
+        parameters.setDumpInitValuesParameters(DumpInitValuesParameters.createDumpInitValuesParametersFromConfig(moduleConfig, filePathResolver));
     }
 
     public static DynawoSimulationParameters load(Map<String, String> properties) {
@@ -263,6 +267,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         Optional.ofNullable(properties.get(CRITERIA_FILE)).ifPresent(prop -> setCriteriaFilePath(prop, fileSystem));
         Optional.ofNullable(properties.get(ADDITIONAL_MODELS_FILE)).ifPresent(prop -> setAdditionalModelsPath(prop, fileSystem));
         dumpFileParameters = DumpFileParameters.updateDumpFileParametersFromPropertiesMap(properties, dumpFileParameters, fileSystem::getPath);
+        dumpInitValuesParameters = DumpInitValuesParameters.updateDumpInitValuesParametersFromPropertiesMap(properties, dumpInitValuesParameters, fileSystem::getPath);
     }
 
     public Map<String, String> createMapFromParameters() {
@@ -284,6 +289,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         addNotNullEntry(CRITERIA_FILE, criteriaFilePath, properties::put);
         addNotNullEntry(ADDITIONAL_MODELS_FILE, additionalModelsPath, properties::put);
         dumpFileParameters.addParametersToMap((k, v) -> addNotNullEntry(k, v, properties::put));
+        dumpInitValuesParameters.addParametersToMap((k, v) -> addNotNullEntry(k, v, properties::put));
         return properties;
     }
 
@@ -466,5 +472,14 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             throw new PowsyblException("File " + additionalModelsPathName + " set in 'additionalModelsFile' property cannot be found");
         }
         setAdditionalModelsPath(path);
+    }
+
+    public DumpInitValuesParameters getDumpInitValuesParameters() {
+        return dumpInitValuesParameters;
+    }
+
+    public DynawoSimulationParameters setDumpInitValuesParameters(DumpInitValuesParameters dumpInitValuesParameters) {
+        this.dumpInitValuesParameters = dumpInitValuesParameters;
+        return this;
     }
 }
