@@ -52,7 +52,7 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
         return List.of(
                 new VarConnection(VersionableVariables.getCurrentValue("OMEGA_GRP"), getOmegaPuVarName()),
                 new VarConnection(VersionableVariables.getCurrentValue("OMEGA_REF_GRP"), getOmegaRefPuVarName()),
-                new VarConnection("running_grp_@INDEX@", getRunningVarName())
+                new VarConnection("running_grp_@INDEX@_value", getRunningVarName())
         );
     }
 
