@@ -8,6 +8,7 @@ package com.powsybl.dynawo.commons;
 
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.regulation.RegulationMode;
 import com.powsybl.iidm.network.test.BoundaryLineNetworkFactory;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.iidm.network.test.ThreeWindingsTransformerNetworkFactory;
@@ -213,7 +214,7 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
             reset(targetShuntCompensator.getTerminal());
         }
         for (StaticVarCompensator targetStaticVarCompensator : targetNetwork.getStaticVarCompensators()) {
-            targetStaticVarCompensator.setRegulationMode(StaticVarCompensator.RegulationMode.VOLTAGE);
+            targetStaticVarCompensator.setRegulationMode(RegulationMode.VOLTAGE);
             targetStaticVarCompensator.setRegulating(false);
             reset(targetStaticVarCompensator.getTerminal());
         }
