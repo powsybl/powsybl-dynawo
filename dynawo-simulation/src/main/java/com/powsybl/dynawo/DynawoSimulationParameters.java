@@ -37,7 +37,7 @@ import static com.powsybl.dynawo.commons.ParametersUtils.*;
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
-@JsonIgnoreProperties(value = { "criteriaFileName" })
+@JsonIgnoreProperties(value = { "criteriaFileName", "inputsExportFolderPath"})
 public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulationParameters> {
 
     public static final String MODULE_SPECIFIC_PARAMETERS = "dynawo-simulation-default-parameters";
@@ -59,6 +59,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private static final String SOLVER_PARAMETERS_FILE = "solver.parametersFile";
     private static final String SOLVER_PARAMETERS_ID = "solver.parametersId";
     private static final String SOLVER_TYPE = "solver.type";
+    private static final String INPUT_DYNAWO_FILES_EXPORT_DIRECTORY = "inputs.exportFolder";
     private static final String MERGE_LOADS = "mergeLoads";
     private static final String MODEL_SIMPLIFIERS = "modelSimplifiers";
     private static final String PRECISION_PROPERTY_NAME = "precision";
@@ -114,6 +115,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private ParametersSet networkParameters;
     private ParametersSet solverParameters;
     private SolverType solverType = DEFAULT_SOLVER_TYPE;
+    private Path inputsExportFolderPath = null;
     private boolean mergeLoads = DEFAULT_MERGE_LOADS;
     private Set<String> modelSimplifiers = new LinkedHashSet<>();
     private DumpFileParameters dumpFileParameters = DumpFileParameters.createDefaultDumpFileParameters();
@@ -131,6 +133,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             new Parameter(SOLVER_PARAMETERS_FILE, ParameterType.STRING, "Solver parameters file path", DEFAULT_INPUT_SOLVER_PARAMETERS_FILE),
             new Parameter(SOLVER_PARAMETERS_ID, ParameterType.STRING, "Solver parameters set id", DEFAULT_SOLVER_PAR_ID),
             new Parameter(SOLVER_TYPE, ParameterType.STRING, "Solver used in the simulation", DEFAULT_SOLVER_TYPE.toString(), getEnumPossibleValues(SolverType.class)),
+            new Parameter(INPUT_DYNAWO_FILES_EXPORT_DIRECTORY, ParameterType.STRING, "Export the input files in the folder without running a simulation", null),
             new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", DEFAULT_MERGE_LOADS),
             new Parameter(MODEL_SIMPLIFIERS, ParameterType.STRING, "Simplifiers used before macro connection computation", null),
             new Parameter(PRECISION_PROPERTY_NAME, ParameterType.DOUBLE, "Simulation step precision", DEFAULT_PRECISION),
@@ -192,6 +195,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         });
         parameters.setDumpFileParameters(DumpFileParameters.createDumpFileParametersFromConfig(moduleConfig, filePathResolver));
         moduleConfig.getOptionalEnumProperty(SOLVER_TYPE, SolverType.class).ifPresent(parameters::setSolverType);
+        moduleConfig.getOptionalStringProperty(INPUT_DYNAWO_FILES_EXPORT_DIRECTORY).ifPresent(cf -> parameters.setInputsExportFolderPath(filePathResolver.apply(cf)));
         moduleConfig.getOptionalBooleanProperty(MERGE_LOADS).ifPresent(parameters::setMergeLoads);
         moduleConfig.getOptionalStringListProperty(MODEL_SIMPLIFIERS).ifPresent(parameters::setModelSimplifiers);
         moduleConfig.getOptionalDoubleProperty(PRECISION_PROPERTY_NAME).ifPresent(parameters::setPrecision);
@@ -252,6 +256,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             }
         });
         Optional.ofNullable(properties.get(SOLVER_TYPE)).ifPresent(prop -> setSolverType(SolverType.valueOf(prop)));
+        Optional.ofNullable(properties.get(INPUT_DYNAWO_FILES_EXPORT_DIRECTORY)).ifPresent(prop -> setInputsExportFolderPath(prop, fileSystem));
         Optional.ofNullable(properties.get(MERGE_LOADS)).ifPresent(prop -> setMergeLoads(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(MODEL_SIMPLIFIERS)).ifPresent(prop ->
                 setModelSimplifiers(Stream.of(prop.split(PROPERTY_LIST_DELIMITER)).map(String::trim).collect(Collectors.toSet())));
@@ -271,6 +276,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         addNotNullEntry("networkParameters", networkParameters, properties::put);
         addNotNullEntry("solverParameters", solverParameters, properties::put);
         addNotNullEntry(SOLVER_TYPE, solverType, properties::put);
+        addNotNullEntry(INPUT_DYNAWO_FILES_EXPORT_DIRECTORY, inputsExportFolderPath, properties::put);
         addNotNullEntry(MERGE_LOADS, mergeLoads, properties::put);
         if (!modelSimplifiers.isEmpty()) {
             properties.put(MODEL_SIMPLIFIERS, String.join(PROPERTY_LIST_DELIMITER, modelSimplifiers));
@@ -351,6 +357,23 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
 
     public SolverType getSolverType() {
         return solverType;
+    }
+
+    public Optional<Path> getInputsExportFolderPath() {
+        return Optional.ofNullable(inputsExportFolderPath);
+    }
+
+    public DynawoSimulationParameters setInputsExportFolderPath(Path inputsExportFolder) {
+        this.inputsExportFolderPath = inputsExportFolder;
+        return this;
+    }
+
+    private void setInputsExportFolderPath(String inputsExportFolderPathName, FileSystem fileSystem) {
+        Path inputsExportFolder = inputsExportFolderPathName != null ? fileSystem.getPath(inputsExportFolderPathName) : null;
+        if (inputsExportFolder == null || !Files.exists(inputsExportFolder)) {
+            throw new PowsyblException("File " + inputsExportFolderPathName + " set in 'inputs.exportFolder' property cannot be found");
+        }
+        setInputsExportFolderPath(inputsExportFolder);
     }
 
     public boolean isMergeLoads() {
