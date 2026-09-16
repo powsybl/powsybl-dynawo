@@ -484,6 +484,25 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertThat(result.getStatusText()).contains("KINSOL fails to solve the problem");
     }
 
+    @Test
+    void testExportInputFiles() throws IOException {
+        Path exportDir = Files.createDirectory(localDir.resolve("exportInputFiles"));
+
+        dynawoSimulationParameters.setInputsExportFolderPath(exportDir);
+
+        DynamicSimulationResult result = setupIEEE14Simulation().get();
+
+        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
+        assertThat(result.getStatusText()).isEmpty();
+
+        assertThat(exportDir.resolve(NETWORK_FILENAME)).exists();
+        assertThat(exportDir.resolve("powsybl_dynawo.jobs")).exists();
+        assertThat(exportDir.resolve("powsybl_dynawo.dyd")).exists();
+        assertThat(exportDir.resolve("network.par")).exists();
+        assertThat(exportDir.resolve("solvers.par")).exists();
+        assertThat(exportDir.resolve("models.par")).exists();
+    }
+
     private static List<DynamicModel> buildDynamicModels(Network network, ReportNode reportNode) {
         return List.of(
                 DynamicOverloadManagementSystemBuilder.of(network, reportNode)
