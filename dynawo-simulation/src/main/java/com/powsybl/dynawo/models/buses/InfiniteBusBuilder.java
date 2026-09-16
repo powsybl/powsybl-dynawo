@@ -10,17 +10,19 @@ package com.powsybl.dynawo.models.buses;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
 import com.powsybl.dynawo.commons.DynawoVersion;
-import com.powsybl.iidm.network.Network;
+import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
+import com.powsybl.iidm.network.*;
 
 import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class InfiniteBusBuilder extends AbstractBusBuilder<InfiniteBusBuilder> {
+public class InfiniteBusBuilder extends AbstractEquipmentModelBuilder<Generator, InfiniteBusBuilder> {
 
     public static final String CATEGORY = "INFINITE_BUS";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
+    private static final String EQUIPMENT_TYPE = IdentifiableType.GENERATOR.toString();
 
     public static InfiniteBusBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
@@ -59,12 +61,20 @@ public class InfiniteBusBuilder extends AbstractBusBuilder<InfiniteBusBuilder> {
     }
 
     protected InfiniteBusBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
-        super(network, modelConfig, parentReportNode);
+        super(network, modelConfig, EQUIPMENT_TYPE, parentReportNode);
     }
 
     @Override
-    public InfiniteBus build() {
-        return isInstantiable() ? new InfiniteBus(getEquipment(), parameterSetId, modelConfig) : null;
+    protected Generator findEquipment(String staticId) {
+        return network.getGenerator(staticId);
+    }
+
+    @Override
+    public EquipmentBlackBoxModel build() {
+        if (isInstantiable()) {
+            return new InfiniteBusGenerator(getEquipment(), parameterSetId, modelConfig);
+        }
+        return null;
     }
 
     @Override
