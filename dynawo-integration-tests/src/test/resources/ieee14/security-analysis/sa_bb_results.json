@@ -1,5 +1,5 @@
 {
-  "version" : "1.9",
+  "version" : "1.10",
   "preContingencyResult" : {
     "status" : "CONVERGED",
     "limitViolationsResult" : {
@@ -10,7 +10,7 @@
         "limitType" : "CURRENT",
         "limitName" : "permanent",
         "limit" : 500.0,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       } ],
@@ -38,7 +38,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       }, {
@@ -47,7 +47,7 @@
         "limitType" : "HIGH_VOLTAGE",
         "limitName" : "USupUmax",
         "limit" : 15.042000000000002,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 15.042000001061153
       } ],
       "actionsTaken" : [ ]
@@ -80,7 +80,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       } ],
@@ -114,7 +114,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       }, {
@@ -123,7 +123,7 @@
         "limitType" : "HIGH_VOLTAGE",
         "limitName" : "USupUmax",
         "limit" : 15.042000000000002,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 15.042000001897073
       } ],
       "actionsTaken" : [ ]
@@ -156,7 +156,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       }, {
@@ -165,7 +165,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 836.74,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 1178.1967030075305,
         "side" : "ONE"
       }, {
@@ -174,7 +174,7 @@
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 66.92999999999999,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 66.04302591577434
       }, {
         "subjectId" : "_BUS____4_VL",
@@ -182,7 +182,7 @@
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 66.92999999999999,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 65.72762039320641
       }, {
         "subjectId" : "_BUS____5_VL",
@@ -190,7 +190,7 @@
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 66.92999999999999,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 65.52250008834531
       }, {
         "subjectId" : "_BUS___14_VL",
@@ -198,7 +198,7 @@
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 13.386000000000001,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 13.348620218406515
       }, {
         "subjectId" : "_BUS____2_VL",
@@ -206,7 +206,7 @@
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 66.92999999999999,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 66.79275331228723
       }, {
         "subjectId" : "_BUS___10_VL",
@@ -214,7 +214,7 @@
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 13.386000000000001,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 13.377658087264606
       } ],
       "actionsTaken" : [ ]
@@ -248,7 +248,7 @@
         "limitName" : "OverloadUp",
         "acceptableDuration" : 120,
         "limit" : 1500.0,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 1882.2348668192342,
         "side" : "ONE"
       } ],
@@ -282,7 +282,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       }, {
@@ -291,7 +291,7 @@
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 66.92999999999999,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 66.39712316522031
       }, {
         "subjectId" : "_BUS____4-BUS____5-1_AC",
@@ -299,7 +299,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 836.74,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 843.5741006594511,
         "side" : "ONE"
       }, {
@@ -308,7 +308,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 836.74,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 839.9381832777893,
         "side" : "ONE"
       } ],
@@ -342,7 +342,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       }, {
@@ -351,7 +351,7 @@
         "limitType" : "HIGH_VOLTAGE",
         "limitName" : "USupUmax",
         "limit" : 15.042000000000002,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 15.042000000491042
       } ],
       "actionsTaken" : [ ]
@@ -384,7 +384,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       }, {
@@ -393,7 +393,7 @@
         "limitType" : "HIGH_VOLTAGE",
         "limitName" : "USupUmax",
         "limit" : 15.042000000000002,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 15.042000009140898
       } ],
       "actionsTaken" : [ ]
@@ -426,7 +426,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       }, {
@@ -435,7 +435,7 @@
         "limitType" : "HIGH_VOLTAGE",
         "limitName" : "USupUmax",
         "limit" : 15.042000000000002,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 15.042000000033678
       } ],
       "actionsTaken" : [ ]
@@ -468,7 +468,7 @@
         "limitType" : "HIGH_VOLTAGE",
         "limitName" : "USupUmax",
         "limit" : 15.042000000000002,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 15.042000014432785
       } ],
       "actionsTaken" : [ ]
@@ -501,7 +501,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       }, {
@@ -510,7 +510,7 @@
         "limitType" : "HIGH_VOLTAGE",
         "limitName" : "USupUmax",
         "limit" : 15.042000000000002,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 15.042000015828775
       } ],
       "actionsTaken" : [ ]
@@ -543,7 +543,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       } ],
@@ -577,7 +577,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       }, {
@@ -586,7 +586,7 @@
         "limitType" : "HIGH_VOLTAGE",
         "limitName" : "USupUmax",
         "limit" : 15.042000000000002,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 15.042000011509883
       } ],
       "actionsTaken" : [ ]
@@ -619,7 +619,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       } ],
@@ -653,7 +653,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       } ],
@@ -687,7 +687,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       }, {
@@ -696,7 +696,7 @@
         "limitType" : "HIGH_VOLTAGE",
         "limitName" : "USupUmax",
         "limit" : 15.042000000000002,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 15.04200000911756
       } ],
       "actionsTaken" : [ ]
@@ -729,7 +729,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 500.00000000000006,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 596.8074979043256,
         "side" : "ONE"
       }, {
@@ -738,7 +738,7 @@
         "limitType" : "HIGH_VOLTAGE",
         "limitName" : "USupUmax",
         "limit" : 15.042000000000002,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 15.042000020174058
       } ],
       "actionsTaken" : [ ]
