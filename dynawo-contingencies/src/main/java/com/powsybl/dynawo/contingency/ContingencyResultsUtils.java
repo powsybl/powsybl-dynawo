@@ -83,7 +83,7 @@ public final class ContingencyResultsUtils {
                         getLimitViolationsResult(network, violationFilter, constraintsDir, c.getId()),
                         NetworkResult.empty(),
                         ConnectivityResult.empty(),
-                        Double.NaN))
+                        Double.NaN, List.of())) //TODO return the changed phase tap changers data
                 .toList();
     }
 

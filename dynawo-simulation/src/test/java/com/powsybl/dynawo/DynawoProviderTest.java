@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
-import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.dynamicsimulation.DynamicSimulationResult.Status.FAILURE;
 import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,6 +42,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 class DynawoProviderTest extends AbstractSerDeTest {
+
+    private static final DynamicModelsSupplier EMPTY_DYNAMIC_MODELS_SUPPLIER = (n, r) -> Collections.emptyList();
 
     private DynawoSimulationConfig config;
 
@@ -88,11 +89,10 @@ class DynawoProviderTest extends AbstractSerDeTest {
         Network network = createTestNetwork();
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out", "/mergedLoads.xiidm");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters().setComputationManager(computationManager);
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynawoSimulationProvider.NAME, dynawoSimulation.getName());
-        DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
-                OutputVariablesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, DynamicSimulationParameters.load(), NO_OP);
+        DynamicSimulationResult result = dynawoSimulation.run(network, EMPTY_DYNAMIC_MODELS_SUPPLIER, runParameters);
         assertNotNull(result);
     }
 
@@ -106,11 +106,12 @@ class DynawoProviderTest extends AbstractSerDeTest {
         DynawoSimulationParameters dynawoSimulationParameters = DynawoSimulationParameters.load();
         dynawoSimulationParameters.setMergeLoads(false);
         dynamicSimulationParameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(dynamicSimulationParameters);
 
         assertEquals(DynawoSimulationProvider.NAME, dynawoSimulation.getName());
-        DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
-                OutputVariablesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, dynamicSimulationParameters, NO_OP);
+        DynamicSimulationResult result = dynawoSimulation.run(network, EMPTY_DYNAMIC_MODELS_SUPPLIER, runParameters);
         assertNotNull(result);
     }
 
@@ -130,11 +131,12 @@ class DynawoProviderTest extends AbstractSerDeTest {
                 .setMergeLoads(false)
                 .setDumpFileParameters(DumpFileParameters.createImportExportDumpFileParameters(folderPath, fileProperty));
         dynamicSimulationParameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(dynamicSimulationParameters);
 
         assertEquals(DynawoSimulationProvider.NAME, dynawoSimulation.getName());
-        DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
-                OutputVariablesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, dynamicSimulationParameters, NO_OP);
+        DynamicSimulationResult result = dynawoSimulation.run(network, EMPTY_DYNAMIC_MODELS_SUPPLIER, runParameters);
         assertNotNull(result);
     }
 
@@ -143,11 +145,11 @@ class DynawoProviderTest extends AbstractSerDeTest {
         Network network = createTestNetwork();
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out", null);
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager);
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynawoSimulationProvider.NAME, dynawoSimulation.getName());
-        DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
-                OutputVariablesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, DynamicSimulationParameters.load(), NO_OP);
+        DynamicSimulationResult result = dynawoSimulation.run(network, EMPTY_DYNAMIC_MODELS_SUPPLIER, runParameters);
         assertNotNull(result);
         assertEquals(FAILURE, result.getStatus());
     }
@@ -157,11 +159,12 @@ class DynawoProviderTest extends AbstractSerDeTest {
         Network network = createTestNetwork();
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out", "/test.xiidm");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setOutputVariablesSupplier(new OutputVariablesSupplierMock());
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynawoSimulationProvider.NAME, dynawoSimulation.getName());
-        DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
-                new OutputVariablesSupplierMock(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, DynamicSimulationParameters.load(), NO_OP);
+        DynamicSimulationResult result = dynawoSimulation.run(network, EMPTY_DYNAMIC_MODELS_SUPPLIER, runParameters);
         assertNotNull(result);
         assertEquals(FAILURE, result.getStatus());
     }
@@ -191,14 +194,11 @@ class DynawoProviderTest extends AbstractSerDeTest {
         Network network = Network.create("test", "test");
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_bad_version.out", null);
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager);
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynawoSimulationProvider.NAME, dynawoSimulation.getName());
-        DynamicModelsSupplier dms = (n, r) -> Collections.emptyList();
-        EventModelsSupplier ems = EventModelsSupplier.empty();
-        OutputVariablesSupplier cs = OutputVariablesSupplier.empty();
-        String wvId = network.getVariantManager().getWorkingVariantId();
-        DynamicSimulationParameters dsp = DynamicSimulationParameters.load();
-        PowsyblException e = assertThrows(PowsyblException.class, () -> dynawoSimulation.run(network, dms, ems, cs, wvId, computationManager, dsp, NO_OP));
+        PowsyblException e = assertThrows(PowsyblException.class, () -> dynawoSimulation.run(network, EMPTY_DYNAMIC_MODELS_SUPPLIER, runParameters));
         assertEquals("dynawo version not supported. Must be >= " + DynawoConstants.VERSION_MIN, e.getMessage());
     }
 
