@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
-import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -104,11 +103,14 @@ public abstract class AbstractIeeeTest {
 
     public DynamicSimulationResult runSimulation(LocalCommandExecutor commandExecutor) throws Exception {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(workingDir, 1), commandExecutor, ForkJoinPool.commonPool());
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setEventModelsSupplier(eventModelsSupplier)
+                .setOutputVariablesSupplier(outputVariablesSupplier)
+                .setParameters(parameters);
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynawoSimulationProvider.NAME, dynawoSimulation.getName());
-        return dynawoSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier,
-            outputVariablesSupplier, network.getVariantManager().getWorkingVariantId(),
-            computationManager, parameters, NO_OP);
+        return dynawoSimulation.run(network, dynamicModelsSupplier, runParameters);
     }
 
 }
