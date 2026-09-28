@@ -26,13 +26,11 @@ import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.iidm.network.Network;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
-import static org.apache.commons.io.file.PathUtils.copyDirectory;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -188,10 +186,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     }
 
     private void exportInputFiles(DynawoSimulationContext context, ReportNode reportNode, Path exportDir) throws IOException {
-        Path workingDir = Files.createTempDirectory(WORKING_DIR_PREFIX);
         DynawoSimulationHandler handler = new DynawoSimulationHandler(context, getCommand(config), reportNode);
-
-        handler.writeInputFiles(workingDir);
-        copyDirectory(workingDir, exportDir);
+        handler.writeInputFiles(exportDir);
     }
 }
