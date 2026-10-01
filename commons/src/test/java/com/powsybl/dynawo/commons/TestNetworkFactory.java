@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.commons;
 
 import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.regulation.RegulationMode;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -51,7 +52,17 @@ public final class TestNetworkFactory {
         Bus b3 = vl2.getBusBreakerView().newBus().setId("b3").add();
         vl2.getBusBreakerView().newSwitch().setId("c1").setBus1(b1.getId()).setBus2(b2.getId()).add();
         vl2.getBusBreakerView().newSwitch().setId("c2").setBus1(b2.getId()).setBus2(b3.getId()).add();
-        vl2.newGenerator().setId("g1").setBus(b1.getId()).setTargetP(101).setTargetV(390).setMinP(0).setMaxP(150).setVoltageRegulatorOn(true).add();
+        vl2.newGenerator()
+                .setId("g1")
+                .setBus(b1.getId())
+                .setTargetP(101)
+                .setLocalTargetV(390)
+                .setMinP(0)
+                .setMaxP(150)
+                .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+                .add();
         vl2.newLoad().setId("load5").setP0(37.0).setQ0(1.0).setBus(b2.getId()).add()
                 .getTerminal().setP(36.1).setQ(4.0);
         vl2.newLoad().setId("load6").setP0(13.0).setQ0(6.0).setBus(b2.getId()).add()
@@ -97,7 +108,17 @@ public final class TestNetworkFactory {
         Bus b1 = vl2.getBusBreakerView().newBus().setId("b1").add();
         Bus b2 = vl2.getBusBreakerView().newBus().setId("b2").add();
         vl2.getBusBreakerView().newSwitch().setId("c1").setBus1(b1.getId()).setBus2(b2.getId()).add();
-        vl2.newGenerator().setId("g1").setBus(b1.getId()).setTargetP(101).setTargetV(390).setMinP(0).setMaxP(150).setVoltageRegulatorOn(true).add();
+        vl2.newGenerator()
+                .setId("g1")
+                .setBus(b1.getId())
+                .setTargetP(101)
+                .setLocalTargetV(390)
+                .setMinP(0)
+                .setMaxP(150)
+                .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+                .add();
 
         for (int i = 0; i < loadStates.size(); i++) {
             LoadState loadState = loadStates.get(i);

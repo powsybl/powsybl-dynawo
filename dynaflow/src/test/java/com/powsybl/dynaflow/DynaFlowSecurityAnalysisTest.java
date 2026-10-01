@@ -13,6 +13,7 @@ import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.regulation.RegulationMode;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.SecurityAnalysis;
@@ -186,7 +187,17 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         vlNb.getNodeBreakerView().newBusbarSection().setId("NB_BBS").setNode(0).add();
         vlNb.getNodeBreakerView().newBreaker().setId("NB_BG").setNode1(0).setNode2(1).setRetained(true).add();
         vlNb.getNodeBreakerView().newDisconnector().setId("NB_DL").setNode1(0).setNode2(2).add();
-        vlNb.newGenerator().setId("NB_GEN").setNode(1).setTargetP(8).setTargetV(390).setMinP(0).setMaxP(11).setVoltageRegulatorOn(true).add();
+        vlNb.newGenerator()
+                .setId("NB_GEN")
+                .setNode(1)
+                .setTargetP(8)
+                .setLocalTargetV(390)
+                .setMinP(0)
+                .setMaxP(11)
+                .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+                .add();
         Line lineNbBb = network.newLine().setId("NB_NGEN").setVoltageLevel1(vlNb.getId()).setNode1(2).setVoltageLevel2("VLGEN").setBus2("NGEN")
                 .setR(3.0).setX(33.0).setB1(193E-6).setB2(193E-6).add();
         lineNbBb.getOrCreateSelectedOperationalLimitsGroup1().newCurrentLimits().setPermanentLimit(41).add();
