@@ -41,7 +41,8 @@ public class NodeFaultEvent extends AbstractEvent {
     }
 
     private List<VarConnection> getVarConnectionsWith(ActionConnectionPoint connected) {
-        return List.of(new VarConnection("fault_terminal", connected.getTerminalVarName()));
+        return List.of(new VarConnection("fault_terminal", connected.getTerminalVarName()),
+                new VarConnection("fault_switchOffSignal1", "@NAME@_switchOff_value"));
     }
 
     @Override
