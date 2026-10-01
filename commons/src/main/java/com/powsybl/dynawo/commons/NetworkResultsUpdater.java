@@ -11,6 +11,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.commons.loadmerge.LoadPowersSigns;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.regulation.VoltageRegulation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +54,11 @@ public final class NetworkResultsUpdater {
         for (StaticVarCompensator sourceStaticVarCompensator : sourceNetwork.getStaticVarCompensators()) {
             StaticVarCompensator targetStaticVarCompensator = targetNetwork.getStaticVarCompensator(sourceStaticVarCompensator.getId());
             update(targetStaticVarCompensator, sourceStaticVarCompensator);
-            targetStaticVarCompensator.setRegulationMode(sourceStaticVarCompensator.getRegulationMode());
-            targetStaticVarCompensator.setRegulating(sourceStaticVarCompensator.isRegulating());
+            VoltageRegulation voltageRegulation = targetStaticVarCompensator.getVoltageRegulation();
+            if (voltageRegulation != null) {
+                voltageRegulation.setMode(sourceStaticVarCompensator.getVoltageRegulation().getMode());
+                voltageRegulation.setRegulating(sourceStaticVarCompensator.isRegulating());
+            }
         }
         for (Switch sourceSwitch : sourceNetwork.getSwitches()) {
             targetNetwork.getSwitch(sourceSwitch.getId()).setOpen(sourceSwitch.isOpen());

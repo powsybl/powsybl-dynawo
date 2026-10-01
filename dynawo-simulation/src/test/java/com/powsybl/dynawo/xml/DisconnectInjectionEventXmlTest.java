@@ -16,6 +16,7 @@ import com.powsybl.dynawo.models.generators.GridFormingConverterBuilder;
 import com.powsybl.dynawo.models.generators.InertialGridBuilder;
 import com.powsybl.dynawo.models.generators.WeccBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
+import com.powsybl.iidm.network.regulation.RegulationMode;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -45,10 +46,12 @@ class DisconnectInjectionEventXmlTest extends AbstractDynamicModelXmlTest {
                 .setConnectableBus(NGEN)
                 .setMinP(-9999.99)
                 .setMaxP(9999.99)
-                .setVoltageRegulatorOn(true)
-                .setTargetV(24.5)
+                .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+                .setLocalTargetV(24.5)
                 .setTargetP(607.0)
-                .setTargetQ(301.0)
+                .setLocalTargetQ(301.0)
                 .add();
         network.getGenerator(genId).getTerminal()
                 .setP(-605.558349609375)

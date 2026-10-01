@@ -17,6 +17,7 @@ import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
 import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.regulation.RegulationMode;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 
@@ -104,10 +105,12 @@ class MainConnectedComponentSimplifierTest {
                 .setConnectableBus("BUS")
                 .setMinP(-9999.99)
                 .setMaxP(9999.99)
-                .setVoltageRegulatorOn(true)
-                .setTargetV(24.5)
+                .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+                .setLocalTargetV(24.5)
                 .setTargetP(607.0)
-                .setTargetQ(301.0)
+                .setLocalTargetQ(301.0)
             .add();
         vlSub.newLccConverterStation()
                 .setId("LCC1")
