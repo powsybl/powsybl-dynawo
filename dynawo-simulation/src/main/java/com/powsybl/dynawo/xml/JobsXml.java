@@ -17,6 +17,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -141,9 +142,10 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("directory", OUTPUTS_FOLDER);
 
         writer.writeEmptyElement(DYN_URI, "dumpInitValues");
-        writer.writeAttribute("local", Boolean.toString(parameters.getDumpInitValuesParameters().useDumpInit()));
-        writer.writeAttribute("global", Boolean.toString(parameters.getDumpInitValuesParameters().useDumpInit()));
-        writer.writeAttribute("init", Boolean.toString(parameters.getDumpInitValuesParameters().useDumpInit()));
+        boolean useDumpInit = parameters.getDumpInitValuesParameters().useDumpInit();
+        for (String attr : List.of("local", "global", "init")) {
+            writer.writeAttribute(attr, Boolean.toString(useDumpInit));
+        }
 
         if (context.withConstraints()) {
             writer.writeEmptyElement(DYN_URI, "constraints");

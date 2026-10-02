@@ -122,7 +122,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         Supplier<DynamicSimulationResult> resultSupplier = setupIEEE14Simulation();
         parameters.setStopTime(30);
         Path dumpInitFolder = Files.createDirectory(localDir.resolve("dumpInitValues"));
-        DumpInitValuesParameters dumpInitParameters = DumpInitValuesParameters.createDumpInitValuesParameters(true, dumpInitFolder);
+        DumpInitValuesParameters dumpInitParameters = new DumpInitValuesParameters(true, dumpInitFolder);
         dynawoSimulationParameters.setDumpInitValuesParameters(dumpInitParameters);
         DynamicSimulationResult result = resultSupplier.get();
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());

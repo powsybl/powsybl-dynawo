@@ -122,9 +122,9 @@
   </xs:complexType>
 
   <xs:complexType name="InitValuesEntry">
-    <xs:attribute name="local" use="required" type="xs:boolean"/>
-    <xs:attribute name="global" use="required" type="xs:boolean"/>
-    <xs:attribute name="init" use="required" type="xs:boolean"/>
+    <xs:attribute name="local" type="xs:boolean"/>
+    <xs:attribute name="global" type="xs:boolean"/>
+    <xs:attribute name="init" type="xs:boolean"/>
   </xs:complexType>
 
   <xs:complexType name="ConstraintsEntry">
