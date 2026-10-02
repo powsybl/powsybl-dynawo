@@ -131,18 +131,23 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             new Parameter(NETWORK_PARAMETERS_ID, ParameterType.STRING, "Network parameters set id", DEFAULT_NETWORK_PAR_ID),
             new Parameter(SOLVER_PARAMETERS_FILE, ParameterType.STRING, "Solver parameters file path", DEFAULT_INPUT_SOLVER_PARAMETERS_FILE),
             new Parameter(SOLVER_PARAMETERS_ID, ParameterType.STRING, "Solver parameters set id", DEFAULT_SOLVER_PAR_ID),
-            new Parameter(SOLVER_TYPE, ParameterType.STRING, "Solver used in the simulation", DEFAULT_SOLVER_TYPE.toString(), getEnumPossibleValues(SolverType.class)),
-            new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", DEFAULT_MERGE_LOADS),
-            new Parameter(MODEL_SIMPLIFIERS, ParameterType.STRING, "Simplifiers used before macro connection computation", null),
-            new Parameter(PRECISION_PROPERTY_NAME, ParameterType.DOUBLE, "Simulation step precision", DEFAULT_PRECISION),
-            new Parameter(TIMELINE_EXPORT_MODE, ParameterType.STRING, "Timeline export file extension", DEFAULT_TIMELINE_EXPORT_MODE.toString(), getEnumPossibleValues(ExportMode.class)),
-            new Parameter(LOG_LEVEL_FILTER, ParameterType.STRING, "Dynawo log level", DEFAULT_LOG_LEVEL_FILTER.toString(), getEnumPossibleValues(LogLevel.class)),
-            new Parameter(LOG_SPECIFIC_LOGS, ParameterType.STRING, "List specific logs returned", null, getEnumPossibleValues(SpecificLog.class)),
-            new Parameter(CRITERIA_FILE, ParameterType.STRING, "Simulation criteria file path", null),
-            new Parameter(ADDITIONAL_MODELS_FILE, ParameterType.STRING, "Additional models file path", null)),
-            DumpFileParameters.SPECIFIC_PARAMETERS.stream()),
-            DumpInitValuesParameters.SPECIFIC_PARAMETERS.stream()
-    ).toList();
+    public static final List<Parameter> SPECIFIC_PARAMETERSs = Stream.of(Stream.of(
+                    new Parameter(PARAMETERS_FILE, ParameterType.STRING, "Main parameters file path", DEFAULT_INPUT_PARAMETERS_FILE),
+                    new Parameter(NETWORK_PARAMETERS_FILE, ParameterType.STRING, "Network parameters file path", DEFAULT_INPUT_NETWORK_PARAMETERS_FILE),
+                    new Parameter(NETWORK_PARAMETERS_ID, ParameterType.STRING, "Network parameters set id", DEFAULT_NETWORK_PAR_ID),
+                    new Parameter(SOLVER_PARAMETERS_FILE, ParameterType.STRING, "Solver parameters file path", DEFAULT_INPUT_SOLVER_PARAMETERS_FILE),
+                    new Parameter(SOLVER_PARAMETERS_ID, ParameterType.STRING, "Solver parameters set id", DEFAULT_SOLVER_PAR_ID),
+                    new Parameter(SOLVER_TYPE, ParameterType.STRING, "Solver used in the simulation", DEFAULT_SOLVER_TYPE.toString(), getEnumPossibleValues(SolverType.class)),
+                    new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", DEFAULT_MERGE_LOADS),
+                    new Parameter(MODEL_SIMPLIFIERS, ParameterType.STRING, "Simplifiers used before macro connection computation", null),
+                    new Parameter(PRECISION_PROPERTY_NAME, ParameterType.DOUBLE, "Simulation step precision", DEFAULT_PRECISION),
+                    new Parameter(TIMELINE_EXPORT_MODE, ParameterType.STRING, "Timeline export file extension", DEFAULT_TIMELINE_EXPORT_MODE.toString(), getEnumPossibleValues(ExportMode.class)),
+                    new Parameter(LOG_LEVEL_FILTER, ParameterType.STRING, "Dynawo log level", DEFAULT_LOG_LEVEL_FILTER.toString(), getEnumPossibleValues(LogLevel.class)),
+                    new Parameter(LOG_SPECIFIC_LOGS, ParameterType.STRING, "List specific logs returned", null, getEnumPossibleValues(SpecificLog.class)),
+                    new Parameter(CRITERIA_FILE, ParameterType.STRING, "Simulation criteria file path", null),
+                    new Parameter(ADDITIONAL_MODELS_FILE, ParameterType.STRING, "Additional models file path", null)),
+            DumpFileParameters.SPECIFIC_PARAMETERS.stream(), DumpFileParameters.SPECIFIC_PARAMETERS.stream())
+            .flatMap(Function.identity()).toList();
 
     /**
      * Loads parameters from the default platform configuration.
