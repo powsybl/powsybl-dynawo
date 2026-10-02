@@ -138,6 +138,9 @@ The default value is `FALSE`.
 `dumpInitValues.exportFolder` defines the folder path where the dump init values are exported.  
 The default value is `null`.
 
+**Note:** This parameter is optional when the `debugDir` parameter [property](inv:powsyblcore:*:*#simulation/dynamic/configuration)
+is set, since the init values can then be found directly in the result dump, under `/outputs/initValues/`.
+
 ### Examples
 
 **YAML configuration:**

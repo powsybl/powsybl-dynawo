@@ -40,10 +40,6 @@ public record DumpInitValuesParameters(boolean useDumpInit, Path dumpInitFolder)
         return DEFAULT_DUMP_FILE_PARAMETERS;
     }
 
-    public static DumpInitValuesParameters createDumpInitValuesParameters(boolean useDumbInit, Path dumpInitFolder) {
-        return new DumpInitValuesParameters(useDumbInit, dumpInitFolder);
-    }
-
     public static DumpInitValuesParameters createDumpInitValuesParametersFromConfig(ModuleConfig config, Function<String, Path> pathGetter) {
         boolean useDumpInit = config.getOptionalBooleanProperty(DUMP_INIT_USE).orElse(DEFAULT_USE_DUMP_INIT);
         Path dumpInitFolder = config.getOptionalStringProperty(DUMP_INIT_FOLDER).map(pathGetter).orElse(DEFAULT_DUMP_INIT_FOLDER);

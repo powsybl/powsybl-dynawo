@@ -54,7 +54,7 @@ class JobsXmlTest extends DynawoTestUtil {
                 Arguments.of("jobsWithCriteria.xml",
                         DynawoSimulationParameters.load().setCriteriaFilePath(Path.of("criteria.crt"))),
                 Arguments.of("jobsWithDumpInitValues.xml",
-                        DynawoSimulationParameters.load().setDumpInitValuesParameters(DumpInitValuesParameters.createDumpInitValuesParameters(true, null)))
+                        DynawoSimulationParameters.load().setDumpInitValuesParameters(new DumpInitValuesParameters(true, null)))
         );
     }
 
