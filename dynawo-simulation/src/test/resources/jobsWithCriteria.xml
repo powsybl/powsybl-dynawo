@@ -12,7 +12,7 @@
             <dyn:criteria criteriaFile="criteria.crt"/>
         </dyn:simulation>
         <dyn:outputs directory="outputs">
-            <dyn:dumpInitValues local="false" global="false"/>
+            <dyn:dumpInitValues local="false" global="false" init="false"/>
             <dyn:timeline exportMode="XML"/>
             <dyn:finalState exportIIDMFile="true" exportDumpFile="false"/>
             <dyn:curves inputFile="powsybl_dynawo.crv" exportMode="CSV"/>

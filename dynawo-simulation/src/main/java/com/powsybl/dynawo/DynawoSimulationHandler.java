@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo;
 
+import com.powsybl.commons.io.FileUtil;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
@@ -95,6 +96,10 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         if (context.withFsvVariables()) {
             setFinalStateValues(outputsFolder);
         }
+        DumpInitValuesParameters dumpInitValuesParameters = context.getDynawoSimulationParameters().getDumpInitValuesParameters();
+        if (dumpInitValuesParameters.useDumpInit() && dumpInitValuesParameters.dumpInitFolder() != null) {
+            setDumpInitFolder(outputsFolder, dumpInitValuesParameters.dumpInitFolder());
+        }
         Path errorFile = workingDir.resolve(ERROR_FILENAME);
         if (Files.exists(errorFile)) {
             Matcher errorMatcher = Pattern.compile(DYNAWO_ERROR_PATTERN + "(.*)").matcher(Files.readString(errorFile));
@@ -157,6 +162,15 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
             Files.copy(outputDumpFile, dumpFileFolder.resolve(fileName + "_" + OUTPUT_DUMP_FILENAME), StandardCopyOption.REPLACE_EXISTING);
         } else {
             LOGGER.warn("Dump file {} not found, export will be skipped", OUTPUT_DUMP_FILENAME);
+        }
+    }
+
+    private void setDumpInitFolder(Path outputsFolder, Path dumpInitFolder) throws IOException {
+        Path outputDumpInitFolder = outputsFolder.resolve(DUMP_INIT_FOLDER);
+        if (Files.exists(dumpInitFolder)) {
+            FileUtil.copyDir(outputDumpInitFolder, dumpInitFolder);
+        } else {
+            LOGGER.warn("Dump Init Folder {} not found, export will be skipped", OUTPUT_DUMP_FILENAME);
         }
     }
 
