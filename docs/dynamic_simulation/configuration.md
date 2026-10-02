@@ -131,7 +131,7 @@ The models added in the file cannot overload an existing model and must belong t
 The default value is `null`.
 
 #### dumpInitValues.export
-`dumpInitValues.export` defines if the initialization model should be exported as a dump.
+`dumpInitValues.export` defines if the the results of the initialization stages should be exported as a dump.
 The default value is `FALSE`.
 
 #### dumpInitValues.exportFolder
