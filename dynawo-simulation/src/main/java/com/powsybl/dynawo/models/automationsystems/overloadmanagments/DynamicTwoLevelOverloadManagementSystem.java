@@ -77,8 +77,8 @@ public class DynamicTwoLevelOverloadManagementSystem extends DynamicOverloadMana
             controlledBranch.newExtension(DynawoTwoLevelOverloadManagementSystemModelAdder.class)
                     .withIMeasurement1(measuredBranch.getId())
                     .withIMeasurement1Side(measuredSide)
-                    .withIMeasurement1(secondMeasuredBranch.getId())
-                    .withIMeasurement1Side(secondMeasuredSide)
+                    .withIMeasurement2(secondMeasuredBranch.getId())
+                    .withIMeasurement2Side(secondMeasuredSide)
                     .withDynamicModelId(getDynamicModelId())
                     .withParameterSetId(getParameterSetId())
                     .withModelName(modelConfig.name())
@@ -86,8 +86,8 @@ public class DynamicTwoLevelOverloadManagementSystem extends DynamicOverloadMana
         } else {
             extension.setIMeasurement1(measuredBranch.getId())
                     .setIMeasurement1Side(measuredSide)
-                    .setIMeasurement1(secondMeasuredBranch.getId())
-                    .setIMeasurement1Side(secondMeasuredSide)
+                    .setIMeasurement2(secondMeasuredBranch.getId())
+                    .setIMeasurement2Side(secondMeasuredSide)
                     .setDynamicModelId(getDynamicModelId())
                     .setParameterSetId(getParameterSetId())
                     .setModelName(modelConfig.name());
