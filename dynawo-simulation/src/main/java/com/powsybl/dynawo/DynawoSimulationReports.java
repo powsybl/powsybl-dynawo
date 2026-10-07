@@ -29,6 +29,13 @@ public final class DynawoSimulationReports {
                 .add();
     }
 
+    public static ReportNode createModelExtensionsAdderReportNode(ReportNode reportNode, String networkId) {
+        return reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.modelExtensionsAdder")
+                .withTypedValue("networkId", networkId, TypedValue.ID)
+                .add();
+    }
+
     public static ReportNode createDynawoModelSupplierReportNode(ReportNode reportNode) {
         return reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.jsonDynamicModels")

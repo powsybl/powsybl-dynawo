@@ -10,7 +10,7 @@ package com.powsybl.dynawo.models.automationsystems;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
 import com.powsybl.dynawo.commons.DynawoVersion;
-import com.powsybl.dynawo.models.TransformerSide;
+import com.powsybl.dynawo.commons.TransformerSide;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;

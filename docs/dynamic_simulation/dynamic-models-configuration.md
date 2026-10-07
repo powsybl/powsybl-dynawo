@@ -301,7 +301,7 @@ With specific attributes:
 
 **Groovy script:**
 ```groovy
-import com.powsybl.dynawo.models.TransformerSide
+import com.powsybl.dynawo.commons.TransformerSide
 
 PhaseShifterBlockingI {
     dynamicModelId "PSB"
@@ -340,7 +340,7 @@ With specific attributes:
 
 **Groovy script:**
 ```groovy
-import com.powsybl.dynawo.models.TransformerSide
+import com.powsybl.dynawo.commons.TransformerSide
 
 TapChangerAutomationSystem {
     dynamicModelId "TC"

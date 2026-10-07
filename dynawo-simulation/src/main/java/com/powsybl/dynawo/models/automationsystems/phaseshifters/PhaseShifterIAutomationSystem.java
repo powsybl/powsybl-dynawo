@@ -8,6 +8,8 @@
 package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.extensions.api.model.DynawoPhaseShifterIModel;
+import com.powsybl.dynawo.extensions.api.model.DynawoPhaseShifterIModelAdder;
 import com.powsybl.dynawo.models.ParameterUpdater;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.ConnectionStatefulModel;
@@ -77,5 +79,21 @@ public class PhaseShifterIAutomationSystem extends AbstractPhaseShifterAutomatio
     public void updateDynamicModelParameters(ParameterUpdater updater) {
         updater.addReference(getParameterSetId(), "phaseShifter_I0", ParameterType.DOUBLE, "i1", transformer.getId());
         super.updateDynamicModelParameters(updater);
+    }
+
+    @Override
+    public void createDynawoModelExtension() {
+        DynawoPhaseShifterIModel extension = transformer.getExtension(DynawoPhaseShifterIModel.class);
+        if (extension == null) {
+            transformer.newExtension(DynawoPhaseShifterIModelAdder.class)
+                    .withModelName(modelConfig.name())
+                    .withDynamicModelId(getDynamicModelId())
+                    .withParameterSetId(getParameterSetId())
+                    .add();
+        } else {
+            extension.setModelName(modelConfig.name())
+                    .setDynamicModelId(getDynamicModelId())
+                    .setParameterSetId(getParameterSetId());
+        }
     }
 }

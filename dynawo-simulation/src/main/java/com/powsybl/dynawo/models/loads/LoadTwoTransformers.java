@@ -8,13 +8,13 @@
 package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.TransformerSide;
+import com.powsybl.dynawo.commons.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
 
-import static com.powsybl.dynawo.models.TransformerSide.*;
+import static com.powsybl.dynawo.commons.TransformerSide.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}

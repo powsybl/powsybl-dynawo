@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.TransformerSide;
+import com.powsybl.dynawo.commons.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
@@ -16,8 +16,8 @@ import com.powsybl.iidm.network.Load;
 
 import java.util.List;
 
-import static com.powsybl.dynawo.models.TransformerSide.HIGH_VOLTAGE;
-import static com.powsybl.dynawo.models.TransformerSide.LOW_VOLTAGE;
+import static com.powsybl.dynawo.commons.TransformerSide.HIGH_VOLTAGE;
+import static com.powsybl.dynawo.commons.TransformerSide.LOW_VOLTAGE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
