@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.EventModel;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +83,14 @@ public final class ModelConfigsHandler {
             return null;
         }
         return constructor.createBuilder(network, modelName, reportNode);
+    }
+
+    public <I extends Identifiable<I>, R extends EquipmentModelBuilder<I, R>> EquipmentModelBuilder<I, R> getEquipmentModelBuilder(Network network, String modelName, ReportNode reportNode) {
+        ModelBuilder<DynamicModel> modelBuilder = getModelBuilder(network, modelName, reportNode);
+        if (modelBuilder instanceof EquipmentModelBuilder) {
+            return (EquipmentModelBuilder<I, R>) modelBuilder;
+        }
+        return null;
     }
 
     public ModelBuilder<EventModel> getEventModelBuilder(Network network, String modelName, ReportNode reportNode) {
