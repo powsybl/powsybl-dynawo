@@ -853,17 +853,6 @@
         "internalModelPrefix": "WTG4A",
         "properties": [
           "SYNCHRONIZED"
-        ],
-        "maxVersion": "1.7.0",
-        "endCause": "Renamed WTG4AWeccCurrentSource1"
-      },
-      {
-        "lib": "WTG4AWeccCurrentSource1",
-        "doc": "WECC Wind Turbine model with a simplified drive train model WTGTA, current control REECA, and generator/converter REGCB with a current source as interface with the grid.",
-        "internalModelPrefix": "WTG4A",
-        "minVersion": "1.8.0",
-        "properties": [
-          "SYNCHRONIZED"
         ]
       },
       {
