@@ -883,8 +883,7 @@
         "lib": "PhotovoltaicsWeccCurrentSource",
         "doc": "WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a current source as interface with the grid.",
         "internalModelPrefix": "photovoltaics",
-        "maxVersion": "1.6.0",
-        "endCause": "Renamed PhotovoltaicsWeccCurrentSourceB",
+        "minVersion": "1.8.0",
         "properties": [
           "SYNCHRONIZED"
         ]
