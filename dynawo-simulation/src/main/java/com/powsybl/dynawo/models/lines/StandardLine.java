@@ -30,7 +30,9 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
             new VarMapping("line_Q1Pu", "q1"),
             new VarMapping("line_P2Pu", "p2"),
             new VarMapping("line_Q2Pu", "q2"),
-            new VarMapping("line_state", "state"));
+            new VarMapping("line_state", "state"),
+            new VarMapping("line_ISide1", "i1"),
+            new VarMapping("line_ISide2", "i2"));
 
     protected StandardLine(Line line, String parameterSetId, ModelConfig modelConfig) {
         super(line, parameterSetId, modelConfig);
