@@ -12,10 +12,10 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.frequencysynchronizers.PowerAngleModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.powsybl.dynawo.models.generators.GeneratorProperties.*;
@@ -50,10 +50,11 @@ public class SynchronousGenerator extends BaseGenerator implements PowerAngleMod
 
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
-        return Arrays.asList(
-                new VarConnection("omega_grp_@INDEX@", getOmegaPuVarName()),
-                new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
-                new VarConnection("running_grp_@INDEX@", getRunningVarName())
+        VersionableVariablesHandler versionableVariablesHandler = VersionableVariablesHandler.getInstance();
+        return List.of(
+                new VarConnection(versionableVariablesHandler.getCurrentValue("OMEGA_GRP"), getOmegaPuVarName()),
+                new VarConnection(versionableVariablesHandler.getCurrentValue("OMEGA_REF_GRP"), getOmegaRefPuVarName()),
+                new VarConnection(versionableVariablesHandler.getCurrentValue("RUNNING_GRP"), getRunningVarName())
         );
     }
 
