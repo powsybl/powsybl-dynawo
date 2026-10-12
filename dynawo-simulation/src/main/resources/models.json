@@ -1,6 +1,6 @@
 {
   "BASE_GENERATOR": {
-    "defaultLib": "GeneratorFictitious",
+    "defaultLib": "GeneratorAlphaBeta",
     "libs": [
       {
         "lib": "GeneratorFictitious",
