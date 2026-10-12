@@ -50,10 +50,11 @@ public class SynchronousGenerator extends BaseGenerator implements PowerAngleMod
 
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
+        VersionableVariablesHandler versionableVariablesHandler = VersionableVariablesHandler.getInstance();
         return List.of(
-                new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("OMEGA_GRP"), getOmegaPuVarName()),
-                new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("OMEGA_REF_GRP"), getOmegaRefPuVarName()),
-                new VarConnection("running_grp_@INDEX@", getRunningVarName())
+                new VarConnection(versionableVariablesHandler.getCurrentValue("OMEGA_GRP"), getOmegaPuVarName()),
+                new VarConnection(versionableVariablesHandler.getCurrentValue("OMEGA_REF_GRP"), getOmegaRefPuVarName()),
+                new VarConnection(versionableVariablesHandler.getCurrentValue("RUNNING_GRP"), getRunningVarName())
         );
     }
 

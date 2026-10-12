@@ -26,11 +26,19 @@ public final class VersionableVariables implements VersionableVariablesProvider 
 
     private static final VersionableVariable OMEGA_GRP = new VersionableVariable("OMEGA_GRP",
             new VersionableVariable.VariableStep("omega_grp_@INDEX@"),
-            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "omega_grp_@INDEX@_value"));
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "omega_grp_@INDEX@_"));
+
+    private static final VersionableVariable OMEGA_GRP_VALUE = new VersionableVariable("OMEGA_GRP_VALUE",
+            new VersionableVariable.VariableStep("omega_grp_@INDEX@_value"),
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "omega_grp_@INDEX@_"));
 
     private static final VersionableVariable OMEGA_REF_GRP = new VersionableVariable("OMEGA_REF_GRP",
             new VersionableVariable.VariableStep("omegaRef_grp_@INDEX@"),
-            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "omegaRef_grp_@INDEX@_value"));
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "omegaRef_grp_@INDEX@_"));
+
+    private static final VersionableVariable OMEGA_REF_GRP_VALUE = new VersionableVariable("OMEGA_REF_GRP_VALUE",
+            new VersionableVariable.VariableStep("omegaRef_grp_@INDEX@_value"),
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "omegaRef_grp_@INDEX@_"));
 
     private static final VersionableVariable TC_LOCKED = new VersionableVariable("TC_LOCKED",
             new VersionableVariable.VariableStep("tapChanger%s_locked"),
@@ -72,9 +80,17 @@ public final class VersionableVariables implements VersionableVariablesProvider 
             new VersionableVariable.VariableStep("load_omegaRefPu_value"),
             new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "load_omegaRefPu"));
 
+    private static final VersionableVariable NUMCC = new VersionableVariable("NUMCC",
+            new VersionableVariable.VariableStep("numcc_node_@INDEX@"),
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "numcc_node_@INDEX@_"));
+
     private static final VersionableVariable PHI = new VersionableVariable("PHI",
             new VersionableVariable.VariableStep("@@NAME@@@NODE@_phi_value"),
             new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "@@NAME@@@NODE@_phi"));
+
+    private static final VersionableVariable RUNNING_GRP = new VersionableVariable("RUNNING_GRP",
+            new VersionableVariable.VariableStep("running_grp_@INDEX@"),
+            new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "running_grp_@INDEX@_"));
 
     private static final VersionableVariable STATE = new VersionableVariable("STATE",
             new VersionableVariable.VariableStep("%s_state_value"),
@@ -104,10 +120,10 @@ public final class VersionableVariables implements VersionableVariablesProvider 
             new VersionableVariable.VariableStep("transformer_U2Pu_value"),
             new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "transformer_U2Pu"));
 
-    private static final List<VersionableVariable> VERSIONABLE_VARIABLES = List.of(STEP, OMEGA_GRP, OMEGA_REF_GRP,
-            TC_LOCKED, TCB_LOCKED, TC_SWITCH_OFF, DELTA_PC, DELTA_QC, DELTA_P_LOAD, DELTA_Q_LOAD, DELTA_P_GEN,
-            EVENT_STATE, LOAD_OMEGA_REF_PU, PHI, STATE, SIDED_STATE, SIDED_UPU, SVARC_MODE_HANDLING, TRANSFORMER_P1PU,
-            TRANSFORMER_Q1PU, TRANSFORMER_U2PU);
+    private static final List<VersionableVariable> VERSIONABLE_VARIABLES = List.of(STEP, OMEGA_GRP, OMEGA_GRP_VALUE,
+            OMEGA_REF_GRP, OMEGA_REF_GRP_VALUE, TC_LOCKED, TCB_LOCKED, TC_SWITCH_OFF, DELTA_PC, DELTA_QC, DELTA_P_LOAD,
+            DELTA_Q_LOAD, DELTA_P_GEN, EVENT_STATE, LOAD_OMEGA_REF_PU, NUMCC, PHI, RUNNING_GRP, STATE, SIDED_STATE,
+            SIDED_UPU, SVARC_MODE_HANDLING, TRANSFORMER_P1PU, TRANSFORMER_Q1PU, TRANSFORMER_U2PU);
 
     @Override
     public List<VersionableVariable> getVersionableVariables() {
