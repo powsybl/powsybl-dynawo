@@ -866,12 +866,18 @@
       {
         "lib": "WT4AWeccCurrentSource",
         "doc": "WECC Wind Turbine model with a simplified drive train model WTGT A, without the plant controller, with current control REECA, and generator/convertor REGCB with a current source as interface with the grid.",
-        "internalModelPrefix": "WT4A"
+        "internalModelPrefix": "WT4A",
+        "properties": [
+          "SYNCHRONIZED"
+        ]
       },
       {
         "lib": "WT4BWeccCurrentSource",
         "doc": "WECC Wind Turbine model without plant controller, with current control REECA, and generator/converter REGCB with a current source as interface with the grid.",
-        "internalModelPrefix": "WT4B"
+        "internalModelPrefix": "WT4B",
+        "properties": [
+          "SYNCHRONIZED"
+        ]
       },
       {
         "lib": "PhotovoltaicsWeccCurrentSource",
