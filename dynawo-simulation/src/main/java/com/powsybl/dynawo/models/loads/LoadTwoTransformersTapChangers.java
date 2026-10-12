@@ -34,9 +34,8 @@ public class LoadTwoTransformersTapChangers extends AbstractLoadTwoTransformers 
         List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {
-                    String switchOffVar = VersionableVariablesHandler.getInstance().getCurrentValue("TC_SWITCH_OFF");
-                    varConnections.add(new VarConnection(String.format(switchOffVar, HIGH_VOLTAGE.getSideSuffix()), switchOff));
-                    varConnections.add(new VarConnection(String.format(switchOffVar, LOW_VOLTAGE.getSideSuffix()), switchOff));
+                    varConnections.add(new VarConnection(String.format("tapChanger%s_switchOffSignal1", HIGH_VOLTAGE.getSideSuffix()), switchOff));
+                    varConnections.add(new VarConnection(String.format("tapChanger%s_switchOffSignal1", LOW_VOLTAGE.getSideSuffix()), switchOff));
                 });
         return varConnections;
     }

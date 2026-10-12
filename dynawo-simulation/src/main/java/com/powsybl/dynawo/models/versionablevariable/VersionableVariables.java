@@ -121,7 +121,7 @@ public final class VersionableVariables implements VersionableVariablesProvider 
             new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "transformer_U2Pu"));
 
     private static final List<VersionableVariable> VERSIONABLE_VARIABLES = List.of(STEP, OMEGA_GRP, OMEGA_GRP_VALUE,
-            OMEGA_REF_GRP, OMEGA_REF_GRP_VALUE, TC_LOCKED, TCB_LOCKED, TC_SWITCH_OFF, DELTA_PC, DELTA_QC, DELTA_P_LOAD,
+            OMEGA_REF_GRP, OMEGA_REF_GRP_VALUE, TC_LOCKED, TCB_LOCKED, DELTA_PC, DELTA_QC, DELTA_P_LOAD,
             DELTA_Q_LOAD, DELTA_P_GEN, EVENT_STATE, LOAD_OMEGA_REF_PU, NUMCC, PHI, RUNNING_GRP, STATE, SIDED_STATE,
             SIDED_UPU, SVARC_MODE_HANDLING, TRANSFORMER_P1PU, TRANSFORMER_Q1PU, TRANSFORMER_U2PU);
 

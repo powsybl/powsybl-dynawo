@@ -32,15 +32,15 @@
         <dyn:connect var1="transformer_terminal1" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="transformer_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
         <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
-        <dyn:connect var1="transformer_tapChanger_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+        <dyn:connect var1="tapChanger_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_LoadTwoTransformersTapChangers-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="transformerT_terminal1" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="transformerT_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
         <dyn:connect var1="transformerD_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
         <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
-        <dyn:connect var1="transformerT_tapChanger_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
-        <dyn:connect var1="transformerD_tapChanger_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+        <dyn:connect var1="tapChangerT_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+        <dyn:connect var1="tapChangerD_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_LoadAlphaBetaMotorSimplified-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="load_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
