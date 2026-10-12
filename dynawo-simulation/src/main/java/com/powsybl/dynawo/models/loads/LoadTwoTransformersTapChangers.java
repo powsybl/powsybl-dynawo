@@ -10,7 +10,6 @@ package com.powsybl.dynawo.models.loads;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
-import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
 import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.iidm.network.Load;
@@ -27,17 +26,6 @@ public class LoadTwoTransformersTapChangers extends AbstractLoadTwoTransformers 
 
     protected LoadTwoTransformersTapChangers(Load load, String parameterSetId, ModelConfig modelConfig) {
         super(load, parameterSetId, modelConfig);
-    }
-
-    @Override
-    protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
-        List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
-        connected.getSwitchOffSignalVarName()
-                .ifPresent(switchOff -> {
-                    varConnections.add(new VarConnection(String.format("tapChanger%s_switchOffSignal1", HIGH_VOLTAGE.getSideSuffix()), switchOff));
-                    varConnections.add(new VarConnection(String.format("tapChanger%s_switchOffSignal1", LOW_VOLTAGE.getSideSuffix()), switchOff));
-                });
-        return varConnections;
     }
 
     @Override
