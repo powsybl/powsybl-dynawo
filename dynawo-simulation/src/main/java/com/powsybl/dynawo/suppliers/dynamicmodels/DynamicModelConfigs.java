@@ -14,13 +14,23 @@ import java.util.List;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public record DynamicModelConfigs(List<DynamicModelConfig> dynamicModelConfigList,
-                                  List<DynamicAlternativeModelsConfig> dynamicAlternativeModelsConfiglist) {
+                                  List<DynamicAlternativeModelsConfig> dynamicAlternativeModelsConfiglist,
+                                  List<DynamicMultipleModel> dynamicMultipleModelList) {
 
     public DynamicModelConfigs(List<DynamicModelConfig> dynamicModelConfigList) {
-        this(dynamicModelConfigList, Collections.emptyList());
+        this(dynamicModelConfigList, Collections.emptyList(), Collections.emptyList());
+    }
+
+    public DynamicModelConfigs(List<DynamicModelConfig> dynamicModelConfigList,
+                               List<DynamicAlternativeModelsConfig> dynamicAlternativeModelsConfiglist) {
+        this(dynamicModelConfigList, dynamicAlternativeModelsConfiglist, Collections.emptyList());
     }
 
     boolean hasDynamicAlternativeModels() {
         return !dynamicAlternativeModelsConfiglist.isEmpty();
+    }
+
+    boolean hasMultipleModels() {
+        return !dynamicMultipleModelList.isEmpty();
     }
 }

@@ -15,10 +15,17 @@ import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
+import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.suppliers.dynamicmodels.*;
+import com.powsybl.iidm.network.Country;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import org.gridsuite.filter.utils.EquipmentType;
+import org.gridsuite.filter.utils.expertfilter.FieldType;
+import org.gridsuite.filter.utils.expertfilter.OperatorType;
+import org.gridsuite.filter.wip.ExpertFilter;
+import org.gridsuite.filter.wip.rule.EnumExpertRule;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -102,6 +109,50 @@ class DynawoModelsSupplierTest {
                     tcb -> assertThat(tcb).usingRecursiveComparison().isEqualTo(getTcbConfig()));
             assertThat(configs.dynamicAlternativeModelsConfiglist()).hasSize(1).satisfiesExactly(
                     gen -> assertThat(gen).usingRecursiveComparison().isEqualTo(getAlternativeModelGenConfig()));
+            assertThat(configs.dynamicMultipleModelList()).isEmpty();
+        }
+    }
+
+    @Test
+    void testMultipleModelsDeserializer() throws IOException {
+        String json = """
+                {
+                  "multipleModels": [
+                    {
+                      "model": "GeneratorPQ",
+                      "group": "GPQ",
+                      "rule": {
+                        "filterType": "EXPERT",
+                        "equipmentType": "GENERATOR",
+                        "rule": {
+                          "dataType": "ENUM",
+                          "field": "COUNTRY",
+                          "operator": "EQUALS",
+                          "value": "FR"
+                        }
+                      }
+                    }
+                  ]
+                }
+                """;
+        DynawoSupplierJsonDeserializer deserializer = new DynawoSupplierJsonDeserializer();
+        try (InputStream is = new java.io.ByteArrayInputStream(json.getBytes(java.nio.charset.StandardCharsets.UTF_8))) {
+            DynamicModelConfigs configs = deserializer.deserialize(is);
+            assertTrue(configs.dynamicModelConfigList().isEmpty());
+            assertTrue(configs.dynamicAlternativeModelsConfiglist().isEmpty());
+            assertThat(configs.dynamicMultipleModelList()).hasSize(1).satisfiesExactly(
+                    m -> {
+                        assertEquals("GeneratorPQ", m.model());
+                        assertEquals("GPQ", m.group());
+                        assertNotNull(m.rule());
+                        assertEquals(EquipmentType.GENERATOR, m.rule().getEquipmentType());
+                        assertInstanceOf(EnumExpertRule.class, m.rule().getRule());
+                        EnumExpertRule rule = (EnumExpertRule) m.rule().getRule();
+                        assertEquals(FieldType.COUNTRY, rule.getField());
+                        assertEquals(OperatorType.EQUALS, rule.getOperator());
+                        assertEquals("FR", rule.getValue());
+                    }
+            );
         }
     }
 
@@ -193,6 +244,49 @@ class DynawoModelsSupplierTest {
         List<DynamicModel> models = new DynawoModelsSupplier(configs).get(network, ReportNode.NO_OP);
 
         assertThat(models).isEmpty();
+    }
+
+    @Test
+    void testMultipleModels() {
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
+        ExpertFilter filter = ExpertFilter.builder()
+                .equipmentType(EquipmentType.GENERATOR)
+                .rule(EnumExpertRule.builder()
+                        .field(FieldType.COUNTRY)
+                        .operator(OperatorType.EQUALS)
+                        .value(Country.FR.name())
+                        .build())
+                .build();
+        DynamicMultipleModel mm = new DynamicMultipleModel("GeneratorPV", "GPV", filter);
+        DynamicModelConfigs configs = new DynamicModelConfigs(Collections.emptyList(), Collections.emptyList(), List.of(mm));
+        List<DynamicModel> models = new DynawoModelsSupplier(configs).get(network);
+
+        DynamicModel gen = SynchronizedGeneratorBuilder.of(network, "GeneratorPV")
+                .staticId("GEN")
+                .parameterSetId("GPV")
+                .build();
+        assertThat(models).hasSize(1).satisfiesExactly(
+                g -> assertThat(g).usingRecursiveComparison().isEqualTo(gen));
+    }
+
+    @Test
+    void testMultipleModelsFromJson() throws IOException {
+        Network network = EurostagTutorialExample1Factory.create().getSubstation("P2").setCountry(Country.BE).getNetwork();
+        try (InputStream is = getClass().getResourceAsStream("/suppliers/dynamicMultipleModels.json")) {
+            List<DynamicModel> models = DynawoModelsSupplier.load(is).get(network);
+
+            DynamicModel expectedBus = InfiniteBusBuilder.of(network, "InfiniteBus")
+                    .staticId("NGEN")
+                    .parameterSetId("Bus")
+                    .build();
+            DynamicModel expectedBus2 = InfiniteBusBuilder.of(network, "InfiniteBus")
+                    .staticId("NHV1")
+                    .parameterSetId("Bus")
+                    .build();
+            assertThat(models).satisfiesExactly(
+                    dm -> assertThat(dm).usingRecursiveComparison().isEqualTo(expectedBus),
+                    dm -> assertThat(dm).usingRecursiveComparison().isEqualTo(expectedBus2));
+        }
     }
 
     private static List<DynamicModelConfig> getModelConfigs() {

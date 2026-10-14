@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.powsybl.commons.json.JsonUtil;
 import com.powsybl.dynawo.suppliers.*;
+import org.gridsuite.filter.wip.ExpertFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +30,25 @@ public class DynamicModelConfigsJsonDeserializer extends StdDeserializer<Dynamic
     public DynamicModelConfigs deserialize(JsonParser parser, DeserializationContext context) {
         List<DynamicModelConfig> modelConfigList = new ArrayList<>();
         List<DynamicAlternativeModelsConfig> altModelConfigList = new ArrayList<>();
+        List<DynamicMultipleModel> multipleModelList = new ArrayList<>();
         JsonUtil.parseObject(parser, name -> {
-            if (name.equals("models")) {
-                JsonUtil.parseObjectArray(parser, modelConfigList::add, DynamicModelConfigsJsonDeserializer::parseModelConfig);
-                return true;
-            } else if (name.equals("alternativeModels")) {
-                JsonUtil.parseObjectArray(parser, altModelConfigList::add, DynamicModelConfigsJsonDeserializer::parseAlternativeModelConfig);
-                return true;
+            switch (name) {
+                case "models" -> {
+                    JsonUtil.parseObjectArray(parser, modelConfigList::add, DynamicModelConfigsJsonDeserializer::parseModelConfig);
+                    return true;
+                }
+                case "alternativeModels" -> {
+                    JsonUtil.parseObjectArray(parser, altModelConfigList::add, DynamicModelConfigsJsonDeserializer::parseAlternativeModelConfig);
+                    return true;
+                }
+                case "multipleModels" -> {
+                    JsonUtil.parseObjectArray(parser, multipleModelList::add, DynamicModelConfigsJsonDeserializer::parseMultipleModel);
+                    return true;
+                }
             }
             return false;
         });
-        return new DynamicModelConfigs(modelConfigList, altModelConfigList);
+        return new DynamicModelConfigs(modelConfigList, altModelConfigList, multipleModelList);
     }
 
     private static DynamicModelConfig parseModelConfig(JsonParser parser) {
@@ -100,5 +109,27 @@ public class DynamicModelConfigsJsonDeserializer extends StdDeserializer<Dynamic
             return handled;
         });
         return new AlternativeModelConfig(parsingContext.model, parsingContext.group);
+    }
+
+    public static DynamicMultipleModel parseMultipleModel(JsonParser parser) {
+        var parsingContext = new Object() {
+            String model = null;
+            String group = null;
+            ExpertFilter rule = null;
+        };
+        JsonUtil.parseObject(parser, name -> {
+            boolean handled = true;
+            switch (name) {
+                case "model" -> parsingContext.model = parser.nextTextValue();
+                case "group" -> parsingContext.group = parser.nextTextValue();
+                case "rule" -> {
+                    parser.nextToken();
+                    parsingContext.rule = parser.readValueAs(ExpertFilter.class);
+                }
+                default -> handled = false;
+            }
+            return handled;
+        });
+        return new DynamicMultipleModel(parsingContext.model, parsingContext.group, parsingContext.rule);
     }
 }

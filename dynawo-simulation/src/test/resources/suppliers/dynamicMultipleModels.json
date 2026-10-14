@@ -1,0 +1,18 @@
+{
+  "multipleModels": [
+    {
+      "model": "InfiniteBus",
+      "group": "Bus",
+      "rule": {
+        "filterType": "EXPERT",
+        "equipmentType": "BUS",
+        "rule": {
+          "dataType": "ENUM",
+          "field": "COUNTRY",
+          "operator": "EQUALS",
+          "value": "FR"
+        }
+      }
+    }
+  ]
+}
