@@ -48,12 +48,12 @@ public final class DefaultEquipmentConnectionPoint implements EquipmentConnectio
 
     @Override
     public Optional<String> getSwitchOffSignalVarName() {
-        return Optional.of("@STATIC_ID@@NODE@_switchOff_value");
+        return Optional.of("@STATIC_ID@@NODE@_switchOff");
     }
 
     @Override
     public Optional<String> getSwitchOffSignalVarName(TwoSides side) {
-        return Optional.of("@STATIC_ID@@NODE" + side.getNum() + "@_switchOff_value");
+        return Optional.of("@STATIC_ID@@NODE" + side.getNum() + "@_switchOff");
     }
 
     @Override
