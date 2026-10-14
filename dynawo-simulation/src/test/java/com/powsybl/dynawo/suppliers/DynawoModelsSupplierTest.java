@@ -15,8 +15,12 @@ import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
+import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
+import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.suppliers.dynamicmodels.*;
+import com.powsybl.iidm.network.Country;
+import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -25,10 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -103,6 +104,37 @@ class DynawoModelsSupplierTest {
                     gen -> assertThat(gen).usingRecursiveComparison().isEqualTo(getGenConfig()));
             assertThat(configs.dynamicAlternativeModelsConfiglist()).hasSize(1).satisfiesExactly(
                     gen -> assertThat(gen).usingRecursiveComparison().isEqualTo(getAlternativeModelGenConfig()));
+            assertThat(configs.dynamicMultipleModelList()).isEmpty();
+        }
+    }
+
+    @Test
+    void testMultipleModelsDeserializer() throws IOException {
+        String json = """
+                {
+                  "multipleModels": [
+                    {
+                      "model": "GeneratorPQ",
+                      "group": "GPQ",
+                      "resolverName": "TestGeographicalTags",
+                      "identifiableType": "GENERATOR"
+                    }
+                  ]
+                }
+                """;
+        DynawoSupplierJsonDeserializer deserializer = new DynawoSupplierJsonDeserializer();
+        try (InputStream is = new java.io.ByteArrayInputStream(json.getBytes(java.nio.charset.StandardCharsets.UTF_8))) {
+            DynamicModelConfigs configs = deserializer.deserialize(is);
+            assertTrue(configs.dynamicModelConfigList().isEmpty());
+            assertTrue(configs.dynamicAlternativeModelsConfiglist().isEmpty());
+            assertThat(configs.dynamicMultipleModelList()).hasSize(1).satisfiesExactly(
+                    m -> {
+                        assertEquals("GeneratorPQ", m.model());
+                        assertEquals("GPQ", m.group());
+                        assertEquals("TestGeographicalTags", m.modelResolverName());
+                        assertEquals(IdentifiableType.GENERATOR, m.identifiableType());
+                    }
+            );
         }
     }
 
@@ -179,6 +211,50 @@ class DynawoModelsSupplierTest {
         List<DynamicModel> models = new DynawoModelsSupplier(configs).get(network, ReportNode.NO_OP);
 
         assertThat(models).isEmpty();
+    }
+
+    @Test
+    void testMultipleModels() {
+        Network network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
+        DynamicMultipleModel mm = new DynamicMultipleModel("GeneratorPV", "GPV", "TestGeographicalTags", IdentifiableType.GENERATOR);
+        DynamicModelConfigs configs = new DynamicModelConfigs(Collections.emptyList(), Collections.emptyList(), List.of(mm));
+        List<DynamicModel> models = new DynawoModelsSupplier(configs).get(network);
+
+        DynamicModel gen1 = SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindings")
+                .staticId("GEN")
+                .parameterSetId("GFW")
+                .build();
+        DynamicModel gen2 = SynchronizedGeneratorBuilder.of(network, "GeneratorPV")
+                .staticId("GEN2")
+                .parameterSetId("GPV")
+                .build();
+        DynamicModel gen3 = SynchronizedGeneratorBuilder.of(network, "GeneratorPV")
+                .staticId("GEN3")
+                .parameterSetId("GPV")
+                .build();
+        assertThat(models).hasSize(3).satisfiesExactly(
+                g -> assertThat(g).usingRecursiveComparison().isEqualTo(gen1),
+                g2 -> assertThat(g2).usingRecursiveComparison().isEqualTo(gen2),
+                g3 -> assertThat(g3).usingRecursiveComparison().isEqualTo(gen3));
+    }
+
+    @Test
+    void testMultipleModelsFromJson() throws IOException {
+        Network network = EurostagTutorialExample1Factory.create();
+        try (InputStream is = getClass().getResourceAsStream("/suppliers/dynamicMultipleModels.json")) {
+            List<DynamicModel> models = DynawoModelsSupplier.load(is).get(network);
+
+            DynamicModel gen1 = SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindings")
+                    .staticId("GEN")
+                    .parameterSetId("GFW")
+                    .build();
+            DynamicModel expectedBus2 = InfiniteBusBuilder.of(network, "InfiniteBus")
+                    .staticId("NHV1")
+                    .parameterSetId("Bus")
+                    .build();
+            assertThat(models).hasSize(1).satisfiesExactlyInAnyOrder(
+                    dm -> assertThat(dm).usingRecursiveComparison().isEqualTo(gen1));
+        }
     }
 
     private static List<DynamicModelConfig> getModelConfigs() {
@@ -304,6 +380,36 @@ class DynawoModelsSupplierTest {
                 return null;
             }
             return new DynamicModelConfig(config.model(), config.group(), groupType, properties);
+        }
+    }
+
+    @AutoService(MultipleModelResolver.class)
+    public static class TestGeographicalTags implements MultipleModelResolver {
+
+        @Override
+        public String getName() {
+            return "TestGeographicalTags";
+        }
+
+        @Override
+        public List<DynamicModelConfig> resolveMultipleModels(Network network, ReportNode reportNode) {
+            return network.getGeneratorStream().map(g -> {
+                if (g.getTerminal().getVoltageLevel().getNullableSubstation().getGeographicalTags().isEmpty()) {
+                    return new DynamicModelConfig("GeneratorPV", "GPV",
+                            List.of(new PropertyBuilder()
+                                    .name("staticId")
+                                    .value(g.getId())
+                                    .type(PropertyType.STRING)
+                                    .build()));
+                } else {
+                    return new DynamicModelConfig("GeneratorSynchronousFourWindings", "GFW",
+                            List.of(new PropertyBuilder()
+                                    .name("staticId")
+                                    .value(g.getId())
+                                    .type(PropertyType.STRING)
+                                    .build()));
+                }
+            }).toList();
         }
     }
 }

@@ -17,6 +17,9 @@ import com.powsybl.dynawo.builders.ModelBuilder;
 import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.suppliers.DynawoSupplierJsonDeserializer;
 import com.powsybl.dynawo.suppliers.Property;
+import com.powsybl.dynawo.suppliers.PropertyBuilder;
+import com.powsybl.dynawo.suppliers.PropertyType;
+import com.powsybl.dynawo.suppliers.SetGroupType;
 import com.powsybl.iidm.network.Network;
 
 import java.io.InputStream;
@@ -64,10 +67,31 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
     @Override
     public List<DynamicModel> get(Network network, ReportNode reportNode) {
         ReportNode supplierReportNode = createDynawoModelSupplierReportNode(reportNode);
-        return Stream.concat(dynamicModelConfigs.dynamicModelConfigList().stream(), getAlternativeModelsStream(network, reportNode))
+        return Stream.concat(
+                        Stream.concat(dynamicModelConfigs.dynamicModelConfigList().stream(), getAlternativeModelsStream(network, reportNode)),
+                        getMultipleModelsStream(network, reportNode))
                 .map(dynamicModelConfig -> buildDynamicModel(dynamicModelConfig, network, supplierReportNode))
                 .filter(Objects::nonNull)
                 .toList();
+    }
+
+    private Stream<DynamicModelConfig> getMultipleModelsStream(Network network, ReportNode reportNode) {
+        if (dynamicModelConfigs.hasMultipleModels()) {
+            Set<String> missingResolvers = new HashSet<>();
+            MultipleModelResolvers resolvers = new MultipleModelResolvers();
+            return dynamicModelConfigs.dynamicMultipleModelList().stream()
+                    .flatMap(mm -> {
+                        MultipleModelResolver resolver = resolvers.getMultipleModelResolver(mm.modelResolverName());
+                        if (resolver == null) {
+                            if (missingResolvers.add(mm.modelResolverName())) {
+                                DynawoSimulationReports.reportModelResolverNotFound(reportNode, mm.modelResolverName());
+                            }
+                            return Stream.<DynamicModelConfig>empty();
+                        }
+                        return resolver.resolveMultipleModels(network, reportNode).stream();
+                    });
+        }
+        return Stream.empty();
     }
 
     private Stream<DynamicModelConfig> getAlternativeModelsStream(Network network, ReportNode reportNode) {

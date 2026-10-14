@@ -1,0 +1,10 @@
+{
+  "multipleModels": [
+    {
+      "model": "InfiniteBus",
+      "group": "Bus",
+      "resolverName": "TestGeographicalTags",
+      "identifiableType": "BUS"
+    }
+  ]
+}
