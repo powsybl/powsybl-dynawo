@@ -43,12 +43,8 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
     }
 
     public static HvdcVscBuilder of(Network network, String modelName, ReportNode reportNode) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
-        if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
-            return null;
-        }
-        return new HvdcVscBuilder(network, modelConfig, reportNode);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName, reportNode);
+        return modelConfig != null ? new HvdcVscBuilder(network, modelConfig, reportNode) : null;
     }
 
     public static ModelInfo getDefaultModelInfo() {

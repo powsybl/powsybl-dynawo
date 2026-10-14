@@ -53,7 +53,7 @@ class HvdcTest {
         assertEquals(1, hvdcPDangling.getConnectedStations().size());
         assertEquals(line.getConverterStation2(), hvdcPDangling.getConnectedStations().getFirst());
 
-        BaseHvdc hvdcVscDangling = HvdcVscBuilder.of(network, "HvdcVSCDanglingP")
+        BaseHvdc hvdcVscDangling = HvdcVscBuilder.of(network, "HvdcVscDanglingP")
                 .staticId("L")
                 .parameterSetId("HVDC")
                 .dangling(TwoSides.TWO)

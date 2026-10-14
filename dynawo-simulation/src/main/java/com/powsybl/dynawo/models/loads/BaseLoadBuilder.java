@@ -35,12 +35,8 @@ public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
     }
 
     public static BaseLoadBuilder of(Network network, String modelName, ReportNode reportNode) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
-        if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
-            return null;
-        }
-        return new BaseLoadBuilder(network, modelConfig, reportNode);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName, reportNode);
+        return modelConfig != null ? new BaseLoadBuilder(network, modelConfig, reportNode) : null;
     }
 
     public static ModelInfo getDefaultModelInfo() {

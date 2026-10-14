@@ -16,6 +16,8 @@ import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
+import com.powsybl.dynawo.builders.ModelConfigsHandler;
+import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.AfterEach;
 
@@ -48,6 +50,7 @@ public abstract class AbstractIeeeTest {
     @AfterEach
     void tearDown() throws IOException {
         FileUtil.removeDir(workingDir);
+        ModelConfigsHandler.getInstance().setDynawoVersion(DynawoConstants.CURRENT_VERSION);
     }
 
     public abstract String getWorkingDirName();

@@ -9,7 +9,6 @@ package com.powsybl.dynawo;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.report.TypedValue;
-import com.powsybl.dynawo.commons.DynawoVersion;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -52,29 +51,6 @@ public final class DynawoSimulationReports {
                 .withMessageTemplate("dynawo.dynasim.duplicateDynamicId")
                 .withUntypedValue("duplicateId", duplicateId)
                 .withUntypedValue(MODEL_NAME_FIELD, modelName)
-                .withSeverity(TypedValue.WARN_SEVERITY)
-                .add();
-    }
-
-    public static void reportDynawoVersionTooHigh(ReportNode reportNode, String modelName, String dynamicId, DynawoVersion modelVersion, DynawoVersion currentVersion) {
-        reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynasim.highDynawoVersion")
-                .withUntypedValue("modelVersion", modelVersion.toString())
-                .withUntypedValue("currentVersion", currentVersion.toString())
-                .withUntypedValue(MODEL_NAME_FIELD, modelName)
-                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
-                .withSeverity(TypedValue.WARN_SEVERITY)
-                .add();
-    }
-
-    public static void reportDynawoVersionTooLow(ReportNode reportNode, String modelName, String dynamicId, DynawoVersion modelVersion, DynawoVersion currentVersion, String endCause) {
-        reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynasim.lowDynawoVersion")
-                .withUntypedValue("modelVersion", modelVersion.toString())
-                .withUntypedValue("currentVersion", currentVersion.toString())
-                .withUntypedValue("endCause", endCause)
-                .withUntypedValue(MODEL_NAME_FIELD, modelName)
-                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }

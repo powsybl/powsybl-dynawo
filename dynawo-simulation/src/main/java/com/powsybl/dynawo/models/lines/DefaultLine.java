@@ -8,6 +8,7 @@ package com.powsybl.dynawo.models.lines;
 
 import com.powsybl.dynawo.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawo.models.utils.SideUtils;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.iidm.network.TwoSides;
 
 /**
@@ -36,7 +37,7 @@ public class DefaultLine extends AbstractDefaultModel implements LineModel {
 
     @Override
     public String getStateValueVarName() {
-        return "@NAME@_state_value";
+        return VersionableVariablesHandler.getInstance().getCurrentValue("STATE", "@NAME@");
     }
 
     @Override
