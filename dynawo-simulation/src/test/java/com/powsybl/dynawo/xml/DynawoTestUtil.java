@@ -18,6 +18,7 @@ import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
 import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.regulation.RegulationMode;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.xml.sax.SAXException;
@@ -185,10 +186,12 @@ public class DynawoTestUtil extends AbstractSerDeTest {
             .setConnectableBus(ngen.getId())
             .setMinP(-9999.99)
             .setMaxP(9999.99)
-            .setVoltageRegulatorOn(true)
-            .setTargetV(24.5)
+            .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+            .setLocalTargetV(24.5)
             .setTargetP(1.0)
-            .setTargetQ(0.5)
+            .setLocalTargetQ(0.5)
             .add();
         vlgen.newGenerator()
             .setId("GEN3")
@@ -196,10 +199,12 @@ public class DynawoTestUtil extends AbstractSerDeTest {
             .setConnectableBus(ngen.getId())
             .setMinP(-9999.99)
             .setMaxP(9999.99)
-            .setVoltageRegulatorOn(true)
-            .setTargetV(24.5)
+            .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+            .setLocalTargetV(24.5)
             .setTargetP(0.1)
-            .setTargetQ(0.2)
+            .setLocalTargetQ(0.2)
             .add();
         vlgen.newGenerator()
             .setId("GEN4")
@@ -207,10 +212,12 @@ public class DynawoTestUtil extends AbstractSerDeTest {
             .setConnectableBus(ngen.getId())
             .setMinP(-9999.99)
             .setMaxP(9999.99)
-            .setVoltageRegulatorOn(true)
-            .setTargetV(24.5)
+            .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+            .setLocalTargetV(24.5)
             .setTargetP(-1.3)
-            .setTargetQ(0.9)
+            .setLocalTargetQ(0.9)
             .add();
         vlgen.newGenerator()
             .setId("GEN5")
@@ -218,10 +225,12 @@ public class DynawoTestUtil extends AbstractSerDeTest {
             .setConnectableBus(ngen.getId())
             .setMinP(-9999.99)
             .setMaxP(9999.99)
-            .setVoltageRegulatorOn(true)
-            .setTargetV(24.5)
+            .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+            .setLocalTargetV(24.5)
             .setTargetP(-0.3)
-            .setTargetQ(0.7)
+            .setLocalTargetQ(0.7)
             .add();
         vlgen.newGenerator()
             .setId("GEN6")
@@ -229,10 +238,12 @@ public class DynawoTestUtil extends AbstractSerDeTest {
             .setConnectableBus(ngen.getId())
             .setMinP(-9999.99)
             .setMaxP(9999.99)
-            .setVoltageRegulatorOn(true)
-            .setTargetV(24.5)
+            .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+            .setLocalTargetV(24.5)
             .setTargetP(-0.3)
-            .setTargetQ(0.7)
+            .setLocalTargetQ(0.7)
             .add();
         vlgen.newGenerator()
             .setId("GEN7")
@@ -240,10 +251,12 @@ public class DynawoTestUtil extends AbstractSerDeTest {
             .setConnectableBus(ngen.getId())
             .setMinP(-9999.99)
             .setMaxP(9999.99)
-            .setVoltageRegulatorOn(true)
-            .setTargetV(24.5)
+            .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+            .setLocalTargetV(24.5)
             .setTargetP(-0.3)
-            .setTargetQ(0.7)
+            .setLocalTargetQ(0.7)
             .add();
         VoltageLevel vlhv1 = network.getVoltageLevel("VLHV1");
         Bus nhv1 = vlhv1.getBusBreakerView().getBus("NHV1");
@@ -253,10 +266,12 @@ public class DynawoTestUtil extends AbstractSerDeTest {
             .setConnectableBus(nhv1.getId())
             .setMinP(-9999.99)
             .setMaxP(9999.99)
-            .setVoltageRegulatorOn(true)
-            .setTargetV(24.5)
+            .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+            .setLocalTargetV(24.5)
             .setTargetP(0.1)
-            .setTargetQ(0.2)
+            .setLocalTargetQ(0.2)
             .add();
         return network;
     }
