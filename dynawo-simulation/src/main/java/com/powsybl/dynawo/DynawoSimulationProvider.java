@@ -25,6 +25,8 @@ import com.powsybl.dynawo.json.DynawoSimulationParametersSerializer;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.iidm.network.Network;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -118,6 +120,22 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                 .reportNode(reportNode)
                 .build();
 
+        if (dynawoParameters.getInputsExportFolderPath().isPresent()) {
+            try {
+                exportInputFiles(context, reportNode, dynawoParameters.getInputsExportFolderPath().orElseThrow());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            return CompletableFuture.completedFuture(
+                    new DynamicSimulationResultImpl(
+                            DynamicSimulationResult.Status.SUCCESS,
+                            "",
+                            Collections.emptyMap(),
+                            Collections.emptyMap(),
+                            Collections.emptyList()));
+        }
+
         ExecutionEnvironment execEnvSimulation = ExecutionEnvironmentUtils.createSimulationEnv(config, WORKING_DIR_PREFIX, dumpDir);
         return computationManager.execute(execEnvSimulation, new DynawoSimulationHandler(context, getCommand(config), reportNode));
     }
@@ -165,5 +183,10 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     @Override
     public Optional<ModuleConfig> getModuleConfig(PlatformConfig platformConfig) {
         return platformConfig.getOptionalModuleConfig(DynawoSimulationParameters.MODULE_SPECIFIC_PARAMETERS);
+    }
+
+    private void exportInputFiles(DynawoSimulationContext context, ReportNode reportNode, Path exportDir) throws IOException {
+        DynawoSimulationHandler handler = new DynawoSimulationHandler(context, getCommand(config), reportNode);
+        handler.writeInputFiles(exportDir);
     }
 }
