@@ -130,6 +130,10 @@ The file must follow the `models.json` pattern defined [here](base-additional-mo
 The models added in the file cannot overload an existing model and must belong to an existing category, otherwise they will be skipped (see [here](base-additional-models.md#additional-models)).  
 The default value is `null`.
 
+#### dumpInitValues
+`dumpInitValues` defines if the results of the initialization stages should be exported as a dump.
+The default value is `FALSE`.
+
 ### Examples
 
 **YAML configuration:**
@@ -155,6 +159,7 @@ dynawo-simulation-default-parameters:
     - NETWORK
     - PARAMETERS
   criteria.file: /home/user/criteria.crt
+  dumpInitValues: false
 ```
 
 **XML configuration:**
@@ -177,5 +182,6 @@ dynawo-simulation-default-parameters:
   <log.levelFilter>INFO</log.levelFilter>
   <log.specificLogs>NETWORK, PARAMETERS</log.specificLogs>
   <criteria.file>/home/user/criteria.crt</criteria.file>
+  <dumpInitValues>false</dumpInitValues>
 </dynawo-simulation-default-parameters>
 ```

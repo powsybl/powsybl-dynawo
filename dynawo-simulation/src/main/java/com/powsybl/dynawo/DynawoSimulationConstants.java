@@ -43,6 +43,14 @@ public final class DynawoSimulationConstants {
 
     public static final String FINAL_STEP_JOBS_FILENAME = "final_step.jobs";
 
+    public static final String DUMP_INIT_VALUES_FOLDER = "initValues";
+
+    public static final String DUMP_INIT_VALUES_GLOBAL_FOLDER = "globalInit";
+
+    public static final String DUMP_INIT_VALUES_LOCAL_FOLDER = "localInit";
+
+    public static final String DUMP_INIT_VALUES_INIT_FOLDER = "initModel";
+
     private DynawoSimulationConstants() {
     }
 
