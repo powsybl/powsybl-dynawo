@@ -56,7 +56,6 @@ public final class NetworkResultsUpdater {
             update(targetStaticVarCompensator, sourceStaticVarCompensator);
             VoltageRegulation voltageRegulation = targetStaticVarCompensator.getVoltageRegulation();
             if (voltageRegulation != null) {
-                voltageRegulation.setMode(sourceStaticVarCompensator.getVoltageRegulation().getMode());
                 voltageRegulation.setRegulating(sourceStaticVarCompensator.isRegulating());
             }
         }
