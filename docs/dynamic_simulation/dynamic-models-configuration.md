@@ -32,9 +32,10 @@ In the following examples the array will be omitted.
 See examples below.
 
 ### Equipment models
-Dynamic models matching a network equipment (generator, load, ...).
-With specific attribute:
-- `staticId`: equipment id in the network.
+Dynamic models matching network equipment (generator, load, ...).
+
+With specific attributes:
+- `staticId`: equipment id (or id list) in the network, in the case of multiple ids, the first one found in the network will be used.
 
 The `dynamicModelId` will be set implicitly to `staticId` and cannot be modified.
 
@@ -45,7 +46,7 @@ GeneratorSynchronousThreeWindings {
     parameterSetId 'GSTW'
 }
 LoadAlphaBeta {
-    staticId 'LOAD'
+    staticId 'LOAD', 'ALT_LOAD'
     parameterSetId 'LAB_LOAD'
 }
 ```
@@ -70,7 +71,7 @@ LoadAlphaBeta {
     "properties":[
       {
         "name":"staticId",
-        "value":"LOAD",
+        "values": ["LOAD", "ALT_LOAD"],
         "type":"STRING"
       }
     ]
