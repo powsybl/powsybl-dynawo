@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.shunts;
 
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
+import com.powsybl.dynawo.models.InjectionModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class BaseShunt extends AbstractEquipmentBlackBoxModel<ShuntCompensator> implements ShuntModel {
+public class BaseShunt extends AbstractEquipmentBlackBoxModel<ShuntCompensator> implements InjectionModel {
 
     protected BaseShunt(ShuntCompensator svarc, String parameterSetId, ModelConfig modelConfig) {
         super(svarc, parameterSetId, modelConfig);
@@ -37,20 +38,5 @@ public class BaseShunt extends AbstractEquipmentBlackBoxModel<ShuntCompensator> 
     @Override
     public String getSwitchOffSignalEventVarName() {
         return "shunt_switchOffSignal2";
-    }
-
-    @Override
-    public String getStateVarName() {
-        return "shunt_state";
-    }
-
-    @Override
-    public String getIsCapacitorVarName() {
-        return "shunt_isCapacitor";
-    }
-
-    @Override
-    public String getIsAvailableVarName() {
-        return "shunt_isAvailable";
     }
 }
