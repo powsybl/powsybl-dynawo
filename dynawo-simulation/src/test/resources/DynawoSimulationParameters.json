@@ -53,10 +53,7 @@
       "specificLogs" : [ "PARAMETERS", "VARIABLES" ],
       "criteriaFilePath" : null,
       "additionalModelsPath" : null,
-      "dumpInitValuesParameters" : {
-        "useDumpInit" : false,
-        "dumpInitFolder" : null
-      },
+      "dumpInitValues" : false,
       "modelsParameters" : [ {
         "id" : "test",
         "parameters" : {
