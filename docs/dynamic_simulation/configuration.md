@@ -132,6 +132,8 @@ The default value is `null`.
 
 #### dumpInitValues
 `dumpInitValues` defines if the results of the initialization stages should be exported as a dump.
+To retrieve the init values, this parameter must be used in combination with the [`debugDir` parameter](inv:powsyblcore:*:*#simulation/dynamic/configuration) or [`debug` parameter](configuration.md#debug).
+The init values can then be found directly in the result output folder, under `/outputs/initValues/`.
 The default value is `FALSE`.
 
 ### Examples
