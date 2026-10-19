@@ -142,7 +142,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             new Parameter(LOG_SPECIFIC_LOGS, ParameterType.STRING, "List specific logs returned", null, getEnumPossibleValues(SpecificLog.class)),
             new Parameter(CRITERIA_FILE, ParameterType.STRING, "Simulation criteria file path", null),
             new Parameter(ADDITIONAL_MODELS_FILE, ParameterType.STRING, "Additional models file path", null),
-            new Parameter(DUMP_INIT_VALUES, ParameterType.BOOLEAN, "Write the values of the initialization model", DEFAULT_DUMP_INIT_VALUES)),
+            new Parameter(DUMP_INIT_VALUES, ParameterType.BOOLEAN, "Dump the results of the initialization stages", DEFAULT_DUMP_INIT_VALUES)),
             DumpFileParameters.SPECIFIC_PARAMETERS.stream())
             .flatMap(Function.identity()).toList();
 
