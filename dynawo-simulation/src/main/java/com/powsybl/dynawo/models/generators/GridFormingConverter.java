@@ -51,6 +51,11 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
         return varConnections;
     }
 
+    @Override
+    public List<VarConnection> getSetPointVarConnections() {
+        return List.of(new VarConnection("setPoint_setPoint_value", getOmegaRefPuVarName()));
+    }
+
     protected String getOmegaPuVarName() {
         return "converter_omegaPu";
     }

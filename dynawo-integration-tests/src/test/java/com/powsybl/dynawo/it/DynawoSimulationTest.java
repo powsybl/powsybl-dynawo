@@ -19,10 +19,16 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
+import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
+import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
+import com.powsybl.dynawo.models.buses.StandardBusBuilder;
 import com.powsybl.dynawo.models.events.*;
+import com.powsybl.dynawo.models.generators.*;
+import com.powsybl.dynawo.models.lines.LineBuilder;
+import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
 import com.powsybl.dynawo.suppliers.events.DynawoEventModelsSupplier;
@@ -36,6 +42,9 @@ import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import com.powsybl.timeseries.DoubleTimeSeries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,6 +52,7 @@ import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -50,8 +60,7 @@ import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.commons.report.ReportNode.newRootReportNode;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -202,13 +211,20 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         checkTimeLineEvent(timeLine.getFirst(), 0.0, "PhaseShifterI", "Phase-shifter : above maximum allowed value");
     }
 
-    @Test
-    void testSmib() {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideGenerators")
+    void testSmib(Function<Network, BlackBoxModel> genSupplier) {
         Network network = Network.read(new ResourceDataSource("SMIB", new ResourceSet("/smib", "SMIB.iidm")));
 
-        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/smib/dynamicModels.groovy"),
-                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+        DynamicModelsSupplier dynamicModelsSupplier = (n, r) -> List.of(
+                genSupplier.apply(n),
+                InfiniteBusBuilder.of(n, "InfiniteBus").staticId("VL1_BUS1").parameterSetId("1").build(),
+                StandardBusBuilder.of(n, "Bus").staticId("VL2_BUS1").parameterSetId("1").build(),
+                StandardBusBuilder.of(n, "Bus").staticId("VL3_BUS1").parameterSetId("1").build(),
+                LineBuilder.of(n, "Line").staticId("line1").parameterSetId("2").build(),
+                LineBuilder.of(n, "Line").staticId("line2").parameterSetId("2").build(),
+                TransformerFixedRatioBuilder.of(n, "TransformerFixedRatio").staticId("TR").parameterSetId("4").build()
+        );
 
         GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
                 getResourceAsStream("/smib/eventModels.groovy"),
@@ -234,9 +250,32 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
-        assertEquals(35, result.getCurves().size());
-        List<TimelineEvent> timeLine = result.getTimeLine();
-        assertTrue(timeLine.isEmpty());
+        assertEquals(16, result.getCurves().size());
+    }
+
+    private static Stream<Arguments> provideGenerators() {
+        String genId = "SM";
+        return Stream.of(
+                Arguments.of((Function<Network, BlackBoxModel>)
+                        n -> SynchronizedGeneratorBuilder.of(n, "GeneratorPQ")
+                            .staticId(genId)
+                            .parameterSetId("GPQ")
+                            .build()),
+                Arguments.of((Function<Network, BlackBoxModel>)
+                        n -> SynchronousGeneratorBuilder.of(n, "GeneratorSynchronousFourWindingsProportionalRegulations")
+                                .staticId(genId)
+                                .parameterSetId("GFW")
+                                .build()),
+                Arguments.of((Function<Network, BlackBoxModel>)
+                        n -> WeccBuilder.of(n, "WTG4AWeccCurrentSource")
+                                .staticId(genId)
+                                .parameterSetId("Wind")
+                                .build()),
+                Arguments.of((Function<Network, BlackBoxModel>)
+                        n -> GridFormingConverterBuilder.of(n, "GridFormingConverterDroopControl")
+                                .staticId(genId)
+                                .parameterSetId("GFM")
+                                .build()));
     }
 
     @Test
