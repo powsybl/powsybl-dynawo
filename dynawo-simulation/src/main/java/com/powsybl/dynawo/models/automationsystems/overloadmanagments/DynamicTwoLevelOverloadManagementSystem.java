@@ -8,6 +8,8 @@
 package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelOverloadManagementSystemModel;
+import com.powsybl.dynawo.extensions.api.model.DynawoTwoLevelOverloadManagementSystemModelAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
@@ -66,5 +68,29 @@ public class DynamicTwoLevelOverloadManagementSystem extends DynamicOverloadMana
 
     private List<VarConnection> getVarConnectionsWithSecondMeasuredBranch(BranchModel connected) {
         return List.of(new VarConnection("currentLimitAutomaton_IMonitored2", connected.getIVarName(secondMeasuredSide)));
+    }
+
+    @Override
+    public void createDynawoModelExtension() {
+        DynawoTwoLevelOverloadManagementSystemModel extension = controlledBranch.getExtension(DynawoTwoLevelOverloadManagementSystemModel.class);
+        if (extension == null) {
+            controlledBranch.newExtension(DynawoTwoLevelOverloadManagementSystemModelAdder.class)
+                    .withIMeasurement1(measuredBranch.getId())
+                    .withIMeasurement1Side(measuredSide)
+                    .withIMeasurement2(secondMeasuredBranch.getId())
+                    .withIMeasurement2Side(secondMeasuredSide)
+                    .withDynamicModelId(getDynamicModelId())
+                    .withParameterSetId(getParameterSetId())
+                    .withModelName(modelConfig.name())
+                    .add();
+        } else {
+            extension.setIMeasurement1(measuredBranch.getId())
+                    .setIMeasurement1Side(measuredSide)
+                    .setIMeasurement2(secondMeasuredBranch.getId())
+                    .setIMeasurement2Side(secondMeasuredSide)
+                    .setDynamicModelId(getDynamicModelId())
+                    .setParameterSetId(getParameterSetId())
+                    .setModelName(modelConfig.name());
+        }
     }
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--~
+  ~ Copyright (c) 2026, RTE (http://www.rte-france.com)
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.powsybl.org/schema/iidm/ext/dynawo_tap_changer_model/1_0"
+           xmlns:dtc="http://www.powsybl.org/schema/iidm/ext/dynawo_tap_changer_model/1_0"
+           elementFormDefault="qualified">
+
+    <xs:simpleType name="TransformerSide">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="HIGH_VOLTAGE"/>
+            <xs:enumeration value="LOW_VOLTAGE"/>
+            <xs:enumeration value="NONE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="dynawoTapChangerModel">
+        <xs:complexType>
+            <xs:attribute name="dynamicModelId" use="required" type="xs:string"/>
+            <xs:attribute name="modelName" use="required" type="xs:string"/>
+            <xs:attribute name="parameterSetId" type="xs:string"/>
+            <xs:attribute name="side" type="dtc:TransformerSide"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

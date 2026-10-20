@@ -9,6 +9,8 @@ package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
 import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.extensions.api.model.DynawoPhaseShifterBlockingIModel;
+import com.powsybl.dynawo.extensions.api.model.DynawoPhaseShifterBlockingIModelAdder;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
@@ -63,5 +65,25 @@ public class PhaseShifterBlockingIAutomationSystem extends AbstractPureDynamicBl
     @Override
     public boolean isConnected() {
         return isConnected;
+    }
+
+    @Override
+    public void createDynawoModelExtension() {
+        if (isConnected) {
+            DynawoPhaseShifterBlockingIModel extension = transformer.getValue().getExtension(DynawoPhaseShifterBlockingIModel.class);
+            if (extension == null) {
+                transformer.getValue().newExtension(DynawoPhaseShifterBlockingIModelAdder.class)
+                        .withModelName(modelConfig.name())
+                        .withDynamicModelId(getDynamicModelId())
+                        .withParameterSetId(getParameterSetId())
+                        .withPhaseShifterId(phaseShifterIDynamicId)
+                        .add();
+            } else {
+                extension.setModelName(modelConfig.name())
+                        .setDynamicModelId(getDynamicModelId())
+                        .setParameterSetId(getParameterSetId())
+                        .setPhaseShifterId(phaseShifterIDynamicId);
+            }
+        }
     }
 }

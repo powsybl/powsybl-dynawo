@@ -12,7 +12,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.builders.ModelConfigsHandler;
-import com.powsybl.dynawo.models.TransformerSide;
+import com.powsybl.dynawo.commons.TransformerSide;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;

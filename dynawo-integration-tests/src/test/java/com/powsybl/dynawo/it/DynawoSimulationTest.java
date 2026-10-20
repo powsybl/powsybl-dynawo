@@ -19,6 +19,7 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
+import com.powsybl.dynawo.extensions.api.model.DynawoEquipmentModel;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
@@ -27,6 +28,7 @@ import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
 import com.powsybl.dynawo.suppliers.events.DynawoEventModelsSupplier;
 import com.powsybl.dynawo.xml.ParametersXml;
+import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.VariantManagerConstants;
@@ -136,6 +138,32 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         ReportNode dynawoLog = reportNode.getChildren().get(2);
         assertEquals("dynawo.commons.dynawoLog", dynawoLog.getMessageKey());
         assertTrue(dynawoLog.getChildren().stream().anyMatch(r -> r.getMessage().contains("one simulation's criteria is not respected")));
+    }
+
+    @Test
+    void testIeee14AddModels() {
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
+                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testIEEE14")
+                .build();
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
+                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2");
+
+        ((DynawoSimulationProvider) provider).addDynamicModelsToNetwork(network, dynamicModelsSupplier,
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode);
+
+        DynawoEquipmentModel<Generator> equipmentModelInfo = network.getGenerator("_GEN____6_SM").getExtension(DynawoEquipmentModel.class);
+        assertEquals("GeneratorSynchronousThreeWindingsProportionalRegulations", equipmentModelInfo.getModelName());
+        assertEquals("GSTWPR_GEN____6_SM", equipmentModelInfo.getParameterSetId());
     }
 
     @Test

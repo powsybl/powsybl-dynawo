@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawo.models.transformers;
 
+import com.powsybl.dynawo.commons.TransformerSide;
 import com.powsybl.dynawo.models.Model;
-import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 
 import java.util.List;

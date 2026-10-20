@@ -69,6 +69,14 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jdk8</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-dynawo-extensions-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-dynawo-extensions-impl</artifactId>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>

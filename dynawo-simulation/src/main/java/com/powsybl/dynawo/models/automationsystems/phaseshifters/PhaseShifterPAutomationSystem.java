@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.extensions.api.model.*;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.transformers.TransformerModel;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
@@ -30,5 +31,21 @@ public class PhaseShifterPAutomationSystem extends AbstractPhaseShifterAutomatio
                 new VarConnection("phaseShifter_PMonitored", connected.getPMonitoredVarName()),
                 new VarConnection("phaseShifter_AutomatonExists", connected.getDisableInternalTapChangerVarName())
         );
+    }
+
+    @Override
+    public void createDynawoModelExtension() {
+        DynawoPhaseShifterPModel extension = transformer.getExtension(DynawoPhaseShifterPModel.class);
+        if (extension == null) {
+            transformer.newExtension(DynawoPhaseShifterPModelAdder.class)
+                    .withModelName(modelConfig.name())
+                    .withDynamicModelId(getDynamicModelId())
+                    .withParameterSetId(getParameterSetId())
+                    .add();
+        } else {
+            extension.setModelName(modelConfig.name())
+                    .setDynamicModelId(getDynamicModelId())
+                    .setParameterSetId(getParameterSetId());
+        }
     }
 }
