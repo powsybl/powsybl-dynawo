@@ -11,7 +11,6 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.builders.AbstractDynamicModelBuilder;
 import com.powsybl.dynawo.builders.BuilderReports;
-import com.powsybl.dynawo.builders.ModelBuilder;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.iidm.network.Network;
 
@@ -20,7 +19,7 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractAutomationSystemModelBuilder<T extends AbstractAutomationSystemModelBuilder<T>> extends AbstractDynamicModelBuilder implements ModelBuilder<DynamicModel> {
+public abstract class AbstractAutomationSystemModelBuilder<T extends AbstractAutomationSystemModelBuilder<T>> extends AbstractDynamicModelBuilder<DynamicModel> {
 
     protected String dynamicModelId;
     protected String parameterSetId;

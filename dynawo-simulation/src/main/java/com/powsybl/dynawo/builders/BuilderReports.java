@@ -21,6 +21,7 @@ public final class BuilderReports {
     private static final String FIELD_NAME = "fieldName";
     private static final String MODEL_NAME = "modelName";
     private static final String STATIC_ID = "staticId";
+    private static final String STATIC_IDS = "staticIds";
 
     private BuilderReports() {
     }
@@ -106,6 +107,16 @@ public final class BuilderReports {
                 .add();
     }
 
+    public static void reportStaticIdListUnknown(ReportNode reportNode, String fieldName, String staticIds, String equipmentType) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.staticIdListUnknown")
+                .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue(STATIC_IDS, staticIds)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
     public static void reportDifferentNetwork(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.wrongNetwork")
@@ -141,7 +152,17 @@ public final class BuilderReports {
                 .withMessageTemplate("dynawo.dynasim.energizedStaticIdListUnknown")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue("staticIds", staticIds)
+                .withUntypedValue(STATIC_IDS, staticIds)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportNotFictitiousStaticIdListUnknown(ReportNode reportNode, String fieldName, String staticIds, String equipmentType) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.notFictitiousStaticIdListUnknown")
+                .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue(STATIC_IDS, staticIds)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
