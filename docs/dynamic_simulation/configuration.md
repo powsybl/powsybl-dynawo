@@ -82,6 +82,11 @@ The default value is `null`.
 `modelSimplifiers` defines the list of simplifier to use before macro connection computation (see [here](model-simplifiers.md)).  
 The default value is an empty list.
 
+#### inputs.exportFolder
+`inputs.exportFolder` defines the folder name where the input files (.dyd, .jobs, .par ...) for the simulation are exported.
+If the path is set, no simulation is run, only the files are exported.
+The default value is `null`.
+
 #### mergeLoads
 `mergeLoads` indicates if loads connected to the same bus are merged (except fictitious load).  
 The default value is `FALSE`.
