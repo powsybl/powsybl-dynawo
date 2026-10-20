@@ -1,5 +1,5 @@
 {
-  "version" : "1.9",
+  "version" : "1.10",
   "preContingencyResult" : {
     "status" : "CONVERGED",
     "limitViolationsResult" : {
@@ -10,7 +10,7 @@
         "limitType" : "CURRENT",
         "limitName" : "permanent",
         "limit" : 836.74,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 1248.0773003764798,
         "side" : "ONE"
       } ],
@@ -39,7 +39,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 836.74,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 1248.100487597837,
         "side" : "ONE"
       } ],

@@ -77,8 +77,8 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         if (!runParameters.getActions().isEmpty()) {
             LOG.error("Actions are not implemented in Dynaflow");
         }
-        if (!runParameters.getLimitReductions().isEmpty()) {
-            LOG.error("Limit reductions are not implemented in Dynaflow");
+        if (!runParameters.getLimitScalings().isEmpty()) {
+            LOG.error("Limit scalings are not implemented in Dynaflow");
         }
 
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
