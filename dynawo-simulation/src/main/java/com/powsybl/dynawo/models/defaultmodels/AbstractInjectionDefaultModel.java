@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.defaultmodels;
 
 import com.powsybl.dynawo.models.InjectionModel;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -19,7 +20,7 @@ public abstract class AbstractInjectionDefaultModel extends AbstractDefaultModel
     }
 
     public String getStateValueVarName() {
-        return "@NAME@_state_value";
+        return VersionableVariablesHandler.getInstance().getCurrentValue("STATE", "@NAME@");
     }
 
     @Override

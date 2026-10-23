@@ -97,6 +97,18 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         checkReportNode(report);
     }
 
+    @Test
+    void testNullBuilder() throws IOException {
+        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream("/dynamicModels/lowVersionGenerator.groovy"), EXTENSIONS);
+        List<DynamicModel> dynamicModels = supplier.get(EurostagTutorialExample1Factory.create(), reportNode);
+        assertTrue(dynamicModels.isEmpty());
+        checkReportNode("""
+                + DSL tests
+                   + Groovy Dynamic Models Supplier
+                      Model GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a version 1.6.0 is too low for the current Dynawo version 1.7.0 (Renamed GeneratorSynchronousThreeWindingsPmConstExAc1)
+                """);
+    }
+
     void assertEquipmentBlackBoxModel(EquipmentBlackBoxModel bbm, String id, String parameterId, String lib) {
         assertEquals(id, bbm.getDynamicModelId());
         assertEquals(parameterId, bbm.getParameterSetId());
