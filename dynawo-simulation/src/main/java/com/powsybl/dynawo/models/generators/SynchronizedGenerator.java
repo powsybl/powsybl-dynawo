@@ -47,8 +47,8 @@ public class SynchronizedGenerator extends BaseGenerator implements FrequencySyn
     public List<VarConnection> getOmegaRefVarConnections() {
         VersionableVariablesHandler versionableVariablesHandler = VersionableVariablesHandler.getInstance();
         return List.of(
-                new VarConnection(versionableVariablesHandler.getCurrentValue("OMEGA_REF_GRP"), getOmegaRefPuVarName()),
-                new VarConnection(versionableVariablesHandler.getCurrentValue("RUNNING_GRP"), getRunningVarName())
+                new VarConnection(versionableVariablesHandler.getCurrentValue("INDEXED_VARIABLE", "omegaRef_grp"), getOmegaRefPuVarName()),
+                new VarConnection(versionableVariablesHandler.getCurrentValue("INDEXED_VARIABLE", "running_grp"), getRunningVarName())
         );
     }
 

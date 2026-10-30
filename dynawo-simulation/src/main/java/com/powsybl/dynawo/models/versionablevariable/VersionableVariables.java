@@ -24,15 +24,9 @@ public final class VersionableVariables implements VersionableVariablesProvider 
             new VersionableVariable("STEP",
                     new VersionableVariable.VariableStep("step_step_value"),
                     new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "step_step")),
-            new VersionableVariable("OMEGA_GRP",
-                    new VersionableVariable.VariableStep("omega_grp_@INDEX@"),
-                    new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "omega_grp_@INDEX@_")),
             new VersionableVariable("OMEGA_GRP_VALUE",
                     new VersionableVariable.VariableStep("omega_grp_@INDEX@_value"),
                     new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "omega_grp_@INDEX@_")),
-            new VersionableVariable("OMEGA_REF_GRP",
-                    new VersionableVariable.VariableStep("omegaRef_grp_@INDEX@"),
-                    new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "omegaRef_grp_@INDEX@_")),
             new VersionableVariable("OMEGA_REF_GRP_VALUE",
                     new VersionableVariable.VariableStep("omegaRef_grp_@INDEX@_value"),
                     new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "omegaRef_grp_@INDEX@_")),
@@ -63,15 +57,9 @@ public final class VersionableVariables implements VersionableVariablesProvider 
             new VersionableVariable("LOAD_OMEGA_REF_PU",
                     new VersionableVariable.VariableStep("load_omegaRefPu_value"),
                     new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "load_omegaRefPu")),
-            new VersionableVariable("NUMCC",
-                    new VersionableVariable.VariableStep("numcc_node_@INDEX@"),
-                    new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "numcc_node_@INDEX@_")),
             new VersionableVariable("PHI",
                     new VersionableVariable.VariableStep("@@NAME@@@NODE@_phi_value"),
                     new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "@@NAME@@@NODE@_phi")),
-            new VersionableVariable("RUNNING_GRP",
-                    new VersionableVariable.VariableStep("running_grp_@INDEX@"),
-                    new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "running_grp_@INDEX@_")),
             new VersionableVariable("STATE",
                     new VersionableVariable.VariableStep("%s_state_value"),
                     new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "%s_state")),
@@ -92,7 +80,10 @@ public final class VersionableVariables implements VersionableVariablesProvider 
                     new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "transformer%s_Q1Pu")),
             new VersionableVariable("TRANSFORMER_U2PU",
                     new VersionableVariable.VariableStep("transformer_U2Pu_value"),
-                    new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "transformer_U2Pu"))
+                    new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "transformer_U2Pu")),
+            new VersionableVariable("INDEXED_VARIABLE",
+                    new VersionableVariable.VariableStep("%s_@INDEX@"),
+                    new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "%s_@INDEX@_"))
     );
 
     @Override

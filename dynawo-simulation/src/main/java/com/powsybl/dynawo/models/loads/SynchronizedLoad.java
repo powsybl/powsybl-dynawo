@@ -31,7 +31,7 @@ public class SynchronizedLoad extends BaseLoad implements FrequencySynchronizedM
         VersionableVariablesHandler versionableVariablesHandler = VersionableVariablesHandler.getInstance();
         return List.of(
                 new VarConnection(versionableVariablesHandler.getCurrentValue("OMEGA_REF_GRP_VALUE"), getOmegaRefPuVarName()),
-                new VarConnection(versionableVariablesHandler.getCurrentValue("RUNNING_GRP"), getRunningVarName())
+                new VarConnection(versionableVariablesHandler.getCurrentValue("INDEXED_VARIABLE", "running_grp"), getRunningVarName())
         );
     }
 

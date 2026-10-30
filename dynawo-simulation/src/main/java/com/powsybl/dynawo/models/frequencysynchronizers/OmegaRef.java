@@ -64,7 +64,7 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
     }
 
     private List<VarConnection> getVarConnectionsWithBus(BusOfFrequencySynchronizedModel connected) {
-        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("NUMCC"),
+        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("INDEXED_VARIABLE", "numcc_node"),
                 connected.getNumCCVarName()));
     }
 
