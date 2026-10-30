@@ -60,8 +60,8 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
     }
 
     private List<VarConnection> getVarConnectionsWith(DefaultControllableLoadModel connected) {
-        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("DELTA_P_LOAD"), connected.getDeltaPVarName()),
-                new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("DELTA_Q_LOAD"), connected.getDeltaQVarName()));
+        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("INDEXED_VARIABLE_VALUE", "DeltaPc_load"), connected.getDeltaPVarName()),
+                new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("INDEXED_VARIABLE_VALUE", "DeltaQc_load"), connected.getDeltaQVarName()));
     }
 
     @Override
