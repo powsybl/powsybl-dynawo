@@ -35,7 +35,7 @@ public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronize
     public List<VarConnection> getOmegaRefVarConnections() {
         VersionableVariablesHandler versionableVariablesHandler = VersionableVariablesHandler.getInstance();
         return List.of(
-                new VarConnection(versionableVariablesHandler.getCurrentValue("OMEGA_REF_GRP_VALUE"), getOmegaRefPuVarName()),
+                new VarConnection(versionableVariablesHandler.getCurrentValue("INDEXED_VARIABLE_VALUE", "omegaRef_grp"), getOmegaRefPuVarName()),
                 new VarConnection(versionableVariablesHandler.getCurrentValue("INDEXED_VARIABLE", "running_grp"), getRunningVarName())
         );
     }

@@ -24,12 +24,6 @@ public final class VersionableVariables implements VersionableVariablesProvider 
             new VersionableVariable("STEP",
                     new VersionableVariable.VariableStep("step_step_value"),
                     new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "step_step")),
-            new VersionableVariable("OMEGA_GRP_VALUE",
-                    new VersionableVariable.VariableStep("omega_grp_@INDEX@_value"),
-                    new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "omega_grp_@INDEX@_")),
-            new VersionableVariable("OMEGA_REF_GRP_VALUE",
-                    new VersionableVariable.VariableStep("omegaRef_grp_@INDEX@_value"),
-                    new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "omegaRef_grp_@INDEX@_")),
             new VersionableVariable("TC_LOCKED",
                     new VersionableVariable.VariableStep("tapChanger%s_locked"),
                     new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "transformer%s_locked")),
@@ -83,6 +77,9 @@ public final class VersionableVariables implements VersionableVariablesProvider 
                     new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "transformer_U2Pu")),
             new VersionableVariable("INDEXED_VARIABLE",
                     new VersionableVariable.VariableStep("%s_@INDEX@"),
+                    new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "%s_@INDEX@_")),
+            new VersionableVariable("INDEXED_VARIABLE_VALUE",
+                    new VersionableVariable.VariableStep("%s_@INDEX@_value"),
                     new VersionableVariable.VariableStep(DYNAWO_VERSION_1_8_0, "%s_@INDEX@_"))
     );
 
