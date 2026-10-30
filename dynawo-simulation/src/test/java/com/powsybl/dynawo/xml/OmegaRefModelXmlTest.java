@@ -24,13 +24,14 @@ class OmegaRefModelXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void setupNetwork() {
         network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
+        network.getGenerator("GEN").setRatedS(1000);
     }
 
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsPmConstVRNordic")
                 .staticId("GEN")
-                .parameterSetId("GSFW")
+                .parameterSetId("GSFW2")
                 .build());
         dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
                 .staticId("GEN2")
