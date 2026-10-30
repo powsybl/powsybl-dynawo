@@ -38,7 +38,7 @@ public class EventSwitchOpen extends AbstractEvent {
     }
 
     private List<VarConnection> getVarConnectionsWith(SwitchModel connected) {
-        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("EVENT_STATE"), connected.getStateValueVarName()));
+        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "event_state1"), connected.getStateValueVarName()));
     }
 
     @Override

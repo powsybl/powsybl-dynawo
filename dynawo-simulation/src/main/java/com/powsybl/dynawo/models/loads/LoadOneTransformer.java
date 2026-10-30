@@ -26,7 +26,7 @@ public class LoadOneTransformer extends AbstractLoadOneTransformer implements Lo
     @Override
     public List<VarConnection> getTapChangerVarConnections() {
         return List.of(new VarConnection("tapChanger_tap", "transformer_tap"),
-                new VarConnection("tapChanger_UMonitored", VersionableVariablesHandler.getInstance().getCurrentValue("TRANSFORMER_U2PU")),
+                new VarConnection("tapChanger_UMonitored", VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "transformer_U2Pu")),
                 new VarConnection("tapChanger_switchOffSignal1", "transformer_switchOffSignal1"));
     }
 }

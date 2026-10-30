@@ -41,7 +41,7 @@ public class EventBusDisconnection extends AbstractEvent implements ContextDepen
 
     private List<VarConnection> getVarConnectionsWith(ActionConnectionPoint connected) {
         return connected.getStateValueVarName()
-                .map(sv -> List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("EVENT_STATE"), sv)))
+                .map(sv -> List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "event_state1"), sv)))
                 .orElse(Collections.emptyList());
     }
 

@@ -27,6 +27,6 @@ public class DefaultHvdc extends AbstractDefaultModel implements HvdcModel {
 
     @Override
     public String getSwitchOffSignalEventVarName(TwoSides side) {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("SIDED_STATE", "@NAME@", side.getNum());
+        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "@NAME@_state" + side.getNum());
     }
 }

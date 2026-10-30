@@ -24,7 +24,7 @@ public class SynchronizedGeneratorControllable extends SynchronizedGenerator imp
 
     @Override
     public String getDeltaPVarName() {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("DELTA_P_GEN");
+        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "generator_deltaPmRefPu");
     }
 
     @Override

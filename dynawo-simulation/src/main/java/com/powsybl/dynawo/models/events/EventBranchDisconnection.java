@@ -34,7 +34,7 @@ public class EventBranchDisconnection extends AbstractEvent {
     }
 
     private List<VarConnection> getVarConnectionsWith(BranchModel connected) {
-        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("EVENT_STATE"), connected.getStateValueVarName()));
+        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "event_state1"), connected.getStateValueVarName()));
     }
 
     @Override

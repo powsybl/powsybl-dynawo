@@ -31,8 +31,8 @@ public abstract class AbstractLoadOneTransformer extends AbstractLoad {
     @Override
     public List<VarMapping> getVarsMapping() {
         return List.of(
-                new VarMapping(VersionableVariablesHandler.getInstance().getCurrentValue("TRANSFORMER_P1PU", NONE.getSideSuffix()), "p"),
-                new VarMapping(VersionableVariablesHandler.getInstance().getCurrentValue("TRANSFORMER_Q1PU", NONE.getSideSuffix()), "q"),
+                new VarMapping(VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "transformer" + NONE.getSideSuffix() + "_P1Pu"), "p"),
+                new VarMapping(VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "transformer" + NONE.getSideSuffix() + "_Q1Pu"), "q"),
                 new VarMapping("transformer_state", "state"));
     }
 

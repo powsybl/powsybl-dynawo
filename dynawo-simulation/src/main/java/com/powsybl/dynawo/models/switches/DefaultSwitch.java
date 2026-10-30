@@ -21,7 +21,7 @@ public class DefaultSwitch extends AbstractDefaultModel implements SwitchModel {
 
     @Override
     public String getStateValueVarName() {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("STATE", "@NAME@");
+        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "@NAME@_state");
     }
 
     @Override

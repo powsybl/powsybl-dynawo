@@ -33,7 +33,7 @@ public class DefaultTransformer extends AbstractDefaultModel implements Transfor
 
     @Override
     public String getStateValueVarName() {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("STATE", "@NAME@");
+        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "@NAME@_state");
     }
 
     @Override
@@ -58,13 +58,13 @@ public class DefaultTransformer extends AbstractDefaultModel implements Transfor
 
     @Override
     public String getUPuVarName(TwoSides sides) {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("SIDED_UPU", "@@NAME@@@NODE" + sides.getNum());
+        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "@@NAME@@@NODE" + sides.getNum() + "@_Upu");
     }
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
         return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE),
-                VersionableVariablesHandler.getInstance().getCurrentValue("TCB_LOCKED", "@NAME@")));
+                VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "@NAME@_TAP_CHANGER_locked")));
     }
 
     @Override

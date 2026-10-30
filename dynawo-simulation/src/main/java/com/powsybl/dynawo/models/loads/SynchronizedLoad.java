@@ -37,7 +37,7 @@ public class SynchronizedLoad extends BaseLoad implements FrequencySynchronizedM
 
     @Override
     public String getOmegaRefPuVarName() {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("LOAD_OMEGA_REF_PU");
+        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "load_omegaRefPu");
     }
 
     @Override

@@ -36,7 +36,7 @@ public class EventReferenceVoltageVariation extends AbstractEvent {
     }
 
     private List<VarConnection> getVarConnectionsWith(UControllableEquipmentModel connected) {
-        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("STEP"), connected.getDeltaUVarName()));
+        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "step_step"), connected.getDeltaUVarName()));
     }
 
     @Override

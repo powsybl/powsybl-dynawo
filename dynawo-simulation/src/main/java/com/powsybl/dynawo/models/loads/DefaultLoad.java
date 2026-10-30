@@ -26,11 +26,11 @@ public class DefaultLoad extends AbstractInjectionDefaultModel implements Defaul
 
     @Override
     public String getDeltaPVarName() {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("DELTA_PC");
+        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "@NAME@_DeltaPc");
     }
 
     @Override
     public String getDeltaQVarName() {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("DELTA_QC");
+        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "@NAME@_DeltaQc");
     }
 }

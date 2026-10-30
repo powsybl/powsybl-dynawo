@@ -31,7 +31,7 @@ public class EventReactivePowerVariation extends AbstractVariationEvent {
 
     private List<VarConnection> getVarConnectionsWith(QControllableEquipmentModel connected) {
         if (equipmentModelType.getValue().isStep()) {
-            return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("STEP"), connected.getDeltaQVarName()));
+            return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "step_step"), connected.getDeltaQVarName()));
         }
         return List.of(new VarConnection("event_state1", connected.getDeltaQVarName()));
     }

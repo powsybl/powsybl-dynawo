@@ -30,7 +30,7 @@ public class EventActivePowerVariation extends AbstractVariationEvent {
 
     private List<VarConnection> getVarConnectionsWith(PControllableEquipmentModel connected) {
         if (equipmentModelType.getValue().isStep()) {
-            return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("STEP"), connected.getDeltaPVarName()));
+            return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "step_step"), connected.getDeltaPVarName()));
         }
         return List.of(new VarConnection("event_state1", connected.getDeltaPVarName()));
     }

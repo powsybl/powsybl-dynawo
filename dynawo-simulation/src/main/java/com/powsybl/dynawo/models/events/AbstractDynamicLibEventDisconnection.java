@@ -26,7 +26,7 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     protected enum EquipmentModelType {
 
         SPECIFIED("EventSetPointBoolean", () -> "event_state1", "event_stateEvent1"),
-        DEFAULT("EventConnectedStatus", () -> VersionableVariablesHandler.getInstance().getCurrentValue("EVENT_STATE"), "event_open");
+        DEFAULT("EventConnectedStatus", () -> VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "event_state1"), "event_open");
 
         private final String lib;
         private final Supplier<String> varConnectionSupplier;

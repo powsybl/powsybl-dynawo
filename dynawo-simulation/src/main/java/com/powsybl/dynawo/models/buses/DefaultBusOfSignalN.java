@@ -37,7 +37,7 @@ public final class DefaultBusOfSignalN extends AbstractDefaultModel implements B
     }
 
     public String getPhiVarName() {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("PHI");
+        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "@@NAME@@@NODE@_phi");
     }
 
     @Override

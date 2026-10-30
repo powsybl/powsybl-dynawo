@@ -20,6 +20,6 @@ public class StandbyAutomatonVarMappingHandler implements SvarcVarMappingHandler
     @Override
     public List<VarMapping> getVarsMapping() {
         return List.of(P_MAPPING, Q_MAPPING, STATE_MAPPING,
-                new VarMapping(VersionableVariablesHandler.getInstance().getCurrentValue("SVARC_MODE_HANDLING"), "regulatingMode"));
+                new VarMapping(VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "SVarC_modeHandling_mode"), "regulatingMode"));
     }
 }
