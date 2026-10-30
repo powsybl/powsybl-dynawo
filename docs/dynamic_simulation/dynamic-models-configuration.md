@@ -32,9 +32,10 @@ In the following examples the array will be omitted.
 See examples below.
 
 ### Equipment models
-Dynamic models matching a network equipment (generator, load, ...).
-With specific attribute:
-- `staticId`: equipment id in the network.
+Dynamic models matching network equipment (generator, load, ...).
+
+With specific attributes:
+- `staticId`: equipment id (or id list) in the network, in the case of multiple ids, the first one found in the network will be used.
 
 The `dynamicModelId` will be set implicitly to `staticId` and cannot be modified.
 
@@ -45,7 +46,7 @@ GeneratorSynchronousThreeWindings {
     parameterSetId 'GSTW'
 }
 LoadAlphaBeta {
-    staticId 'LOAD'
+    staticId 'LOAD', 'ALT_LOAD'
     parameterSetId 'LAB_LOAD'
 }
 ```
@@ -70,7 +71,7 @@ LoadAlphaBeta {
     "properties":[
       {
         "name":"staticId",
-        "value":"LOAD",
+        "values": ["LOAD", "ALT_LOAD"],
         "type":"STRING"
       }
     ]
@@ -380,6 +381,13 @@ With specific attributes:
   - transformer
   - load mapped to a dynamic model with transformer
   - tap changer automation system (referenced by its dynamic model id)
+
+or
+- `transformersVoltageLevels`: voltage levels static ids handling the two types of equipment found in the given voltage levels:
+  - transformer
+  - load mapped to a dynamic model with transformer
+
+
 - `uMeasurements`: up to five bus or busbar section ids, can be defined in two ways:
   - a simple list of ids, one id for each measurement point
   - a list of list of ids, each list containing a probable measurement point id, the first one found in the network will be used
@@ -401,6 +409,13 @@ TapChangerBlockingAutomationSystem {
     parameterSetId "TCB"
     uMeasurements measurementsTCB2
     transformers "NGEN_NHV1", "NHV2_NLOAD", "LOAD"
+}
+
+TapChangerBlockingAutomationSystem {
+  dynamicModelId "TCB3"
+  parameterSetId "TCB"
+  uMeasurements "NGEN"
+  transformersVoltageLevels "VL1", "VL2"
 }
 ```
 **Json configuration:**
@@ -447,9 +462,69 @@ TapChangerBlockingAutomationSystem {
         "type": "STRING"
       }
     ]
+  },
+  {
+    "model":"TapChangerBlockingAutomationSystem",
+    "group": "TCB",
+    "properties":[
+      {
+        "name": "dynamicModelId",
+        "value": "TCB3",
+        "type": "STRING"
+      },
+      {
+        "name": "transformersVoltageLevels",
+        "values": ["VL1, VL2"],
+        "type": "STRING"
+      },
+      {
+        "name": "uMeasurements",
+        "value": "NGEN",
+        "type": "STRING"
+      }
+    ]
   }
 ]
 ```
+
+## JSON-specific features
+### Alternative models
+Contrary to normal models, alternative allows the users to define several model configurations that will be resolved by a `ModelResolver` implementation.
+With specific attributes:
+- `resolverName` : name of the resolver used to find the correct model configuration.
+- `alternativeConfigurations` : list of model configurations containing a pair of `model` and `group` fields
+
+These models are added in a specific `alternativeModels` array.
+For example:
+```json
+{
+  "models":[...],
+  "alternativeModels":[
+    {
+      "alternativeConfigurations" : [
+        {
+          "model":"GeneratorPQ",
+          "group":"GPQ"
+        },
+        {
+          "model":"GeneratorPV",
+          "group":"GPV"
+        }
+      ],
+      "resolverName": "ControllableModel",
+      "groupType": "FIXED",
+      "properties":[
+        {
+          "name":"staticId",
+          "value":"GEN",
+          "type":"STRING"
+        }
+      ]
+    }
+  ]
+}
+```
+
 
 ## Dynamic model builder List
 Ultimately, all groovy scripts call dedicated builders that can be used directly by developers.

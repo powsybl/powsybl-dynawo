@@ -1,5 +1,5 @@
 {
-  "version" : "1.9",
+  "version" : "1.10",
   "preContingencyResult" : {
     "status" : "CONVERGED",
     "limitViolationsResult" : {
@@ -9,7 +9,7 @@
         "limitType" : "CURRENT",
         "limitName" : "permanent",
         "limit" : 40.0,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 1192.5631358010583,
         "side" : "ONE"
       }, {
@@ -19,7 +19,7 @@
         "limitName" : "permanent",
         "acceptableDuration" : 600,
         "limit" : 1000.0,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 1192.5631358010583,
         "side" : "TWO"
       } ],
@@ -46,14 +46,14 @@
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 395.0,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 390.0
       }, {
         "subjectId" : "NB_NGEN",
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 41.0,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 44.57144078143882,
         "side" : "ONE"
       }, {
@@ -61,7 +61,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 40.0,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 42.34286874236708,
         "side" : "ONE"
       }, {
@@ -69,7 +69,7 @@
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 395.0,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 390.0
       }, {
         "subjectId" : "NHV1_NHV2_1",
@@ -77,7 +77,7 @@
         "limitName" : "OverloadUp",
         "acceptableDuration" : 600,
         "limit" : 1000.0,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 1005.5945782585499,
         "side" : "TWO"
       } ],
@@ -110,7 +110,7 @@
         "limitType" : "CURRENT",
         "limitName" : "PATL",
         "limit" : 40.0,
-        "limitReduction" : 1.0,
+        "limitScaling" : 1.0,
         "value" : 42.34286874236708,
         "side" : "ONE"
       } ],

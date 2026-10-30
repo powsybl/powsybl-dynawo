@@ -12,5 +12,7 @@ package com.powsybl.dynawo.builders;
  */
 public interface ModelBuilder<T> {
 
+    String getModelId();
+
     T build();
 }

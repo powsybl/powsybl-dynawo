@@ -27,6 +27,11 @@ public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronize
     }
 
     @Override
+    public List<VarConnection> getSetPointVarConnections() {
+        return List.of(new VarConnection("setPoint_setPoint_value", getOmegaRefPuVarName()));
+    }
+
+    @Override
     public List<VarConnection> getOmegaRefVarConnections() {
         VersionableVariablesHandler versionableVariablesHandler = VersionableVariablesHandler.getInstance();
         return List.of(

@@ -164,7 +164,9 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/weccSynchro.groovy", SynchronizedWeccGen.class,
                         EurostagTutorialExample1Factory.create(), "GEN", "Wind", "WTG4AWeccCurrentSource"),
                 Arguments.of("/dynamicModels/gridFormingConverter.groovy", GridFormingConverter.class,
-                        EurostagTutorialExample1Factory.create(), "GEN", "GF", "GridFormingConverterMatchingControl")
+                        EurostagTutorialExample1Factory.create(), "GEN", "GF", "GridFormingConverterMatchingControl"),
+                Arguments.of("/dynamicModels/genAltIds.groovy", SynchronousGenerator.class,
+                        EurostagTutorialExample1Factory.create(), "GEN", "GSFWPR", "GeneratorSynchronousThreeWindings")
         );
     }
 
@@ -179,6 +181,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/tapChangerBlockingBusBar.groovy", TapChangerBlockingAutomationSystem.class,
                         FourSubstationsNodeBreakerFactory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton2"),
                 Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomationSystem.class,
+                        EurostagTutorialExample1Factory.createWithLFResults(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
+                Arguments.of("/dynamicModels/tapChangerBlockingVoltageLevels.groovy", TapChangerBlockingAutomationSystem.class,
                         EurostagTutorialExample1Factory.createWithLFResults(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
                 Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomationSystem.class,
                         PhaseShifterTestCaseFactory.create(), "PS_PS1", "ps", "PhaseShifterI"),

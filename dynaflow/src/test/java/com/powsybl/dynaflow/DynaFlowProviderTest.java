@@ -16,6 +16,7 @@ import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.regulation.RegulationMode;
 import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.loadflow.LoadFlow;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -297,7 +298,17 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         Bus b1 = vl2.getBusBreakerView().newBus().setId("b1").add();
         vl2.getBusBreakerView().newBus().setId("b2").add();
         vl2.getBusBreakerView().newSwitch().setId("c").setBus1("b1").setBus2("b2").add();
-        vl2.newGenerator().setId("g1").setBus("b1").setTargetP(101).setTargetV(390).setMinP(0).setMaxP(150).setVoltageRegulatorOn(true).add();
+        vl2.newGenerator()
+                .setId("g1")
+                .setBus("b1")
+                .setTargetP(101)
+                .setLocalTargetV(390)
+                .setMinP(0)
+                .setMaxP(150)
+                .newVoltageRegulation()
+                    .withMode(RegulationMode.VOLTAGE)
+                    .add()
+                .add();
         vl2.newLoad().setId("load3").setP0(77.0).setQ0(1.0).setBus("b2").add();
 
         network.newLine().setId("l1").setVoltageLevel1(vl1.getId()).setNode1(3).setVoltageLevel2(vl2.getId()).setBus2(b1.getId())

@@ -37,7 +37,7 @@ TransformerFixedRatio {
     parameterSetId "4"
 }
 
-GeneratorSynchronousFourWindingsProportionalRegulations {
+WTG4AWeccCurrentSource {
     staticId "SM"
-    parameterSetId "5"
+    parameterSetId "Wind"
 }

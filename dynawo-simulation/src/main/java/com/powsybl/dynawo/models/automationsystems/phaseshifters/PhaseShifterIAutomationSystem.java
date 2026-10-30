@@ -76,6 +76,9 @@ public class PhaseShifterIAutomationSystem extends AbstractPhaseShifterAutomatio
     @Override
     public void updateDynamicModelParameters(ParameterUpdater updater) {
         updater.addReference(getParameterSetId(), "phaseShifter_I0", ParameterType.DOUBLE, "i1", transformer.getId());
+        updater.addReference(getParameterSetId(), "phaseShifter_UNom", ParameterType.DOUBLE, "v1Nom", transformer.getId());
+        updater.addReference(getParameterSetId(), "phaseShifter_iMax", ParameterType.DOUBLE, "iMax", transformer.getId());
+        updater.addReference(getParameterSetId(), "phaseShifter_iStop", ParameterType.DOUBLE, "iStop", transformer.getId());
         super.updateDynamicModelParameters(updater);
     }
 }

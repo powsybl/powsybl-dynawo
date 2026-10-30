@@ -9,11 +9,6 @@ package smib
 
 import com.powsybl.iidm.network.Line
 
-curve {
-    id "SM"
-    variables "generator_cePu", "generator_PePu", "generator_cmPu", "generator_PmPu", "generator_ufPu", "generator_efdPu", "generator_omegaPu", "generator_theta", "generator_PGenPu", "generator_QGenPu", "generator_PGen", "generator_QGen", "generator_UPu", "generator_IStatorPu", "generator_IRotorPu", "generator_UStatorPu", "generator_QStatorPu", "generator_thetaInternal", "governor_PmRefPu"
-}
-
 for (Line line : network.lines) {
     curve {
         id line.id

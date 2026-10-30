@@ -52,6 +52,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     public static final double DEFAULT_PRECISION = 1e-6;
     public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.XML;
     public static final LogLevel DEFAULT_LOG_LEVEL_FILTER = LogLevel.INFO;
+    public static final boolean DEFAULT_DUMP_INIT_VALUES = false;
 
     private static final String PARAMETERS_FILE = "parametersFile";
     private static final String NETWORK_PARAMETERS_FILE = "network.parametersFile";
@@ -67,6 +68,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private static final String LOG_SPECIFIC_LOGS = "log.specificLogs";
     private static final String CRITERIA_FILE = "criteria.file";
     private static final String ADDITIONAL_MODELS_FILE = "additionalModelsFile";
+    private static final String DUMP_INIT_VALUES = "dumpInitValues";
 
     /**
      * Information about the solver to use in the simulation
@@ -123,8 +125,9 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private EnumSet<SpecificLog> specificLogs = EnumSet.noneOf(SpecificLog.class);
     private Path criteriaFilePath = null;
     private Path additionalModelsPath = null;
+    private boolean dumpInitValues = DEFAULT_DUMP_INIT_VALUES;
 
-    public static final List<Parameter> SPECIFIC_PARAMETERS = Stream.concat(Stream.of(
+    public static final List<Parameter> SPECIFIC_PARAMETERS = Stream.of(Stream.of(
             new Parameter(PARAMETERS_FILE, ParameterType.STRING, "Main parameters file path", DEFAULT_INPUT_PARAMETERS_FILE),
             new Parameter(NETWORK_PARAMETERS_FILE, ParameterType.STRING, "Network parameters file path", DEFAULT_INPUT_NETWORK_PARAMETERS_FILE),
             new Parameter(NETWORK_PARAMETERS_ID, ParameterType.STRING, "Network parameters set id", DEFAULT_NETWORK_PAR_ID),
@@ -138,8 +141,10 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             new Parameter(LOG_LEVEL_FILTER, ParameterType.STRING, "Dynawo log level", DEFAULT_LOG_LEVEL_FILTER.toString(), getEnumPossibleValues(LogLevel.class)),
             new Parameter(LOG_SPECIFIC_LOGS, ParameterType.STRING, "List specific logs returned", null, getEnumPossibleValues(SpecificLog.class)),
             new Parameter(CRITERIA_FILE, ParameterType.STRING, "Simulation criteria file path", null),
-            new Parameter(ADDITIONAL_MODELS_FILE, ParameterType.STRING, "Additional models file path", null)),
-            DumpFileParameters.SPECIFIC_PARAMETERS.stream()).toList();
+            new Parameter(ADDITIONAL_MODELS_FILE, ParameterType.STRING, "Additional models file path", null),
+            new Parameter(DUMP_INIT_VALUES, ParameterType.BOOLEAN, "Dump the results of the initialization stages", DEFAULT_DUMP_INIT_VALUES)),
+            DumpFileParameters.SPECIFIC_PARAMETERS.stream())
+            .flatMap(Function.identity()).toList();
 
     /**
      * Loads parameters from the default platform configuration.
@@ -200,6 +205,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         moduleConfig.getOptionalEnumSetProperty(LOG_SPECIFIC_LOGS, SpecificLog.class).ifPresent(parameters::setSpecificLogs);
         moduleConfig.getOptionalStringProperty(CRITERIA_FILE).ifPresent(cf -> parameters.setCriteriaFilePath(filePathResolver.apply(cf)));
         moduleConfig.getOptionalStringProperty(ADDITIONAL_MODELS_FILE).ifPresent(am -> parameters.setAdditionalModelsPath(filePathResolver.apply(am)));
+        moduleConfig.getOptionalBooleanProperty(DUMP_INIT_VALUES).ifPresent(parameters::setDumpInitValues);
     }
 
     public static DynawoSimulationParameters load(Map<String, String> properties) {
@@ -262,6 +268,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
                 setSpecificLogs(Stream.of(prop.split(PROPERTY_LIST_DELIMITER)).map(o -> SpecificLog.valueOf(o.trim())).collect(Collectors.toSet())));
         Optional.ofNullable(properties.get(CRITERIA_FILE)).ifPresent(prop -> setCriteriaFilePath(prop, fileSystem));
         Optional.ofNullable(properties.get(ADDITIONAL_MODELS_FILE)).ifPresent(prop -> setAdditionalModelsPath(prop, fileSystem));
+        Optional.ofNullable(properties.get(DUMP_INIT_VALUES)).ifPresent(prop -> setDumpInitValues(Boolean.parseBoolean(prop)));
         dumpFileParameters = DumpFileParameters.updateDumpFileParametersFromPropertiesMap(properties, dumpFileParameters, fileSystem::getPath);
     }
 
@@ -283,6 +290,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         }
         addNotNullEntry(CRITERIA_FILE, criteriaFilePath, properties::put);
         addNotNullEntry(ADDITIONAL_MODELS_FILE, additionalModelsPath, properties::put);
+        addNotNullEntry(DUMP_INIT_VALUES, dumpInitValues, properties::put);
         dumpFileParameters.addParametersToMap((k, v) -> addNotNullEntry(k, v, properties::put));
         return properties;
     }
@@ -466,5 +474,14 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             throw new PowsyblException("File " + additionalModelsPathName + " set in 'additionalModelsFile' property cannot be found");
         }
         setAdditionalModelsPath(path);
+    }
+
+    public boolean isDumpInitValues() {
+        return dumpInitValues;
+    }
+
+    public DynawoSimulationParameters setDumpInitValues(boolean dumpInitValues) {
+        this.dumpInitValues = dumpInitValues;
+        return this;
     }
 }

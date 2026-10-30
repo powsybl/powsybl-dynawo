@@ -12,14 +12,13 @@ import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawo.builders.AbstractDynamicModelBuilder;
 import com.powsybl.dynawo.builders.BuilderEquipment;
 import com.powsybl.dynawo.builders.BuilderReports;
-import com.powsybl.dynawo.builders.ModelBuilder;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends AbstractEventModelBuilder<T, R>> extends AbstractDynamicModelBuilder implements ModelBuilder<EventModel> {
+abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends AbstractEventModelBuilder<T, R>> extends AbstractDynamicModelBuilder<EventModel> {
 
     protected final BuilderEquipment<T> builderEquipment;
     protected String eventId;

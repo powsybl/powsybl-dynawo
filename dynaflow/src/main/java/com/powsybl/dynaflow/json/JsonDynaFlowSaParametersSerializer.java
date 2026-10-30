@@ -61,7 +61,7 @@ public class JsonDynaFlowSaParametersSerializer implements
     private static ObjectMapper createMapper() {
         return JsonUtil.createObjectMapper()
                 .addMixIn(DynaFlowSecurityAnalysisParameters.class, SerializationSpec.class)
-                .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
+                .setDefaultPropertyInclusion(JsonInclude.Include.NON_ABSENT);
     }
 
     @Override

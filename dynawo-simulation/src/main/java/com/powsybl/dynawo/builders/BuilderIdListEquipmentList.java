@@ -15,6 +15,9 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
+ * Represents an equipment list field identified by a list of list of alternative static ID in a builder
+ * Verifies if the equipments corresponding to one of the ids with the specified type exist, log the missing equipments
+ *
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class BuilderIdListEquipmentList<T extends Identifiable<?>> extends BuilderEquipmentsList<T> {

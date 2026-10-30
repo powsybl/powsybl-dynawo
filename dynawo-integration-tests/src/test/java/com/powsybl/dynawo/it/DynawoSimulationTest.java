@@ -19,10 +19,16 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
+import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
+import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
+import com.powsybl.dynawo.models.buses.StandardBusBuilder;
 import com.powsybl.dynawo.models.events.*;
+import com.powsybl.dynawo.models.generators.*;
+import com.powsybl.dynawo.models.lines.LineBuilder;
+import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
 import com.powsybl.dynawo.suppliers.events.DynawoEventModelsSupplier;
@@ -36,6 +42,9 @@ import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import com.powsybl.timeseries.DoubleTimeSeries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,6 +52,7 @@ import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -50,8 +60,7 @@ import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.commons.report.ReportNode.newRootReportNode;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -151,9 +160,12 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverParameters(getResourceAsStream("/svarc/solvers.par"), "2")
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA);
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), OutputVariablesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
-                .join();
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(parameters);
+
+        DynamicSimulationResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                        dynamicModelsSupplier, runParameters).join();
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
@@ -183,9 +195,13 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setSpecificLogs(EnumSet.allOf(DynawoSimulationParameters.SpecificLog.class));
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), OutputVariablesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
-                .join();
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(parameters)
+                .setReportNode(reportNode);
+
+        DynamicSimulationResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                        dynamicModelsSupplier, runParameters).join();
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
@@ -195,13 +211,20 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         checkTimeLineEvent(timeLine.getFirst(), 0.0, "PhaseShifterI", "Phase-shifter : above maximum allowed value");
     }
 
-    @Test
-    void testSmib() {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideGenerators")
+    void testSmib(Function<Network, BlackBoxModel> genSupplier) {
         Network network = Network.read(new ResourceDataSource("SMIB", new ResourceSet("/smib", "SMIB.iidm")));
 
-        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/smib/dynamicModels.groovy"),
-                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+        DynamicModelsSupplier dynamicModelsSupplier = (n, r) -> List.of(
+                genSupplier.apply(n),
+                InfiniteBusBuilder.of(n, "InfiniteBus").staticId("VL1_BUS1").parameterSetId("1").build(),
+                StandardBusBuilder.of(n, "Bus").staticId("VL2_BUS1").parameterSetId("1").build(),
+                StandardBusBuilder.of(n, "Bus").staticId("VL3_BUS1").parameterSetId("1").build(),
+                LineBuilder.of(n, "Line").staticId("line1").parameterSetId("2").build(),
+                LineBuilder.of(n, "Line").staticId("line2").parameterSetId("2").build(),
+                TransformerFixedRatioBuilder.of(n, "TransformerFixedRatio").staticId("TR").parameterSetId("4").build()
+        );
 
         GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
                 getResourceAsStream("/smib/eventModels.groovy"),
@@ -216,14 +239,43 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverParameters(getResourceAsStream("/smib/solvers.par"), "1")
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA);
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
-                .join();
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(parameters)
+                .setEventModelsSupplier(eventModelsSupplier)
+                .setOutputVariablesSupplier(outputVariablesSupplier);
+
+        DynamicSimulationResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                        dynamicModelsSupplier, runParameters).join();
+
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
-        assertEquals(35, result.getCurves().size());
-        List<TimelineEvent> timeLine = result.getTimeLine();
-        assertTrue(timeLine.isEmpty());
+        assertEquals(16, result.getCurves().size());
+    }
+
+    private static Stream<Arguments> provideGenerators() {
+        String genId = "SM";
+        return Stream.of(
+                Arguments.of((Function<Network, BlackBoxModel>)
+                        n -> SynchronizedGeneratorBuilder.of(n, "GeneratorPQ")
+                            .staticId(genId)
+                            .parameterSetId("GPQ")
+                            .build()),
+                Arguments.of((Function<Network, BlackBoxModel>)
+                        n -> SynchronousGeneratorBuilder.of(n, "GeneratorSynchronousFourWindingsProportionalRegulations")
+                                .staticId(genId)
+                                .parameterSetId("GFW")
+                                .build()),
+                Arguments.of((Function<Network, BlackBoxModel>)
+                        n -> WeccBuilder.of(n, "WTG4AWeccCurrentSource")
+                                .staticId(genId)
+                                .parameterSetId("Wind")
+                                .build()),
+                Arguments.of((Function<Network, BlackBoxModel>)
+                        n -> GridFormingConverterBuilder.of(n, "GridFormingConverterDroopControl")
+                                .staticId(genId)
+                                .parameterSetId("GFM")
+                                .build()));
     }
 
     @Test
@@ -246,9 +298,14 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverParameters(getResourceAsStream("/error/solvers.par"), "3")
                 .setSolverType(DynawoSimulationParameters.SolverType.SIM);
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
-                .join();
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(parameters)
+                .setEventModelsSupplier(eventModelsSupplier)
+                .setOutputVariablesSupplier(outputVariablesSupplier);
+
+        DynamicSimulationResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                        dynamicModelsSupplier, runParameters).join();
 
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
         assertThat(result.getStatusText()).contains("time step <= 0.1 s for more than 10 iterations");
@@ -270,9 +327,13 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setTimelineExportMode(ExportMode.XML);
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, OutputVariablesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
-                .join();
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(parameters)
+                .setEventModelsSupplier(eventModelsSupplier);
+
+        DynamicSimulationResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                        dynamicModelsSupplier, runParameters).join();
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
@@ -311,9 +372,15 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setTimelineExportMode(ExportMode.XML);
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
-                .join();
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(parameters)
+                .setEventModelsSupplier(eventModelsSupplier)
+                .setOutputVariablesSupplier(outputVariablesSupplier)
+                .setReportNode(reportNode);
+
+        DynamicSimulationResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                        dynamicModelsSupplier, runParameters).join();
 
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
         assertEquals("CRV file is empty", result.getStatusText());
@@ -343,9 +410,13 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverType(DynawoSimulationParameters.SolverType.SIM)
                 .setTimelineExportMode(ExportMode.XML);
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, OutputVariablesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
-                .join();
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(parameters)
+                .setEventModelsSupplier(eventModelsSupplier);
+
+        DynamicSimulationResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                        dynamicModelsSupplier, runParameters).join();
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertThat(result.getStatusText()).isEmpty();
@@ -380,9 +451,15 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setTimelineExportMode(ExportMode.XML);
 
-        return () -> provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
-                .join();
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(parameters)
+                .setEventModelsSupplier(eventModelsSupplier)
+                .setOutputVariablesSupplier(outputVariablesSupplier)
+                .setReportNode(reportNode);
+
+        return () -> provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, dynamicModelsSupplier,
+                        runParameters).join();
     }
 
     @Test
@@ -406,9 +483,14 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA);
 
-        DynamicSimulationResult result = provider.run(network, (n, r) -> List.of(), eventModelsSupplier, OutputVariablesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
-                .join();
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(parameters)
+                .setEventModelsSupplier(eventModelsSupplier)
+                .setReportNode(reportNode);
+
+        DynamicSimulationResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                (n, r) -> List.of(), runParameters).join();
 
         ReportNode eventReport = reportNode.getChildren().getFirst();
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
@@ -436,9 +518,12 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         .faultTime(15)
                         .build()
         );
-        result = provider.run(network, (n, r) -> List.of(), eventModelsSupplier, OutputVariablesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
-                .join();
+
+        runParameters.setEventModelsSupplier(eventModelsSupplier)
+                .setReportNode(reportNode);
+
+        result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                (n, r) -> List.of(), runParameters).join();
 
         eventReport = reportNode.getChildren().getFirst();
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
@@ -471,11 +556,13 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .beginStep().setR(1.0).setX(2.0).setG(3.0).setB(4.0).setAlpha(5.0).setRho(6.0).endStep()
                 .add();
 
-        DynamicModelsSupplier dynamicModelsSupplier = DynawoSimulationTest::buildDynamicModels;
-        EventModelsSupplier eventModelsSupplier = (n, r) -> List.of();
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, OutputVariablesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
-                .join();
+        DynamicSimulationRunParameters runParameters = new DynamicSimulationRunParameters()
+                .setComputationManager(computationManager)
+                .setParameters(parameters)
+                .setReportNode(reportNode);
+
+        DynamicSimulationResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                DynawoSimulationTest::buildDynamicModels, runParameters).join();
 
         ReportNode eventReport = reportNode.getChildren().getFirst();
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());

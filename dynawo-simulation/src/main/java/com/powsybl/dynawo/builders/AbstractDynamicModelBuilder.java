@@ -18,7 +18,7 @@ import static com.powsybl.dynawo.builders.BuilderReports.setupModelInstantiation
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractDynamicModelBuilder {
+public abstract class AbstractDynamicModelBuilder<M> implements ModelBuilder<M> {
 
     protected final Network network;
     protected final ReportNode reportNode;
@@ -38,6 +38,4 @@ public abstract class AbstractDynamicModelBuilder {
     }
 
     protected abstract String getModelName();
-
-    protected abstract String getModelId();
 }

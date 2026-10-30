@@ -130,6 +130,11 @@ The file must follow the `models.json` pattern defined [here](base-additional-mo
 The models added in the file cannot overload an existing model and must belong to an existing category, otherwise they will be skipped (see [here](base-additional-models.md#additional-models)).  
 The default value is `null`.
 
+#### dumpInitValues
+`dumpInitValues` defines if the results of the initialization stages should be exported as a dump.
+To retrieve the init values, this parameter must be used in combination with the `debugDir` [parameter](inv:powsyblcore:*:*:#param-dy-debug-dir) or `debug` [parameter](configuration.md#debug).
+The init values can then be found directly in the result output folder, under `/outputs/initValues/`.<br>
+The default value is `FALSE`.
 ### Examples
 
 **YAML configuration:**
@@ -155,6 +160,7 @@ dynawo-simulation-default-parameters:
     - NETWORK
     - PARAMETERS
   criteria.file: /home/user/criteria.crt
+  dumpInitValues: false
 ```
 
 **XML configuration:**
@@ -177,5 +183,6 @@ dynawo-simulation-default-parameters:
   <log.levelFilter>INFO</log.levelFilter>
   <log.specificLogs>NETWORK, PARAMETERS</log.specificLogs>
   <criteria.file>/home/user/criteria.crt</criteria.file>
+  <dumpInitValues>false</dumpInitValues>
 </dynawo-simulation-default-parameters>
 ```

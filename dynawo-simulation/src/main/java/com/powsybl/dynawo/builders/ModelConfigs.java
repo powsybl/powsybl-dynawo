@@ -64,6 +64,10 @@ public class ModelConfigs {
         return modelConfig;
     }
 
+    Collection<ModelConfig> getModelConfigs() {
+        return modelConfigMap.values();
+    }
+
     public Collection<ModelInfo> getModelInfos() {
         return Collections.unmodifiableCollection(modelConfigMap.values());
     }

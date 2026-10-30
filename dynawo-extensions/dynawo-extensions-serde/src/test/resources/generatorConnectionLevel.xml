@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_17"
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_18"
               xmlns:gcl="http://www.powsybl.org/schema/iidm/ext/generator_connection_level/1_0"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               id="sim1" caseDate="2016-12-07T11:18:52.881+01:00"
@@ -12,9 +12,10 @@
                 <iidm:bus id="NGEN"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="GEN" energySource="OTHER" minP="-9999.99" maxP="9999.99"
-                            voltageRegulatorOn="true" targetP="607.0"
-                            targetV="24.5" targetQ="301.0" bus="NGEN" connectableBus="NGEN">
+                            targetP="607.0"
+                            localTargetV="24.5" localTargetQ="301.0" bus="NGEN" connectableBus="NGEN">
                 <iidm:minMaxReactiveLimits minQ="-9999.99" maxQ="9999.99"/>
+                <iidm:voltageRegulation mode="VOLTAGE" regulating="true"/>
             </iidm:generator>
         </iidm:voltageLevel>
 
@@ -53,14 +54,14 @@
                                      voltageLevelId1="VLHV2" bus1="NHV2"
                                      connectableBus1="NHV2"
                                      voltageLevelId2="VLLOAD" bus2="NLOAD" connectableBus2="NLOAD">
-            <iidm:ratioTapChanger regulating="true"
-                                  tapPosition="1" targetDeadband="0.0"
-                                  loadTapChangingCapabilities="true"
-                                  regulationMode="VOLTAGE" regulationValue="158.0">
-                <iidm:terminalRef id="NHV2_NLOAD" side="TWO"/>
+            <iidm:ratioTapChanger tapPosition="1"
+                                  loadTapChangingCapabilities="true">
                 <iidm:step rho="0.8505666905244191"/>
                 <iidm:step rho="1.0006666666666666"/>
                 <iidm:step rho="1.150766642808914"/>
+                <iidm:voltageRegulation mode="VOLTAGE" regulating="true" targetValue="158.0" targetDeadband="0.0">
+                    <iidm:terminalRef id="NHV2_NLOAD" side="TWO"/>
+                </iidm:voltageRegulation>
             </iidm:ratioTapChanger>
         </iidm:twoWindingsTransformer>
     </iidm:substation>
