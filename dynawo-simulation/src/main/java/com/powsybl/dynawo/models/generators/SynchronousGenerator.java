@@ -12,6 +12,7 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.frequencysynchronizers.PowerAngleModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
+import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
@@ -59,8 +60,10 @@ public class SynchronousGenerator extends BaseGenerator implements PowerAngleMod
 
     @Override
     public double getWeightGen(DynawoSimulationParameters dynawoSimulationParameters) {
-        double h = dynawoSimulationParameters.getModelParameters(getParameterSetId()).getDouble("generator_H");
-        double sNom = dynawoSimulationParameters.getModelParameters(getParameterSetId()).getDouble("generator_SNom");
+        ParametersSet parametersSet = dynawoSimulationParameters.getModelParameters(getParameterSetId());
+        double h = parametersSet.getDouble("generator_H");
+        double sNom = parametersSet.hasParameter("generator_SNom") ? parametersSet.getDouble("generator_SNom")
+                : getEquipment().getRatedS();
         return h * sNom;
     }
 
