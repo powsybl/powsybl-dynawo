@@ -12,8 +12,8 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
 import com.powsybl.dynawo.models.versionablevariable.Versionable;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariable;
 import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariable;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;

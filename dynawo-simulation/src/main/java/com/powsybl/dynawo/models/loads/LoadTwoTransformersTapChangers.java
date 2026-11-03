@@ -13,8 +13,8 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
 import com.powsybl.dynawo.models.versionablevariable.Versionable;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariable;
 import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariable;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import static com.powsybl.dynawo.models.versionablevariable.VersionableHandler.D
  */
 public class LoadTwoTransformersTapChangers extends AbstractLoadTwoTransformers implements TapChangerModel {
 
-    private static final VersionableVariable TC_SIDE_LOCKED = new VersionableVariable("TC_LOCKED",
+    private static final VersionableVariable TC_SIDE_LOCKED = new VersionableVariable("TC_SIDE_LOCKED",
             new Versionable.Step<>("tapChanger%s_locked"),
             new Versionable.Step<>(DYNAWO_VERSION_1_8_0, "transformer%s_locked"));
 

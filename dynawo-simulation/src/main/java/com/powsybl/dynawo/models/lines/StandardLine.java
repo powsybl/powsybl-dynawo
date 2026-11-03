@@ -14,8 +14,8 @@ import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.versionablevariable.Versionable;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVarsMapping;
 import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVarsMapping;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.TwoSides;
 

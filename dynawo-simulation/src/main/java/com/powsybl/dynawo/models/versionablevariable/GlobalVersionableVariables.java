@@ -25,4 +25,7 @@ public final class GlobalVersionableVariables {
     public static final VersionableVariable VARIABLE_VALUE = new VersionableVariable("VARIABLE_VALUE",
             new Versionable.Step<>("%s_value"),
             new Versionable.Step<>(DYNAWO_VERSION_1_8_0, "%s"));
+
+    private GlobalVersionableVariables() {
+    }
 }

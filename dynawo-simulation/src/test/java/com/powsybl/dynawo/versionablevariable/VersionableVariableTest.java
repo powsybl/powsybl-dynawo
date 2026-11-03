@@ -10,8 +10,8 @@ package com.powsybl.dynawo.versionablevariable;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.versionablevariable.Versionable;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariable;
 import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariable;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
