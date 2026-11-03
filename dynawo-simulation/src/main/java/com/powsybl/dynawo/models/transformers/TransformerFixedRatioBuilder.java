@@ -37,7 +37,6 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
         return new TransformerFixedRatioBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

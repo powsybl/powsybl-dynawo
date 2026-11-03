@@ -43,7 +43,6 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
         return new HvdcVscBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

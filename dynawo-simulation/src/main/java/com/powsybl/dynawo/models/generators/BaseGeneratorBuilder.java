@@ -35,7 +35,6 @@ public class BaseGeneratorBuilder extends AbstractGeneratorBuilder<BaseGenerator
         return new BaseGeneratorBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

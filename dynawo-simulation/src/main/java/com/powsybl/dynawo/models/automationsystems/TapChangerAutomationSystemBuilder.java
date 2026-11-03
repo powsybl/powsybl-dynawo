@@ -41,7 +41,6 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
         return new TapChangerAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

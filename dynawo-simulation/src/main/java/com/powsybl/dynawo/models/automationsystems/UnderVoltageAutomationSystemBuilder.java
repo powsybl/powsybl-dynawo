@@ -39,7 +39,6 @@ public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSyste
         return new UnderVoltageAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

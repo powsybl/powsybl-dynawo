@@ -35,7 +35,6 @@ public class LoadOneTransformerTapChangerBuilder extends AbstractLoadModelBuilde
         return new LoadOneTransformerTapChangerBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

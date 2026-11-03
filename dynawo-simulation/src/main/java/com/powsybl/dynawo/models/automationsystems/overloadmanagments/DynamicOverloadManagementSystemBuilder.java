@@ -36,7 +36,6 @@ public class DynamicOverloadManagementSystemBuilder extends AbstractOverloadMana
         return new DynamicOverloadManagementSystemBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

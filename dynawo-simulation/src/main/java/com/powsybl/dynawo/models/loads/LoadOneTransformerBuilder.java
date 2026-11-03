@@ -35,7 +35,6 @@ public class LoadOneTransformerBuilder extends AbstractLoadModelBuilder<LoadOneT
         return new LoadOneTransformerBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

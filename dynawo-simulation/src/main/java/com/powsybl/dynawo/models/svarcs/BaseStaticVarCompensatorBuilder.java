@@ -38,7 +38,6 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
         return new BaseStaticVarCompensatorBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

@@ -35,7 +35,6 @@ public class SignalNGeneratorBuilder extends AbstractGeneratorBuilder<SignalNGen
         return new SignalNGeneratorBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

@@ -35,7 +35,6 @@ public class SynchronousGeneratorBuilder extends AbstractSynchronousGeneratorBui
         return new SynchronousGeneratorBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

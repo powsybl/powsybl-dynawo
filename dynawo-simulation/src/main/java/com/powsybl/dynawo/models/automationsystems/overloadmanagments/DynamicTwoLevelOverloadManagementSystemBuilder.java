@@ -40,7 +40,6 @@ public class DynamicTwoLevelOverloadManagementSystemBuilder extends AbstractOver
         return new DynamicTwoLevelOverloadManagementSystemBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

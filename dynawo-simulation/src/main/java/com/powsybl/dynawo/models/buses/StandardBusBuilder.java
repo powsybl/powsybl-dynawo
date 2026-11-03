@@ -35,7 +35,6 @@ public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
         return new StandardBusBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

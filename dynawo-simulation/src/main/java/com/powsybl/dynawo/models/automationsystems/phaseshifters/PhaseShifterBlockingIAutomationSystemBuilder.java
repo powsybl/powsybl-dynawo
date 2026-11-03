@@ -36,7 +36,6 @@ public class PhaseShifterBlockingIAutomationSystemBuilder extends AbstractAutoma
         return new PhaseShifterBlockingIAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

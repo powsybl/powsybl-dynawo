@@ -35,7 +35,6 @@ public class LoadTwoTransformersTapChangersBuilder extends AbstractLoadModelBuil
         return new LoadTwoTransformersTapChangersBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

@@ -35,7 +35,6 @@ public class InertialGridBuilder extends AbstractGeneratorBuilder<InertialGridBu
         return new InertialGridBuilder(network, modelConfig, reportNode);
     }
 
-
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
