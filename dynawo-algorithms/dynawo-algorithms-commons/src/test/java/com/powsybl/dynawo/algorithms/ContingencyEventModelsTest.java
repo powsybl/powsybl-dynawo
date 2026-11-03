@@ -33,7 +33,7 @@ class ContingencyEventModelsTest {
     void test() {
         Network network = EurostagTutorialExample1Factory.createWithLFResults();
         BlackBoxModelSupplier bbmSupplier = BlackBoxModelSupplier.createFrom(List.of(
-                BaseGeneratorBuilder.of(network)
+                BaseGeneratorBuilder.of(network, "GeneratorFictitious")
                         .staticId("GEN")
                         .parameterSetId("gen")
                         .build()));

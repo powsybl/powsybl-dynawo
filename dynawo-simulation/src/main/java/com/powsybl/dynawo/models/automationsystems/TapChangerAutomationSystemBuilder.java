@@ -28,14 +28,6 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
     protected final BuilderEquipment<Load> load;
     protected TransformerSide side = TransformerSide.NONE;
 
-    public static TapChangerAutomationSystemBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static TapChangerAutomationSystemBuilder of(Network network, ReportNode reportNode) {
-        return new TapChangerAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static TapChangerAutomationSystemBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -47,10 +39,6 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
             return null;
         }
         return new TapChangerAutomationSystemBuilder(network, modelConfig, reportNode);
-    }
-
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
     }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {

@@ -27,7 +27,7 @@ class SvarcModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(BaseStaticVarCompensatorBuilder.of(network)
+        dynamicModels.add(BaseStaticVarCompensatorBuilder.of(network, "StaticVarCompensator")
                 .staticId("SVC2")
                 .parameterSetId("svc")
                 .build());

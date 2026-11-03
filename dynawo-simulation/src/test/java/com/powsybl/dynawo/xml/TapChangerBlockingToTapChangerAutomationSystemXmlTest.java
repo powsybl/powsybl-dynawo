@@ -22,7 +22,7 @@ class TapChangerBlockingToTapChangerAutomationSystemXmlTest extends TapChangerAu
     @Override
     protected void addDynamicModels() {
         super.addDynamicModels();
-        dynamicModels.add(TapChangerBlockingAutomationSystemBuilder.of(network)
+        dynamicModels.add(TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem")
                 .dynamicModelId("BBM_TapChangerBlocking")
                 .parameterSetId("TapChangerPar")
                 .transformers("BBM_TC", "BBM_TC2", "BBM_TC3")

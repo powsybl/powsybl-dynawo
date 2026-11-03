@@ -23,7 +23,7 @@ class ActionConnectionPointTest {
     @Test
     void voltageOffBus() {
         Network network = EurostagTutorialExample1Factory.create();
-        assertNull(TapChangerBlockingAutomationSystemBuilder.of(network)
+        assertNull(TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem")
                 .dynamicModelId("TC")
                 .parameterSetId("tc")
                 .transformers("NGEN_NHV1")
@@ -34,7 +34,7 @@ class ActionConnectionPointTest {
     @Test
     void voltageOffBusBarSection() {
         Network network = HvdcTestNetwork.createBase();
-        assertNull(TapChangerBlockingAutomationSystemBuilder.of(network)
+        assertNull(TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem")
                 .dynamicModelId("TC")
                 .parameterSetId("tc")
                 .uMeasurements("BBS1")

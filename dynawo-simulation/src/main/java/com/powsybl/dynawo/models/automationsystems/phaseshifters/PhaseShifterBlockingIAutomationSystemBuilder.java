@@ -23,14 +23,6 @@ public class PhaseShifterBlockingIAutomationSystemBuilder extends AbstractAutoma
     public static final String CATEGORY = "PHASE_SHIFTER_BLOCKING_I";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static PhaseShifterBlockingIAutomationSystemBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static PhaseShifterBlockingIAutomationSystemBuilder of(Network network, ReportNode reportNode) {
-        return new PhaseShifterBlockingIAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static PhaseShifterBlockingIAutomationSystemBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -42,10 +34,6 @@ public class PhaseShifterBlockingIAutomationSystemBuilder extends AbstractAutoma
             return null;
         }
         return new PhaseShifterBlockingIAutomationSystemBuilder(network, modelConfig, reportNode);
-    }
-
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
     }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {

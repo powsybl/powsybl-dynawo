@@ -22,14 +22,6 @@ public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
     public static final String CATEGORY = "BASE_BUS";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static StandardBusBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static StandardBusBuilder of(Network network, ReportNode reportNode) {
-        return new StandardBusBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static StandardBusBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -41,10 +33,6 @@ public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
             return null;
         }
         return new StandardBusBuilder(network, modelConfig, reportNode);
-    }
-
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
     }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {

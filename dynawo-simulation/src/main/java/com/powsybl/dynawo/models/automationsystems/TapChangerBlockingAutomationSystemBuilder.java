@@ -32,14 +32,6 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     private final BuilderModelEquipmentsList<Identifiable<?>> tapChangerEquipments;
     private final BuilderIdListEquipmentList<Identifiable<?>> uMeasurementPoints;
 
-    public static TapChangerBlockingAutomationSystemBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static TapChangerBlockingAutomationSystemBuilder of(Network network, ReportNode reportNode) {
-        return new TapChangerBlockingAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static TapChangerBlockingAutomationSystemBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -51,10 +43,6 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
             return null;
         }
         return new TapChangerBlockingAutomationSystemBuilder(network, modelConfig, reportNode);
-    }
-
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
     }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {

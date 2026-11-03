@@ -22,14 +22,6 @@ public class InertialGridBuilder extends AbstractGeneratorBuilder<InertialGridBu
     public static final String CATEGORY = "INERTIAL_GRID";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static InertialGridBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static InertialGridBuilder of(Network network, ReportNode reportNode) {
-        return new InertialGridBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static InertialGridBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -41,10 +33,6 @@ public class InertialGridBuilder extends AbstractGeneratorBuilder<InertialGridBu
             return null;
         }
         return new InertialGridBuilder(network, modelConfig, reportNode);
-    }
-
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
     }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {

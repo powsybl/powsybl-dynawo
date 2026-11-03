@@ -43,7 +43,7 @@ class TapChangerBlockingBuilderTest {
     @Test
     void testVoltageLevelsInput() throws IOException {
         Network network = EurostagTutorialExample1Factory.createWithLFResults();
-        TapChangerBlockingAutomationSystem tcb = TapChangerBlockingAutomationSystemBuilder.of(network, reportNode)
+        TapChangerBlockingAutomationSystem tcb = TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem", reportNode)
                 .dynamicModelId("BBM_TCB")
                 .parameterSetId("tcb_par")
                 .transformersVoltageLevels("VLLOAD", "VLHV1")
@@ -62,7 +62,7 @@ class TapChangerBlockingBuilderTest {
     @Test
     void testEmptyVoltageLevelsInput() throws IOException {
         Network network = EurostagTutorialExample1Factory.createWith3wTransformer();
-        TapChangerBlockingAutomationSystem tcb = TapChangerBlockingAutomationSystemBuilder.of(network, reportNode)
+        TapChangerBlockingAutomationSystem tcb = TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem", reportNode)
                 .dynamicModelId("BBM_TCB")
                 .parameterSetId("tcb_par")
                 .transformersVoltageLevels("V2")
@@ -80,7 +80,7 @@ class TapChangerBlockingBuilderTest {
     @Test
     void testWrongVoltageLevelsInput() throws IOException {
         Network network = EurostagTutorialExample1Factory.createWithLFResults();
-        TapChangerBlockingAutomationSystem tcb = TapChangerBlockingAutomationSystemBuilder.of(network, reportNode)
+        TapChangerBlockingAutomationSystem tcb = TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem", reportNode)
                 .dynamicModelId("BBM_TCB")
                 .parameterSetId("tcb_par")
                 .transformersVoltageLevels(List.of("WRONG_ID", "WRONG_ID2"))

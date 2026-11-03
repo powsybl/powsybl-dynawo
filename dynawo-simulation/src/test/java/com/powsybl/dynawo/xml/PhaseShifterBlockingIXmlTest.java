@@ -32,12 +32,12 @@ class PhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(PhaseShifterIAutomationSystemBuilder.of(network)
+        dynamicModels.add(PhaseShifterIAutomationSystemBuilder.of(network, "PhaseShifterI")
                 .dynamicModelId("BBM_PS")
                 .parameterSetId("ps")
                 .transformer("NGEN_NHV1")
                 .build());
-        dynamicModels.add(PhaseShifterBlockingIAutomationSystemBuilder.of(network)
+        dynamicModels.add(PhaseShifterBlockingIAutomationSystemBuilder.of(network, "PhaseShifterBlockingI")
                 .dynamicModelId("BBM_PSB")
                 .parameterSetId("psb")
                 .phaseShifterId("BBM_PS")

@@ -12,7 +12,6 @@ import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationS
 import com.powsybl.dynawo.models.automationsystems.UnderVoltageAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelOverloadManagementSystemBuilder;
-import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterBlockingIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
@@ -30,7 +29,6 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
@@ -40,94 +38,6 @@ class BuildersTest {
 
     private static final Network NETWORK = SvcTestCaseFactory.create();
     private static final String WRONG_LIB = "wrongLib";
-
-    @Test
-    void testDefaultLibAutomationSystems() {
-        assertNotNull(UnderVoltageAutomationSystemBuilder.of(NETWORK));
-        assertNotNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK));
-        assertNotNull(TapChangerAutomationSystemBuilder.of(NETWORK));
-        assertNotNull(DynamicOverloadManagementSystemBuilder.of(NETWORK));
-        assertNotNull(DynamicTwoLevelOverloadManagementSystemBuilder.of(NETWORK));
-        assertNotNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK));
-        assertNotNull(PhaseShifterBlockingIAutomationSystemBuilder.of(NETWORK));
-        assertNotNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK));
-    }
-
-    @Test
-    void testDefaultLibEquipments() {
-        // Load
-        assertNotNull(BaseLoadBuilder.of(NETWORK));
-        assertNotNull(LoadOneTransformerBuilder.of(NETWORK));
-        assertNotNull(LoadOneTransformerTapChangerBuilder.of(NETWORK));
-        assertNotNull(LoadTwoTransformersBuilder.of(NETWORK));
-        assertNotNull(LoadTwoTransformersTapChangersBuilder.of(NETWORK));
-        // Bus
-        assertNotNull(StandardBusBuilder.of(NETWORK));
-        assertNotNull(InfiniteBusBuilder.of(NETWORK));
-        // Transformer
-        assertNotNull(TransformerFixedRatioBuilder.of(NETWORK));
-        // Line
-        assertNotNull(LineBuilder.of(NETWORK));
-        // Generator
-        assertNotNull(BaseGeneratorBuilder.of(NETWORK));
-        assertNotNull(SynchronizedGeneratorBuilder.of(NETWORK));
-        assertNotNull(SynchronousGeneratorBuilder.of(NETWORK));
-        assertNotNull(InertialGridBuilder.of(NETWORK));
-        assertNotNull(WeccBuilder.of(NETWORK));
-        assertNotNull(GridFormingConverterBuilder.of(NETWORK));
-        assertNotNull(SignalNGeneratorBuilder.of(NETWORK));
-        // HVDC
-        assertNotNull(HvdcPBuilder.of(NETWORK));
-        assertNotNull(HvdcVscBuilder.of(NETWORK));
-        // Shunt
-        assertNotNull(BaseShuntBuilder.of(NETWORK));
-        // Static var comp
-        assertNotNull(BaseStaticVarCompensatorBuilder.of(NETWORK));
-    }
-
-    @Test
-    void testDefaultModelGetterAutomationSystems() {
-        assertNotNull(UnderVoltageAutomationSystemBuilder.getDefaultModelInfo());
-        assertNotNull(TapChangerBlockingAutomationSystemBuilder.getDefaultModelInfo());
-        assertNotNull(TapChangerAutomationSystemBuilder.getDefaultModelInfo());
-        assertNotNull(DynamicOverloadManagementSystemBuilder.getDefaultModelInfo());
-        assertNotNull(DynamicTwoLevelOverloadManagementSystemBuilder.getDefaultModelInfo());
-        assertNotNull(PhaseShifterIAutomationSystemBuilder.getDefaultModelInfo());
-        assertNotNull(PhaseShifterBlockingIAutomationSystemBuilder.getDefaultModelInfo());
-        assertNotNull(PhaseShifterPAutomationSystemBuilder.getDefaultModelInfo());
-    }
-
-    @Test
-    void testDefaultModelGetterEquipments() {
-        // Load
-        assertNotNull(BaseLoadBuilder.getDefaultModelInfo());
-        assertNotNull(LoadOneTransformerBuilder.getDefaultModelInfo());
-        assertNotNull(LoadOneTransformerTapChangerBuilder.getDefaultModelInfo());
-        assertNotNull(LoadTwoTransformersBuilder.getDefaultModelInfo());
-        assertNotNull(LoadTwoTransformersTapChangersBuilder.getDefaultModelInfo());
-        // Bus
-        assertNotNull(StandardBusBuilder.getDefaultModelInfo());
-        assertNotNull(InfiniteBusBuilder.getDefaultModelInfo());
-        // Transformer
-        assertNotNull(TransformerFixedRatioBuilder.getDefaultModelInfo());
-        // Line
-        assertNotNull(LineBuilder.getDefaultModelInfo());
-        // Generator
-        assertNotNull(BaseGeneratorBuilder.getDefaultModelInfo());
-        assertNotNull(SynchronizedGeneratorBuilder.getDefaultModelInfo());
-        assertNotNull(SynchronousGeneratorBuilder.getDefaultModelInfo());
-        assertNotNull(InertialGridBuilder.getDefaultModelInfo());
-        assertNotNull(WeccBuilder.getDefaultModelInfo());
-        assertNotNull(GridFormingConverterBuilder.getDefaultModelInfo());
-        assertNotNull(SignalNGeneratorBuilder.getDefaultModelInfo());
-        // HVDC
-        assertNotNull(HvdcPBuilder.getDefaultModelInfo());
-        assertNotNull(HvdcVscBuilder.getDefaultModelInfo());
-        // Shunt
-        assertNotNull(BaseShuntBuilder.getDefaultModelInfo());
-        // Static var comp
-        assertNotNull(BaseStaticVarCompensatorBuilder.getDefaultModelInfo());
-    }
 
     @Test
     void testWrongLibEquipments() {
@@ -175,44 +85,44 @@ class BuildersTest {
     @Test
     void testNotInstantiableEquipment() {
         // Load
-        assertNull(BaseLoadBuilder.of(NETWORK).build());
-        assertNull(LoadOneTransformerBuilder.of(NETWORK).build());
-        assertNull(LoadOneTransformerTapChangerBuilder.of(NETWORK).build());
-        assertNull(LoadTwoTransformersBuilder.of(NETWORK).build());
-        assertNull(LoadTwoTransformersTapChangersBuilder.of(NETWORK).build());
+        assertNull(BaseLoadBuilder.of(NETWORK, BaseLoadBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(LoadOneTransformerBuilder.of(NETWORK, LoadOneTransformerBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(LoadOneTransformerTapChangerBuilder.of(NETWORK, LoadOneTransformerTapChangerBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(LoadTwoTransformersBuilder.of(NETWORK, LoadTwoTransformersBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(LoadTwoTransformersTapChangersBuilder.of(NETWORK, LoadTwoTransformersTapChangersBuilder.getSupportedModelInfos().iterator().next().name()).build());
         // Bus
-        assertNull(StandardBusBuilder.of(NETWORK).build());
-        assertNull(InfiniteBusBuilder.of(NETWORK).build());
+        assertNull(StandardBusBuilder.of(NETWORK, StandardBusBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(InfiniteBusBuilder.of(NETWORK, InfiniteBusBuilder.getSupportedModelInfos().iterator().next().name()).build());
         // Transformer
-        assertNull(TransformerFixedRatioBuilder.of(NETWORK).build());
+        assertNull(TransformerFixedRatioBuilder.of(NETWORK, TransformerFixedRatioBuilder.getSupportedModelInfos().iterator().next().name()).build());
         // Line
-        assertNull(LineBuilder.of(NETWORK).build());
+        assertNull(LineBuilder.of(NETWORK, LineBuilder.getSupportedModelInfos().iterator().next().name()).build());
         // Generator
-        assertNull(BaseGeneratorBuilder.of(NETWORK).build());
-        assertNull(SynchronizedGeneratorBuilder.of(NETWORK).build());
-        assertNull(SynchronousGeneratorBuilder.of(NETWORK).build());
-        assertNull(InertialGridBuilder.of(NETWORK).build());
-        assertNull(WeccBuilder.of(NETWORK).build());
-        assertNull(GridFormingConverterBuilder.of(NETWORK).build());
-        assertNull(SignalNGeneratorBuilder.of(NETWORK).build());
+        assertNull(BaseGeneratorBuilder.of(NETWORK, BaseGeneratorBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(SynchronizedGeneratorBuilder.of(NETWORK, SynchronizedGeneratorBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(SynchronousGeneratorBuilder.of(NETWORK, SynchronousGeneratorBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(InertialGridBuilder.of(NETWORK, InertialGridBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(WeccBuilder.of(NETWORK, WeccBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(GridFormingConverterBuilder.of(NETWORK, GridFormingConverterBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(SignalNGeneratorBuilder.of(NETWORK, SignalNGeneratorBuilder.getSupportedModelInfos().iterator().next().name()).build());
         // HVDC
-        assertNull(HvdcPBuilder.of(NETWORK).build());
-        assertNull(HvdcVscBuilder.of(NETWORK).build());
+        assertNull(HvdcPBuilder.of(NETWORK, HvdcPBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(HvdcVscBuilder.of(NETWORK, HvdcVscBuilder.getSupportedModelInfos().iterator().next().name()).build());
         // Shunt
-        assertNull(BaseShuntBuilder.of(NETWORK).build());
+        assertNull(BaseShuntBuilder.of(NETWORK, BaseShuntBuilder.getSupportedModelInfos().iterator().next().name()).build());
         // Static var comp
-        assertNull(BaseStaticVarCompensatorBuilder.of(NETWORK).build());
+        assertNull(BaseStaticVarCompensatorBuilder.of(NETWORK, BaseStaticVarCompensatorBuilder.getSupportedModelInfos().iterator().next().name()).build());
     }
 
     @Test
     void testNotInstantiableAutomationSystem() {
-        assertNull(UnderVoltageAutomationSystemBuilder.of(NETWORK).build());
-        assertNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK).build());
-        assertNull(TapChangerAutomationSystemBuilder.of(NETWORK).build());
-        assertNull(DynamicOverloadManagementSystemBuilder.of(NETWORK).build());
-        assertNull(DynamicTwoLevelOverloadManagementSystemBuilder.of(NETWORK).build());
-        assertNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK).build());
-        assertNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK).build());
+        assertNull(UnderVoltageAutomationSystemBuilder.of(NETWORK, UnderVoltageAutomationSystemBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK, TapChangerBlockingAutomationSystemBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(TapChangerAutomationSystemBuilder.of(NETWORK, TapChangerAutomationSystemBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(DynamicOverloadManagementSystemBuilder.of(NETWORK, DynamicOverloadManagementSystemBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(DynamicTwoLevelOverloadManagementSystemBuilder.of(NETWORK, DynamicTwoLevelOverloadManagementSystemBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK, PhaseShifterIAutomationSystemBuilder.getSupportedModelInfos().iterator().next().name()).build());
+        assertNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK, PhaseShifterPAutomationSystemBuilder.getSupportedModelInfos().iterator().next().name()).build());
     }
 
     @Test

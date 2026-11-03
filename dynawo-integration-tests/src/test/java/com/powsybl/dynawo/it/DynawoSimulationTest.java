@@ -573,26 +573,26 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
     private static List<DynamicModel> buildDynamicModels(Network network, ReportNode reportNode) {
         return List.of(
-                DynamicOverloadManagementSystemBuilder.of(network, reportNode)
+                DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem", reportNode)
                         .dynamicModelId("CLA_LINE")
                         .parameterSetId("CLA")
                         .iMeasurement(EurostagTutorialExample1Factory.NHV1_NHV2_2)
                         .iMeasurementSide(TwoSides.TWO)
                         .controlledBranch(EurostagTutorialExample1Factory.NHV1_NHV2_2)
                         .build(),
-                DynamicOverloadManagementSystemBuilder.of(network, reportNode)
+                DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem", reportNode)
                         .dynamicModelId("CLA_TFO")
                         .parameterSetId("CLA")
                         .iMeasurement(EurostagTutorialExample1Factory.NGEN_NHV1)
                         .iMeasurementSide(TwoSides.TWO)
                         .controlledBranch(EurostagTutorialExample1Factory.NGEN_NHV1)
                         .build(),
-                PhaseShifterIAutomationSystemBuilder.of(network, reportNode)
+                PhaseShifterIAutomationSystemBuilder.of(network, "PhaseShifterI", reportNode)
                         .dynamicModelId("PS")
                         .parameterSetId("PS")
                         .transformer(EurostagTutorialExample1Factory.NHV2_NLOAD)
                         .build(),
-                TapChangerBlockingAutomationSystemBuilder.of(network, reportNode)
+                TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem", reportNode)
                         .dynamicModelId("TCB")
                         .parameterSetId("TCB")
                         .uMeasurements(EurostagTutorialExample1Factory.NGEN)

@@ -41,10 +41,10 @@ class MainConnectedComponentSimplifierTest {
                 .withMessageTemplate("simplifierTest")
                 .build();
         List<BlackBoxModel> dynamicModels = List.of(
-                LoadOneTransformerBuilder.of(network)
+                LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
                         .staticId("LOAD")
                         .build(),
-                TapChangerAutomationSystemBuilder.of(network)
+                TapChangerAutomationSystemBuilder.of(network, "TapChangerAutomationSystem")
                         .dynamicModelId("TC")
                         .staticId("LOAD")
                         .build(),

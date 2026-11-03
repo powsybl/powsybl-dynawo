@@ -25,14 +25,6 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
     public static final String CATEGORY = "BASE_STATIC_VAR_COMPENSATOR";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static BaseStaticVarCompensatorBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static BaseStaticVarCompensatorBuilder of(Network network, ReportNode reportNode) {
-        return new BaseStaticVarCompensatorBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static BaseStaticVarCompensatorBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -44,10 +36,6 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
             return null;
         }
         return new BaseStaticVarCompensatorBuilder(network, modelConfig, reportNode);
-    }
-
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
     }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {

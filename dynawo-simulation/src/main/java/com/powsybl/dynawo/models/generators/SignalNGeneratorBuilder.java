@@ -22,14 +22,6 @@ public class SignalNGeneratorBuilder extends AbstractGeneratorBuilder<SignalNGen
     public static final String CATEGORY = "SIGNAL_N_GENERATOR";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static SignalNGeneratorBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static SignalNGeneratorBuilder of(Network network, ReportNode reportNode) {
-        return new SignalNGeneratorBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static SignalNGeneratorBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -41,10 +33,6 @@ public class SignalNGeneratorBuilder extends AbstractGeneratorBuilder<SignalNGen
             return null;
         }
         return new SignalNGeneratorBuilder(network, modelConfig, reportNode);
-    }
-
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
     }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {

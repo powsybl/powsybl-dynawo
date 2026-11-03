@@ -24,14 +24,6 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
     public static final String CATEGORY = "TRANSFORMER";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static TransformerFixedRatioBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static TransformerFixedRatioBuilder of(Network network, ReportNode reportNode) {
-        return new TransformerFixedRatioBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static TransformerFixedRatioBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -43,10 +35,6 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
             return null;
         }
         return new TransformerFixedRatioBuilder(network, modelConfig, reportNode);
-    }
-
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
     }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {

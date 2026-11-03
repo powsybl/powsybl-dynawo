@@ -45,11 +45,11 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(BaseGeneratorBuilder.of(network)
+        dynamicModels.add(BaseGeneratorBuilder.of(network, "GeneratorFictitious")
                 .staticId("G1")
                 .parameterSetId("GF")
                 .build());
-        dynamicModels.add(BaseShuntBuilder.of(network)
+        dynamicModels.add(BaseShuntBuilder.of(network, "ShuntB")
                 .staticId("SH1")
                 .parameterSetId("BS")
                 .build());

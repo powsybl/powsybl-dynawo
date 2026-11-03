@@ -47,7 +47,7 @@ class TapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlT
                 .staticId("LOAD2")
                 .parameterSetId("ltt")
                 .build());
-        dynamicModels.add(TapChangerBlockingAutomationSystemBuilder.of(network)
+        dynamicModels.add(TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem")
                 .dynamicModelId("BBM_TapChangerBlocking")
                 .parameterSetId("TapChangerPar")
                 .transformers("NGEN_NHV1", "NHV2_NLOAD", "LOAD", "LOAD2")
@@ -65,7 +65,7 @@ class TapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlT
 
     @Test
     void testMonitoredEquipmentsLimit() throws IOException {
-        BlackBoxModel bbm = TapChangerBlockingAutomationSystemBuilder.of(network, reportNode)
+        BlackBoxModel bbm = TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem", reportNode)
                 .dynamicModelId("TapChanger1")
                 .parameterSetId("TapChangerPar")
                 .transformers("NGEN_NHV1")
@@ -82,7 +82,7 @@ class TapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlT
 
     @Test
     void testMissingMeasurementPoint() {
-        TapChangerBlockingAutomationSystemBuilder builder = TapChangerBlockingAutomationSystemBuilder.of(network)
+        TapChangerBlockingAutomationSystemBuilder builder = TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem")
                 .dynamicModelId("TapChanger1")
                 .parameterSetId("TapChangerPar")
                 .transformers("NGEN_NHV1")

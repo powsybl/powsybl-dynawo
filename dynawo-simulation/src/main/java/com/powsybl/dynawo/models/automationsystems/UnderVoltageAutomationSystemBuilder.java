@@ -26,14 +26,6 @@ public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSyste
 
     protected final BuilderEquipment<Generator> generator;
 
-    public static UnderVoltageAutomationSystemBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static UnderVoltageAutomationSystemBuilder of(Network network, ReportNode reportNode) {
-        return new UnderVoltageAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static UnderVoltageAutomationSystemBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -45,10 +37,6 @@ public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSyste
             return null;
         }
         return new UnderVoltageAutomationSystemBuilder(network, modelConfig, reportNode);
-    }
-
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
     }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {

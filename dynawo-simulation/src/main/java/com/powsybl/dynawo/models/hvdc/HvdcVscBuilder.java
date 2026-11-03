@@ -30,14 +30,6 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
         return true;
     };
 
-    public static HvdcVscBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static HvdcVscBuilder of(Network network, ReportNode reportNode) {
-        return new HvdcVscBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static HvdcVscBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -49,10 +41,6 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
             return null;
         }
         return new HvdcVscBuilder(network, modelConfig, reportNode);
-    }
-
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
     }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {

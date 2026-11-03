@@ -65,7 +65,7 @@ class HvdcTest {
     @Test
     void vscDynamicModelOnLCC() {
         Network network = HvdcTestNetwork.createLcc();
-        assertNull(HvdcVscBuilder.of(network)
+        assertNull(HvdcVscBuilder.of(network, "HvdcVsc")
                 .staticId("L")
                 .parameterSetId("HVDC")
                 .build());

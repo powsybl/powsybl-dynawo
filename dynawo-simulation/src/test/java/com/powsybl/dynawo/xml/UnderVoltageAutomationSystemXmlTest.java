@@ -56,7 +56,7 @@ class UnderVoltageAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(BaseGeneratorBuilder.of(network, reportNode)
+        dynamicModels.add(BaseGeneratorBuilder.of(network, "GeneratorFictitious", reportNode)
                 .staticId("GEN")
                 .parameterSetId("gen")
                 .build());
@@ -67,22 +67,22 @@ class UnderVoltageAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("GEN4")
                 .parameterSetId("GF")
                 .build());
-        dynamicModels.add(UnderVoltageAutomationSystemBuilder.of(network, reportNode)
+        dynamicModels.add(UnderVoltageAutomationSystemBuilder.of(network, "UnderVoltage", reportNode)
                 .dynamicModelId("BBM_under_voltage")
                 .parameterSetId("uv")
                 .generator("GEN")
                 .build());
-        dynamicModels.add(UnderVoltageAutomationSystemBuilder.of(network, reportNode)
+        dynamicModels.add(UnderVoltageAutomationSystemBuilder.of(network, "UnderVoltage", reportNode)
                 .dynamicModelId("BBM_skipped_under_voltage")
                 .parameterSetId("uv")
                 .generator("GEN2")
                 .build());
-        dynamicModels.add(UnderVoltageAutomationSystemBuilder.of(network, reportNode)
+        dynamicModels.add(UnderVoltageAutomationSystemBuilder.of(network, "UnderVoltage", reportNode)
                 .dynamicModelId("BBM_UVA_WECC")
                 .parameterSetId("uv")
                 .generator("GEN3")
                 .build());
-        dynamicModels.add(UnderVoltageAutomationSystemBuilder.of(network, reportNode)
+        dynamicModels.add(UnderVoltageAutomationSystemBuilder.of(network, "UnderVoltage", reportNode)
                 .dynamicModelId("BBM_UVA_GF")
                 .parameterSetId("uv")
                 .generator("GEN4")

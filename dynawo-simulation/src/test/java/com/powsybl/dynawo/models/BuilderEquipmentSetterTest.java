@@ -43,11 +43,11 @@ class BuilderEquipmentSetterTest {
                 .withMessageTemplate("testBuilder")
                 .build();
 
-        BlackBoxModel bbmNetwork1 = LineBuilder.of(network)
+        BlackBoxModel bbmNetwork1 = LineBuilder.of(network, "Line")
                 .equipment(ln1)
                 .parameterSetId("sl")
                 .build();
-        BlackBoxModel bbmNetwork2 = LineBuilder.of(network, reportNode)
+        BlackBoxModel bbmNetwork2 = LineBuilder.of(network, "Line", reportNode)
                 .equipment(ln2)
                 .parameterSetId("sl")
                 .build();

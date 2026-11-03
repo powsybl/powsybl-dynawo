@@ -30,11 +30,11 @@ class LoadTest {
                 .setP0(600.0)
                 .setQ0(200.0)
                 .add();
-        assertNull(BaseLoadBuilder.of(network)
+        assertNull(BaseLoadBuilder.of(network, "LoadAlphaBeta")
                 .staticId("L")
                 .parameterSetId("LAB")
                 .build());
-        assertNull(BaseLoadBuilder.of(network)
+        assertNull(BaseLoadBuilder.of(network, "LoadAlphaBeta")
                 .staticId("LOAD")
                 .parameterSetId("LAB")
                 .build());
