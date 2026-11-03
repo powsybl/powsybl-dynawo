@@ -82,6 +82,7 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
         ExecutionEnvironment execEnvVersionCheck = ExecutionEnvironmentUtils.createVersionEnv(config, WORKING_DIR_PREFIX, dumpDir);
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnvVersionCheck, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
 
+        ModelConfigsHandler.getInstance().setDynawoVersion(currentVersion);
         DynamicSecurityAnalysisParameters parameters = runParameters.getDynamicSecurityAnalysisParameters();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(parameters.getDynamicSimulationParameters());
         dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->

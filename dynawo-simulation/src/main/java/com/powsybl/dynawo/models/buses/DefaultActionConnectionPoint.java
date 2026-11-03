@@ -8,8 +8,11 @@
 package com.powsybl.dynawo.models.buses;
 
 import com.powsybl.dynawo.models.defaultmodels.AbstractDefaultModel;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 
 import java.util.Optional;
+
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -43,6 +46,6 @@ public class DefaultActionConnectionPoint extends AbstractDefaultModel implement
 
     @Override
     public Optional<String> getStateValueVarName() {
-        return Optional.of("@NAME@_state_value");
+        return Optional.of(VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "@NAME@_state"));
     }
 }

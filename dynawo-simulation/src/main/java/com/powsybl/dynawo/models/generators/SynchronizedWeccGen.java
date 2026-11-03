@@ -11,10 +11,14 @@ import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
+
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.INDEXED_VARIABLE;
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.INDEXED_VARIABLE_VALUE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -32,9 +36,10 @@ public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronize
 
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
+        VersionableHandler versionableHandler = VersionableHandler.getInstance();
         return List.of(
-                new VarConnection("omegaRef_grp_@INDEX@_value", getOmegaRefPuVarName()),
-                new VarConnection("running_grp_@INDEX@", getRunningVarName())
+                new VarConnection(versionableHandler.getCurrentVariable(INDEXED_VARIABLE_VALUE, "omegaRef_grp"), getOmegaRefPuVarName()),
+                new VarConnection(versionableHandler.getCurrentVariable(INDEXED_VARIABLE, "running_grp"), getRunningVarName())
         );
     }
 

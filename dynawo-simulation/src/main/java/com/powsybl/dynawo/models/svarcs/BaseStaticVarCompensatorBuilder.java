@@ -38,12 +38,8 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
     }
 
     public static BaseStaticVarCompensatorBuilder of(Network network, String modelName, ReportNode reportNode) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
-        if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, CATEGORY, modelName);
-            return null;
-        }
-        return new BaseStaticVarCompensatorBuilder(network, modelConfig, reportNode);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName, reportNode);
+        return modelConfig != null ? new BaseStaticVarCompensatorBuilder(network, modelConfig, reportNode) : null;
     }
 
     public static ModelInfo getDefaultModelInfo() {
