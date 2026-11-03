@@ -55,15 +55,10 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
 
     private static ModelConfigs parseModelConfigs(JsonParser parser) {
         var parsingContext = new Object() {
-            String defaultLib = null;
             final SortedMap<String, ModelConfig> libs = new TreeMap<>();
         };
         JsonUtil.parseObject(parser, name ->
             switch (name) {
-                case "defaultLib" -> {
-                    parsingContext.defaultLib = parser.nextTextValue();
-                    yield true;
-                }
                 case "libs" -> {
                     JsonUtil.parseObjectArray(parser, mc -> parsingContext.libs.put(mc.name(), mc), ModelConfigsJsonDeserializer::createModelConfig);
                     yield true;
@@ -71,7 +66,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
                 default -> false;
             }
         );
-        return new ModelConfigs(parsingContext.libs, parsingContext.defaultLib);
+        return new ModelConfigs(parsingContext.libs);
     }
 
     private static ModelConfig createModelConfig(JsonParser parser) {

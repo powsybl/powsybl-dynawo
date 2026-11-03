@@ -39,7 +39,6 @@ class ModelConfigLoaderTest {
         String json = """
                 {
                     "miscGenerators": {
-                        "defaultLib": "WT4BWeccCurrentSource",
                         "libs": [
                             {
                               "lib": "PhotovoltaicsWeccCurrentSource",
@@ -102,7 +101,6 @@ class ModelConfigLoaderTest {
                 List.of(new VarMapping("wecc_state", "state")),
                 Map.of("terminal", "WT_terminal"));
 
-        assertEquals(defaultModel, synchroGens.getDefaultModelConfig());
         assertThat(synchroGens.getModelInfos())
                 .containsExactly(baseModel, defaultModel, completeModel)
                 // Check formatted info
@@ -120,23 +118,24 @@ class ModelConfigLoaderTest {
     @Test
     void mergeModelConfigs() {
         ModelConfig defaultModel = new ModelConfig("AA");
-        ModelConfigs modelConfigs1 = new ModelConfigs(new TreeMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel.name());
+        ModelConfigs modelConfigs1 = new ModelConfigs(new TreeMap<>(Map.of(defaultModel.name(), defaultModel)));
 
         ModelConfig mc1 = new ModelConfig("BB");
         ModelConfig mc2 = new ModelConfig("CC");
-        ModelConfigs modelConfigs2 = new ModelConfigs(new TreeMap<>(Map.of(mc1.name(), mc1, mc2.name(), mc2)), mc1.name());
+        ModelConfigs modelConfigs2 = new ModelConfigs(new TreeMap<>(Map.of(mc1.name(), mc1, mc2.name(), mc2)));
 
         modelConfigs1.addModelConfigs(modelConfigs2);
         assertThat(modelConfigs1.getModelInfos()).containsExactly(
                 defaultModel,
                 new ModelConfig("BB"),
                 mc2);
-        assertEquals(defaultModel, modelConfigs1.getDefaultModelConfig());
 
-        ModelConfigs modelConfigs3 = new ModelConfigs(new TreeMap<>(Map.of(mc2.name(), mc2)), null);
-        ModelConfigs modelConfigs4 = new ModelConfigs(new TreeMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel.name());
+        ModelConfigs modelConfigs3 = new ModelConfigs(new TreeMap<>(Map.of(mc2.name(), mc2)));
+        ModelConfigs modelConfigs4 = new ModelConfigs(new TreeMap<>(Map.of(defaultModel.name(), defaultModel)));
         modelConfigs3.addModelConfigs(modelConfigs4);
-        assertEquals(defaultModel, modelConfigs3.getDefaultModelConfig());
+        assertThat(modelConfigs3.getModelInfos()).containsExactly(
+                defaultModel,
+                mc2);
     }
 
     @Test

@@ -21,22 +21,10 @@ public class ModelConfigs {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelConfigs.class);
 
-    private ModelConfig defaultModelConfig;
     private final SortedMap<String, ModelConfig> modelConfigMap;
 
-    ModelConfigs(SortedMap<String, ModelConfig> modelConfigMap, String defaultModelConfigName) {
+    ModelConfigs(SortedMap<String, ModelConfig> modelConfigMap) {
         this.modelConfigMap = Objects.requireNonNull(modelConfigMap);
-        if (defaultModelConfigName != null) {
-            this.defaultModelConfig = Objects.requireNonNull(modelConfigMap.get(defaultModelConfigName));
-        }
-    }
-
-    public boolean hasDefaultModelConfig() {
-        return defaultModelConfig != null;
-    }
-
-    public ModelConfig getDefaultModelConfig() {
-        return defaultModelConfig;
     }
 
     public ModelConfig getModelConfig(String modelName) {
@@ -62,13 +50,6 @@ public class ModelConfigs {
     }
 
     void addModelConfigs(ModelConfigs modelConfigsToMerge) {
-        if (hasDefaultModelConfig() && modelConfigsToMerge.hasDefaultModelConfig()) {
-            LOGGER.warn("Default model configs {} & {} found, the first one will be kept",
-                    defaultModelConfig.lib(),
-                    modelConfigsToMerge.getDefaultModelConfig().lib());
-        } else if (!hasDefaultModelConfig()) {
-            defaultModelConfig = modelConfigsToMerge.defaultModelConfig;
-        }
         modelConfigsToMerge.modelConfigMap.forEach((k, v) -> {
             if (modelConfigMap.putIfAbsent(k, v) != null) {
                 LOGGER.warn("Model {} already exist, the first one will be kept", k);

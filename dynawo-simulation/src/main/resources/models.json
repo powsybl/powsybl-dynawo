@@ -1,6 +1,5 @@
 {
   "BASE_GENERATOR": {
-    "defaultLib": "GeneratorFictitious",
     "libs": [
       {
         "lib": "GeneratorFictitious",
@@ -13,7 +12,6 @@
     ]
   },
   "SYNCHRONOUS_GENERATOR": {
-    "defaultLib": "GeneratorSynchronousFourWindings",
     "libs": [
       {
         "lib": "GeneratorSynchronousFourWindings",
@@ -369,7 +367,6 @@
     ]
   },
   "SYNCHRONIZED_GENERATOR": {
-    "defaultLib": "GeneratorPQ",
     "libs": [
       {
         "lib": "GeneratorPQ",
@@ -392,7 +389,6 @@
     ]
   },
   "SIGNAL_N_GENERATOR": {
-    "defaultLib": "GeneratorPVSignalN",
     "libs": [
       {
         "lib": "GeneratorPVSignalN",
@@ -433,7 +429,6 @@
     ]
   },
   "HVDC_P": {
-    "defaultLib": "HvdcPV",
     "libs": [
       {
         "lib": "HvdcPV",
@@ -544,7 +539,6 @@
     ]
   },
   "HVDC_VSC": {
-    "defaultLib": "HvdcVsc",
     "libs": [
       {
         "lib": "HvdcVsc",
@@ -605,7 +599,6 @@
     ]
   },
   "BASE_BUS": {
-    "defaultLib": "Bus",
     "libs": [
       {
         "lib": "Bus",
@@ -614,7 +607,6 @@
     ]
   },
   "INFINITE_BUS": {
-    "defaultLib": "InfiniteBus",
     "libs": [
       {
         "lib": "InfiniteBus",
@@ -631,7 +623,6 @@
     ]
   },
   "BASE_LOAD": {
-    "defaultLib": "LoadAlphaBeta",
     "libs": [
       {
         "lib": "LoadAlphaBeta",
@@ -715,7 +706,6 @@
     ]
   },
   "LOAD_ONE_TRANSFORMER": {
-    "defaultLib": "LoadOneTransformer",
     "libs": [
       {
         "lib": "LoadOneTransformer",
@@ -724,7 +714,6 @@
     ]
   },
   "LOAD_ONE_TRANSFORMER_TAP_CHANGER": {
-    "defaultLib": "LoadOneTransformerTapChanger",
     "libs": [
       {
         "lib": "LoadOneTransformerTapChanger",
@@ -733,7 +722,6 @@
     ]
   },
   "LOAD_TWO_TRANSFORMERS": {
-    "defaultLib": "LoadTwoTransformers",
     "libs": [
       {
         "lib": "LoadTwoTransformers",
@@ -742,7 +730,6 @@
     ]
   },
   "LOAD_TWO_TRANSFORMERS_TAP_CHANGER": {
-    "defaultLib": "LoadTwoTransformersTapChangers",
     "libs": [
       {
         "lib": "LoadTwoTransformersTapChangers",
@@ -751,7 +738,6 @@
     ]
   },
   "BASE_LINE": {
-    "defaultLib": "Line",
     "libs": [
       {
         "lib": "Line",
@@ -760,7 +746,6 @@
     ]
   },
   "BASE_SHUNT": {
-    "defaultLib": "ShuntB",
     "libs": [
       {
         "lib": "ShuntB",
@@ -773,7 +758,6 @@
     ]
   },
   "BASE_STATIC_VAR_COMPENSATOR": {
-    "defaultLib": "StaticVarCompensator",
     "libs": [
       {
         "lib": "StaticVarCompensator",
@@ -814,7 +798,6 @@
     ]
   },
   "TRANSFORMER": {
-    "defaultLib": "TransformerFixedRatio",
     "libs": [
       {
         "lib": "TransformerFixedRatio",
@@ -828,7 +811,6 @@
     ]
   },
   "INERTIAL_GRID": {
-    "defaultLib": "InertialGrid",
     "libs": [
       {
         "lib": "InertialGrid",
@@ -838,7 +820,6 @@
     ]
   },
   "WECC": {
-    "defaultLib": "WTG4AWeccCurrentSource",
     "libs": [
       {
         "lib": "WTG4AWeccCurrentSource",
@@ -916,7 +897,6 @@
     ]
   },
   "GRID_FORMING_CONVERTER": {
-    "defaultLib": "GridFormingConverterDroopControl",
     "libs": [
       {
         "lib": "GridFormingConverterDroopControl",
@@ -942,7 +922,6 @@
     ]
   },
   "OVERLOAD_MANAGEMENT": {
-    "defaultLib": "OverloadManagementSystem",
     "libs": [
       {
         "lib": "CurrentLimitAutomaton",
@@ -952,7 +931,6 @@
     ]
   },
   "TWO_LEVEL_OVERLOAD_MANAGEMENT": {
-    "defaultLib": "TwoLevelOverloadManagementSystem",
     "libs": [
       {
         "lib": "CurrentLimitAutomatonTwoLevels",
@@ -962,7 +940,6 @@
     ]
   },
   "PHASE_SHIFTER_I": {
-    "defaultLib": "PhaseShifterI",
     "libs": [
       {
         "lib": "PhaseShifterI",
@@ -971,7 +948,6 @@
     ]
   },
   "PHASE_SHIFTER_P": {
-    "defaultLib": "PhaseShifterP",
     "libs": [
       {
         "lib": "PhaseShifterP",
@@ -980,7 +956,6 @@
     ]
   },
   "PHASE_SHIFTER_BLOCKING_I": {
-    "defaultLib": "PhaseShifterBlockingI",
     "libs": [
       {
         "lib": "PhaseShifterBlockingI",
@@ -989,7 +964,6 @@
     ]
   },
   "TAP_CHANGER": {
-    "defaultLib": "TapChangerAutomationSystem",
     "libs": [
       {
         "lib": "TapChangerAutomaton",
@@ -999,7 +973,6 @@
     ]
   },
   "TAP_CHANGER_BLOCKING": {
-    "defaultLib": "TapChangerBlockingAutomationSystem",
     "libs": [
       {
         "lib": "TapChangerBlockingAutomaton",
@@ -1009,7 +982,6 @@
     ]
   },
   "UNDER_VOLTAGE": {
-    "defaultLib": "UnderVoltage",
     "libs": [
       {
         "lib": "UnderVoltageAutomaton",
