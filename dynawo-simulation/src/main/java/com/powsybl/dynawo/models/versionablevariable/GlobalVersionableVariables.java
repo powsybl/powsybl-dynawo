@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawo.models.versionablevariable;
 
-import static com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler.DYNAWO_VERSION_1_8_0;
+import static com.powsybl.dynawo.models.versionablevariable.VersionableHandler.DYNAWO_VERSION_1_8_0;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}

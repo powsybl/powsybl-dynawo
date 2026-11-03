@@ -17,23 +17,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Resolve all VarConnection variable with a value dependent of the Dynawo version
+ * Resolve Versionable with a value dependent of the Dynawo version
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class VersionableVariablesHandler {
+public final class VersionableHandler {
 
     public static final DynawoVersion DYNAWO_VERSION_1_8_0 = new DynawoVersion(1, 8, 0);
-    private static final VersionableVariablesHandler INSTANCE = new VersionableVariablesHandler();
+    private static final VersionableHandler INSTANCE = new VersionableHandler();
 
     private final Map<String, String> currentVariableValues = new HashMap<>();
     private final Map<String, List<VarMapping>> currentVarMappingsValues = new HashMap<>();
 
     private DynawoVersion currentVersion = DynawoConstants.CURRENT_VERSION;
 
-    private VersionableVariablesHandler() {
+    private VersionableHandler() {
     }
 
-    public static VersionableVariablesHandler getInstance() {
+    public static VersionableHandler getInstance() {
         return INSTANCE;
     }
 
@@ -45,10 +45,6 @@ public final class VersionableVariablesHandler {
     public String getCurrentVariable(VersionableVariable versionableVariable, Object... args) {
         return String.format(currentVariableValues.computeIfAbsent(versionableVariable.getName(),
                 k -> getCurrentValue(versionableVariable)), args);
-    }
-
-    public String getCurrentValue(String name, Object... args) {
-        return String.format(currentVariableValues.get(name), args);
     }
 
     public void setCurrentVersion(DynawoVersion currentVersion) {

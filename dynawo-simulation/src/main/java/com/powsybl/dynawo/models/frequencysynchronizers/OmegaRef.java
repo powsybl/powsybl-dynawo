@@ -14,12 +14,13 @@ import com.powsybl.dynawo.models.buses.BusOfFrequencySynchronizedModel;
 import com.powsybl.dynawo.models.buses.DefaultBusOfFrequencySynchronized;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.dynawo.parameters.ParametersSet;
 
 import java.util.List;
 import java.util.function.Consumer;
 
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.INDEXED_VARIABLE;
 import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 import static com.powsybl.dynawo.parameters.ParameterType.INT;
 
@@ -64,7 +65,7 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
     }
 
     private List<VarConnection> getVarConnectionsWithBus(BusOfFrequencySynchronizedModel connected) {
-        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("INDEXED_VARIABLE", "numcc_node"),
+        return List.of(new VarConnection(VersionableHandler.getInstance().getCurrentVariable(INDEXED_VARIABLE, "numcc_node"),
                 connected.getNumCCVarName()));
     }
 

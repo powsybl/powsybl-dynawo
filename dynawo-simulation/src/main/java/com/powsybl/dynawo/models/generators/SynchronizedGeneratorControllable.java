@@ -10,8 +10,10 @@ package com.powsybl.dynawo.models.generators;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.events.PControllableEquipmentModel;
 import com.powsybl.dynawo.models.events.UControllableEquipmentModel;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.iidm.network.Generator;
+
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -24,7 +26,7 @@ public class SynchronizedGeneratorControllable extends SynchronizedGenerator imp
 
     @Override
     public String getDeltaPVarName() {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "generator_deltaPmRefPu");
+        return VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "generator_deltaPmRefPu");
     }
 
     @Override

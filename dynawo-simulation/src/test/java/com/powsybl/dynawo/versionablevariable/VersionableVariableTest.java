@@ -11,7 +11,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.versionablevariable.Versionable;
 import com.powsybl.dynawo.models.versionablevariable.VersionableVariable;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -24,7 +24,7 @@ class VersionableVariableTest {
 
     @Test
     void testVariableVersion() {
-        VersionableVariablesHandler handler = VersionableVariablesHandler.getInstance();
+        VersionableHandler handler = VersionableHandler.getInstance();
         handler.setCurrentVersion(DynawoVersion.createFromString("1.6.0"));
         VersionableVariable variable = new VersionableVariable("VAR",
                 new Versionable.Step<>(DynawoVersion.createFromString("1.5.0"), "variable1"),
@@ -37,7 +37,7 @@ class VersionableVariableTest {
 
     @Test
     void testVariableExactVersion() {
-        VersionableVariablesHandler handler = VersionableVariablesHandler.getInstance();
+        VersionableHandler handler = VersionableHandler.getInstance();
         handler.setCurrentVersion(DynawoVersion.createFromString("1.6.0"));
         VersionableVariable variable = new VersionableVariable("VAR_EXACT",
                 new Versionable.Step<>(DynawoVersion.createFromString("1.5.0"), "variable1"),
@@ -50,7 +50,7 @@ class VersionableVariableTest {
 
     @Test
     void testVersionNotFound() {
-        VersionableVariablesHandler handler = VersionableVariablesHandler.getInstance();
+        VersionableHandler handler = VersionableHandler.getInstance();
         handler.setCurrentVersion(DynawoVersion.createFromString("1.4.0"));
         VersionableVariable variable = new VersionableVariable("VAR_NOT_FOUND",
                 new Versionable.Step<>(DynawoVersion.createFromString("1.5.0"), "variable1"),

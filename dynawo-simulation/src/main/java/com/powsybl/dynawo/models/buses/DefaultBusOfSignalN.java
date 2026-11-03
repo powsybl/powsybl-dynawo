@@ -10,10 +10,12 @@ package com.powsybl.dynawo.models.buses;
 import com.powsybl.dynawo.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawo.models.frequencysynchronizers.SignalNModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.dynawo.xml.DynawoSimulationXmlConstants;
 
 import java.util.List;
+
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -37,7 +39,7 @@ public final class DefaultBusOfSignalN extends AbstractDefaultModel implements B
     }
 
     public String getPhiVarName() {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "@@NAME@@@NODE@_phi");
+        return VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "@@NAME@@@NODE@_phi");
     }
 
     @Override

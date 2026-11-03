@@ -15,13 +15,14 @@ import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.versionablevariable.Versionable;
 import com.powsybl.dynawo.models.versionablevariable.VersionableVarsMapping;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 
-import static com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler.DYNAWO_VERSION_1_8_0;
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
+import static com.powsybl.dynawo.models.versionablevariable.VersionableHandler.DYNAWO_VERSION_1_8_0;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -57,7 +58,7 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
 
     @Override
     public List<VarMapping> getVarsMapping() {
-        return VersionableVariablesHandler.getInstance().getCurrentVarMapping(VERSIONABLE_VAR_MAPPING);
+        return VersionableHandler.getInstance().getCurrentVarMapping(VERSIONABLE_VAR_MAPPING);
     }
 
     @Override
@@ -72,7 +73,7 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
 
     @Override
     public String getStateValueVarName() {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "line_state");
+        return VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "line_state");
     }
 
     @Override

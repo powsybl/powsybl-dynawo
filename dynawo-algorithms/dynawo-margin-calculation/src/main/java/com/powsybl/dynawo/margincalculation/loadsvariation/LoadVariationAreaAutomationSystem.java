@@ -13,7 +13,7 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.loads.DefaultControllableLoadModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Load;
 
@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.INDEXED_VARIABLE_VALUE;
 import static com.powsybl.dynawo.parameters.ParameterType.*;
 
 /**
@@ -60,8 +61,8 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
     }
 
     private List<VarConnection> getVarConnectionsWith(DefaultControllableLoadModel connected) {
-        return List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("INDEXED_VARIABLE_VALUE", "DeltaPc_load"), connected.getDeltaPVarName()),
-                new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("INDEXED_VARIABLE_VALUE", "DeltaQc_load"), connected.getDeltaQVarName()));
+        return List.of(new VarConnection(VersionableHandler.getInstance().getCurrentVariable(INDEXED_VARIABLE_VALUE, "DeltaPc_load"), connected.getDeltaPVarName()),
+                new VarConnection(VersionableHandler.getInstance().getCurrentVariable(INDEXED_VARIABLE_VALUE, "DeltaQc_load"), connected.getDeltaQVarName()));
     }
 
     @Override

@@ -16,14 +16,15 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.dynawo.models.versionablevariable.Versionable;
 import com.powsybl.dynawo.models.versionablevariable.VersionableVarsMapping;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 import java.util.List;
 
 import static com.powsybl.dynawo.models.TransformerSide.HIGH_VOLTAGE;
-import static com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler.DYNAWO_VERSION_1_8_0;
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
+import static com.powsybl.dynawo.models.versionablevariable.VersionableHandler.DYNAWO_VERSION_1_8_0;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -59,7 +60,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
 
     @Override
     public List<VarMapping> getVarsMapping() {
-        return VersionableVariablesHandler.getInstance().getCurrentVarMapping(VERSIONABLE_VAR_MAPPING);
+        return VersionableHandler.getInstance().getCurrentVarMapping(VERSIONABLE_VAR_MAPPING);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
 
     @Override
     public String getStateValueVarName() {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "transformer_state");
+        return VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "transformer_state");
     }
 
     @Override
@@ -95,7 +96,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
         return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE),
-                VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "transformer_TAP_CHANGER_locked")));
+                VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "transformer_TAP_CHANGER_locked")));
     }
 
     @Override
@@ -115,7 +116,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
 
     @Override
     public String getUPuVarName(TwoSides sides) {
-        return VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "@STATIC_ID@@NODE" + sides.getNum() + "@_Upu");
+        return VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "@STATIC_ID@@NODE" + sides.getNum() + "@_Upu");
     }
 
     @Override

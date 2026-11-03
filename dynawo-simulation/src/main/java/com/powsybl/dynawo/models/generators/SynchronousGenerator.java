@@ -12,13 +12,14 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.frequencysynchronizers.PowerAngleModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
 
 import static com.powsybl.dynawo.models.generators.GeneratorProperties.*;
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.INDEXED_VARIABLE;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
@@ -50,11 +51,11 @@ public class SynchronousGenerator extends BaseGenerator implements PowerAngleMod
 
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
-        VersionableVariablesHandler versionableVariablesHandler = VersionableVariablesHandler.getInstance();
+        VersionableHandler versionableHandler = VersionableHandler.getInstance();
         return List.of(
-                new VarConnection(versionableVariablesHandler.getCurrentValue("INDEXED_VARIABLE", "omega_grp"), getOmegaPuVarName()),
-                new VarConnection(versionableVariablesHandler.getCurrentValue("INDEXED_VARIABLE", "omegaRef_grp"), getOmegaRefPuVarName()),
-                new VarConnection(versionableVariablesHandler.getCurrentValue("INDEXED_VARIABLE", "running_grp"), getRunningVarName())
+                new VarConnection(versionableHandler.getCurrentVariable(INDEXED_VARIABLE, "omega_grp"), getOmegaPuVarName()),
+                new VarConnection(versionableHandler.getCurrentVariable(INDEXED_VARIABLE, "omegaRef_grp"), getOmegaRefPuVarName()),
+                new VarConnection(versionableHandler.getCurrentVariable(INDEXED_VARIABLE, "running_grp"), getRunningVarName())
         );
     }
 

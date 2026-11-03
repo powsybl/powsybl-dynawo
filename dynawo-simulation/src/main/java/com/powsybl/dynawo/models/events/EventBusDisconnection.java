@@ -12,7 +12,7 @@ import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.ActionConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
 import static com.powsybl.dynawo.parameters.ParameterType.BOOL;
 import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 
@@ -41,7 +42,7 @@ public class EventBusDisconnection extends AbstractEvent implements ContextDepen
 
     private List<VarConnection> getVarConnectionsWith(ActionConnectionPoint connected) {
         return connected.getStateValueVarName()
-                .map(sv -> List.of(new VarConnection(VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "event_state1"), sv)))
+                .map(sv -> List.of(new VarConnection(VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "event_state1"), sv)))
                 .orElse(Collections.emptyList());
     }
 

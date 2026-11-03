@@ -9,12 +9,13 @@ package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.utils.ImmutableLateInit;
-import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Identifiable;
 
 import java.util.function.Supplier;
 
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
 import static com.powsybl.dynawo.parameters.ParameterType.BOOL;
 import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 
@@ -26,7 +27,7 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     protected enum EquipmentModelType {
 
         SPECIFIED("EventSetPointBoolean", () -> "event_state1", "event_stateEvent1"),
-        DEFAULT("EventConnectedStatus", () -> VersionableVariablesHandler.getInstance().getCurrentValue("VARIABLE_VALUE", "event_state1"), "event_open");
+        DEFAULT("EventConnectedStatus", () -> VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "event_state1"), "event_open");
 
         private final String lib;
         private final Supplier<String> varConnectionSupplier;
