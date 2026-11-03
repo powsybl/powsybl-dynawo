@@ -22,14 +22,6 @@ public class InfiniteBusBuilder extends AbstractBusBuilder<InfiniteBusBuilder> {
     public static final String CATEGORY = "INFINITE_BUS";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static InfiniteBusBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static InfiniteBusBuilder of(Network network, ReportNode reportNode) {
-        return new InfiniteBusBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static InfiniteBusBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -43,9 +35,6 @@ public class InfiniteBusBuilder extends AbstractBusBuilder<InfiniteBusBuilder> {
         return new InfiniteBusBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
-    }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();

@@ -39,17 +39,17 @@ class FinalStepGlobalXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(
-                BaseGeneratorBuilder.of(network)
+                BaseGeneratorBuilder.of(network, "GeneratorFictitious")
                         .staticId("GEN")
                         .parameterSetId("gen")
                         .build());
         dynamicModels.add(
-                BaseLoadBuilder.of(network)
+                BaseLoadBuilder.of(network, "LoadAlphaBeta")
                         .staticId("LOAD")
                         .parameterSetId("lab")
                         .build());
         dynamicModels.add(
-                BaseLoadBuilder.of(network)
+                BaseLoadBuilder.of(network, "LoadAlphaBeta")
                         .staticId("LOAD2")
                         .parameterSetId("lab")
                         .build());

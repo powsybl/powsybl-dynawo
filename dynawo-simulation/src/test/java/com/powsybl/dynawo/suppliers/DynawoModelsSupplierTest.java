@@ -48,19 +48,19 @@ class DynawoModelsSupplierTest {
                 .staticId("GEN")
                 .parameterSetId("DM_GEN")
                 .build();
-        DynamicModel tc = TapChangerAutomationSystemBuilder.of(network)
+        DynamicModel tc = TapChangerAutomationSystemBuilder.of(network, "TapChangerAutomationSystem")
                 .dynamicModelId("TC")
                 .parameterSetId("tc_par")
                 .staticId("LOAD")
                 .side(TransformerSide.LOW_VOLTAGE)
                 .build();
-        DynamicModel tcb = TapChangerBlockingAutomationSystemBuilder.of(network)
+        DynamicModel tcb = TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem")
                 .dynamicModelId("TCB1")
                 .parameterSetId("tcb_par")
                 .transformers("NGEN_NHV1", "NHV2_NLOAD")
                 .uMeasurements(new Collection[]{List.of("OldNGen", "NGEN"), List.of("NHV1", "NHV2")})
                 .build();
-        DynamicModel tcb2 = TapChangerBlockingAutomationSystemBuilder.of(network)
+        DynamicModel tcb2 = TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem")
                 .dynamicModelId("TCB2")
                 .parameterSetId("tcb_par")
                 .transformers("NGEN_NHV2")

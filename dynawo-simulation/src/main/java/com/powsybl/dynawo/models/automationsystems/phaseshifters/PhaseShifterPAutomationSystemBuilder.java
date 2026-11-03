@@ -22,14 +22,6 @@ public class PhaseShifterPAutomationSystemBuilder extends AbstractPhaseShifterMo
     public static final String CATEGORY = "PHASE_SHIFTER_P";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static PhaseShifterPAutomationSystemBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static PhaseShifterPAutomationSystemBuilder of(Network network, ReportNode reportNode) {
-        return new PhaseShifterPAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static PhaseShifterPAutomationSystemBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -43,9 +35,6 @@ public class PhaseShifterPAutomationSystemBuilder extends AbstractPhaseShifterMo
         return new PhaseShifterPAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
-    }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();

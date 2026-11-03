@@ -22,14 +22,6 @@ public class LoadOneTransformerBuilder extends AbstractLoadModelBuilder<LoadOneT
     public static final String CATEGORY = "LOAD_ONE_TRANSFORMER";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static LoadOneTransformerBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static LoadOneTransformerBuilder of(Network network, ReportNode reportNode) {
-        return new LoadOneTransformerBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static LoadOneTransformerBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -43,9 +35,6 @@ public class LoadOneTransformerBuilder extends AbstractLoadModelBuilder<LoadOneT
         return new LoadOneTransformerBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
-    }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();

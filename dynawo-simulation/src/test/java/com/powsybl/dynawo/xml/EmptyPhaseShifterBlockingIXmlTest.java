@@ -29,17 +29,17 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         addModelIfNotNull(
-            PhaseShifterIAutomationSystemBuilder.of(network, reportNode)
+            PhaseShifterIAutomationSystemBuilder.of(network, "PhaseShifterI", reportNode)
                 .dynamicModelId("BBM_PS")
                 .parameterSetId("ps")
                 .transformer("PS1")
                 .build(),
-            PhaseShifterBlockingIAutomationSystemBuilder.of(network, reportNode)
+            PhaseShifterBlockingIAutomationSystemBuilder.of(network, "PhaseShifterBlockingI", reportNode)
                 .dynamicModelId("BBM_PSB")
                 .parameterSetId("psb")
                 .phaseShifterId("WRONG_ID")
                 .build(),
-            PhaseShifterBlockingIAutomationSystemBuilder.of(network, reportNode)
+            PhaseShifterBlockingIAutomationSystemBuilder.of(network, "PhaseShifterBlockingI", reportNode)
                 .dynamicModelId("BBM_PSB2")
                 .parameterSetId("psb")
                 .build());

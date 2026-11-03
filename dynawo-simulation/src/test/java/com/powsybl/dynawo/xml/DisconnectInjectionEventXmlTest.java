@@ -65,13 +65,13 @@ class DisconnectInjectionEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(BaseGeneratorBuilder.of(network)
+        dynamicModels.add(BaseGeneratorBuilder.of(network, "GeneratorFictitious")
                 .staticId("GEN")
                 .build());
-        dynamicModels.add(InertialGridBuilder.of(network)
+        dynamicModels.add(InertialGridBuilder.of(network, "InertialGrid")
                 .staticId("GEN2")
                 .build());
-        dynamicModels.add(BaseLoadBuilder.of(network)
+        dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
                 .staticId("LOAD")
                 .build());
         dynamicModels.add(WeccBuilder.of(network, "WT4AWeccCurrentSource")

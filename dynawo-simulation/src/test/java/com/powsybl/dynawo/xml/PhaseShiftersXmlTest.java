@@ -62,7 +62,7 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     protected void addDynamicModels(Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) {
         dynamicModels.add(phaseShifterConstructor.apply(network));
         if (dynamicTransformer) {
-            dynamicModels.add(TransformerFixedRatioBuilder.of(network)
+            dynamicModels.add(TransformerFixedRatioBuilder.of(network, "TransformerFixedRatio")
                     .staticId("NGEN_NHV1")
                     .parameterSetId("tt")
                     .build());
@@ -83,13 +83,13 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     private static Stream<Arguments> providePhaseShifter() {
         return Stream.of(
                 Arguments.of("phase_shifter_i_dyd.xml", "phase_shifter_i_par.xml", (Function<Network, BlackBoxModel>) n ->
-                        PhaseShifterIAutomationSystemBuilder.of(n)
+                        PhaseShifterIAutomationSystemBuilder.of(n, "PhaseShifterI")
                                 .dynamicModelId(DYN_NAME)
                                 .parameterSetId("phase_shifter_i_par")
                                 .transformer("NGEN_NHV1")
                                 .build(), true),
                 Arguments.of("phase_shifter_p_dyd.xml", "phase_shifter_p_par.xml", (Function<Network, BlackBoxModel>) n ->
-                        PhaseShifterPAutomationSystemBuilder.of(n)
+                        PhaseShifterPAutomationSystemBuilder.of(n, "PhaseShifterP")
                                 .dynamicModelId(DYN_NAME)
                                 .parameterSetId("phase_shifter_p_par")
                                 .transformer("NGEN_NHV1")

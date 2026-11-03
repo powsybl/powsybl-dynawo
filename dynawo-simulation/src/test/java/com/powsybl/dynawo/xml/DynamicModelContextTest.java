@@ -74,7 +74,7 @@ class DynamicModelContextTest {
                 .staticId(duplicatedId)
                 .parameterSetId("lab")
                 .build();
-        BlackBoxModel phaseShifter = TapChangerAutomationSystemBuilder.of(network)
+        BlackBoxModel phaseShifter = TapChangerAutomationSystemBuilder.of(network, "TapChangerAutomationSystem")
                 .dynamicModelId(duplicatedId)
                 .parameterSetId("tc")
                 .staticId("LOAD")
@@ -110,10 +110,10 @@ class DynamicModelContextTest {
                 .build();
         dynamicModels.add(bbm);
         Generator gen = network.getGenerator("GEN");
-        dynamicModels.add(BaseGeneratorBuilder.of(network)
+        dynamicModels.add(BaseGeneratorBuilder.of(network, "GeneratorFictitious")
                 .equipment(gen)
                 .build());
-        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
+        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network, "TapChangerAutomationSystem")
                 .dynamicModelId("TAP_CHANGER_1")
                 .parameterSetId("tc")
                 .staticId("LOAD")

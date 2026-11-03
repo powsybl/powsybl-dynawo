@@ -36,9 +36,9 @@ class StandardLineTest {
                 .setR(1).setX(3).setG1(0).setG2(0).setB1(0).setB2(0).add();
 
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
-        dynamicModels.add(StandardBusBuilder.of(network).staticId("bus1").parameterSetId("bus").build());
-        dynamicModels.add(StandardBusBuilder.of(network).staticId("bus2").parameterSetId("bus").build());
-        dynamicModels.add(LineBuilder.of(network).staticId("l").parameterSetId("SL").build());
+        dynamicModels.add(StandardBusBuilder.of(network, "Bus").staticId("bus1").parameterSetId("bus").build());
+        dynamicModels.add(StandardBusBuilder.of(network, "Bus").staticId("bus2").parameterSetId("bus").build());
+        dynamicModels.add(LineBuilder.of(network, "Line").staticId("l").parameterSetId("SL").build());
         dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                         .dynamicModelId("BBM_CLA")
                         .parameterSetId("CLA")

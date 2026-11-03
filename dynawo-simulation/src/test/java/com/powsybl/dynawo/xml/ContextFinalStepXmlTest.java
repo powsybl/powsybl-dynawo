@@ -45,15 +45,15 @@ class ContextFinalStepXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     }
 
     protected void addDynamicModels() {
-        dynamicModels.add(BaseShuntBuilder.of(network)
+        dynamicModels.add(BaseShuntBuilder.of(network, "ShuntB")
                 .staticId("SHUNT")
                 .parameterSetId("sh")
                 .build());
-        dynamicModels.add(BaseLoadBuilder.of(network)
+        dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
                 .staticId("LOAD")
                 .parameterSetId("lab")
                 .build());
-        dynamicModels.add(BaseLoadBuilder.of(network)
+        dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
                 .staticId("LOAD2")
                 .parameterSetId("lab")
                 .build());

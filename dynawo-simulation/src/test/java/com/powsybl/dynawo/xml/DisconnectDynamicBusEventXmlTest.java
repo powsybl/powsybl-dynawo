@@ -30,19 +30,19 @@ class DisconnectDynamicBusEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(BaseGeneratorBuilder.of(network, reportNode)
+        dynamicModels.add(BaseGeneratorBuilder.of(network, "GeneratorFictitious", reportNode)
                 .staticId("G1")
                 .parameterSetId("gen")
                 .build());
-        dynamicModels.add(StandardBusBuilder.of(network, reportNode)
+        dynamicModels.add(StandardBusBuilder.of(network, "Bus", reportNode)
                 .staticId("B1")
                 .parameterSetId("bus")
                 .build());
-        dynamicModels.add(StandardBusBuilder.of(network, reportNode)
+        dynamicModels.add(StandardBusBuilder.of(network, "Bus", reportNode)
                 .staticId("B2")
                 .parameterSetId("bus")
                 .build());
-        dynamicModels.add(LineBuilder.of(network, reportNode)
+        dynamicModels.add(LineBuilder.of(network, "Line", reportNode)
                 .staticId("L1")
                 .parameterSetId("line")
                 .build());

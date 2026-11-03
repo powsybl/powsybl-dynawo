@@ -22,14 +22,6 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
     public static final String CATEGORY = "WECC";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static WeccBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static WeccBuilder of(Network network, ReportNode reportNode) {
-        return new WeccBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static WeccBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -43,9 +35,6 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
         return new WeccBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
-    }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();

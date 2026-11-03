@@ -22,14 +22,6 @@ public class SynchronousGeneratorBuilder extends AbstractSynchronousGeneratorBui
     public static final String CATEGORY = "SYNCHRONOUS_GENERATOR";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static SynchronousGeneratorBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static SynchronousGeneratorBuilder of(Network network, ReportNode reportNode) {
-        return new SynchronousGeneratorBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static SynchronousGeneratorBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -43,9 +35,6 @@ public class SynchronousGeneratorBuilder extends AbstractSynchronousGeneratorBui
         return new SynchronousGeneratorBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
-    }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();

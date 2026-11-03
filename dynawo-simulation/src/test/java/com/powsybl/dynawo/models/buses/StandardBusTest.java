@@ -31,7 +31,7 @@ class StandardBusTest {
     void connectionToModelWithoutDynamicModelException() {
         Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
-        dynamicModels.add(StandardBusBuilder.of(network)
+        dynamicModels.add(StandardBusBuilder.of(network, "Bus")
                 .staticId("NHV1")
                 .parameterSetId("SB")
                 .build());

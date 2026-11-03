@@ -40,13 +40,13 @@ class EmptyTapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicMode
                 .staticId("LOAD")
                 .parameterSetId("lot")
                 .build());
-        dynamicModels.add(TapChangerBlockingAutomationSystemBuilder.of(network)
+        dynamicModels.add(TapChangerBlockingAutomationSystemBuilder.of(network, "TapChangerBlockingAutomationSystem")
                 .dynamicModelId("BBM_TapChangerBlocking")
                 .parameterSetId("TapChangerPar")
                 .transformers("GEN", "LOAD", "BBM_TC")
                 .uMeasurements("NHV1")
                 .build());
-        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
+        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network, "TapChangerAutomationSystem")
                 .dynamicModelId("BBM_TC")
                 .parameterSetId("tc")
                 .staticId("LOAD2")

@@ -48,18 +48,18 @@ class TapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("LOAD3")
                 .parameterSetId("LTT")
                 .build());
-        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
+        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network, "TapChangerAutomationSystem")
                 .dynamicModelId("BBM_TC")
                 .parameterSetId("tc")
                 .staticId("LOAD")
                 .build());
-        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
+        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network, "TapChangerAutomationSystem")
                 .dynamicModelId("BBM_TC2")
                 .parameterSetId("tc")
                 .staticId("LOAD2")
                 .side(TransformerSide.LOW_VOLTAGE)
                 .build());
-        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
+        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network, "TapChangerAutomationSystem")
                 .dynamicModelId("BBM_TC3")
                 .parameterSetId("tc")
                 .staticId("LOAD3")

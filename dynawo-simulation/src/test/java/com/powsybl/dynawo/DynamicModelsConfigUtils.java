@@ -43,7 +43,7 @@ public final class DynamicModelsConfigUtils {
 
     private static void addBus(Network network, List<BlackBoxModel> models, Set<String> existingModels, String staticId) {
         if (!existingModels.contains(staticId)) {
-            models.add(StandardBusBuilder.of(network)
+            models.add(StandardBusBuilder.of(network, "Bus")
                     .staticId(staticId)
                     .parameterSetId(BUS_PARAM_SET_ID)
                     .build());
@@ -52,7 +52,7 @@ public final class DynamicModelsConfigUtils {
 
     private static void addLine(Network network, List<BlackBoxModel> models, Set<String> existingModels, String staticId) {
         if (!existingModels.contains(staticId)) {
-            models.add(LineBuilder.of(network)
+            models.add(LineBuilder.of(network, "Line")
                     .staticId(staticId)
                     .parameterSetId(LINE_PARAM_SET_ID)
                     .build());
@@ -61,7 +61,7 @@ public final class DynamicModelsConfigUtils {
 
     private static void addTransformer(Network network, List<BlackBoxModel> models, Set<String> existingModels, String staticId) {
         if (!existingModels.contains(staticId)) {
-            models.add(TransformerFixedRatioBuilder.of(network)
+            models.add(TransformerFixedRatioBuilder.of(network, "TransformerFixedRatio")
                     .staticId(staticId)
                     .parameterSetId(TRANSFORMER_PARAM_SET_ID)
                     .build());

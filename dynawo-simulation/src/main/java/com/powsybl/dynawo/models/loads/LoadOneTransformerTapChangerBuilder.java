@@ -22,14 +22,6 @@ public class LoadOneTransformerTapChangerBuilder extends AbstractLoadModelBuilde
     public static final String CATEGORY = "LOAD_ONE_TRANSFORMER_TAP_CHANGER";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static LoadOneTransformerTapChangerBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static LoadOneTransformerTapChangerBuilder of(Network network, ReportNode reportNode) {
-        return new LoadOneTransformerTapChangerBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static LoadOneTransformerTapChangerBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -43,9 +35,6 @@ public class LoadOneTransformerTapChangerBuilder extends AbstractLoadModelBuilde
         return new LoadOneTransformerTapChangerBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
-    }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();

@@ -42,12 +42,12 @@ class DynawoOutputVariablesTest {
                 .staticId("LOAD")
                 .parameterSetId("lot")
                 .build());
-        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
+        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network, "TapChangerAutomationSystem")
                 .dynamicModelId("BBM_TC_LOAD")
                 .parameterSetId("tc")
                 .staticId("LOAD")
                 .build());
-        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
+        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network, "TapChangerAutomationSystem")
                 .dynamicModelId("BBM_TC_LOAD2")
                 .parameterSetId("tc")
                 .staticId("LOAD2")

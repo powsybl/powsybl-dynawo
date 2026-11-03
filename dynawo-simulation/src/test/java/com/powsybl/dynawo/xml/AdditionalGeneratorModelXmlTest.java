@@ -62,7 +62,7 @@ class AdditionalGeneratorModelXmlTest extends AbstractParametrizedDynamicModelXm
 
     protected void addDynamicModels(Function<Network, BlackBoxModel> genConstructor) {
         dynamicModels.add(genConstructor.apply(network));
-        dynamicModels.add(UnderVoltageAutomationSystemBuilder.of(network)
+        dynamicModels.add(UnderVoltageAutomationSystemBuilder.of(network, "UnderVoltage")
                 .dynamicModelId("UVA")
                 .generator(GEN_ID)
                 .build());

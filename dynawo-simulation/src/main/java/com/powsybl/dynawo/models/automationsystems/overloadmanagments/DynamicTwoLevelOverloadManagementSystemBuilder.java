@@ -27,14 +27,6 @@ public class DynamicTwoLevelOverloadManagementSystemBuilder extends AbstractOver
     protected final BuilderEquipment<Branch<?>> iMeasurement2;
     protected TwoSides iMeasurement2Side;
 
-    public static DynamicTwoLevelOverloadManagementSystemBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static DynamicTwoLevelOverloadManagementSystemBuilder of(Network network, ReportNode reportNode) {
-        return new DynamicTwoLevelOverloadManagementSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static DynamicTwoLevelOverloadManagementSystemBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -48,9 +40,6 @@ public class DynamicTwoLevelOverloadManagementSystemBuilder extends AbstractOver
         return new DynamicTwoLevelOverloadManagementSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
-    }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();

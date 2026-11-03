@@ -22,14 +22,6 @@ public class GridFormingConverterBuilder extends AbstractGeneratorBuilder<GridFo
     public static final String CATEGORY = "GRID_FORMING_CONVERTER";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static GridFormingConverterBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static GridFormingConverterBuilder of(Network network, ReportNode reportNode) {
-        return new GridFormingConverterBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static GridFormingConverterBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -43,9 +35,6 @@ public class GridFormingConverterBuilder extends AbstractGeneratorBuilder<GridFo
         return new GridFormingConverterBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
-    }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();

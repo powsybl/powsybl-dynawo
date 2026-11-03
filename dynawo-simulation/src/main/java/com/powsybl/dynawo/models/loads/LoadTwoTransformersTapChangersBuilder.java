@@ -22,14 +22,6 @@ public class LoadTwoTransformersTapChangersBuilder extends AbstractLoadModelBuil
     public static final String CATEGORY = "LOAD_TWO_TRANSFORMERS_TAP_CHANGER";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static LoadTwoTransformersTapChangersBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static LoadTwoTransformersTapChangersBuilder of(Network network, ReportNode reportNode) {
-        return new LoadTwoTransformersTapChangersBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static LoadTwoTransformersTapChangersBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -43,9 +35,6 @@ public class LoadTwoTransformersTapChangersBuilder extends AbstractLoadModelBuil
         return new LoadTwoTransformersTapChangersBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
-    }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();

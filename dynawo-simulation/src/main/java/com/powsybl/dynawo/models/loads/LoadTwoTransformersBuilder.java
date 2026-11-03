@@ -22,14 +22,6 @@ public class LoadTwoTransformersBuilder extends AbstractLoadModelBuilder<LoadTwo
     public static final String CATEGORY = "LOAD_TWO_TRANSFORMERS";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static LoadTwoTransformersBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static LoadTwoTransformersBuilder of(Network network, ReportNode reportNode) {
-        return new LoadTwoTransformersBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static LoadTwoTransformersBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -43,9 +35,6 @@ public class LoadTwoTransformersBuilder extends AbstractLoadModelBuilder<LoadTwo
         return new LoadTwoTransformersBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
-    }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();

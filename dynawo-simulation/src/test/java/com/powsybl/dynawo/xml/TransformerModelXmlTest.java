@@ -28,7 +28,7 @@ class TransformerModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(TransformerFixedRatioBuilder.of(network)
+        dynamicModels.add(TransformerFixedRatioBuilder.of(network, "TransformerFixedRatio")
                 .staticId("NGEN_NHV1")
                 .parameterSetId("TFR")
                 .build());

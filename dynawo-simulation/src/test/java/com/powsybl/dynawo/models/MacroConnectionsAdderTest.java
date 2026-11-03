@@ -36,16 +36,16 @@ class MacroConnectionsAdderTest {
     @BeforeEach
     void setUp() {
         Network network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
-        gen = SynchronousGeneratorBuilder.of(network)
+        gen = SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindings")
                 .staticId("GEN")
                 .build();
-        SynchronousGenerator gen2 = SynchronousGeneratorBuilder.of(network)
+        SynchronousGenerator gen2 = SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindings")
                 .staticId("GEN2")
                 .build();
         dynamicModels = List.of(
                 gen,
                 gen2,
-                SynchronousGeneratorBuilder.of(network)
+                SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindings")
                         .staticId("GEN3")
                         .build()
         );

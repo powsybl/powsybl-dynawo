@@ -62,10 +62,10 @@ class EnergizedSimplifierTest {
     void testNoFilterEnergizedSimplifier() {
         Network network = EurostagTutorialExample1Factory.createWithLFResults();
         List<BlackBoxModel> dynamicModels = List.of(
-                LoadOneTransformerBuilder.of(network)
+                LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
                         .staticId("LOAD")
                         .build(),
-                TapChangerAutomationSystemBuilder.of(network)
+                TapChangerAutomationSystemBuilder.of(network, "TapChangerAutomationSystem")
                         .dynamicModelId("TC")
                         .staticId("LOAD")
                         .build());
@@ -112,7 +112,7 @@ class EnergizedSimplifierTest {
                         """),
                 Arguments.of(EurostagTutorialExample1Factory.create(),
                         (Consumer<Network>) n -> n.getLine("NHV1_NHV2_1").getTerminal1().disconnect(),
-                        (Function<Network, BlackBoxModel>) n -> DynamicOverloadManagementSystemBuilder.of(n)
+                        (Function<Network, BlackBoxModel>) n -> DynamicOverloadManagementSystemBuilder.of(n, "OverloadManagementSystem")
                                 .dynamicModelId("OMS")
                                 .parameterSetId("oms")
                                 .controlledBranch("NHV1_NHV2_1")
@@ -126,7 +126,7 @@ class EnergizedSimplifierTest {
                         """),
                 Arguments.of(EurostagTutorialExample1Factory.create(),
                         (Consumer<Network>) n -> n.getBusBreakerView().getBus("NGEN").setV(1.0),
-                        (Function<Network, BlackBoxModel>) n -> DynamicOverloadManagementSystemBuilder.of(n)
+                        (Function<Network, BlackBoxModel>) n -> DynamicOverloadManagementSystemBuilder.of(n, "OverloadManagementSystem")
                                 .dynamicModelId("OMS")
                                 .parameterSetId("oms")
                                 .controlledBranch("NHV1_NHV2_1")
@@ -140,7 +140,7 @@ class EnergizedSimplifierTest {
                         """),
                 Arguments.of(EurostagTutorialExample1Factory.create(),
                         (Consumer<Network>) n -> n.getBusBreakerView().getBus("NGEN").setV(1.0),
-                        (Function<Network, BlackBoxModel>) n -> DynamicTwoLevelOverloadManagementSystemBuilder.of(n)
+                        (Function<Network, BlackBoxModel>) n -> DynamicTwoLevelOverloadManagementSystemBuilder.of(n, "TwoLevelOverloadManagementSystem")
                                 .dynamicModelId("OMSTL")
                                 .parameterSetId("oms")
                                 .controlledBranch("NHV1_NHV2_1")

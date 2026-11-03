@@ -24,14 +24,6 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
     private static final HvdcVarNameHandler P_NAME_HANDLER = new HvdcPVarNameHandler();
 
-    public static HvdcPBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static HvdcPBuilder of(Network network, ReportNode reportNode) {
-        return new HvdcPBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static HvdcPBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -45,9 +37,6 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
         return new HvdcPBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
-    }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();

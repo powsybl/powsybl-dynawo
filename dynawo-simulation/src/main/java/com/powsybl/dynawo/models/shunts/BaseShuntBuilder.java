@@ -24,14 +24,6 @@ public class BaseShuntBuilder extends AbstractEquipmentModelBuilder<ShuntCompens
     public static final String CATEGORY = "BASE_SHUNT";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static BaseShuntBuilder of(Network network) {
-        return of(network, ReportNode.NO_OP);
-    }
-
-    public static BaseShuntBuilder of(Network network, ReportNode reportNode) {
-        return new BaseShuntBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
-    }
-
     public static BaseShuntBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
@@ -45,9 +37,6 @@ public class BaseShuntBuilder extends AbstractEquipmentModelBuilder<ShuntCompens
         return new BaseShuntBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfo getDefaultModelInfo() {
-        return MODEL_CONFIGS.getDefaultModelConfig();
-    }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
