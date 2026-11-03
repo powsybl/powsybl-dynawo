@@ -95,7 +95,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     }
 
     protected void setupMacroConnections() {
-        VersionableVariablesHandler.getInstance().setCurrentValues(dynawoVersion);
+        VersionableVariablesHandler.getInstance().setCurrentVersion(dynawoVersion);
         simulationModels = SimulationModels.createFrom(blackBoxModelSupplier, dynamicModels, eventModels, dynamicModelsParameters::add,
                 dynawoParameters, reportNode);
         if (!finalStepDynamicModels.isEmpty()) {

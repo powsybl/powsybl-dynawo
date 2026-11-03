@@ -9,7 +9,9 @@ package com.powsybl.dynawo.versionablevariable;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.models.versionablevariable.Versionable;
 import com.powsybl.dynawo.models.versionablevariable.VersionableVariable;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -22,35 +24,40 @@ class VersionableVariableTest {
 
     @Test
     void testVariableVersion() {
+        VersionableVariablesHandler handler = VersionableVariablesHandler.getInstance();
+        handler.setCurrentVersion(DynawoVersion.createFromString("1.6.0"));
         VersionableVariable variable = new VersionableVariable("VAR",
-                new VersionableVariable.VariableStep(DynawoVersion.createFromString("1.5.0"), "variable1"),
-                new VersionableVariable.VariableStep(DynawoVersion.createFromString("1.7.0"), "variable2"),
-                new VersionableVariable.VariableStep(DynawoVersion.createFromString("1.8.0"), "variable3")
+                new Versionable.Step<>(DynawoVersion.createFromString("1.5.0"), "variable1"),
+                new Versionable.Step<>(DynawoVersion.createFromString("1.7.0"), "variable2"),
+                new Versionable.Step<>(DynawoVersion.createFromString("1.8.0"), "variable3")
         );
-        String currentValue = variable.getCurrentValue(DynawoVersion.createFromString("1.6.0"));
+        String currentValue = handler.getCurrentVariable(variable);
         assertEquals("variable1", currentValue);
     }
 
     @Test
     void testVariableExactVersion() {
-        VersionableVariable variable = new VersionableVariable("VAR",
-                new VersionableVariable.VariableStep(DynawoVersion.createFromString("1.5.0"), "variable1"),
-                new VersionableVariable.VariableStep(DynawoVersion.createFromString("1.6.0"), "variable2"),
-                new VersionableVariable.VariableStep(DynawoVersion.createFromString("1.7.0"), "variable3")
+        VersionableVariablesHandler handler = VersionableVariablesHandler.getInstance();
+        handler.setCurrentVersion(DynawoVersion.createFromString("1.6.0"));
+        VersionableVariable variable = new VersionableVariable("VAR_EXACT",
+                new Versionable.Step<>(DynawoVersion.createFromString("1.5.0"), "variable1"),
+                new Versionable.Step<>(DynawoVersion.createFromString("1.6.0"), "variable2"),
+                new Versionable.Step<>(DynawoVersion.createFromString("1.7.0"), "variable3")
         );
-        String currentValue = variable.getCurrentValue(DynawoVersion.createFromString("1.6.0"));
+        String currentValue = handler.getCurrentVariable(variable);
         assertEquals("variable2", currentValue);
     }
 
     @Test
     void testVersionNotFound() {
-        VersionableVariable variable = new VersionableVariable("VAR",
-                new VersionableVariable.VariableStep(DynawoVersion.createFromString("1.5.0"), "variable1"),
-                new VersionableVariable.VariableStep(DynawoVersion.createFromString("1.8.0"), "variable2")
+        VersionableVariablesHandler handler = VersionableVariablesHandler.getInstance();
+        handler.setCurrentVersion(DynawoVersion.createFromString("1.4.0"));
+        VersionableVariable variable = new VersionableVariable("VAR_NOT_FOUND",
+                new Versionable.Step<>(DynawoVersion.createFromString("1.5.0"), "variable1"),
+                new Versionable.Step<>(DynawoVersion.createFromString("1.8.0"), "variable2")
         );
-        DynawoVersion lowVersion = DynawoVersion.createFromString("1.4.0");
-        assertThatThrownBy(() -> variable.getCurrentValue(lowVersion))
-            .isInstanceOf(PowsyblException.class)
-            .hasMessageContaining("No VersionableVariable value found for Dynawo version 1.4.0");
+        assertThatThrownBy(() -> handler.getCurrentVariable(variable))
+                .isInstanceOf(PowsyblException.class)
+                .hasMessageContaining("No versionable value found for Dynawo version 1.4.0");
     }
 }

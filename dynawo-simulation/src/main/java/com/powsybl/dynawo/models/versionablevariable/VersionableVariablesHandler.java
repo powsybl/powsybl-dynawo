@@ -15,8 +15,6 @@ import com.powsybl.dynawo.models.VarMapping;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.stream.Collectors;
 
 /**
  * Resolve all VarConnection variable with a value dependent of the Dynawo version
@@ -25,39 +23,39 @@ import java.util.stream.Collectors;
 public final class VersionableVariablesHandler {
 
     public static final DynawoVersion DYNAWO_VERSION_1_8_0 = new DynawoVersion(1, 8, 0);
-
     private static final VersionableVariablesHandler INSTANCE = new VersionableVariablesHandler();
 
-    private final List<VersionableVariable> versionableVariables;
-    private final Map<String, String> currentValues = new HashMap<>();
-    private final Map<String, List<VarMapping>> currentVarMappings = new HashMap<>();
+    private final Map<String, String> currentVariableValues = new HashMap<>();
+    private final Map<String, List<VarMapping>> currentVarMappingsValues = new HashMap<>();
 
     private DynawoVersion currentVersion = DynawoConstants.CURRENT_VERSION;
 
     private VersionableVariablesHandler() {
-        this.versionableVariables = ServiceLoader.load(VersionableVariablesProvider.class).stream()
-                .map(ServiceLoader.Provider::get)
-                .flatMap(p -> p.getVersionableVariables().stream())
-                .collect(Collectors.toList());
-        setCurrentValues();
     }
 
     public static VersionableVariablesHandler getInstance() {
         return INSTANCE;
     }
 
-    public String getCurrentValue(String name) {
-        return currentValues.get(name);
+    public String getCurrentVariable(VersionableVariable versionableVariable) {
+        return currentVariableValues.computeIfAbsent(versionableVariable.getName(),
+                k -> getCurrentValue(versionableVariable));
+    }
+
+    public String getCurrentVariable(VersionableVariable versionableVariable, Object... args) {
+        return String.format(currentVariableValues.computeIfAbsent(versionableVariable.getName(),
+                k -> getCurrentValue(versionableVariable)), args);
     }
 
     public String getCurrentValue(String name, Object... args) {
-        return String.format(currentValues.get(name), args);
+        return String.format(currentVariableValues.get(name), args);
     }
 
-    public void setCurrentValues(DynawoVersion currentVersion) {
+    public void setCurrentVersion(DynawoVersion currentVersion) {
         if (this.currentVersion.compareTo(currentVersion) != 0) {
             this.currentVersion = currentVersion;
-            setCurrentValues();
+            currentVariableValues.clear();
+            currentVarMappingsValues.clear();
         }
     }
 
@@ -65,7 +63,7 @@ public final class VersionableVariablesHandler {
      * Load lazily the current value for VersionableVarsMapping
      */
     public List<VarMapping> getCurrentVarMapping(VersionableVarsMapping versionableVarsMapping) {
-        return currentVarMappings.computeIfAbsent(versionableVarsMapping.getName(),
+        return currentVarMappingsValues.computeIfAbsent(versionableVarsMapping.getName(),
                 k -> getCurrentValue(versionableVarsMapping));
     }
 
@@ -84,9 +82,5 @@ public final class VersionableVariablesHandler {
             }
         }
         throw new PowsyblException("No versionable value found for Dynawo version %s".formatted(currentVersion));
-    }
-
-    private void setCurrentValues() {
-        versionableVariables.forEach(vv -> currentValues.put(vv.name(), vv.getCurrentValue(currentVersion)));
     }
 }

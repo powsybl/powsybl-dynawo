@@ -12,6 +12,7 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
 import com.powsybl.dynawo.models.versionablevariable.Versionable;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariable;
 import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.iidm.network.Load;
 
@@ -27,11 +28,11 @@ import static com.powsybl.dynawo.models.versionablevariable.VersionableVariables
  */
 public class LoadOneTransformerTapChanger extends AbstractLoadOneTransformer implements TapChangerModel {
 
-    protected LoadOneTransformerTapChanger(Load load, String parameterSetId, ModelConfig modelConfig) {
-        super(load, parameterSetId, modelConfig);
-    }
+    private static final VersionableVariable TC_LOCKED = new VersionableVariable("TC_LOCKED",
+            new Versionable.Step<>("tapChanger_locked"),
+            new Versionable.Step<>(DYNAWO_VERSION_1_8_0, "transformer_locked"));
 
-    Versionable<Function<EquipmentConnectionPoint, List<VarConnection>>> versionableVarConnections = () -> List.of(
+    private final Versionable<Function<EquipmentConnectionPoint, List<VarConnection>>> versionableVarConnections = () -> List.of(
             new Versionable.Step<>(c -> {
                 List<VarConnection> varConnections = super.getVarConnectionsWith(c);
                 c.getSwitchOffSignalVarName()
@@ -42,6 +43,10 @@ public class LoadOneTransformerTapChanger extends AbstractLoadOneTransformer imp
             new Versionable.Step<>(DYNAWO_VERSION_1_8_0, super::getVarConnectionsWith)
     );
 
+    protected LoadOneTransformerTapChanger(Load load, String parameterSetId, ModelConfig modelConfig) {
+        super(load, parameterSetId, modelConfig);
+    }
+
     @Override
     protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         return VersionableVariablesHandler.getInstance().getCurrentVersionable(versionableVarConnections).apply(connected);
@@ -49,6 +54,6 @@ public class LoadOneTransformerTapChanger extends AbstractLoadOneTransformer imp
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE), VersionableVariablesHandler.getInstance().getCurrentValue("TC_LOCKED", NONE.getSideSuffix())));
+        return List.of(new VarConnection(getTapChangerBlockingVarName(HIGH_VOLTAGE), VersionableVariablesHandler.getInstance().getCurrentVariable(TC_LOCKED)));
     }
 }

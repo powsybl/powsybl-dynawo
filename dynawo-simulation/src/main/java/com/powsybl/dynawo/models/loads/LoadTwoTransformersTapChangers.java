@@ -13,6 +13,7 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
 import com.powsybl.dynawo.models.versionablevariable.Versionable;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariable;
 import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.iidm.network.Load;
 
@@ -27,11 +28,11 @@ import static com.powsybl.dynawo.models.versionablevariable.VersionableVariables
  */
 public class LoadTwoTransformersTapChangers extends AbstractLoadTwoTransformers implements TapChangerModel {
 
-    protected LoadTwoTransformersTapChangers(Load load, String parameterSetId, ModelConfig modelConfig) {
-        super(load, parameterSetId, modelConfig);
-    }
+    private static final VersionableVariable TC_SIDE_LOCKED = new VersionableVariable("TC_LOCKED",
+            new Versionable.Step<>("tapChanger%s_locked"),
+            new Versionable.Step<>(DYNAWO_VERSION_1_8_0, "transformer%s_locked"));
 
-    Versionable<Function<EquipmentConnectionPoint, List<VarConnection>>> versionableVarConnections = () -> List.of(
+    private final Versionable<Function<EquipmentConnectionPoint, List<VarConnection>>> versionableVarConnections = () -> List.of(
             new Versionable.Step<>(c -> {
                 List<VarConnection> varConnections = super.getVarConnectionsWith(c);
                 c.getSwitchOffSignalVarName()
@@ -44,6 +45,10 @@ public class LoadTwoTransformersTapChangers extends AbstractLoadTwoTransformers 
             new Versionable.Step<>(DYNAWO_VERSION_1_8_0, super::getVarConnectionsWith)
     );
 
+    protected LoadTwoTransformersTapChangers(Load load, String parameterSetId, ModelConfig modelConfig) {
+        super(load, parameterSetId, modelConfig);
+    }
+
     @Override
     protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         return VersionableVariablesHandler.getInstance().getCurrentVersionable(versionableVarConnections).apply(connected);
@@ -51,7 +56,7 @@ public class LoadTwoTransformersTapChangers extends AbstractLoadTwoTransformers 
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        String lockedVar = VersionableVariablesHandler.getInstance().getCurrentValue("TC_LOCKED");
+        String lockedVar = VersionableVariablesHandler.getInstance().getCurrentVariable(TC_SIDE_LOCKED);
         return List.of(getTapChangerBlockerVarConnection(LOW_VOLTAGE, lockedVar),
                 getTapChangerBlockerVarConnection(HIGH_VOLTAGE, lockedVar));
     }
