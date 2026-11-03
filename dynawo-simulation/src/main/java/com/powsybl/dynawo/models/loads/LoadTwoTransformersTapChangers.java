@@ -12,13 +12,15 @@ import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
+import com.powsybl.dynawo.models.versionablevariable.Versionable;
 import com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
+import java.util.function.Function;
 
-import static com.powsybl.dynawo.models.TransformerSide.HIGH_VOLTAGE;
-import static com.powsybl.dynawo.models.TransformerSide.LOW_VOLTAGE;
+import static com.powsybl.dynawo.models.TransformerSide.*;
+import static com.powsybl.dynawo.models.versionablevariable.VersionableVariablesHandler.DYNAWO_VERSION_1_8_0;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -29,15 +31,22 @@ public class LoadTwoTransformersTapChangers extends AbstractLoadTwoTransformers 
         super(load, parameterSetId, modelConfig);
     }
 
+    Versionable<Function<EquipmentConnectionPoint, List<VarConnection>>> versionableVarConnections = () -> List.of(
+            new Versionable.Step<>(c -> {
+                List<VarConnection> varConnections = super.getVarConnectionsWith(c);
+                c.getSwitchOffSignalVarName()
+                        .ifPresent(switchOff -> {
+                            varConnections.add(new VarConnection(String.format("tapChanger%s_switchOffSignal1", HIGH_VOLTAGE.getSideSuffix()), switchOff));
+                            varConnections.add(new VarConnection(String.format("tapChanger%s_switchOffSignal1", LOW_VOLTAGE.getSideSuffix()), switchOff));
+                        });
+                return varConnections;
+            }),
+            new Versionable.Step<>(DYNAWO_VERSION_1_8_0, super::getVarConnectionsWith)
+    );
+
     @Override
     protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
-        List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
-        connected.getSwitchOffSignalVarName()
-                .ifPresent(switchOff -> {
-                    varConnections.add(new VarConnection(String.format("tapChanger%s_switchOffSignal1", HIGH_VOLTAGE.getSideSuffix()), switchOff));
-                    varConnections.add(new VarConnection(String.format("tapChanger%s_switchOffSignal1", LOW_VOLTAGE.getSideSuffix()), switchOff));
-                });
-        return varConnections;
+        return VersionableVariablesHandler.getInstance().getCurrentVersionable(versionableVarConnections).apply(connected);
     }
 
     @Override
