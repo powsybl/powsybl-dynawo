@@ -70,7 +70,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
 
     @Override
     public String getStateValueVarName() {
-        return VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "transformer_state");
+        return VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, getStateVarName());
     }
 
     @Override
