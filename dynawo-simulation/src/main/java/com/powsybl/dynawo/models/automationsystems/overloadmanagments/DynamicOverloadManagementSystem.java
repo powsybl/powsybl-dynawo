@@ -16,7 +16,6 @@ import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Terminal;
 import com.powsybl.iidm.network.TwoSides;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,13 +54,12 @@ public class DynamicOverloadManagementSystem extends AbstractPureDynamicBlackBox
     }
 
     private List<VarConnection> getVarConnectionsWithMeasuredBranch(BranchModel connected) {
-        return Arrays.asList(
-                new VarConnection("currentLimitAutomaton_IMonitored", connected.getIVarName(measuredSide)),
-                new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDeactivateCurrentLimitsVarName())
-        );
+        return List.of(new VarConnection("currentLimitAutomaton_IMonitored", connected.getIVarName(measuredSide)));
     }
 
     protected List<VarConnection> getVarConnectionsWithControlledBranch(BranchModel connected) {
-        return List.of(new VarConnection("currentLimitAutomaton_order", connected.getStateVarName()));
+        return List.of(new VarConnection("currentLimitAutomaton_order", connected.getStateVarName()),
+                new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDeactivateCurrentLimitsVarName())
+        );
     }
 }
