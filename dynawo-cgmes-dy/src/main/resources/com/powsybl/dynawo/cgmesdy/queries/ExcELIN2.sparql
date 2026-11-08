@@ -1,0 +1,35 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:ExcELIN2 .
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?synchronousMachineId . }
+  OPTIONAL { ?id cim:ExcELIN2.tr4 ?tr4 . }
+  OPTIONAL { ?id cim:ExcELIN2.k1 ?k1 . }
+  OPTIONAL { ?id cim:ExcELIN2.t1 ?t1 . }
+  OPTIONAL { ?id cim:ExcELIN2.p1 ?p1 . }
+  OPTIONAL { ?id cim:ExcELIN2.p2 ?p2 . }
+  OPTIONAL { ?id cim:ExcELIN2.ti1 ?ti1 . }
+  OPTIONAL { ?id cim:ExcELIN2.ti3 ?ti3 . }
+  OPTIONAL { ?id cim:ExcELIN2.ti4 ?ti4 . }
+  OPTIONAL { ?id cim:ExcELIN2.te ?te . }
+  OPTIONAL { ?id cim:ExcELIN2.ermin ?ermin . }
+  OPTIONAL { ?id cim:ExcELIN2.ermax ?ermax . }
+  OPTIONAL { ?id cim:ExcELIN2.kcse ?kcse . }
+  OPTIONAL { ?id cim:ExcELIN2.kce ?kce . }
+  OPTIONAL { ?id cim:ExcELIN2.tc4 ?tc4 . }
+  OPTIONAL { ?id cim:ExcELIN2.tb4 ?tb4 . }
+  OPTIONAL { ?id cim:ExcELIN2.efdbas ?efdbas . }
+  OPTIONAL { ?id cim:ExcELIN2.iefmax ?iefmax . }
+  OPTIONAL { ?id cim:ExcELIN2.iefmax2 ?iefmax2 . }
+  OPTIONAL { ?id cim:ExcELIN2.efmin2 ?efmin2 . }
+  OPTIONAL { ?id cim:ExcELIN2.k2 ?k2 . }
+  OPTIONAL { ?id cim:ExcELIN2.t2 ?t2 . }
+}

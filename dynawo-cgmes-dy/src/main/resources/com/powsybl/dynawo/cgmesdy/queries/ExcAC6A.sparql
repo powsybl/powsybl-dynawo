@@ -1,0 +1,37 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:ExcAC6A .
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?synchronousMachineId . }
+  OPTIONAL { ?id cim:ExcAC6A.tr ?tr . }
+  OPTIONAL { ?id cim:ExcAC6A.ka ?ka . }
+  OPTIONAL { ?id cim:ExcAC6A.ta ?ta . }
+  OPTIONAL { ?id cim:ExcAC6A.vamax ?vamax . }
+  OPTIONAL { ?id cim:ExcAC6A.vamin ?vamin . }
+  OPTIONAL { ?id cim:ExcAC6A.tk ?tk . }
+  OPTIONAL { ?id cim:ExcAC6A.tb ?tb . }
+  OPTIONAL { ?id cim:ExcAC6A.tc ?tc . }
+  OPTIONAL { ?id cim:ExcAC6A.te ?te . }
+  OPTIONAL { ?id cim:ExcAC6A.ke ?ke . }
+  OPTIONAL { ?id cim:ExcAC6A.vhmax ?vhmax . }
+  OPTIONAL { ?id cim:ExcAC6A.kh ?kh . }
+  OPTIONAL { ?id cim:ExcAC6A.tj ?tj . }
+  OPTIONAL { ?id cim:ExcAC6A.th ?th . }
+  OPTIONAL { ?id cim:ExcAC6A.td ?td . }
+  OPTIONAL { ?id cim:ExcAC6A.kc ?kc . }
+  OPTIONAL { ?id cim:ExcAC6A.kd ?kd . }
+  OPTIONAL { ?id cim:ExcAC6A.vrmax ?vrmax . }
+  OPTIONAL { ?id cim:ExcAC6A.vrmin ?vrmin . }
+  OPTIONAL { ?id cim:ExcAC6A.e1 ?e1 . }
+  OPTIONAL { ?id cim:ExcAC6A.se1 ?se1 . }
+  OPTIONAL { ?id cim:ExcAC6A.e2 ?e2 . }
+  OPTIONAL { ?id cim:ExcAC6A.se2 ?se2 . }
+}

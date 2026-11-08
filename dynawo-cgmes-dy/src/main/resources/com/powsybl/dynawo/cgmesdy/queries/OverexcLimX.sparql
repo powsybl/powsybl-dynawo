@@ -1,0 +1,25 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:OverexcLimX .
+  OPTIONAL { ?id cim:OverexcitationLimiterDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:OverexcLimX.efd1 ?efd1 . }
+  OPTIONAL { ?id cim:OverexcLimX.efd2 ?efd2 . }
+  OPTIONAL { ?id cim:OverexcLimX.efd3 ?efd3 . }
+  OPTIONAL { ?id cim:OverexcLimX.efddes ?efddes . }
+  OPTIONAL { ?id cim:OverexcLimX.efdrated ?efdrated . }
+  OPTIONAL { ?id cim:OverexcLimX.kmx ?kmx . }
+  OPTIONAL { ?id cim:OverexcLimX.srew ?srew . }
+  OPTIONAL { ?id cim:OverexcLimX.t1 ?t1 . }
+  OPTIONAL { ?id cim:OverexcLimX.t2 ?t2 . }
+  OPTIONAL { ?id cim:OverexcLimX.t3 ?t3 . }
+  OPTIONAL { ?id cim:OverexcLimX.vlow ?vlow . }
+}

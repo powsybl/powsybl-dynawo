@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Minimal CGMES DY profile fixture for synchronous machine dynamics.
+  Namespace: CIM16 (IEC 61970-302 / CGMES 2.4.15)
+  Contains one instance of each synchronous machine dynamics class.
+-->
+<rdf:RDF
+    xmlns:rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:cim  = "http://iec.ch/TC57/2013/CIM-schema-cim16#"
+    xmlns:md   = "http://iec.ch/TC57/61970-552/ModelDescription/1#">
+
+  <!-- ===================================================================
+       Reference steady-state SynchronousMachine (normally in EQ profile)
+       =================================================================== -->
+  <cim:SynchronousMachine rdf:ID="_sm-gen1">
+    <cim:IdentifiedObject.name>Gen1</cim:IdentifiedObject.name>
+    <cim:IdentifiedObject.description>Test generator 1</cim:IdentifiedObject.description>
+  </cim:SynchronousMachine>
+
+  <cim:SynchronousMachine rdf:ID="_sm-gen2">
+    <cim:IdentifiedObject.name>Gen2</cim:IdentifiedObject.name>
+  </cim:SynchronousMachine>
+
+  <cim:SynchronousMachine rdf:ID="_sm-gen3">
+    <cim:IdentifiedObject.name>Gen3</cim:IdentifiedObject.name>
+  </cim:SynchronousMachine>
+
+  <cim:SynchronousMachine rdf:ID="_sm-gen4">
+    <cim:IdentifiedObject.name>Gen4</cim:IdentifiedObject.name>
+  </cim:SynchronousMachine>
+
+  <cim:SynchronousMachine rdf:ID="_sm-gen5">
+    <cim:IdentifiedObject.name>Gen5 (user-defined)</cim:IdentifiedObject.name>
+  </cim:SynchronousMachine>
+
+  <!-- ===================================================================
+       1. SynchronousMachineSimplified
+           Classical constant-voltage-behind-Xd' model.
+       =================================================================== -->
+  <cim:SynchronousMachineSimplified rdf:ID="_dyn-simplified-gen1">
+    <cim:IdentifiedObject.name>Gen1_Simplified</cim:IdentifiedObject.name>
+    <cim:SynchronousMachineDynamics.SynchronousMachine rdf:resource="#_sm-gen1"/>
+    <cim:RotatingMachineDynamics.mBase>900.0</cim:RotatingMachineDynamics.mBase>
+    <cim:RotatingMachineDynamics.damping>0.0</cim:RotatingMachineDynamics.damping>
+    <cim:RotatingMachineDynamics.inertia>6.5</cim:RotatingMachineDynamics.inertia>
+    <cim:RotatingMachineDynamics.statorLeakageReactance>0.14</cim:RotatingMachineDynamics.statorLeakageReactance>
+    <cim:RotatingMachineDynamics.statorResistance>0.003</cim:RotatingMachineDynamics.statorResistance>
+  </cim:SynchronousMachineSimplified>
+
+  <!-- ===================================================================
+       2. SynchronousMachineDetailed (base class, standalone)
+          Rarely used directly – here for completeness.
+       =================================================================== -->
+  <cim:SynchronousMachineDetailed rdf:ID="_dyn-detailed-gen2">
+    <cim:IdentifiedObject.name>Gen2_Detailed</cim:IdentifiedObject.name>
+    <cim:SynchronousMachineDynamics.SynchronousMachine rdf:resource="#_sm-gen2"/>
+    <cim:RotatingMachineDynamics.mBase>600.0</cim:RotatingMachineDynamics.mBase>
+    <cim:RotatingMachineDynamics.damping>2.0</cim:RotatingMachineDynamics.damping>
+    <cim:RotatingMachineDynamics.inertia>5.0</cim:RotatingMachineDynamics.inertia>
+    <cim:RotatingMachineDynamics.statorLeakageReactance>0.12</cim:RotatingMachineDynamics.statorLeakageReactance>
+    <cim:RotatingMachineDynamics.statorResistance>0.004</cim:RotatingMachineDynamics.statorResistance>
+    <cim:SynchronousMachineDetailed.ifdBaseType>SynchronousMachineIfdBaseKind.ifag</cim:SynchronousMachineDetailed.ifdBaseType>
+    <cim:RotatingMachineDynamics.saturationFactor>0.05</cim:RotatingMachineDynamics.saturationFactor>
+    <cim:RotatingMachineDynamics.saturationFactor120>0.27</cim:RotatingMachineDynamics.saturationFactor120>
+  </cim:SynchronousMachineDetailed>
+
+  <!-- ===================================================================
+       3. SynchronousMachineEquivalentCircuit
+          Full d-q equivalent circuit representation.
+          Parameters approximate a large steam generator.
+       =================================================================== -->
+  <cim:SynchronousMachineEquivalentCircuit rdf:ID="_dyn-equivcircuit-gen3">
+    <cim:IdentifiedObject.name>Gen3_EquivCircuit</cim:IdentifiedObject.name>
+    <cim:SynchronousMachineDynamics.SynchronousMachine rdf:resource="#_sm-gen3"/>
+    <cim:RotatingMachineDynamics.mBase>1000.0</cim:RotatingMachineDynamics.mBase>
+    <cim:RotatingMachineDynamics.damping>1.0</cim:RotatingMachineDynamics.damping>
+    <cim:RotatingMachineDynamics.inertia>7.2</cim:RotatingMachineDynamics.inertia>
+    <cim:RotatingMachineDynamics.statorLeakageReactance>0.15</cim:RotatingMachineDynamics.statorLeakageReactance>
+    <cim:RotatingMachineDynamics.statorResistance>0.002</cim:RotatingMachineDynamics.statorResistance>
+    <cim:SynchronousMachineDetailed.ifdBaseType>SynchronousMachineIfdBaseKind.ifag</cim:SynchronousMachineDetailed.ifdBaseType>
+    <cim:RotatingMachineDynamics.saturationFactor>0.04</cim:RotatingMachineDynamics.saturationFactor>
+    <cim:RotatingMachineDynamics.saturationFactor120>0.22</cim:RotatingMachineDynamics.saturationFactor120>
+    <!-- d-axis -->
+    <cim:SynchronousMachineEquivalentCircuit.r1d>0.0006</cim:SynchronousMachineEquivalentCircuit.r1d>
+    <cim:SynchronousMachineEquivalentCircuit.x1d>0.1248</cim:SynchronousMachineEquivalentCircuit.x1d>
+    <cim:SynchronousMachineEquivalentCircuit.r2d>0.0</cim:SynchronousMachineEquivalentCircuit.r2d>
+    <cim:SynchronousMachineEquivalentCircuit.x2d>0.0</cim:SynchronousMachineEquivalentCircuit.x2d>
+    <cim:SynchronousMachineEquivalentCircuit.rfd>0.00067</cim:SynchronousMachineEquivalentCircuit.rfd>
+    <cim:SynchronousMachineEquivalentCircuit.xfd>0.1414</cim:SynchronousMachineEquivalentCircuit.xfd>
+    <!-- q-axis -->
+    <cim:SynchronousMachineEquivalentCircuit.r1q>0.0013</cim:SynchronousMachineEquivalentCircuit.r1q>
+    <cim:SynchronousMachineEquivalentCircuit.x1q>0.1313</cim:SynchronousMachineEquivalentCircuit.x1q>
+    <cim:SynchronousMachineEquivalentCircuit.r2q>0.0</cim:SynchronousMachineEquivalentCircuit.r2q>
+    <cim:SynchronousMachineEquivalentCircuit.x2q>0.0</cim:SynchronousMachineEquivalentCircuit.x2q>
+    <!-- mutual / magnetising -->
+    <cim:SynchronousMachineEquivalentCircuit.xad>1.4</cim:SynchronousMachineEquivalentCircuit.xad>
+    <cim:SynchronousMachineEquivalentCircuit.xaq>1.2</cim:SynchronousMachineEquivalentCircuit.xaq>
+    <cim:SynchronousMachineEquivalentCircuit.xf1d>0.09</cim:SynchronousMachineEquivalentCircuit.xf1d>
+    <cim:SynchronousMachineEquivalentCircuit.xmd>1.42</cim:SynchronousMachineEquivalentCircuit.xmd>
+    <cim:SynchronousMachineEquivalentCircuit.xmq>1.22</cim:SynchronousMachineEquivalentCircuit.xmq>
+    <cim:SynchronousMachineEquivalentCircuit.xl>0.14</cim:SynchronousMachineEquivalentCircuit.xl>
+  </cim:SynchronousMachineEquivalentCircuit>
+
+  <!-- ===================================================================
+       4. SynchronousMachineTimeConstantReactance
+          Standard T/X form (most common in CGMES exports).
+          Typical hydro generator parameters – subtransient model.
+       =================================================================== -->
+  <cim:SynchronousMachineTimeConstantReactance rdf:ID="_dyn-tcr-gen4">
+    <cim:IdentifiedObject.name>Gen4_TCR</cim:IdentifiedObject.name>
+    <cim:SynchronousMachineDynamics.SynchronousMachine rdf:resource="#_sm-gen4"/>
+    <cim:RotatingMachineDynamics.mBase>500.0</cim:RotatingMachineDynamics.mBase>
+    <cim:RotatingMachineDynamics.damping>0.5</cim:RotatingMachineDynamics.damping>
+    <cim:RotatingMachineDynamics.inertia>4.0</cim:RotatingMachineDynamics.inertia>
+    <cim:RotatingMachineDynamics.statorLeakageReactance>0.18</cim:RotatingMachineDynamics.statorLeakageReactance>
+    <cim:RotatingMachineDynamics.statorResistance>0.005</cim:RotatingMachineDynamics.statorResistance>
+    <cim:SynchronousMachineDetailed.ifdBaseType>SynchronousMachineIfdBaseKind.ifag</cim:SynchronousMachineDetailed.ifdBaseType>
+    <cim:RotatingMachineDynamics.saturationFactor>0.08</cim:RotatingMachineDynamics.saturationFactor>
+    <cim:RotatingMachineDynamics.saturationFactor120>0.35</cim:RotatingMachineDynamics.saturationFactor120>
+    <!-- Time-constant / reactance specific -->
+    <cim:SynchronousMachineTimeConstantReactance.modelType>SynchronousMachineModelKind.subtransient</cim:SynchronousMachineTimeConstantReactance.modelType>
+    <cim:SynchronousMachineTimeConstantReactance.ks>0.0</cim:SynchronousMachineTimeConstantReactance.ks>
+    <!-- d-axis reactances -->
+    <cim:SynchronousMachineTimeConstantReactance.xDirectSync>1.05</cim:SynchronousMachineTimeConstantReactance.xDirectSync>
+    <cim:SynchronousMachineTimeConstantReactance.xDirectTrans>0.30</cim:SynchronousMachineTimeConstantReactance.xDirectTrans>
+    <cim:SynchronousMachineTimeConstantReactance.xDirectSubtrans>0.25</cim:SynchronousMachineTimeConstantReactance.xDirectSubtrans>
+    <!-- q-axis reactances -->
+    <cim:SynchronousMachineTimeConstantReactance.xQuadSync>0.70</cim:SynchronousMachineTimeConstantReactance.xQuadSync>
+    <cim:SynchronousMachineTimeConstantReactance.xQuadTrans>0.65</cim:SynchronousMachineTimeConstantReactance.xQuadTrans>
+    <cim:SynchronousMachineTimeConstantReactance.xQuadSubtrans>0.23</cim:SynchronousMachineTimeConstantReactance.xQuadSubtrans>
+    <!-- time constants -->
+    <cim:SynchronousMachineTimeConstantReactance.tpdo>8.0</cim:SynchronousMachineTimeConstantReactance.tpdo>
+    <cim:SynchronousMachineTimeConstantReactance.tppdo>0.04</cim:SynchronousMachineTimeConstantReactance.tppdo>
+    <cim:SynchronousMachineTimeConstantReactance.tpqo>1.5</cim:SynchronousMachineTimeConstantReactance.tpqo>
+    <cim:SynchronousMachineTimeConstantReactance.tppqo>0.05</cim:SynchronousMachineTimeConstantReactance.tppqo>
+    <cim:SynchronousMachineTimeConstantReactance.xl>0.18</cim:SynchronousMachineTimeConstantReactance.xl>
+  </cim:SynchronousMachineTimeConstantReactance>
+
+  <!-- ===================================================================
+       5. SynchronousMachineUserDefined
+          Proprietary model placeholder.
+       =================================================================== -->
+<!--  <cim:SynchronousMachineUserDefined rdf:ID="_dyn-userdef-gen5">-->
+<!--    <cim:IdentifiedObject.name>Gen5_UserDefined</cim:IdentifiedObject.name>-->
+<!--    <cim:SynchronousMachineDynamics.SynchronousMachine rdf:resource="#_sm-gen5"/>-->
+<!--    <cim:RotatingMachineDynamics.mBase>200.0</cim:RotatingMachineDynamics.mBase>-->
+<!--    <cim:RotatingMachineDynamics.damping>1.0</cim:RotatingMachineDynamics.damping>-->
+<!--    <cim:RotatingMachineDynamics.inertia>3.5</cim:RotatingMachineDynamics.inertia>-->
+<!--    <cim:RotatingMachineDynamics.statorLeakageReactance>0.10</cim:RotatingMachineDynamics.statorLeakageReactance>-->
+<!--    <cim:RotatingMachineDynamics.statorResistance>0.006</cim:RotatingMachineDynamics.statorResistance>-->
+<!--    <cim:SynchronousMachineUserDefined.proprietary>true</cim:SynchronousMachineUserDefined.proprietary>-->
+<!--  </cim:SynchronousMachineUserDefined>-->
+
+</rdf:RDF>

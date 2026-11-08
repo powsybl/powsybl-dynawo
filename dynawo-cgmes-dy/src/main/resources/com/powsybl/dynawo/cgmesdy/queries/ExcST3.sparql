@@ -1,0 +1,34 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:ExcST3 .
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?synchronousMachineId . }
+  OPTIONAL { ?id cim:ExcST3.tr ?tr . }
+  OPTIONAL { ?id cim:ExcST3.vimax ?vimax . }
+  OPTIONAL { ?id cim:ExcST3.vimin ?vimin . }
+  OPTIONAL { ?id cim:ExcST3.ka ?ka . }
+  OPTIONAL { ?id cim:ExcST3.ta ?ta . }
+  OPTIONAL { ?id cim:ExcST3.tb ?tb . }
+  OPTIONAL { ?id cim:ExcST3.tc ?tc . }
+  OPTIONAL { ?id cim:ExcST3.vrmax ?vrmax . }
+  OPTIONAL { ?id cim:ExcST3.vrmin ?vrmin . }
+  OPTIONAL { ?id cim:ExcST3.km ?km . }
+  OPTIONAL { ?id cim:ExcST3.tm ?tm . }
+  OPTIONAL { ?id cim:ExcST3.vmmax ?vmmax . }
+  OPTIONAL { ?id cim:ExcST3.vmmin ?vmmin . }
+  OPTIONAL { ?id cim:ExcST3.kg ?kg . }
+  OPTIONAL { ?id cim:ExcST3.kp ?kp . }
+  OPTIONAL { ?id cim:ExcST3.ki ?ki . }
+  OPTIONAL { ?id cim:ExcST3.kc ?kc . }
+  OPTIONAL { ?id cim:ExcST3.xl ?xl . }
+  OPTIONAL { ?id cim:ExcST3.thetap ?thetap . }
+  OPTIONAL { ?id cim:ExcST3.vbmax ?vbmax . }
+}

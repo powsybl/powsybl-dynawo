@@ -1,0 +1,33 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:ExcIEEEST4B .
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?synchronousMachineId . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.tr ?tr . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.kpr ?kpr . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.kir ?kir . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.ta ?ta . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.vrmax ?vrmax . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.vrmin ?vrmin . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.kpm ?kpm . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.kim ?kim . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.vmmax ?vmmax . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.vmmin ?vmmin . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.kg ?kg . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.kp ?kp . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.xl ?xl . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.thetap ?thetap . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.vbmax ?vbmax . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.kc ?kc . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.xl2 ?xl2 . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.uelin ?uelin . }
+  OPTIONAL { ?id cim:ExcIEEEST4B.oelin ?oelin . }
+}

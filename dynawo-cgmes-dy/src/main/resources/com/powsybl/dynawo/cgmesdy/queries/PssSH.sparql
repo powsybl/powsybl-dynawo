@@ -1,0 +1,27 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:PssSH .
+  OPTIONAL { ?id cim:PowerSystemStabilizerDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:PssSH.k ?k . }
+  OPTIONAL { ?id cim:PssSH.k0 ?k0 . }
+  OPTIONAL { ?id cim:PssSH.k1 ?k1 . }
+  OPTIONAL { ?id cim:PssSH.k2 ?k2 . }
+  OPTIONAL { ?id cim:PssSH.k3 ?k3 . }
+  OPTIONAL { ?id cim:PssSH.k4 ?k4 . }
+  OPTIONAL { ?id cim:PssSH.t1 ?t1 . }
+  OPTIONAL { ?id cim:PssSH.t2 ?t2 . }
+  OPTIONAL { ?id cim:PssSH.t3 ?t3 . }
+  OPTIONAL { ?id cim:PssSH.t4 ?t4 . }
+  OPTIONAL { ?id cim:PssSH.td ?td . }
+  OPTIONAL { ?id cim:PssSH.vsmax ?vsmax . }
+  OPTIONAL { ?id cim:PssSH.vsmin ?vsmin . }
+}

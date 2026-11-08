@@ -1,0 +1,50 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:GovSteam1 .
+  OPTIONAL { ?id cim:TurbineGovernorDynamics.SynchronousMachineDynamics ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:GovSteam1.mwbase ?mwbase . }
+  OPTIONAL { ?id cim:GovSteam1.k ?k . }
+  OPTIONAL { ?id cim:GovSteam1.t1 ?t1 . }
+  OPTIONAL { ?id cim:GovSteam1.t2 ?t2 . }
+  OPTIONAL { ?id cim:GovSteam1.t3 ?t3 . }
+  OPTIONAL { ?id cim:GovSteam1.uo ?uo . }
+  OPTIONAL { ?id cim:GovSteam1.uc ?uc . }
+  OPTIONAL { ?id cim:GovSteam1.pmax ?pmax . }
+  OPTIONAL { ?id cim:GovSteam1.pmin ?pmin . }
+  OPTIONAL { ?id cim:GovSteam1.t4 ?t4 . }
+  OPTIONAL { ?id cim:GovSteam1.k1 ?k1 . }
+  OPTIONAL { ?id cim:GovSteam1.k2 ?k2 . }
+  OPTIONAL { ?id cim:GovSteam1.t5 ?t5 . }
+  OPTIONAL { ?id cim:GovSteam1.k3 ?k3 . }
+  OPTIONAL { ?id cim:GovSteam1.k4 ?k4 . }
+  OPTIONAL { ?id cim:GovSteam1.t6 ?t6 . }
+  OPTIONAL { ?id cim:GovSteam1.k5 ?k5 . }
+  OPTIONAL { ?id cim:GovSteam1.k6 ?k6 . }
+  OPTIONAL { ?id cim:GovSteam1.t7 ?t7 . }
+  OPTIONAL { ?id cim:GovSteam1.k7 ?k7 . }
+  OPTIONAL { ?id cim:GovSteam1.k8 ?k8 . }
+  OPTIONAL { ?id cim:GovSteam1.db1 ?db1 . }
+  OPTIONAL { ?id cim:GovSteam1.eps ?eps . }
+  OPTIONAL { ?id cim:GovSteam1.db2 ?db2 . }
+  OPTIONAL { ?id cim:GovSteam1.gv1 ?gv1 . }
+  OPTIONAL { ?id cim:GovSteam1.pgv1 ?pgv1 . }
+  OPTIONAL { ?id cim:GovSteam1.gv2 ?gv2 . }
+  OPTIONAL { ?id cim:GovSteam1.pgv2 ?pgv2 . }
+  OPTIONAL { ?id cim:GovSteam1.gv3 ?gv3 . }
+  OPTIONAL { ?id cim:GovSteam1.pgv3 ?pgv3 . }
+  OPTIONAL { ?id cim:GovSteam1.gv4 ?gv4 . }
+  OPTIONAL { ?id cim:GovSteam1.pgv4 ?pgv4 . }
+  OPTIONAL { ?id cim:GovSteam1.gv5 ?gv5 . }
+  OPTIONAL { ?id cim:GovSteam1.pgv5 ?pgv5 . }
+  OPTIONAL { ?id cim:GovSteam1.gv6 ?gv6 . }
+  OPTIONAL { ?id cim:GovSteam1.pgv6 ?pgv6 . }
+}

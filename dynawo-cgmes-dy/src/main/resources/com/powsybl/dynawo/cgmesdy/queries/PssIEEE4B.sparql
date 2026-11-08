@@ -1,0 +1,81 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:PssIEEE4B .
+  OPTIONAL { ?id cim:PowerSystemStabilizerDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:PssIEEE4B.bwh1 ?bwh1 . }
+  OPTIONAL { ?id cim:PssIEEE4B.bwh2 ?bwh2 . }
+  OPTIONAL { ?id cim:PssIEEE4B.bwl1 ?bwl1 . }
+  OPTIONAL { ?id cim:PssIEEE4B.bwl2 ?bwl2 . }
+  OPTIONAL { ?id cim:PssIEEE4B.kh ?kh . }
+  OPTIONAL { ?id cim:PssIEEE4B.kh1 ?kh1 . }
+  OPTIONAL { ?id cim:PssIEEE4B.kh11 ?kh11 . }
+  OPTIONAL { ?id cim:PssIEEE4B.kh17 ?kh17 . }
+  OPTIONAL { ?id cim:PssIEEE4B.kh2 ?kh2 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ki ?ki . }
+  OPTIONAL { ?id cim:PssIEEE4B.ki1 ?ki1 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ki11 ?ki11 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ki17 ?ki17 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ki2 ?ki2 . }
+  OPTIONAL { ?id cim:PssIEEE4B.kl ?kl . }
+  OPTIONAL { ?id cim:PssIEEE4B.kl1 ?kl1 . }
+  OPTIONAL { ?id cim:PssIEEE4B.kl11 ?kl11 . }
+  OPTIONAL { ?id cim:PssIEEE4B.kl17 ?kl17 . }
+  OPTIONAL { ?id cim:PssIEEE4B.kl2 ?kl2 . }
+  OPTIONAL { ?id cim:PssIEEE4B.omeganh1 ?omeganh1 . }
+  OPTIONAL { ?id cim:PssIEEE4B.omeganh2 ?omeganh2 . }
+  OPTIONAL { ?id cim:PssIEEE4B.omeganl1 ?omeganl1 . }
+  OPTIONAL { ?id cim:PssIEEE4B.omeganl2 ?omeganl2 . }
+  OPTIONAL { ?id cim:PssIEEE4B.th1 ?th1 . }
+  OPTIONAL { ?id cim:PssIEEE4B.th10 ?th10 . }
+  OPTIONAL { ?id cim:PssIEEE4B.th11 ?th11 . }
+  OPTIONAL { ?id cim:PssIEEE4B.th12 ?th12 . }
+  OPTIONAL { ?id cim:PssIEEE4B.th2 ?th2 . }
+  OPTIONAL { ?id cim:PssIEEE4B.th3 ?th3 . }
+  OPTIONAL { ?id cim:PssIEEE4B.th4 ?th4 . }
+  OPTIONAL { ?id cim:PssIEEE4B.th5 ?th5 . }
+  OPTIONAL { ?id cim:PssIEEE4B.th6 ?th6 . }
+  OPTIONAL { ?id cim:PssIEEE4B.th7 ?th7 . }
+  OPTIONAL { ?id cim:PssIEEE4B.th8 ?th8 . }
+  OPTIONAL { ?id cim:PssIEEE4B.th9 ?th9 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ti1 ?ti1 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ti10 ?ti10 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ti11 ?ti11 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ti12 ?ti12 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ti2 ?ti2 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ti3 ?ti3 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ti4 ?ti4 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ti5 ?ti5 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ti6 ?ti6 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ti7 ?ti7 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ti8 ?ti8 . }
+  OPTIONAL { ?id cim:PssIEEE4B.ti9 ?ti9 . }
+  OPTIONAL { ?id cim:PssIEEE4B.tl1 ?tl1 . }
+  OPTIONAL { ?id cim:PssIEEE4B.tl10 ?tl10 . }
+  OPTIONAL { ?id cim:PssIEEE4B.tl11 ?tl11 . }
+  OPTIONAL { ?id cim:PssIEEE4B.tl12 ?tl12 . }
+  OPTIONAL { ?id cim:PssIEEE4B.tl2 ?tl2 . }
+  OPTIONAL { ?id cim:PssIEEE4B.tl3 ?tl3 . }
+  OPTIONAL { ?id cim:PssIEEE4B.tl4 ?tl4 . }
+  OPTIONAL { ?id cim:PssIEEE4B.tl5 ?tl5 . }
+  OPTIONAL { ?id cim:PssIEEE4B.tl6 ?tl6 . }
+  OPTIONAL { ?id cim:PssIEEE4B.tl7 ?tl7 . }
+  OPTIONAL { ?id cim:PssIEEE4B.tl8 ?tl8 . }
+  OPTIONAL { ?id cim:PssIEEE4B.tl9 ?tl9 . }
+  OPTIONAL { ?id cim:PssIEEE4B.vsmax ?vsmax . }
+  OPTIONAL { ?id cim:PssIEEE4B.vsmin ?vsmin . }
+  OPTIONAL { ?id cim:PssIEEE4B.vshmax ?vshmax . }
+  OPTIONAL { ?id cim:PssIEEE4B.vshmin ?vshmin . }
+  OPTIONAL { ?id cim:PssIEEE4B.vsimax ?vsimax . }
+  OPTIONAL { ?id cim:PssIEEE4B.vsimin ?vsimin . }
+  OPTIONAL { ?id cim:PssIEEE4B.vslmax ?vslmax . }
+  OPTIONAL { ?id cim:PssIEEE4B.vslmin ?vslmin . }
+}

@@ -1,0 +1,45 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:GovHydroWEH .
+  OPTIONAL { ?id cim:TurbineGovernorDynamics.SynchronousMachineDynamics ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:GovHydroWEH.mwbase ?mwbase . }
+  OPTIONAL { ?id cim:GovHydroWEH.rpg ?rpg . }
+  OPTIONAL { ?id cim:GovHydroWEH.rpp ?rpp . }
+  OPTIONAL { ?id cim:GovHydroWEH.reg ?reg . }
+  OPTIONAL { ?id cim:GovHydroWEH.tg ?tg . }
+  OPTIONAL { ?id cim:GovHydroWEH.tp ?tp . }
+  OPTIONAL { ?id cim:GovHydroWEH.td ?td . }
+  OPTIONAL { ?id cim:GovHydroWEH.tf ?tf . }
+  OPTIONAL { ?id cim:GovHydroWEH.td2 ?td2 . }
+  OPTIONAL { ?id cim:GovHydroWEH.tw ?tw . }
+  OPTIONAL { ?id cim:GovHydroWEH.pmax ?pmax . }
+  OPTIONAL { ?id cim:GovHydroWEH.pmin ?pmin . }
+  OPTIONAL { ?id cim:GovHydroWEH.gtmxop ?gtmxop . }
+  OPTIONAL { ?id cim:GovHydroWEH.gtmxcl ?gtmxcl . }
+  OPTIONAL { ?id cim:GovHydroWEH.pmss1 ?pmss1 . }
+  OPTIONAL { ?id cim:GovHydroWEH.pmss2 ?pmss2 . }
+  OPTIONAL { ?id cim:GovHydroWEH.pmss3 ?pmss3 . }
+  OPTIONAL { ?id cim:GovHydroWEH.pmss4 ?pmss4 . }
+  OPTIONAL { ?id cim:GovHydroWEH.pmss5 ?pmss5 . }
+  OPTIONAL { ?id cim:GovHydroWEH.pmss6 ?pmss6 . }
+  OPTIONAL { ?id cim:GovHydroWEH.pmss7 ?pmss7 . }
+  OPTIONAL { ?id cim:GovHydroWEH.pmss8 ?pmss8 . }
+  OPTIONAL { ?id cim:GovHydroWEH.pmss9 ?pmss9 . }
+  OPTIONAL { ?id cim:GovHydroWEH.pmss10 ?pmss10 . }
+  OPTIONAL { ?id cim:GovHydroWEH.gpmax ?gpmax . }
+  OPTIONAL { ?id cim:GovHydroWEH.gmax ?gmax . }
+  OPTIONAL { ?id cim:GovHydroWEH.gmin ?gmin . }
+  OPTIONAL { ?id cim:GovHydroWEH.dpv ?dpv . }
+  OPTIONAL { ?id cim:GovHydroWEH.dicn ?dicn . }
+  OPTIONAL { ?id cim:GovHydroWEH.dspv ?dspv . }
+  OPTIONAL { ?id cim:GovHydroWEH.feedbackSignal ?feedbackSignal . }
+}

@@ -1,0 +1,26 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:GovGAST3 .
+  OPTIONAL { ?id cim:TurbineGovernorDynamics.SynchronousMachineDynamics ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:GovGAST3.mwbase ?mwbase . }
+  OPTIONAL { ?id cim:GovGAST3.r ?r . }
+  OPTIONAL { ?id cim:GovGAST3.t1 ?t1 . }
+  OPTIONAL { ?id cim:GovGAST3.vmax ?vmax . }
+  OPTIONAL { ?id cim:GovGAST3.vmin ?vmin . }
+  OPTIONAL { ?id cim:GovGAST3.dturb ?dturb . }
+  OPTIONAL { ?id cim:GovGAST3.bca ?bca . }
+  OPTIONAL { ?id cim:GovGAST3.kca ?kca . }
+  OPTIONAL { ?id cim:GovGAST3.tsi ?tsi . }
+  OPTIONAL { ?id cim:GovGAST3.bp ?bp . }
+  OPTIONAL { ?id cim:GovGAST3.tsa ?tsa . }
+  OPTIONAL { ?id cim:GovGAST3.tsb ?tsb . }
+}

@@ -1,0 +1,31 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:PssIEEE3B .
+  OPTIONAL { ?id cim:PowerSystemStabilizerDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:PssIEEE3B.inputSignal1Type ?inputSignal1Type . }
+  OPTIONAL { ?id cim:PssIEEE3B.inputSignal2Type ?inputSignal2Type . }
+  OPTIONAL { ?id cim:PssIEEE3B.ks1 ?ks1 . }
+  OPTIONAL { ?id cim:PssIEEE3B.ks2 ?ks2 . }
+  OPTIONAL { ?id cim:PssIEEE3B.t1 ?t1 . }
+  OPTIONAL { ?id cim:PssIEEE3B.t2 ?t2 . }
+  OPTIONAL { ?id cim:PssIEEE3B.t3 ?t3 . }
+  OPTIONAL { ?id cim:PssIEEE3B.a1 ?a1 . }
+  OPTIONAL { ?id cim:PssIEEE3B.a2 ?a2 . }
+  OPTIONAL { ?id cim:PssIEEE3B.a3 ?a3 . }
+  OPTIONAL { ?id cim:PssIEEE3B.a4 ?a4 . }
+  OPTIONAL { ?id cim:PssIEEE3B.a5 ?a5 . }
+  OPTIONAL { ?id cim:PssIEEE3B.a6 ?a6 . }
+  OPTIONAL { ?id cim:PssIEEE3B.a7 ?a7 . }
+  OPTIONAL { ?id cim:PssIEEE3B.a8 ?a8 . }
+  OPTIONAL { ?id cim:PssIEEE3B.vsmax ?vsmax . }
+  OPTIONAL { ?id cim:PssIEEE3B.vsmin ?vsmin . }
+}

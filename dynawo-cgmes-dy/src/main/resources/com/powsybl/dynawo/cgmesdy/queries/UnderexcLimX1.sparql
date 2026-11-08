@@ -1,0 +1,20 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:UnderexcLimX1 .
+  OPTIONAL { ?id cim:UnderexcitationLimiterDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:UnderexcLimX1.k ?k . }
+  OPTIONAL { ?id cim:UnderexcLimX1.kf2 ?kf2 . }
+  OPTIONAL { ?id cim:UnderexcLimX1.km ?km . }
+  OPTIONAL { ?id cim:UnderexcLimX1.melmax ?melmax . }
+  OPTIONAL { ?id cim:UnderexcLimX1.tf2 ?tf2 . }
+  OPTIONAL { ?id cim:UnderexcLimX1.tm ?tm . }
+}

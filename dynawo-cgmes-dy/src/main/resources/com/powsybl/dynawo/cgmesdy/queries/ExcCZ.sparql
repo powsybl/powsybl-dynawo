@@ -1,0 +1,25 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:ExcCZ .
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?synchronousMachineId . }
+  OPTIONAL { ?id cim:ExcCZ.ka ?ka . }
+  OPTIONAL { ?id cim:ExcCZ.ta ?ta . }
+  OPTIONAL { ?id cim:ExcCZ.tc ?tc . }
+  OPTIONAL { ?id cim:ExcCZ.vrmax ?vrmax . }
+  OPTIONAL { ?id cim:ExcCZ.vrmin ?vrmin . }
+  OPTIONAL { ?id cim:ExcCZ.ke ?ke . }
+  OPTIONAL { ?id cim:ExcCZ.te ?te . }
+  OPTIONAL { ?id cim:ExcCZ.krb ?krb . }
+  OPTIONAL { ?id cim:ExcCZ.kp ?kp . }
+  OPTIONAL { ?id cim:ExcCZ.tp ?tp . }
+  OPTIONAL { ?id cim:ExcCZ.efdmax ?efdmax . }
+}
