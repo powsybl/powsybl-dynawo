@@ -26,20 +26,34 @@
     "contingency" : {
       "id" : "Disconnect",
       "elements" : [ {
-        "id" : "_BUS____1-BUS____5-1_AC",
-        "type" : "LINE",
-        "voltageLevelId" : "_BUS____5_VL"
+        "id" : "_GEN____1_SM",
+        "type" : "GENERATOR"
       }, {
         "id" : "_GEN____2_SM",
         "type" : "GENERATOR"
       }, {
-        "id" : "_BUS____1_TN",
-        "type" : "BUS"
+        "id" : "_GEN____3_SM",
+        "type" : "GENERATOR"
+      }, {
+        "id" : "_GEN____6_SM",
+        "type" : "GENERATOR"
+      }, {
+        "id" : "_GEN____8_SM",
+        "type" : "GENERATOR"
       } ]
     },
     "status" : "SOLVER_FAILED",
     "limitViolationsResult" : {
-      "limitViolations" : [ ],
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____2-1_AC",
+        "subjectName" : "BUS    1-BUS    2-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 836.74,
+        "limitScaling" : 1.0,
+        "value" : 1248.100487597837,
+        "side" : "ONE"
+      } ],
       "actionsTaken" : [ ]
     },
     "networkResult" : {
