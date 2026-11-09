@@ -95,9 +95,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(27, result.getCurves().size());
         DoubleTimeSeries ts1 = result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
-        assertEquals(585, ts1.getMetadata().getIndex().getPointCount());
+        assertEquals(521, ts1.getMetadata().getIndex().getPointCount());
         assertEquals(14, result.getFinalStateValues().size());
-        assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu_value"));
+        assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu"));
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(23, timeLine.size());
         checkTimeLineEvent(timeLine.getFirst(), 0, "_GEN____8_SM", "PMIN : activation");
