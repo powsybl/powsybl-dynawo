@@ -37,17 +37,11 @@ public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> implement
             new Versionable.Step<>("%s_measurements_QPuSnRef"),
             new Versionable.Step<>(DYNAWO_VERSION_1_8_0, "%s_HvMeasurements_QPuSnRef"));
 
-    private final List<VarMapping> varsMapping;
     protected final String weccPrefix;
 
     protected WeccGen(Generator generator, String parameterSetId, ModelConfig modelConfig) {
         super(generator, parameterSetId, modelConfig);
         this.weccPrefix = Objects.requireNonNull(modelConfig.internalModelPrefix());
-        VersionableHandler handler = VersionableHandler.getInstance();
-        varsMapping = List.of(
-                new VarMapping(handler.getCurrentVariable(P_WECC_STATIC_REF, weccPrefix), "p"),
-                new VarMapping(handler.getCurrentVariable(Q_WECC_STATIC_REF, weccPrefix), "q"),
-                new VarMapping(weccPrefix + "_injector_state", "state"));
     }
 
     private String switchOffSignalNodeVarName() {
@@ -85,6 +79,10 @@ public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> implement
 
     @Override
     public List<VarMapping> getVarsMapping() {
-        return varsMapping;
+        VersionableHandler handler = VersionableHandler.getInstance();
+        return List.of(
+                new VarMapping(handler.getCurrentVariable(P_WECC_STATIC_REF, weccPrefix), "p"),
+                new VarMapping(handler.getCurrentVariable(Q_WECC_STATIC_REF, weccPrefix), "q"),
+                new VarMapping(weccPrefix + "_injector_state", "state"));
     }
 }
