@@ -71,7 +71,7 @@ class WeccGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
                             .parameterSetId("Wind")
                             .build()),
                 Arguments.of("wecc_pv_dyd.xml", "wecc_wt_par.xml", (Function<Network, BlackBoxModel>) n ->
-                        WeccBuilder.of(n, "PhotovoltaicsWeccCurrentSource")
+                        WeccBuilder.of(n, "PhotovoltaicsWeccCurrentSourceB")
                             .staticId(STATIC_ID)
                             .parameterSetId("Wind")
                             .build()),

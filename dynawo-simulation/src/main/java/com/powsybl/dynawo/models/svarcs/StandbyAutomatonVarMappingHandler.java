@@ -8,19 +8,20 @@
 package com.powsybl.dynawo.models.svarcs;
 
 import com.powsybl.dynawo.models.VarMapping;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 
 import java.util.List;
+
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class StandbyAutomatonVarMappingHandler implements SvarcVarMappingHandler {
 
-    private static final List<VarMapping> VAR_MAPPING = List.of(P_MAPPING, Q_MAPPING, STATE_MAPPING,
-            new VarMapping("SVarC_modeHandling_mode_value", "regulatingMode"));
-
     @Override
     public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
+        return List.of(P_MAPPING, Q_MAPPING, STATE_MAPPING,
+                new VarMapping(VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "SVarC_modeHandling_mode"), "regulatingMode"));
     }
 }

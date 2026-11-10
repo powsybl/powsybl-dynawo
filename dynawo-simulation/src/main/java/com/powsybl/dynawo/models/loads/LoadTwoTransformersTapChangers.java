@@ -12,17 +12,38 @@ import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
+import com.powsybl.dynawo.models.versionablevariable.Versionable;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVariable;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
+import java.util.function.Function;
 
-import static com.powsybl.dynawo.models.TransformerSide.HIGH_VOLTAGE;
-import static com.powsybl.dynawo.models.TransformerSide.LOW_VOLTAGE;
+import static com.powsybl.dynawo.models.TransformerSide.*;
+import static com.powsybl.dynawo.models.versionablevariable.VersionableHandler.DYNAWO_VERSION_1_8_0;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class LoadTwoTransformersTapChangers extends AbstractLoadTwoTransformers implements TapChangerModel {
+
+    private static final VersionableVariable TC_SIDE_LOCKED = new VersionableVariable("TC_SIDE_LOCKED",
+            new Versionable.Step<>("tapChanger%s_locked"),
+            new Versionable.Step<>(DYNAWO_VERSION_1_8_0, "transformer%s_locked"));
+
+    private final Versionable<Function<EquipmentConnectionPoint, List<VarConnection>>> versionableVarConnections = () -> List.of(
+            new Versionable.Step<>(c -> {
+                List<VarConnection> varConnections = super.getVarConnectionsWith(c);
+                c.getSwitchOffSignalVarName()
+                        .ifPresent(switchOff -> {
+                            varConnections.add(new VarConnection(String.format("tapChanger%s_switchOffSignal1", HIGH_VOLTAGE.getSideSuffix()), switchOff));
+                            varConnections.add(new VarConnection(String.format("tapChanger%s_switchOffSignal1", LOW_VOLTAGE.getSideSuffix()), switchOff));
+                        });
+                return varConnections;
+            }),
+            new Versionable.Step<>(DYNAWO_VERSION_1_8_0, super::getVarConnectionsWith)
+    );
 
     protected LoadTwoTransformersTapChangers(Load load, String parameterSetId, ModelConfig modelConfig) {
         super(load, parameterSetId, modelConfig);
@@ -30,26 +51,17 @@ public class LoadTwoTransformersTapChangers extends AbstractLoadTwoTransformers 
 
     @Override
     protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
-        List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
-        connected.getSwitchOffSignalVarName()
-                .ifPresent(switchOff -> {
-                    varConnections.add(new VarConnection(getSwitchOffSignal(HIGH_VOLTAGE), switchOff));
-                    varConnections.add(new VarConnection(getSwitchOffSignal(LOW_VOLTAGE), switchOff));
-                });
-        return varConnections;
+        return VersionableHandler.getInstance().getCurrentVersionable(versionableVarConnections).apply(connected);
     }
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(getTapChangerBlockerVarConnection(LOW_VOLTAGE),
-                getTapChangerBlockerVarConnection(HIGH_VOLTAGE));
+        String lockedVar = VersionableHandler.getInstance().getCurrentVariable(TC_SIDE_LOCKED);
+        return List.of(getTapChangerBlockerVarConnection(LOW_VOLTAGE, lockedVar),
+                getTapChangerBlockerVarConnection(HIGH_VOLTAGE, lockedVar));
     }
 
-    private VarConnection getTapChangerBlockerVarConnection(TransformerSide side) {
-        return new VarConnection(getTapChangerBlockingVarName(side), "tapChanger" + side.getSideSuffix() + "_locked");
-    }
-
-    private String getSwitchOffSignal(TransformerSide side) {
-        return "tapChanger" + side.getSideSuffix() + "_switchOffSignal1";
+    private VarConnection getTapChangerBlockerVarConnection(TransformerSide side, String lockedVar) {
+        return new VarConnection(getTapChangerBlockingVarName(side), String.format(lockedVar, side.getSideSuffix()));
     }
 }
