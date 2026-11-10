@@ -37,11 +37,17 @@ public final class VersionableHandler {
         return INSTANCE;
     }
 
+    /**
+     * Returns the current value for VersionableVariable and resolve it lazily if needed
+     */
     public String getCurrentVariable(VersionableVariable versionableVariable) {
         return currentVariableValues.computeIfAbsent(versionableVariable.getName(),
                 k -> getCurrentValue(versionableVariable));
     }
 
+    /**
+     * Returns the current value for VersionableVariable and resolve it lazily if needed and format it
+     */
     public String getCurrentVariable(VersionableVariable versionableVariable, Object... args) {
         return String.format(currentVariableValues.computeIfAbsent(versionableVariable.getName(),
                 k -> getCurrentValue(versionableVariable)), args);
@@ -56,7 +62,7 @@ public final class VersionableHandler {
     }
 
     /**
-     * Load lazily the current value for VersionableVarsMapping
+     * Returns the current value for VersionableVarsMapping and resolve it lazily if needed
      */
     public List<VarMapping> getCurrentVarMapping(VersionableVarsMapping versionableVarsMapping) {
         return currentVarMappingsValues.computeIfAbsent(versionableVarsMapping.getName(),

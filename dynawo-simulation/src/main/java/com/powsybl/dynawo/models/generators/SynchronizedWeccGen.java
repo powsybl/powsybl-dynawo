@@ -17,8 +17,7 @@ import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
 
-import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.INDEXED_VARIABLE;
-import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.INDEXED_VARIABLE_VALUE;
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -31,7 +30,9 @@ public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronize
 
     @Override
     public List<VarConnection> getSetPointVarConnections() {
-        return List.of(new VarConnection("setPoint_setPoint_value", getOmegaRefPuVarName()));
+        return List.of(new VarConnection(
+                VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "setPoint_setPoint"),
+                getOmegaRefPuVarName()));
     }
 
     @Override
