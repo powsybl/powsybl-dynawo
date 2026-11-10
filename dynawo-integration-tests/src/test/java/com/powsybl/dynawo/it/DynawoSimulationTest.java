@@ -213,8 +213,11 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideGenerators")
-    void testSmib(Function<Network, BlackBoxModel> genSupplier) {
+    void testSmib(Function<Network, BlackBoxModel> genSupplier, String combiTableName) throws IOException {
         Network network = Network.read(new ResourceDataSource("SMIB", new ResourceSet("/smib", "SMIB.iidm")));
+        if (combiTableName != null) {
+            Files.copy(getResourceAsStream("/smib/" + combiTableName), localDir.resolve(combiTableName));
+        }
 
         DynamicModelsSupplier dynamicModelsSupplier = (n, r) -> List.of(
                 genSupplier.apply(n),
@@ -260,22 +263,26 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         n -> SynchronizedGeneratorBuilder.of(n, "GeneratorPQ")
                             .staticId(genId)
                             .parameterSetId("GPQ")
-                            .build()),
+                            .build(),
+                        null),
                 Arguments.of((Function<Network, BlackBoxModel>)
                         n -> SynchronousGeneratorBuilder.of(n, "GeneratorSynchronousFourWindingsProportionalRegulations")
                                 .staticId(genId)
                                 .parameterSetId("GFW")
-                                .build()),
+                                .build(),
+                        null),
                 Arguments.of((Function<Network, BlackBoxModel>)
                         n -> WeccBuilder.of(n, "WTG4AWeccCurrentSource")
                                 .staticId(genId)
                                 .parameterSetId("Wind")
-                                .build()),
+                                .build(),
+                        "LHVRT.txt"),
                 Arguments.of((Function<Network, BlackBoxModel>)
                         n -> GridFormingConverterBuilder.of(n, "GridFormingConverterDroopControl")
                                 .staticId(genId)
                                 .parameterSetId("GFM")
-                                .build()));
+                                .build(),
+                        null));
     }
 
     @Test
