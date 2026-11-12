@@ -42,7 +42,7 @@ for (Generator gen : network.generators) {
             parameterSetId "GSTW"
         }
     } else if (gen.id == "GEN6") {
-        GeneratorFictitious {
+        GeneratorAlphaBeta {
             staticId gen.id
             parameterSetId "GF"
         }

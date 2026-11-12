@@ -21,6 +21,7 @@ import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerTapChangerBuilder;
 import com.powsybl.dynawo.models.loads.LoadTwoTransformersTapChangersBuilder;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,15 +33,15 @@ import java.io.IOException;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class Dynawo18VersionXmlTest extends AbstractDynamicModelXmlTest {
+class Dynawo17VersionXmlTest extends AbstractDynamicModelXmlTest {
 
-    private static final DynawoVersion DYNAWO_VERSION = DynawoVersion.createFromString("1.8.0");
+    private static final DynawoVersion DYNAWO_VERSION = DynawoVersion.createFromString("1.7.0");
 
     @BeforeEach
     @Override
     public void setup() {
-        super.setup();
         ModelConfigsHandler.getInstance().setDynawoVersion(DYNAWO_VERSION);
+        super.setup();
     }
 
     @Override
@@ -53,7 +54,7 @@ class Dynawo18VersionXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected DynawoSimulationContext.Builder setupDynawoContextBuilder() {
-        return super.setupDynawoContextBuilder().currentVersion(DynawoVersion.createFromString("1.8.0"));
+        return super.setupDynawoContextBuilder().currentVersion(DynawoVersion.createFromString("1.7.0"));
     }
 
     @Override
@@ -105,13 +106,14 @@ class Dynawo18VersionXmlTest extends AbstractDynamicModelXmlTest {
     void writeModel() throws SAXException, IOException {
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
-        validate("dyd.xsd", "dynawo_1_8_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        validate("dyd.xsd", "dynawo_1_7_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 
     @AfterEach
     @Override
     public void tearDown() throws IOException {
-        super.tearDown();
         ModelConfigsHandler.getInstance().setDynawoVersion(DynawoConstants.CURRENT_VERSION);
+        VersionableHandler.getInstance().setCurrentVersion(DynawoConstants.CURRENT_VERSION);
+        super.tearDown();
     }
 }
