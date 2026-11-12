@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="GEN6" lib="GeneratorFictitious" parFile="models.par" parId="GF" staticId="GEN6">
-        <dyn:macroStaticRef id="MSR_GeneratorFictitious"/>
+    <dyn:blackBoxModel id="GEN6" lib="GeneratorAlphaBeta" parFile="models.par" parId="GF" staticId="GEN6">
+        <dyn:macroStaticRef id="MSR_GeneratorAlphaBeta"/>
     </dyn:blackBoxModel>
-    <dyn:macroConnector id="MC_GeneratorFictitious-DefaultEquipmentConnectionPoint">
+    <dyn:macroConnector id="MC_GeneratorAlphaBeta-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_GeneratorFictitious">
+    <dyn:macroStaticReference id="MSR_GeneratorAlphaBeta">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_GeneratorFictitious-DefaultEquipmentConnectionPoint" id1="GEN6" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_GeneratorAlphaBeta-DefaultEquipmentConnectionPoint" id1="GEN6" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>

@@ -30,7 +30,7 @@ class ExtensionsTest {
         Network network = EurostagTutorialExample1Factory.create();
         Generator gen = network.getGenerator("GEN");
         List<BlackBoxModel> dynamicModels = List.of(
-                BaseGeneratorBuilder.of(network, "GeneratorFictitious")
+                BaseGeneratorBuilder.of(network, "GeneratorAlphaBeta")
                         .equipment(gen)
                         .parameterSetId("gen")
                         .build()
@@ -38,7 +38,7 @@ class ExtensionsTest {
         new DynawoSimulationContext.Builder(network, dynamicModels).build();
 
         assertThat(gen.getExtensions()).extracting(e -> ((DynamicModelInfo<?>) e).getModelName())
-                .containsExactly("GeneratorFictitious");
+                .containsExactly("GeneratorAlphaBeta");
 
     }
 }

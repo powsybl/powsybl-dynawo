@@ -31,7 +31,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
     }
 
     @Test
-    void writeDynamicModelWithLoadsAndOnlyOneFictitiousGenerator() throws SAXException, IOException {
+    void writeDynamicModelWithLoadsAndOnlyOneAlphaBetaGenerator() throws SAXException, IOException {
         dynamicModels.clear();
         dynamicModels.add(BaseGeneratorBuilder.of(network)
                 .staticId("GEN6")

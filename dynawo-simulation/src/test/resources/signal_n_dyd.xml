@@ -15,7 +15,7 @@
         <dyn:connect var1="signalN_N" var2="generator_N"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_SignalN-DefaultBusOfSignalN">
-        <dyn:connect var1="signalN_thetaRef" var2="@@NAME@@@NODE@_phi_value"/>
+        <dyn:connect var1="signalN_thetaRef" var2="@@NAME@@@NODE@_phi"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_GeneratorPVRemoteDiagramPQSignalN">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>

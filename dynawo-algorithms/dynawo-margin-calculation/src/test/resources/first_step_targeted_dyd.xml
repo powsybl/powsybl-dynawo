@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="GEN" lib="GeneratorFictitious" parFile="models.par" parId="gen" staticId="GEN">
-        <dyn:macroStaticRef id="MSR_GeneratorFictitious"/>
+    <dyn:blackBoxModel id="GEN" lib="GeneratorAlphaBeta" parFile="models.par" parId="gen" staticId="GEN">
+        <dyn:macroStaticRef id="MSR_GeneratorAlphaBeta"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="LOAD" lib="LoadAlphaBeta" parFile="models.par" parId="lab" staticId="LOAD">
         <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
     </dyn:blackBoxModel>
-    <dyn:macroConnector id="MC_GeneratorFictitious-DefaultEquipmentConnectionPoint">
+    <dyn:macroConnector id="MC_GeneratorAlphaBeta-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
@@ -14,7 +14,7 @@
         <dyn:connect var1="load_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_GeneratorFictitious">
+    <dyn:macroStaticReference id="MSR_GeneratorAlphaBeta">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
@@ -24,6 +24,6 @@
         <dyn:staticRef var="load_QPu" staticVar="q"/>
         <dyn:staticRef var="load_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_GeneratorFictitious-DefaultEquipmentConnectionPoint" id1="GEN" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_GeneratorAlphaBeta-DefaultEquipmentConnectionPoint" id1="GEN" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_LoadAlphaBeta-DefaultEquipmentConnectionPoint" id1="LOAD" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>
