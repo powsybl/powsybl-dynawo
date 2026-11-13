@@ -96,9 +96,11 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                         "/ieee14/dynamic-security-analysis/failed-criteria/results.json"),
                 Arguments.of("/ieee14/dynamic-security-analysis/divergence/criteria.crt",
                         List.of(Contingency.builder("Disconnect")
-                                .addLine("_BUS____1-BUS____5-1_AC", "_BUS____5_VL")
+                                .addGenerator("_GEN____1_SM")
                                 .addGenerator("_GEN____2_SM")
-                                .addBus("_BUS____1_TN")
+                                .addGenerator("_GEN____3_SM")
+                                .addGenerator("_GEN____6_SM")
+                                .addGenerator("_GEN____8_SM")
                                 .build()),
                         EventModelsSupplier.empty(),
                         "/ieee14/dynamic-security-analysis/divergence/results.json"),

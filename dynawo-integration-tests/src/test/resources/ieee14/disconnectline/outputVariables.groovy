@@ -14,7 +14,7 @@ import com.powsybl.iidm.network.Load
 for (Bus bus : network.busBreakerView.buses) {
     fsv {
         id bus.id
-        variable "Upu_value"
+        variable "Upu"
     }
 }
 

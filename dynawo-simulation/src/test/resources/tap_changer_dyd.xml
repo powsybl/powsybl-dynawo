@@ -25,7 +25,7 @@
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TapChangerAutomaton-LoadOneTransformer">
         <dyn:connect var1="tapChanger_tap" var2="transformer_tap"/>
-        <dyn:connect var1="tapChanger_UMonitored" var2="transformer_U2Pu_value"/>
+        <dyn:connect var1="tapChanger_UMonitored" var2="transformer_U2Pu"/>
         <dyn:connect var1="tapChanger_switchOffSignal1" var2="transformer_switchOffSignal1"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TapChangerAutomatonD-LoadTwoTransformers">
@@ -39,13 +39,13 @@
         <dyn:connect var1="tapChanger_switchOffSignal1" var2="transformerT_switchOffSignal1"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_LoadOneTransformer">
-        <dyn:staticRef var="transformer_P1Pu_value" staticVar="p"/>
-        <dyn:staticRef var="transformer_Q1Pu_value" staticVar="q"/>
+        <dyn:staticRef var="transformer_P1Pu" staticVar="p"/>
+        <dyn:staticRef var="transformer_Q1Pu" staticVar="q"/>
         <dyn:staticRef var="transformer_state" staticVar="state"/>
     </dyn:macroStaticReference>
     <dyn:macroStaticReference id="MSR_LoadTwoTransformers">
-        <dyn:staticRef var="transformerT_P1Pu_value" staticVar="p"/>
-        <dyn:staticRef var="transformerT_Q1Pu_value" staticVar="q"/>
+        <dyn:staticRef var="transformerT_P1Pu" staticVar="p"/>
+        <dyn:staticRef var="transformerT_Q1Pu" staticVar="q"/>
         <dyn:staticRef var="transformerT_state" staticVar="state"/>
     </dyn:macroStaticReference>
     <dyn:macroConnect connector="MC_LoadOneTransformer-DefaultEquipmentConnectionPoint" id1="LOAD" id2="NETWORK"/>

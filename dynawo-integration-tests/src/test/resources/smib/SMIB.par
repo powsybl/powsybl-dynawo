@@ -136,13 +136,23 @@
     <par type="DOUBLE" name="control_IMaxVI" value="1"/>
   </set>
   <set id="Wind">
-    <reference name="WTG4A_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
-    <reference name="WTG4A_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
-    <reference name="WTG4A_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
-    <reference name="WTG4A_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
-    <reference name="WTG4A_SNom" origData="IIDM" origName="pMax" type="DOUBLE"/>
-    <par type="DOUBLE" name="WTG4A_XPu" value="0.0065"/>
-    <par type="DOUBLE" name="WTG4A_RPu" value="0"/>
+    <par type="DOUBLE" name="WTG4A_P0Pu" value="-0.7"/>
+    <par type="DOUBLE" name="WTG4A_Q0Pu" value="-0.2"/>
+    <par type="DOUBLE" name="WTG4A_U0Pu" value="1.0"/>
+    <par type="DOUBLE" name="WTG4A_UPhase0" value="0.00000144621"/>
+    <par type="DOUBLE" name="WTG4A_PPcc0Pu" value="-0.7"/>
+    <par type="DOUBLE" name="WTG4A_QPcc0Pu" value="-0.2"/>
+    <par type="DOUBLE" name="WTG4A_UPcc0Pu" value="1.0"/>
+    <par type="DOUBLE" name="WTG4A_UPhasePcc0" value="0.00000144621"/>
+    <par type="DOUBLE" name="WTG4A_SNom" value="100"/>
+    <par type="DOUBLE" name="WTG4A_RLvTrPu" value="0"/>
+    <par type="DOUBLE" name="WTG4A_XLvTrPu" value="0"/>
+    <par type="DOUBLE" name="WTG4A_RMvHvPu" value="0"/>
+    <par type="DOUBLE" name="WTG4A_XMvHvPu" value="0.15"/>
+    <par type="DOUBLE" name="WTG4A_BMvHvPu" value="0"/>
+    <par type="DOUBLE" name="WTG4A_GMvHvPu" value="0"/>
+    <par type="BOOL" name="WTG4A_PPCLocal" value="true"/>
+    <par type="BOOL" name="WTG4A_ConverterLVControl" value="true"/>
     <par type="DOUBLE" name="WTG4A_DDn" value="20"/>
     <par type="DOUBLE" name="WTG4A_DUp" value="0.001"/>
     <par type="BOOL" name="WTG4A_FreqFlag" value="true"/>
@@ -162,13 +172,17 @@
     <par type="DOUBLE" name="WTG4A_Kqv" value="2"/>
     <par type="DOUBLE" name="WTG4A_Kvi" value="0.7"/>
     <par type="DOUBLE" name="WTG4A_Kvp" value="1"/>
-    <par type="DOUBLE" name="WTG4A_PMaxPu" value="1"/>
-    <par type="DOUBLE" name="WTG4A_PMinPu" value="0"/>
+    <par type="DOUBLE" name="WTG4A_PMaxREECPu" value="1"/>
+    <par type="DOUBLE" name="WTG4A_PMaxREPCPu" value="1"/>
+    <par type="DOUBLE" name="WTG4A_PMinREECPu" value="0"/>
+    <par type="DOUBLE" name="WTG4A_PMinREPCPu" value="0"/>
     <par type="BOOL" name="WTG4A_PQFlag" value="false"/>
     <par type="BOOL" name="WTG4A_PfFlag" value="false"/>
     <par type="BOOL" name="WTG4A_QFlag" value="true"/>
-    <par type="DOUBLE" name="WTG4A_QMaxPu" value="0.4"/>
-    <par type="DOUBLE" name="WTG4A_QMinPu" value="-0.4"/>
+    <par type="DOUBLE" name="WTG4A_QMaxREECPu" value="0.4"/>
+    <par type="DOUBLE" name="WTG4A_QMaxREPCPu" value="0.4"/>
+    <par type="DOUBLE" name="WTG4A_QMinREECPu" value="-0.4"/>
+    <par type="DOUBLE" name="WTG4A_QMinREPCPu" value="-0.4"/>
     <par type="BOOL" name="WTG4A_RateFlag" value="false"/>
     <par type="BOOL" name="WTG4A_RefFlag" value="true"/>
     <par type="DOUBLE" name="WTG4A_tFilterPC" value="0.04"/>
@@ -178,7 +192,9 @@
     <par type="DOUBLE" name="WTG4A_tG" value="0.02"/>
     <par type="DOUBLE" name="WTG4A_tIq" value="0.01"/>
     <par type="DOUBLE" name="WTG4A_tLag" value="0.1"/>
-    <par type="DOUBLE" name="WTG4A_tP" value="0.05"/>
+    <par type="DOUBLE" name="WTG4A_tpWTGTb" value="0.05"/>
+    <par type="DOUBLE" name="WTG4A_tpREEC" value="0.05"/>
+    <par type="DOUBLE" name="WTG4A_tpREPC" value="0.05"/>
     <par type="DOUBLE" name="WTG4A_tPord" value="0.01"/>
     <par type="DOUBLE" name="WTG4A_tRv" value="0.01"/>
     <par type="DOUBLE" name="WTG4A_VUpPu" value="1.1"/>
@@ -213,21 +229,85 @@
     <par type="DOUBLE" name="WTG4A_Hg" value="1"/>
     <par type="DOUBLE" name="WTG4A_Ht" value="5"/>
     <par type="DOUBLE" name="WTG4A_Kshaft" value="200"/>
+    <par type="DOUBLE" name="WTG4A_tp" value="0.5"/>
     <par type="DOUBLE" name="WTG4A_VDLIp11" value="1.1"/>
     <par type="DOUBLE" name="WTG4A_VDLIp12" value="1.1"/>
-    <par type="DOUBLE" name="WTG4A_VDLIp21" value="1.15"/>
+    <par type="DOUBLE" name="WTG4A_VDLIp21" value="1.5"/>
     <par type="DOUBLE" name="WTG4A_VDLIp22" value="1"/>
-    <par type="DOUBLE" name="WTG4A_VDLIp31" value="1.16"/>
+    <par type="DOUBLE" name="WTG4A_VDLIp31" value="1.6"/>
     <par type="DOUBLE" name="WTG4A_VDLIp32" value="1"/>
-    <par type="DOUBLE" name="WTG4A_VDLIp41" value="1.17"/>
+    <par type="DOUBLE" name="WTG4A_VDLIp41" value="1.7"/>
     <par type="DOUBLE" name="WTG4A_VDLIp42" value="1"/>
     <par type="DOUBLE" name="WTG4A_VDLIq11" value="1.1"/>
     <par type="DOUBLE" name="WTG4A_VDLIq12" value="1.1"/>
-    <par type="DOUBLE" name="WTG4A_VDLIq21" value="1.15"/>
+    <par type="DOUBLE" name="WTG4A_VDLIq21" value="1.5"/>
     <par type="DOUBLE" name="WTG4A_VDLIq22" value="1"/>
-    <par type="DOUBLE" name="WTG4A_VDLIq31" value="1.16"/>
+    <par type="DOUBLE" name="WTG4A_VDLIq31" value="1.6"/>
     <par type="DOUBLE" name="WTG4A_VDLIq32" value="1"/>
-    <par type="DOUBLE" name="WTG4A_VDLIq41" value="1.17"/>
+    <par type="DOUBLE" name="WTG4A_VDLIq41" value="1.7"/>
     <par type="DOUBLE" name="WTG4A_VDLIq42" value="1"/>
+    <par type="DOUBLE" name="WTG4A_lVRTAggr_T1" value="0.15"/>
+    <par type="DOUBLE" name="WTG4A_lVRTAggr_TInt" value="1"/>
+    <par type="DOUBLE" name="WTG4A_lVRTAggr_T2" value="3"/>
+    <par type="DOUBLE" name="WTG4A_lVRTAggr_UMinPu" value="0.3"/>
+    <par type="DOUBLE" name="WTG4A_lVRTAggr_UIntPu" value="0.5"/>
+    <par type="DOUBLE" name="WTG4A_lVRTAggr_URPu" value="0.8"/>
+    <par type="DOUBLE" name="WTG4A_lVRTAggr_c" value="0.5"/>
+    <par type="DOUBLE" name="WTG4A_lVRTAggr_d" value="0.1"/>
+    <par type="DOUBLE" name="WTG4A_lVRTAggr_e" value="0.5"/>
+    <par type="DOUBLE" name="WTG4A_lVRTAggr_f" value="0.1"/>
+    <par type="DOUBLE" name="WTG4A_lVRTAggr_u_" value="0.5"/>
+    <par type="DOUBLE" name="T1" value="0.15"/>
+    <par type="DOUBLE" name="TInt" value="1"/>
+    <par type="DOUBLE" name="T2" value="3"/>
+    <par type="DOUBLE" name="UMinPu" value="0.3"/>
+    <par type="DOUBLE" name="UIntPu" value="0.5"/>
+    <par type="DOUBLE" name="URPu" value="0.8"/>
+    <par type="DOUBLE" name="ibg_Inom" value="1.2"/>
+    <par type="DOUBLE" name="ibg_P0Pu" value="0.7"/>
+    <par type="DOUBLE" name="ibg_Q0Pu" value="-0.2"/>
+    <par type="DOUBLE" name="ibg_U0Pu" value="1"/>
+    <par type="DOUBLE" name="ibg_UPhase0" value="0.00000144621"/>
+    <par type="DOUBLE" name="ibg_SNom" value="100"/>
+    <par type="DOUBLE" name="ibg_VRCIPu" value="0.7"/>
+    <par type="DOUBLE" name="ibg_VPLLPu" value="0.01"/>
+    <par type="DOUBLE" name="ibg_VS1" value="0.9"/>
+    <par type="DOUBLE" name="ibg_VS2" value="1.1"/>
+    <par type="DOUBLE" name="ibg_kRCI" value="2.5"/>
+    <par type="DOUBLE" name="ibg_kRCA" value="2.5"/>
+    <par type="DOUBLE" name="ibg_m" value="0.1"/>
+    <par type="DOUBLE" name="ibg_n" value="0.1"/>
+    <par type="DOUBLE" name="ibg_Tfltr" value="0.1"/>
+    <par type="DOUBLE" name="ibg_Tg" value="0.1"/>
+    <par type="DOUBLE" name="ibg_Tm" value="0.1"/>
+    <par type="DOUBLE" name="ibg_iPSlewMaxPu" value="1"/>
+    <par type="DOUBLE" name="ibg_iQmaxPu" value="1.2"/>
+    <par type="DOUBLE" name="ibg_iQminPu" value="-1.2"/>
+    <par type="DOUBLE" name="ibg_T1" value="0.15"/>
+    <par type="DOUBLE" name="ibg_TInt" value="1"/>
+    <par type="DOUBLE" name="ibg_T2" value="3"/>
+    <par type="DOUBLE" name="ibg_UMinPu" value="0.3"/>
+    <par type="DOUBLE" name="ibg_UIntPu" value="0.5"/>
+    <par type="DOUBLE" name="ibg_URPu" value="0.8"/>
+    <par type="DOUBLE" name="ibg_omegaMaxPu" value="1.05"/>
+    <par type="DOUBLE" name="ibg_omegaMinPu" value="0.95"/>
+    <par type="DOUBLE" name="ibg_overVoltageProtection_VMax" value="1.2"/>
+    <par type="DOUBLE" name="ibg_overfrequencySupport_omega_sPu" value="1.01"/>
+    <par type="DOUBLE" name="ibg_PLLFreeze_Ki" value="20"/>
+    <par type="DOUBLE" name="ibg_PLLFreeze_Kp" value="3"/>
+    <par type="DOUBLE" name="ibg_PLLFreeze_" value="3"/>
+    <par type="BOOL" name="WTG4A_Lvplsw" value="false"/>
+    <par type="DOUBLE" name="WTG4A_zerox" value="0.1"/>
+    <par type="DOUBLE" name="WTG4A_brkpt" value="0.05"/>
+    <par type="DOUBLE" name="WTG4A_lvpl1" value="1.22"/>
+    <!-- LVRT parameters -->
+    <par type="STRING" name="lhvrt_TablesFile" value="../LHVRT.txt"/>
+    <par type="BOOL" name="lhvrt_TablesOnFile" value="true"/>
+    <par type="STRING" name="lhvrt_TabletUoverUfilt" value="hvrt"/>
+    <par type="STRING" name="lhvrt_TabletUunderUfilt" value="lvrt"/>
+    <par type="DOUBLE" name="lhvrt_tLagAction" value="0.05"/>
+    <par type="DOUBLE" name="lhvrt_tUFilt" value="0.01"/>
+    <par type="DOUBLE" name="lhvrt_UOverPu" value="1.5"/>
+    <par type="DOUBLE" name="lhvrt_UUnderPu" value="0.5"/>
   </set>
 </parametersSet>

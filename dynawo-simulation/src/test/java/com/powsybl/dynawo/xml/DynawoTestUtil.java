@@ -131,7 +131,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
                     .equipment(generator)
                     .parameterSetId("GSTW")
                     .build());
-            case "GEN6" -> dynamicModels.add(BaseGeneratorBuilder.of(network)
+            case "GEN6" -> dynamicModels.add(BaseGeneratorBuilder.of(network, "GeneratorAlphaBeta")
                     .equipment(generator)
                     .parameterSetId("GF")
                     .build());

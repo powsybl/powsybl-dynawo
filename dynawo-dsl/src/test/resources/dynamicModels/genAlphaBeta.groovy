@@ -8,7 +8,7 @@
 
 package dynamicModels
 
-GeneratorFictitious {
+GeneratorAlphaBeta {
     staticId "GEN"
     parameterSetId "GF"
 }

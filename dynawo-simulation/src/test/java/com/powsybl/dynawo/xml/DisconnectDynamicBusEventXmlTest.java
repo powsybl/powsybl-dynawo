@@ -60,7 +60,7 @@ class DisconnectDynamicBusEventXmlTest extends AbstractDynamicModelXmlTest {
         validate("parameters.xsd", "empty_par.xml", tmpDir.resolve(context.getSimulationParFile()));
         checkReport("""
                 + Test DYD
-                   Model GeneratorFictitious G1 instantiation OK
+                   Model GeneratorAlphaBeta G1 instantiation OK
                    Model Bus B1 instantiation OK
                    Model Bus B2 instantiation OK
                    Model Line L1 instantiation OK
