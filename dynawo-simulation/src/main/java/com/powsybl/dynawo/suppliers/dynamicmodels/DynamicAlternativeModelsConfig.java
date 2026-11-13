@@ -17,7 +17,7 @@ import java.util.List;
  * used to configure dynamic model builder in {@link DynawoModelsSupplier}
  * @param alternativeModelConfigs list of alias of the library and parameter set ids
  * @param groupType configures group processing
- * @param modelResolverName anme of the {@link ModelResolver} used to select model and parameter set id in {@link #alternativeModelConfigs} list.
+ * @param modelResolverName name of the {@link ModelResolver} used to select model and parameter set id in {@link #alternativeModelConfigs} list.
  * @param properties list of properties used by the builder
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */

@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static com.powsybl.dynawo.DynawoSimulationReports.createAlternativeModelsReportNode;
 import static com.powsybl.dynawo.DynawoSimulationReports.createDynawoModelSupplierReportNode;
 
 /**
@@ -64,14 +65,16 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
     @Override
     public List<DynamicModel> get(Network network, ReportNode reportNode) {
         ReportNode supplierReportNode = createDynawoModelSupplierReportNode(reportNode);
-        return Stream.concat(dynamicModelConfigs.dynamicModelConfigList().stream(), getAlternativeModelsStream(network, reportNode))
+        Stream<DynamicModelConfig> alternativeModels = resolveAlternativeModelsStream(network, supplierReportNode);
+        return Stream.concat(dynamicModelConfigs.dynamicModelConfigList().stream(), alternativeModels)
                 .map(dynamicModelConfig -> buildDynamicModel(dynamicModelConfig, network, supplierReportNode))
                 .filter(Objects::nonNull)
                 .toList();
     }
 
-    private Stream<DynamicModelConfig> getAlternativeModelsStream(Network network, ReportNode reportNode) {
+    private Stream<DynamicModelConfig> resolveAlternativeModelsStream(Network network, ReportNode reportNode) {
         if (dynamicModelConfigs.hasDynamicAlternativeModels()) {
+            ReportNode altReportNode = createAlternativeModelsReportNode(reportNode);
             Set<String> missingResolvers = new HashSet<>();
             ModelResolvers resolvers = new ModelResolvers();
             return dynamicModelConfigs.dynamicAlternativeModelsConfiglist().stream()
@@ -79,12 +82,12 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
                         ModelResolver resolver = resolvers.getModelResolver(am.modelResolverName());
                         if (resolver == null) {
                             if (missingResolvers.add(am.modelResolverName())) {
-                                DynawoSimulationReports.reportModelResolverNotFound(reportNode, am.modelResolverName());
+                                DynawoSimulationReports.reportModelResolverNotFound(altReportNode, am.modelResolverName());
                             }
                             return null;
                         }
                         return resolver.resolveAlternativeModels(network, am.alternativeModelConfigs(), am.groupType(),
-                                am.properties(), reportNode);
+                                am.properties(), altReportNode);
                     }
                     )
                     .filter(Objects::nonNull);
