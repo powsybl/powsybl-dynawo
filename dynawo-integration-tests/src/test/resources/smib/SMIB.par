@@ -310,4 +310,176 @@
     <par type="DOUBLE" name="lhvrt_UOverPu" value="1.5"/>
     <par type="DOUBLE" name="lhvrt_UUnderPu" value="0.5"/>
   </set>
+  <set id="WT4A">
+    <!-- Nominal -->
+    <par type="DOUBLE" name="WT_SNom" value="100"/>
+    <par type="DOUBLE" name="WT_tS" value="0.001"/>
+    <!-- LV transformer -->
+    <par type="BOOL" name="WT_ConverterLVControl" value="false"/>
+    <par type="DOUBLE" name="WT_BLvTrPu" value="0"/>
+    <par type="DOUBLE" name="WT_GLvTrPu" value="0"/>
+    <par type="DOUBLE" name="WT_RLvTrPu" value="0"/>
+    <par type="DOUBLE" name="WT_XLvTrPu" value="0"/>
+    <!-- Control -->
+    <par type="DOUBLE" name="WT_DipMaxPu" value="1"/>
+    <par type="DOUBLE" name="WT_DiqMaxPu" value="100"/>
+    <par type="DOUBLE" name="WT_DiqMinPu" value="-100"/>
+    <par type="DOUBLE" name="WT_Kipaw" value="100"/>
+    <par type="DOUBLE" name="WT_Kiqaw" value="100"/>
+    <par type="DOUBLE" name="WT_tG" value="0.01"/>
+    <!-- PLL -->
+    <par type="DOUBLE" name="WT_tPll" value="0.01"/>
+    <par type="DOUBLE" name="WT_UPll1Pu" value="999"/>
+    <par type="DOUBLE" name="WT_UPll2Pu" value="0.13"/>
+    <!-- PControl -->
+    <par type="DOUBLE" name="WT_DPMaxP4APu" value="1"/>
+    <par type="DOUBLE" name="WT_Kpaw" value="1000"/>
+    <par type="DOUBLE" name="WT_tPOrdP4A" value="0.1"/>
+    <par type="DOUBLE" name="WT_tUFiltP4A" value="0.01"/>
+    <!-- CurrentLimiter -->
+    <par type="DOUBLE" name="WT_IMaxDipPu" value="1.3"/>
+    <par type="DOUBLE" name="WT_IMaxPu" value="1.3"/>
+    <par type="DOUBLE" name="WT_Kpqu" value="20"/>
+    <par type="BOOL" name="WT_MdfsLim" value="false"/>
+    <par type="BOOL" name="WT_Mqpri" value="true"/>
+    <par type="DOUBLE" name="WT_UpquMaxPu" value="1.1"/>
+    <par type="DOUBLE" name="WT_tUFiltcl" value="0.01"/>
+    <!-- QControl -->
+    <par type="DOUBLE" name="WT_tUFiltQ" value="0.01"/>
+    <par type="DOUBLE" name="WT_tPFiltQ" value="0.01"/>
+    <par type="INT" name="WT_MqUvrt" value="1"/>
+    <par type="DOUBLE" name="WT_Udb1Pu" value="0.9"/>
+    <par type="DOUBLE" name="WT_Udb2Pu" value="1.1"/>
+    <par type="DOUBLE" name="WT_IqH1Pu" value="1.05"/>
+    <par type="DOUBLE" name="WT_IqMaxPu" value="1.05"/>
+    <par type="DOUBLE" name="WT_IqMinPu" value="-1.05"/>
+    <par type="DOUBLE" name="WT_IqPostPu" value="0"/>
+    <par type="DOUBLE" name="WT_Kiq" value="2.25"/>
+    <par type="DOUBLE" name="WT_Kiu" value="10"/>
+    <par type="DOUBLE" name="WT_Kpq" value="1.1"/>
+    <par type="DOUBLE" name="WT_Kpu" value="2"/>
+    <par type="DOUBLE" name="WT_Kqv" value="2"/>
+    <par type="INT" name="WT_MqG" value="1"/>
+    <par type="DOUBLE" name="WT_RDropPu" value="0"/>
+    <par type="DOUBLE" name="WT_tPost" value="0"/>
+    <par type="DOUBLE" name="WT_tQord" value="0.05"/>
+    <par type="DOUBLE" name="WT_UMaxPu" value="1.1"/>
+    <par type="DOUBLE" name="WT_UMinPu" value="0.9"/>
+    <par type="DOUBLE" name="WT_UqDipPu" value="0.9"/>
+    <par type="DOUBLE" name="WT_URef0Pu" value="0"/>
+    <par type="DOUBLE" name="WT_XDropPu" value="0"/>
+    <!-- QLimiter -->
+    <par type="BOOL" name="WT_QlConst" value="true"/>
+    <par type="DOUBLE" name="WT_QMaxPu" value="0.8"/>
+    <par type="DOUBLE" name="WT_QMinPu" value="-0.8"/>
+    <par type="DOUBLE" name="WT_tPFiltql" value="0.01"/>
+    <par type="DOUBLE" name="WT_tUFiltql" value="0.01"/>
+    <!-- GridProtection -->
+    <par type="DOUBLE" name="WT_fOverPu" value="1.1"/>
+    <par type="DOUBLE" name="WT_fUnderPu" value="0.9"/>
+    <par type="DOUBLE" name="WT_UOverPu" value="1.1"/>
+    <par type="DOUBLE" name="WT_UUnderPu" value="0.9"/>
+    <!-- UfMeasurement -->
+    <par type="DOUBLE" name="WT_tphiFilt" value="0.02"/>
+    <par type="BOOL" name="WT_Mzc" value="false"/>
+    <par type="DOUBLE" name="WT_DfMaxPu" value="1"/>
+    <par type="DOUBLE" name="WT_tUFilt" value="0.01"/>
+    <par type="DOUBLE" name="WT_tfFilt" value="0.01"/>
+    <!-- Operating Point -->
+    <par type="DOUBLE" name="WT_P0Pu" value="-1"/>
+    <par type="DOUBLE" name="WT_Q0Pu" value="0.21"/>
+    <par type="DOUBLE" name="WT_U0Pu" value="1"/>
+    <par type="DOUBLE" name="WT_UPhase0" value="0.21949"/>
+  </set>
+  <set id="WT4A_2020">
+    <!-- Nominal -->
+    <par type="DOUBLE" name="WT_SNom" value="100"/>
+    <par type="DOUBLE" name="WT_tS" value="0.001"/>
+    <!-- LV transformer -->
+    <par type="BOOL" name="WT_ConverterLVControl" value="false"/>
+    <par type="DOUBLE" name="WT_BLvTrPu" value="0"/>
+    <par type="DOUBLE" name="WT_GLvTrPu" value="0"/>
+    <par type="DOUBLE" name="WT_RLvTrPu" value="0"/>
+    <par type="DOUBLE" name="WT_XLvTrPu" value="0"/>
+    <!-- Control -->
+    <par type="DOUBLE" name="WT_DipMaxPu" value="1"/>
+    <par type="DOUBLE" name="WT_DiqMaxPu" value="100"/>
+    <par type="DOUBLE" name="WT_DiqMinPu" value="-100"/>
+    <par type="DOUBLE" name="WT_Kipaw" value="100"/>
+    <par type="DOUBLE" name="WT_Kiqaw" value="100"/>
+    <par type="DOUBLE" name="WT_tG" value="0.01"/>
+    <!-- MeasurementC -->
+    <par type="DOUBLE" name="WT_DfcMaxPu" value="1"/>
+    <par type="DOUBLE" name="WT_tfcFilt" value="0.01"/>
+    <par type="DOUBLE" name="WT_tIcFilt" value="0.01"/>
+    <par type="DOUBLE" name="WT_tPcFilt" value="0.01"/>
+    <par type="DOUBLE" name="WT_tQcFilt" value="0.01"/>
+    <par type="DOUBLE" name="WT_tUcFilt" value="0.01"/>
+    <!-- MeasurementP -->
+    <par type="DOUBLE" name="WT_DfpMaxPu" value="1"/>
+    <par type="DOUBLE" name="WT_tfpFilt" value="0.01"/>
+    <par type="DOUBLE" name="WT_tIpFilt" value="0.01"/>
+    <par type="DOUBLE" name="WT_tPpFilt" value="0.01"/>
+    <par type="DOUBLE" name="WT_tQpFilt" value="0.01"/>
+    <par type="DOUBLE" name="WT_tUpFilt" value="0.01"/>
+    <!-- PLL -->
+    <par type="DOUBLE" name="WT_tPll" value="0.01"/>
+    <par type="DOUBLE" name="WT_UPll1Pu" value="999"/>
+    <par type="DOUBLE" name="WT_UPll2Pu" value="0.13"/>
+    <!-- PControl -->
+    <par type="DOUBLE" name="WT_DPMaxP4APu" value="1"/>
+    <par type="DOUBLE" name="WT_DPRefMax4APu" value="100"/>
+    <par type="DOUBLE" name="WT_DPRefMin4APu" value="-100"/>
+    <par type="DOUBLE" name="WT_Kpaw" value="1000"/>
+    <par type="BOOL" name="WT_MpUScale" value="false"/>
+    <par type="DOUBLE" name="WT_tPOrdP4A" value="0.1"/>
+    <par type="DOUBLE" name="WT_tPWTRef4A" value="0.01"/>
+    <par type="DOUBLE" name="WT_UpDipPu" value="0"/>
+    <!-- CurrentLimiter -->
+    <par type="DOUBLE" name="WT_IMaxDipPu" value="1.3"/>
+    <par type="DOUBLE" name="WT_IMaxPu" value="1.3"/>
+    <par type="DOUBLE" name="WT_Kpqu" value="20"/>
+    <par type="BOOL" name="WT_MdfsLim" value="false"/>
+    <par type="BOOL" name="WT_Mqpri" value="true"/>
+    <par type="DOUBLE" name="WT_UpquMaxPu" value="1.1"/>
+    <!-- QControl -->
+    <par type="DOUBLE" name="WT_DUdb1Pu" value="-0.1"/>
+    <par type="DOUBLE" name="WT_DUdb2Pu" value="0.1"/>
+    <par type="DOUBLE" name="WT_IqH1Pu" value="1.05"/>
+    <par type="DOUBLE" name="WT_IqMaxPu" value="1.05"/>
+    <par type="DOUBLE" name="WT_IqMinPu" value="-1.05"/>
+    <par type="DOUBLE" name="WT_IqPostPu" value="0"/>
+    <par type="DOUBLE" name="WT_Kiq" value="2.25"/>
+    <par type="DOUBLE" name="WT_Kiu" value="10"/>
+    <par type="DOUBLE" name="WT_Kpq" value="1.1"/>
+    <par type="DOUBLE" name="WT_Kpu" value="2"/>
+    <par type="DOUBLE" name="WT_Kpufrt" value="2"/>
+    <par type="DOUBLE" name="WT_Kqv" value="2"/>
+    <par type="INT" name="WT_Mqfrt" value="1"/>
+    <par type="INT" name="WT_MqG" value="1"/>
+    <par type="DOUBLE" name="WT_RDropPu" value="0"/>
+    <par type="DOUBLE" name="WT_tPost" value="0"/>
+    <par type="DOUBLE" name="WT_tQord" value="0.05"/>
+    <par type="DOUBLE" name="WT_tUss" value="1"/>
+    <par type="DOUBLE" name="WT_UMaxPu" value="1.1"/>
+    <par type="DOUBLE" name="WT_UMinPu" value="0.9"/>
+    <par type="DOUBLE" name="WT_UqDipPu" value="0.9"/>
+    <par type="DOUBLE" name="WT_UqRisePu" value="1.1"/>
+    <par type="DOUBLE" name="WT_URef0Pu" value="0"/>
+    <par type="DOUBLE" name="WT_XDropPu" value="0"/>
+    <!-- QLimiter -->
+    <par type="BOOL" name="WT_QlConst" value="true"/>
+    <par type="DOUBLE" name="WT_QMaxPu" value="0.8"/>
+    <par type="DOUBLE" name="WT_QMinPu" value="-0.8"/>
+    <!-- GridProtection -->
+    <par type="DOUBLE" name="WT_fOverPu" value="1.1"/>
+    <par type="DOUBLE" name="WT_fUnderPu" value="0.9"/>
+    <par type="DOUBLE" name="WT_UOverPu" value="1.1"/>
+    <par type="DOUBLE" name="WT_UUnderPu" value="0.9"/>
+    <!-- Operating Point -->
+    <par type="DOUBLE" name="WT_P0Pu" value="-1"/>
+    <par type="DOUBLE" name="WT_Q0Pu" value="0.21"/>
+    <par type="DOUBLE" name="WT_U0Pu" value="1"/>
+    <par type="DOUBLE" name="WT_UPhase0" value="0.21949"/>
+  </set>
 </parametersSet>
