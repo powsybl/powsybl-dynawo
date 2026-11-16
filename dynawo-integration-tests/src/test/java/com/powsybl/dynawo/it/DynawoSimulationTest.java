@@ -27,6 +27,7 @@ import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.buses.StandardBusBuilder;
 import com.powsybl.dynawo.models.events.*;
 import com.powsybl.dynawo.models.generators.*;
+import com.powsybl.dynawo.models.generators.iec.IecBuilder;
 import com.powsybl.dynawo.models.lines.LineBuilder;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawo.parameters.ParametersSet;
@@ -77,7 +78,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
     @BeforeEach
     void setUp() throws Exception {
         super.setUp();
-        provider = new DynawoSimulationProvider(new DynawoSimulationConfig(Path.of("/dynaflow-launcher"), true));
+        provider = new DynawoSimulationProvider(new DynawoSimulationConfig(Path.of("/home/issertiallau/Projects/binaires/dynaflow-launcher_1.8.0"), true));
         parameters = new DynamicSimulationParameters()
                 .setStartTime(0)
                 .setStopTime(100);
@@ -251,6 +252,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         DynamicSimulationResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
                         dynamicModelsSupplier, runParameters).join();
 
+        System.out.println(result.getStatusText());
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
         assertEquals(16, result.getCurves().size());
@@ -277,6 +279,16 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                                 .parameterSetId("Wind")
                                 .build(),
                         "LHVRT.txt"),
+                Arguments.of((Function<Network, BlackBoxModel>)
+                        n -> IecBuilder.of(n, "IECWT4ACurrentSource2015")
+                                .staticId(genId)
+                                .parameterSetId("WT4A")
+                                .build()),
+                Arguments.of((Function<Network, BlackBoxModel>)
+                        n -> IecBuilder.of(n, "IECWT4ACurrentSource2020")
+                                .staticId(genId)
+                                .parameterSetId("WT4A_2020")
+                                .build()),
                 Arguments.of((Function<Network, BlackBoxModel>)
                         n -> GridFormingConverterBuilder.of(n, "GridFormingConverterDroopControl")
                                 .staticId(genId)

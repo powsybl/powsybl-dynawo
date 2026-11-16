@@ -918,6 +918,71 @@
       }
     ]
   },
+  "IEC": {
+    "defaultLib": "IECWT4ACurrentSource2015",
+    "libs": [
+      {
+        "lib": "IECWT4ACurrentSource2015",
+        "doc": "Wind Turbine Type 4A model from IEC 61400-27-1:2015 standard : measurement, PLL, protection, PControl, QControl, limiters, electrical and generator modules.",
+        "properties": [
+          "WT"
+        ]
+      },
+      {
+        "lib": "IECWT4ACurrentSource2020",
+        "doc": "Wind Turbine Type 4A model from IEC 61400-27-1:2020 standard : measurement, PLL, protection, PControl, QControl, limiters, electrical and generator modules.",
+        "properties": [
+          "WT"
+        ]
+      },
+      {
+        "lib": "IECWT4BCurrentSource2015",
+        "doc": "Wind Turbine Type 4B model from IEC 61400-27-1:2015 standard : measurement, PLL, protection, PControl, QControl, limiters, electrical and generator modules.",
+        "properties": [
+          "WT"
+        ]
+      },
+      {
+        "lib": "IECWT4BCurrentSource2020",
+        "doc": "Wind Turbine Type 4B model from IEC 61400-27-1:2020 standard : measurement, PLL, protection, PControl, QControl, limiters, electrical, generator and mechanical modules.",
+        "properties": [
+          "WT"
+        ]
+      },
+      {
+        "lib": "IECWPP4ACurrentSource2015",
+        "doc": "Wind Power Plant Type 4A model from IEC 61400-27-1:2015 standard : WT4A, communication modules",
+        "internalModelPrefix": "wT4A",
+        "properties": [
+          "WPP"
+        ]
+      },
+      {
+        "lib": "IECWPP4ACurrentSource2020",
+        "doc": "Wind Power Plant Type 4A model from IEC 61400-27-1:2020 standard : WT4A, communication modules",
+        "internalModelPrefix": "wT4A",
+        "properties": [
+          "WPP"
+        ]
+      },
+      {
+        "lib": "IECWPP4BCurrentSource2015",
+        "doc": "Wind Power Plant Type 4A model from IEC 61400-27-1:2015 standard : WT4B, communication modules",
+        "internalModelPrefix": "wT4B",
+        "properties": [
+          "WPP"
+        ]
+      },
+      {
+        "lib": "IECWPP4BCurrentSource2020",
+        "doc": "Wind Power Plant Type 4B model from IEC 61400-27-1:2020 standard : WT4B, communication modules",
+        "internalModelPrefix": "wT4B",
+        "properties": [
+          "WPP"
+        ]
+      }
+    ]
+  },
   "GRID_FORMING_CONVERTER": {
     "defaultLib": "GridFormingConverterDroopControl",
     "libs": [
