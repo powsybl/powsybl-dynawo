@@ -25,6 +25,7 @@ import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAu
 import com.powsybl.dynawo.models.buses.InfiniteBus;
 import com.powsybl.dynawo.models.buses.StandardBus;
 import com.powsybl.dynawo.models.generators.*;
+import com.powsybl.dynawo.models.generators.iec.WtIecGen;
 import com.powsybl.dynawo.models.hvdc.BaseHvdc;
 import com.powsybl.dynawo.models.hvdc.HvdcDangling;
 import com.powsybl.dynawo.models.lines.StandardLine;
@@ -161,6 +162,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/svarc.groovy", BaseStaticVarCompensator.class, SvcTestCaseFactory.create(), "SVC2", "svarc", "StaticVarCompensatorPV"),
                 Arguments.of("/dynamicModels/wecc.groovy", WeccGen.class,
                         EurostagTutorialExample1Factory.create(), "GEN", "Wind", "WT4BWeccCurrentSource"),
+                Arguments.of("/dynamicModels/iec.groovy", WtIecGen.class,
+                        EurostagTutorialExample1Factory.create(), "GEN", "wt4", "IECWT4BCurrentSource2015"),
                 Arguments.of("/dynamicModels/gridFormingConverter.groovy", GridFormingConverter.class,
                         EurostagTutorialExample1Factory.create(), "GEN", "GF", "GridFormingConverterMatchingControl"),
                 Arguments.of("/dynamicModels/genAltIds.groovy", SynchronousGenerator.class,
