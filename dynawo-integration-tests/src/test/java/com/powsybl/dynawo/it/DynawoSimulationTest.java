@@ -252,7 +252,6 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         DynamicSimulationResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
                         dynamicModelsSupplier, runParameters).join();
 
-        System.out.println(result.getStatusText());
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
         assertEquals(16, result.getCurves().size());
