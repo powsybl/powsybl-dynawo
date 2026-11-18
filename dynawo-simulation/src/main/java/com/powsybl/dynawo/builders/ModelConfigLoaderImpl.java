@@ -23,6 +23,7 @@ import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.buses.StandardBusBuilder;
 import com.powsybl.dynawo.models.events.*;
 import com.powsybl.dynawo.models.generators.*;
+import com.powsybl.dynawo.models.generators.iec.IecBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawo.models.lines.LineBuilder;
@@ -87,6 +88,7 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(SynchronousGeneratorBuilder.CATEGORY, SynchronousGeneratorBuilder::of, SynchronousGeneratorBuilder::getSupportedModelInfos),
             new BuilderConfig(InertialGridBuilder.CATEGORY, InertialGridBuilder::of, InertialGridBuilder::getSupportedModelInfos),
             new BuilderConfig(WeccBuilder.CATEGORY, WeccBuilder::of, WeccBuilder::getSupportedModelInfos),
+            new BuilderConfig(IecBuilder.CATEGORY, IecBuilder::of, IecBuilder::getSupportedModelInfos),
             new BuilderConfig(GridFormingConverterBuilder.CATEGORY, GridFormingConverterBuilder::of, GridFormingConverterBuilder::getSupportedModelInfos),
             new BuilderConfig(SignalNGeneratorBuilder.CATEGORY, SignalNGeneratorBuilder::of, SignalNGeneratorBuilder::getSupportedModelInfos));
 
