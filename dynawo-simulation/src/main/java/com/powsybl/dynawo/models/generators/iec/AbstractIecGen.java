@@ -10,6 +10,7 @@ package com.powsybl.dynawo.models.generators.iec;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
+import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.generators.SpecifiedGeneratorModel;
@@ -26,8 +27,27 @@ import java.util.List;
  */
 abstract class AbstractIecGen extends AbstractEquipmentBlackBoxModel<Generator> implements FrequencySynchronizedModel, SpecifiedGeneratorModel {
 
-    protected AbstractIecGen(Generator generator, String parameterSetId, ModelConfig modelConfig) {
+    enum MeasurementType {
+
+        MEASUREMENT_PQ("measurementsPQ"),
+        MEASUREMENT_CONTROL("controlMeasurements");
+
+        private final String variable;
+
+        MeasurementType(String variable) {
+            this.variable = variable;
+        }
+
+        public String getVariable() {
+            return variable;
+        }
+    }
+
+    private final List<VarMapping> varsMapping;
+
+    protected AbstractIecGen(Generator generator, String parameterSetId, ModelConfig modelConfig, List<VarMapping> varsMapping) {
         super(generator, parameterSetId, modelConfig);
+        this.varsMapping = varsMapping;
     }
 
     protected abstract String switchOffSignalNodeVarName();
@@ -64,5 +84,10 @@ abstract class AbstractIecGen extends AbstractEquipmentBlackBoxModel<Generator> 
     @Override
     public Bus getConnectableBus() {
         return BusUtils.getConnectableBus(equipment);
+    }
+
+    @Override
+    public List<VarMapping> getVarsMapping() {
+        return varsMapping;
     }
 }
