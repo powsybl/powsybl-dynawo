@@ -7,7 +7,6 @@
 package com.powsybl.dynawo.it;
 
 import com.powsybl.computation.ComputationManager;
-import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.computation.local.test.ComputationDockerConfig;
 import com.powsybl.computation.local.test.DockerLocalComputationManager;
 import org.junit.jupiter.api.AfterEach;
@@ -42,7 +41,7 @@ public abstract class AbstractDynawoTest {
         Path dockerDir = Path.of("/home/powsybl");
         ComputationDockerConfig config = new ComputationDockerConfig()
                 .setDockerImageId(DOCKER_IMAGE_ID);
-        computationManager = LocalComputationManager.getDefault();
+        computationManager = new DockerLocalComputationManager(localDir, dockerDir, config);
     }
 
     @AfterEach

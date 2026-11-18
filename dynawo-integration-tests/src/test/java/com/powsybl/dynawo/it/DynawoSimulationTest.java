@@ -78,7 +78,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
     @BeforeEach
     void setUp() throws Exception {
         super.setUp();
-        provider = new DynawoSimulationProvider(new DynawoSimulationConfig(Path.of("/home/issertiallau/Projects/binaires/dynaflow-launcher_1.8.0"), true));
+        provider = new DynawoSimulationProvider(new DynawoSimulationConfig(Path.of("/dynaflow-launcher"), true));
         parameters = new DynamicSimulationParameters()
                 .setStartTime(0)
                 .setStopTime(100);
@@ -285,9 +285,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                                 .parameterSetId("WT4A")
                                 .build()),
                 Arguments.of((Function<Network, BlackBoxModel>)
-                        n -> IecBuilder.of(n, "IECWT4ACurrentSource2020")
+                        n -> IecBuilder.of(n, "IECWPP4BCurrentSource2020")
                                 .staticId(genId)
-                                .parameterSetId("WT4A_2020")
+                                .parameterSetId("WPP4B_2020")
                                 .build()),
                 Arguments.of((Function<Network, BlackBoxModel>)
                         n -> GridFormingConverterBuilder.of(n, "GridFormingConverterDroopControl")
