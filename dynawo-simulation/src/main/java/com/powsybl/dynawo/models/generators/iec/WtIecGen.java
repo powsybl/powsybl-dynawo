@@ -18,13 +18,13 @@ import java.util.List;
  */
 public class WtIecGen extends AbstractIecGen {
 
-    private static final List<VarMapping> VAR_MAPPINGS = List.of(
-            new VarMapping("WT_measurementsPQ_PPuSnRef", "p"),
-            new VarMapping("WT_measurementsPQ_QPuSnRef", "q"),
-            new VarMapping("WT_wT4Injector_state", "state"));
+    private static final VarMapping STATE = new VarMapping("WT_wT4Injector_state", "state");
 
-    protected WtIecGen(Generator generator, String parameterSetId, ModelConfig modelConfig) {
-        super(generator, parameterSetId, modelConfig);
+    protected WtIecGen(Generator generator, String parameterSetId, ModelConfig modelConfig, MeasurementType measurementType) {
+        super(generator, parameterSetId, modelConfig, List.of(
+                new VarMapping("WT_%s_PPuSnRef".formatted(measurementType.getVariable()), "p"),
+                new VarMapping("WT_%s_QPuSnRef".formatted(measurementType.getVariable()), "q"),
+                STATE));
     }
 
     @Override
@@ -49,12 +49,7 @@ public class WtIecGen extends AbstractIecGen {
 
     @Override
     public String getUPuVarName() {
-        return "WT_measurementsPQ_UPu";
-    }
-
-    @Override
-    public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPINGS;
+        return "WT_pll_UWTPu";
     }
 
     @Override

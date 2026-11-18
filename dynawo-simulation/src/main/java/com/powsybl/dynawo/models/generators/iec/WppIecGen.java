@@ -12,7 +12,6 @@ import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -20,15 +19,13 @@ import java.util.Objects;
 public class WppIecGen extends AbstractIecGen {
 
     private final String iecPrefix;
-    private final List<VarMapping> varsMapping;
 
-    protected WppIecGen(Generator generator, String parameterSetId, ModelConfig modelConfig) {
-        super(generator, parameterSetId, modelConfig);
-        this.iecPrefix = Objects.requireNonNull(modelConfig.internalModelPrefix());
-        this.varsMapping = List.of(
-                new VarMapping("WPP_" + iecPrefix + "CurrentSource_measurementsPQ_PPuSnRef", "p"),
-                new VarMapping("WPP_" + iecPrefix + "CurrentSource_measurementsPQ_QPuSnRef", "q"),
-                new VarMapping("WPP_" + iecPrefix + "CurrentSource_wT4Injector_state", "state"));
+    protected WppIecGen(Generator generator, String parameterSetId, ModelConfig modelConfig, MeasurementType measurementType, String iecPrefix) {
+        super(generator, parameterSetId, modelConfig, List.of(
+                new VarMapping("WPP_%sCurrentSource_%s_PPuSnRef".formatted(iecPrefix, measurementType.getVariable()), "p"),
+                new VarMapping("WPP_%sCurrentSource_%s_QPuSnRef".formatted(iecPrefix, measurementType.getVariable()), "q"),
+                new VarMapping("WPP_" + iecPrefix + "CurrentSource_wT4Injector_state", "state")));
+        this.iecPrefix = iecPrefix;
     }
 
     @Override
@@ -53,12 +50,7 @@ public class WppIecGen extends AbstractIecGen {
 
     @Override
     public String getUPuVarName() {
-        return "WPP_" + iecPrefix + "CurrentSource_wT4Injector_UPu";
-    }
-
-    @Override
-    public List<VarMapping> getVarsMapping() {
-        return varsMapping;
+        return "WPP_elecMeasurements_UPu";
     }
 
     @Override

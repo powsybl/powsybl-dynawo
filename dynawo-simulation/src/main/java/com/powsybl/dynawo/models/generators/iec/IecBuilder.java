@@ -28,6 +28,8 @@ public class IecBuilder extends AbstractGeneratorBuilder<IecBuilder> {
     public static final String CATEGORY = "IEC";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
+    private AbstractIecGen.MeasurementType measurementType;
+
     public static IecBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
     }
@@ -65,12 +67,22 @@ public class IecBuilder extends AbstractGeneratorBuilder<IecBuilder> {
     }
 
     @Override
+    protected void checkData() {
+        super.checkData();
+        for (AbstractIecGen.MeasurementType type : AbstractIecGen.MeasurementType.values()) {
+            if (modelConfig.hasProperty(type.toString())) {
+                measurementType = type;
+            }
+        }
+    }
+
+    @Override
     public AbstractEquipmentBlackBoxModel<Generator> build() {
         if (isInstantiable()) {
             if (modelConfig.hasProperty("WT")) {
-                return new WtIecGen(getEquipment(), parameterSetId, modelConfig);
+                return new WtIecGen(getEquipment(), parameterSetId, modelConfig, measurementType);
             } else if (modelConfig.hasProperty("WPP")) {
-                return new WppIecGen(getEquipment(), parameterSetId, modelConfig);
+                return new WppIecGen(getEquipment(), parameterSetId, modelConfig, measurementType, modelConfig.internalModelPrefix());
             }
         }
         return null;
