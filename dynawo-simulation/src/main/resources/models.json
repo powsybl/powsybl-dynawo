@@ -992,7 +992,7 @@
       },
       {
         "lib": "IECWPP4ACurrentSource2015",
-        "doc": "Wind Power Plant Type 4A model from IEC 61400-27-1:2015 standard : WT4A, communication modules",
+        "doc": "Wind Power Plant Type 4A model from IEC 61400-27-1:2015 standard : WT4A, communication modules.",
         "internalModelPrefix": "wT4A",
         "minVersion": "1.8.0",
         "properties": [
@@ -1002,7 +1002,7 @@
       },
       {
         "lib": "IECWPP4ACurrentSource2020",
-        "doc": "Wind Power Plant Type 4A model from IEC 61400-27-1:2020 standard : WT4A, communication modules",
+        "doc": "Wind Power Plant Type 4A model from IEC 61400-27-1:2020 standard : WT4A, communication modules.",
         "minVersion": "1.8.0",
         "internalModelPrefix": "wT4A",
         "properties": [
@@ -1012,7 +1012,7 @@
       },
       {
         "lib": "IECWPP4BCurrentSource2015",
-        "doc": "Wind Power Plant Type 4A model from IEC 61400-27-1:2015 standard : WT4B, communication modules",
+        "doc": "Wind Power Plant Type 4A model from IEC 61400-27-1:2015 standard : WT4B, communication modules.",
         "minVersion": "1.8.0",
         "internalModelPrefix": "wT4B",
         "properties": [
@@ -1022,7 +1022,7 @@
       },
       {
         "lib": "IECWPP4BCurrentSource2020",
-        "doc": "Wind Power Plant Type 4B model from IEC 61400-27-1:2020 standard : WT4B, communication modules",
+        "doc": "Wind Power Plant Type 4B model from IEC 61400-27-1:2020 standard : WT4B, communication modules.",
         "minVersion": "1.8.0",
         "internalModelPrefix": "wT4B",
         "properties": [
