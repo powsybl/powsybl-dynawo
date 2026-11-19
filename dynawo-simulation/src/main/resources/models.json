@@ -372,6 +372,26 @@
         "properties": [
           "TRANSFORMER"
         ]
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsDTRI8",
+        "doc": "Three-winding synchronous generator with governor DTRI8.",
+        "minVersion": "1.8.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsGovSteamEuSt7b",
+        "doc": "Four-winding synchronous generator with governor GovSteamEu (IEEE) and voltage regulator ST7B (IEEE).",
+        "minVersion": "1.8.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsGovSteamEuAc1cPss1aOmega",
+        "doc": "Four-winding synchronous generator with governor GovSteamEu (IEEE), voltage regulator AC1C (IEEE) and power system stabilizer PSS 1A OMEGA (IEEE).",
+        "minVersion": "1.8.0"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsGovSteamEuAc1cPss1aPGen",
+        "doc": "Four-winding synchronous generator with governor GovSteamEu (IEEE), voltage regulator AC1C (IEEE) and power system stabilizer PSS 1A PGEN (IEEE).",
+        "minVersion": "1.8.0"
       }
     ]
   },

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <parametersSet xmlns="http://www.rte-france.com/dynawo">
+    <set id="FREQ_SYNC_PAR">
+        <par type="DOUBLE" name="omegaRefMax" value="1.02"/>
+        <par type="DOUBLE" name="omegaRefMin" value="0.80000000000000004"/>
+    </set>
      <set id="LAB">
         <par type="DOUBLE" name="load_alpha" value="1.5"/>
         <par type="DOUBLE" name="load_beta" value="2.5"/>

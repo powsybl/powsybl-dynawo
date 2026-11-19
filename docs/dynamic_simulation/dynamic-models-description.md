@@ -39,8 +39,17 @@ Four-winding synchronous generator with governor GOVSteam1 regulation and voltag
 Four-winding synchronous generator with governor GOVSteam1 regulation and voltage regulator ST4B (IEEE) and power system stabilizer PSS2B (IEEE).
 (⚠️ Named `GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4BPssIEEE2B` in Dynawo 1.6.0 and below)
 
+- `GeneratorSynchronousFourWindingsGovSteamEuAc1cPss1aOmega`:
+  Four-winding synchronous generator with governor GovSteamEu (IEEE), voltage regulator AC1C (IEEE) and power system stabilizer PSS 1A OMEGA (IEEE).
+
+- `GeneratorSynchronousFourWindingsGovSteamEuAc1cPss1aPGen`:
+  Four-winding synchronous generator with governor GovSteamEu (IEEE), voltage regulator AC1C (IEEE) and power system stabilizer PSS 1A PGEN (IEEE).
+
 - `GeneratorSynchronousFourWindingsGovSteamEuSt4b`: 
 Four-winding synchronous generator with governor GOVSteamEU (IEEE) and voltage regulator ST4B (IEEE).
+
+- `GeneratorSynchronousFourWindingsGovSteamEuSt7b`:
+  Four-winding synchronous generator with governor GOVSteamEU (IEEE) and voltage regulator STB (IEEE).
 
 - `GeneratorSynchronousFourWindingsGoverPropVRPropInt` ([_controllable_](base-additional-models.md#library-properties)): 
 Four-winding synchronous generator with simplified proportional control for governor and simplified proportional integral (PI) control for voltage regulator.
@@ -147,6 +156,9 @@ Synchronous generator, initialized with internal parameters with proportional co
 
 - `GeneratorSynchronousThreeWindings`:
 Three-winding synchronous generator.
+
+- `GeneratorSynchronousThreeWindingsDTRI8`:
+  Three-winding synchronous generator with governor DTRI8.
 
 - `GeneratorSynchronousThreeWindingsGovHydro4St4b`:
 Three-winding synchronous generator with governor GovHydro4 (IEC) and voltage regulator ST4B (IEEE).
