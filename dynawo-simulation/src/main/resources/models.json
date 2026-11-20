@@ -956,24 +956,15 @@
     "libs": [
       {
         "lib": "GridFormingConverterDroopControl",
-        "doc": "Grid forming converter model with droop control.",
-        "properties": [
-          "SYNCHRONIZED"
-        ]
+        "doc": "Grid forming converter model with droop control."
       },
       {
         "lib": "GridFormingConverterMatchingControl",
-        "doc": "Grid forming converter model with matching control.",
-        "properties": [
-          "SYNCHRONIZED"
-        ]
+        "doc": "Grid forming converter model with matching control."
       },
       {
         "lib": "GridFormingConverterDispatchableVirtualOscillatorControl",
-        "doc": "Grid forming converter model with Dispatchable Virtual Oscillator (DVO) control.",
-        "properties": [
-          "SYNCHRONIZED"
-        ]
+        "doc": "Grid forming converter model with Dispatchable Virtual Oscillator (DVO) control."
       }
     ]
   },
