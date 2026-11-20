@@ -161,8 +161,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/svarc.groovy", BaseStaticVarCompensator.class, SvcTestCaseFactory.create(), "SVC2", "svarc", "StaticVarCompensatorPV"),
                 Arguments.of("/dynamicModels/wecc.groovy", WeccGen.class,
                         EurostagTutorialExample1Factory.create(), "GEN", "Wind", "WT4BWeccCurrentSource"),
-                Arguments.of("/dynamicModels/weccSynchro.groovy", SynchronizedWeccGen.class,
-                        EurostagTutorialExample1Factory.create(), "GEN", "Wind", "WTG4AWeccCurrentSource"),
                 Arguments.of("/dynamicModels/gridFormingConverter.groovy", GridFormingConverter.class,
                         EurostagTutorialExample1Factory.create(), "GEN", "GF", "GridFormingConverterMatchingControl"),
                 Arguments.of("/dynamicModels/genAltIds.groovy", SynchronousGenerator.class,
