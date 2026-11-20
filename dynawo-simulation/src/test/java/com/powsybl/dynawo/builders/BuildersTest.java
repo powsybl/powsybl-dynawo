@@ -19,6 +19,7 @@ import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.buses.StandardBusBuilder;
 import com.powsybl.dynawo.models.events.*;
 import com.powsybl.dynawo.models.generators.*;
+import com.powsybl.dynawo.models.generators.iec.IecBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawo.models.lines.LineBuilder;
@@ -74,6 +75,7 @@ class BuildersTest {
         assertNotNull(SynchronousGeneratorBuilder.of(NETWORK));
         assertNotNull(InertialGridBuilder.of(NETWORK));
         assertNotNull(WeccBuilder.of(NETWORK));
+        assertNotNull(IecBuilder.of(NETWORK));
         assertNotNull(GridFormingConverterBuilder.of(NETWORK));
         assertNotNull(SignalNGeneratorBuilder.of(NETWORK));
         // HVDC
@@ -118,6 +120,7 @@ class BuildersTest {
         assertNotNull(SynchronousGeneratorBuilder.getDefaultModelInfo());
         assertNotNull(InertialGridBuilder.getDefaultModelInfo());
         assertNotNull(WeccBuilder.getDefaultModelInfo());
+        assertNotNull(IecBuilder.getDefaultModelInfo());
         assertNotNull(GridFormingConverterBuilder.getDefaultModelInfo());
         assertNotNull(SignalNGeneratorBuilder.getDefaultModelInfo());
         // HVDC
@@ -150,6 +153,7 @@ class BuildersTest {
         assertNull(SynchronousGeneratorBuilder.of(NETWORK, WRONG_LIB));
         assertNull(InertialGridBuilder.of(NETWORK, WRONG_LIB));
         assertNull(WeccBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(IecBuilder.of(NETWORK, WRONG_LIB));
         assertNull(GridFormingConverterBuilder.of(NETWORK, WRONG_LIB));
         assertNull(SignalNGeneratorBuilder.of(NETWORK, WRONG_LIB));
         // HVDC
@@ -193,6 +197,7 @@ class BuildersTest {
         assertNull(SynchronousGeneratorBuilder.of(NETWORK).build());
         assertNull(InertialGridBuilder.of(NETWORK).build());
         assertNull(WeccBuilder.of(NETWORK).build());
+        assertNull(IecBuilder.of(NETWORK).build());
         assertNull(GridFormingConverterBuilder.of(NETWORK).build());
         assertNull(SignalNGeneratorBuilder.of(NETWORK).build());
         // HVDC

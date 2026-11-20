@@ -27,6 +27,7 @@ import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.buses.StandardBusBuilder;
 import com.powsybl.dynawo.models.events.*;
 import com.powsybl.dynawo.models.generators.*;
+import com.powsybl.dynawo.models.generators.iec.IecBuilder;
 import com.powsybl.dynawo.models.lines.LineBuilder;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawo.parameters.ParametersSet;
@@ -277,6 +278,16 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                                 .parameterSetId("Wind")
                                 .build(),
                         "LHVRT.txt"),
+                Arguments.of((Function<Network, BlackBoxModel>)
+                        n -> IecBuilder.of(n, "IECWT4ACurrentSource2015")
+                                .staticId(genId)
+                                .parameterSetId("WT4A")
+                                .build()),
+                Arguments.of((Function<Network, BlackBoxModel>)
+                        n -> IecBuilder.of(n, "IECWPP4BCurrentSource2020")
+                                .staticId(genId)
+                                .parameterSetId("WPP4B_2020")
+                                .build()),
                 Arguments.of((Function<Network, BlackBoxModel>)
                         n -> GridFormingConverterBuilder.of(n, "GridFormingConverterDroopControl")
                                 .staticId(genId)
