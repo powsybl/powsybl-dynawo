@@ -25,6 +25,7 @@ public abstract class AbstractEventConnectionDisconnectionBuilder<S extends Abst
         HVDC,
         NONE
     }
+
     protected ConnectionType type = ConnectionType.NONE;
     protected TwoSides side = null;
 
@@ -61,19 +62,16 @@ public abstract class AbstractEventConnectionDisconnectionBuilder<S extends Abst
         return getEventModelInfo().name();
     }
 
-    abstract protected boolean isDisconnect();
+    protected abstract boolean isDisconnect();
 
     @Override
     public AbstractEvent build() {
         if (isInstantiable()) {
             return switch (type) {
                 case INJECTION -> new EventInjectionDisconnection(eventId, (Injection<?>) builderEquipment.getEquipment(), getEventModelInfo(), startTime, isDisconnect());
-                case BRANCH ->
-                        new EventBranchDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), getEventModelInfo(), startTime, new DisconnectionSide(side, isDisconnect()));
-                case HVDC ->
-                        new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), getEventModelInfo(), startTime, new DisconnectionSide(side, isDisconnect()));
-                case BUS ->
-                        new EventBusDisconnection(eventId, (Bus) builderEquipment.getEquipment(), getEventModelInfo(), startTime, isDisconnect());
+                case BRANCH -> new EventBranchDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), getEventModelInfo(), startTime, new ConnectionActionSide(side, isDisconnect()));
+                case HVDC -> new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), getEventModelInfo(), startTime, new ConnectionActionSide(side, isDisconnect()));
+                case BUS -> new EventBusDisconnection(eventId, (Bus) builderEquipment.getEquipment(), getEventModelInfo(), startTime, isDisconnect());
                 default -> null;
             };
         }

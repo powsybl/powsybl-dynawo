@@ -24,9 +24,9 @@ import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
  */
 public class EventBranchDisconnection extends AbstractEvent {
 
-    private final DisconnectionSide side;
+    private final ConnectionActionSide side;
 
-    protected EventBranchDisconnection(String eventId, Branch<?> equipment, EventModelInfo eventModelInfo, double startTime, DisconnectionSide side) {
+    protected EventBranchDisconnection(String eventId, Branch<?> equipment, EventModelInfo eventModelInfo, double startTime, ConnectionActionSide side) {
         super(eventId, equipment, eventModelInfo, startTime);
         this.side = side;
     }
@@ -43,12 +43,17 @@ public class EventBranchDisconnection extends AbstractEvent {
     @Override
     protected void createEventSpecificParameters(ParametersSet paramSet) {
         paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
-        paramSet.addParameter("event_disconnectOrigin", BOOL, Boolean.toString(side.disconnectSideOne()));
-        paramSet.addParameter("event_disconnectExtremity", BOOL, Boolean.toString(side.disconnectSideTwo()));
+        if (side.disconnect()) {
+            paramSet.addParameter("event_disconnectOrigin", BOOL, Boolean.toString(side.onSideOne()));
+            paramSet.addParameter("event_disconnectExtremity", BOOL, Boolean.toString(side.onSideTwo()));
+        } else {
+            paramSet.addParameter("event_connectOrigin", BOOL, Boolean.toString(side.onSideOne()));
+            paramSet.addParameter("event_connectExtremity", BOOL, Boolean.toString(side.onSideTwo()));
+        }
     }
 
     @Override
     public String getLib() {
-        return "EventQuadripoleDisconnection";
+        return side.disconnect() ? "EventQuadripoleDisconnection" : "EventQuadripoleConnection";
     }
 }

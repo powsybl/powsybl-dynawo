@@ -12,18 +12,14 @@ import com.powsybl.iidm.network.TwoSides;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record DisconnectionSide(TwoSides side, boolean disconnect) {
+public record ConnectionActionSide(TwoSides side, boolean disconnect) {
 
-    public DisconnectionSide(boolean disconnect) {
-        this(null, disconnect);
+    public boolean onSideOne() {
+        return side == null || TwoSides.ONE == side;
     }
 
-    public boolean disconnectSideOne() {
-        return disconnect && (side == null || TwoSides.ONE == side) ;
-    }
-
-    public boolean disconnectSideTwo() {
-        return disconnect && (side == null || TwoSides.ONE == side) ;
+    public boolean onSideTwo() {
+        return side == null || TwoSides.TWO == side;
     }
 
     public boolean isBothSides() {

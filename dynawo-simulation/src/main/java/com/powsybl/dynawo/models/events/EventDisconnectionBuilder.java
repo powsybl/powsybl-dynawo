@@ -10,6 +10,7 @@ package com.powsybl.dynawo.models.events;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.models.utils.EnergizedUtils;
 import com.powsybl.iidm.network.*;
 
 /**
@@ -69,20 +70,44 @@ public class EventDisconnectionBuilder extends AbstractEventConnectionDisconnect
             switch (type) {
                 case BUS -> {
                     Bus bus = (Bus) builderEquipment.getEquipment();
+                    if (!EnergizedUtils.isEnergizedAndInMainConnectedComponent(bus)) {
+                        BuilderReports.reportNotEnergized(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId());
+                        isInstantiable = false;
+                    }
                     if (side != null) {
-                        BuilderReports.reportFieldSetWithWrongEquipment(reportNode, getSideFieldName(), bus.getType(), bus.getId());
+                        BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "disconnectOnly", bus.getType(), bus.getId());
                         isInstantiable = false;
                     }
                 }
                 case INJECTION -> {
                     Injection<?> injection = (Injection<?>) builderEquipment.getEquipment();
+                    if (!EnergizedUtils.isEnergizedAndInMainConnectedComponent(injection)) {
+                        BuilderReports.reportNotEnergized(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId());
+                        isInstantiable = false;
+                    }
                     if (side != null) {
-                        BuilderReports.reportFieldSetWithWrongEquipment(reportNode, getSideFieldName(), injection.getType(), injection.getId());
+                        BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "disconnectOnly", injection.getType(), injection.getId());
+                        isInstantiable = false;
+                    }
+                }
+                case BRANCH -> {
+                    Branch<?> branch = (Branch<?>) builderEquipment.getEquipment();
+                    if (side != null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(branch, side)
+                            || side == null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(branch)) {
+                        BuilderReports.reportNotEnergized(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId());
+                        isInstantiable = false;
+                    }
+                }
+                case HVDC -> {
+                    HvdcLine hvdcLine = (HvdcLine) builderEquipment.getEquipment();
+                    if (side != null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(hvdcLine, side)
+                            || side == null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(hvdcLine)) {
+                        BuilderReports.reportNotEnergized(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId());
                         isInstantiable = false;
                     }
                 }
                 case NONE -> {
-                    BuilderReports.reportStaticIdUnknown(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId(), getModelName());
+                    BuilderReports.reportStaticIdUnknown(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId(), "Disconnectable equipment");
                     isInstantiable = false;
                 }
             }

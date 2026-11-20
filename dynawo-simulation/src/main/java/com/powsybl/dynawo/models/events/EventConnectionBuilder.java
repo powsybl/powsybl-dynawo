@@ -81,12 +81,6 @@ public class EventConnectionBuilder extends AbstractEventConnectionDisconnection
                         isInstantiable = false;
                     }
                 }
-                case BRANCH -> {
-                    // No energized check for connection
-                }
-                case HVDC -> {
-                    // No energized check for connection
-                }
                 case NONE -> {
                     BuilderReports.reportStaticIdUnknown(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId(), getModelName());
                     isInstantiable = false;

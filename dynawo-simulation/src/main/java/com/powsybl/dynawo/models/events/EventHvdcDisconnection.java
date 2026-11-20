@@ -21,11 +21,11 @@ import java.util.List;
  */
 public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection {
 
-    private final DisconnectionSide disconnectionSide;
+    private final ConnectionActionSide connectionActionSide;
 
-    protected EventHvdcDisconnection(String eventId, HvdcLine equipment, EventModelInfo eventModelInfo, double startTime, DisconnectionSide disconnectionSide) {
-        super(eventId, equipment, eventModelInfo, startTime, disconnectionSide.disconnect());
-        this.disconnectionSide = disconnectionSide;
+    protected EventHvdcDisconnection(String eventId, HvdcLine equipment, EventModelInfo eventModelInfo, double startTime, ConnectionActionSide connectionActionSide) {
+        super(eventId, equipment, eventModelInfo, startTime, connectionActionSide.disconnect());
+        this.connectionActionSide = connectionActionSide;
     }
 
     private List<VarConnection> getVarConnectionsWithHvdcModel(HvdcModel connected) {
@@ -40,10 +40,10 @@ public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        if (disconnectionSide.isBothSides()) {
+        if (connectionActionSide.isBothSides()) {
             adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModel);
         } else {
-            adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, disconnectionSide.side());
+            adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, connectionActionSide.side());
         }
     }
 }

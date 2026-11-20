@@ -5,6 +5,7 @@
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="SH1" lib="ShuntB" parFile="models.par" parId="BS" staticId="SH1"/>
     <dyn:blackBoxModel id="Disconnect_G1" lib="EventSetPointBoolean" parFile="svcTestCase.par" parId="Disconnect_G1"/>
+    <dyn:blackBoxModel id="Connect_G1" lib="EventSetPointBoolean" parFile="svcTestCase.par" parId="Connect_G1"/>
     <dyn:blackBoxModel id="Disconnect_L2" lib="EventConnectedStatus" parFile="svcTestCase.par" parId="Disconnect_L2"/>
     <dyn:blackBoxModel id="Disconnect_SVC2" lib="EventConnectedStatus" parFile="svcTestCase.par" parId="Disconnect_SVC2"/>
     <dyn:blackBoxModel id="Disconnect_SH1" lib="EventSetPointBoolean" parFile="svcTestCase.par" parId="Disconnect_SH1"/>
@@ -35,6 +36,7 @@
     <dyn:macroConnect connector="MC_GeneratorFictitious-DefaultEquipmentConnectionPoint" id1="G1" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_ShuntB-DefaultEquipmentConnectionPoint" id1="SH1" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_EventInjectionDisconnection-GeneratorFictitious" id1="Disconnect_G1" id2="G1"/>
+    <dyn:macroConnect connector="MC_EventInjectionDisconnection-GeneratorFictitious" id1="Connect_G1" id2="G1"/>
     <dyn:macroConnect connector="MC_EventInjectionDisconnection-DefaultLoad" id1="Disconnect_L2" id2="NETWORK" name2="L2"/>
     <dyn:macroConnect connector="MC_EventInjectionDisconnection-DefaultStaticVarCompensator" id1="Disconnect_SVC2" id2="NETWORK" name2="SVC2"/>
     <dyn:macroConnect connector="MC_EventInjectionDisconnection-ShuntB" id1="Disconnect_SH1" id2="SH1"/>
