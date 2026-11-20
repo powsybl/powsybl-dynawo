@@ -8,15 +8,10 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.builders.ModelConfigsHandler;
-import com.powsybl.dynawo.commons.DynawoConstants;
-import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.generators.iec.IecBuilder;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,25 +30,12 @@ import java.util.stream.Stream;
 class IecGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static final String STATIC_ID = "GEN";
-    private static final DynawoVersion DYNAWO_VERSION = DynawoVersion.createFromString("1.8.0");
 
     @BeforeEach
     void setup(String dydName, String parName, Function<Network, BlackBoxModel> loadConstructor) {
-        ModelConfigsHandler.getInstance().setDynawoVersion(DYNAWO_VERSION);
         setupNetwork();
         addDynamicModels(loadConstructor);
         setupDynawoContext();
-    }
-
-    @AfterEach
-    @Override
-    public void tearDown() {
-        ModelConfigsHandler.getInstance().setDynawoVersion(DynawoConstants.CURRENT_VERSION);
-    }
-
-    @Override
-    protected DynawoSimulationContext.Builder setupDynawoContextBuilder() {
-        return super.setupDynawoContextBuilder().currentVersion(DYNAWO_VERSION);
     }
 
     protected void setupNetwork() {
