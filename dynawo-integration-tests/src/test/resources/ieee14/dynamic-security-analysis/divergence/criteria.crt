@@ -17,18 +17,4 @@
     <country id="AF"/>
     <country id="AFGHANISTAN"/>
   </busCriteria>
-  <loadCriteria>
-    <parameters id ="Risque protection" scope="FINAL" type="LOCAL_VALUE" pMax="4">
-      <voltageLevel uMaxPu="2"/>
-    </parameters>
-    <country id="AF"/>
-    <country id="AFGHANISTAN"/>
-  </loadCriteria>
-  <generatorCriteria>
-    <parameters id ="Risque protection" scope="FINAL" type="LOCAL_VALUE" pMin="-4">
-      <voltageLevel uMaxPu="2"/>
-    </parameters>
-    <country id="AF"/>
-    <country id="AFGHANISTAN"/>
-  </generatorCriteria>
 </criteria>
