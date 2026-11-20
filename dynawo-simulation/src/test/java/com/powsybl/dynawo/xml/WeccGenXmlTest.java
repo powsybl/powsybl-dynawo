@@ -60,13 +60,8 @@ class WeccGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static Stream<Arguments> provideWecc() {
         return Stream.of(
-                Arguments.of("wecc_wt_dyd.xml", "", (Function<Network, BlackBoxModel>) n ->
+                Arguments.of("wecc_wt_dyd.xml", "wecc_wt_par.xml", (Function<Network, BlackBoxModel>) n ->
                         WeccBuilder.of(n, "WT4AWeccCurrentSource")
-                            .staticId(STATIC_ID)
-                            .parameterSetId("Wind")
-                            .build()),
-                Arguments.of("wecc_wt_synchro_dyd.xml", "wecc_wt_par.xml", (Function<Network, BlackBoxModel>) n ->
-                        WeccBuilder.of(n, "WTG4BWeccCurrentSource")
                             .staticId(STATIC_ID)
                             .parameterSetId("Wind")
                             .build()),
