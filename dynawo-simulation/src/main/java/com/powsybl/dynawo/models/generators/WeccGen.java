@@ -12,22 +12,26 @@ import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
+import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.dynawo.models.versionablevariable.Versionable;
 import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.dynawo.models.versionablevariable.VersionableVariable;
+import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.*;
 import static com.powsybl.dynawo.models.versionablevariable.VersionableHandler.DYNAWO_VERSION_1_8_0;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> implements SpecifiedGeneratorModel {
+public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> implements FrequencySynchronizedModel, SpecifiedGeneratorModel {
 
     private static final VersionableVariable P_WECC_STATIC_REF = new VersionableVariable("P_WECC_STATIC_REF",
             new Versionable.Step<>("%s_measurements_PPuSnRef"),
@@ -84,5 +88,36 @@ public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> implement
                 new VarMapping(handler.getCurrentVariable(P_WECC_STATIC_REF, weccPrefix), "p"),
                 new VarMapping(handler.getCurrentVariable(Q_WECC_STATIC_REF, weccPrefix), "q"),
                 new VarMapping(weccPrefix + "_injector_state", "state"));
+    }
+
+    @Override
+    public List<VarConnection> getSetPointVarConnections() {
+        return List.of(new VarConnection(
+                VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "setPoint_setPoint"),
+                getOmegaRefPuVarName()));
+    }
+
+    @Override
+    public List<VarConnection> getOmegaRefVarConnections() {
+        VersionableHandler versionableHandler = VersionableHandler.getInstance();
+        return List.of(
+                new VarConnection(versionableHandler.getCurrentVariable(INDEXED_VARIABLE_VALUE, "omegaRef_grp"), getOmegaRefPuVarName()),
+                new VarConnection(versionableHandler.getCurrentVariable(INDEXED_VARIABLE, "running_grp"), getRunningVarName())
+        );
+    }
+
+    @Override
+    public String getOmegaRefPuVarName() {
+        return weccPrefix + "_omegaRefPu";
+    }
+
+    @Override
+    public String getRunningVarName() {
+        return weccPrefix + "_injector_running";
+    }
+
+    @Override
+    public Bus getConnectableBus() {
+        return BusUtils.getConnectableBus(equipment);
     }
 }
