@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.models.events.EventConnectionBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -32,10 +33,19 @@ class DisconnectBranchEventXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("NHV1_NHV2_1")
                 .startTime(1)
                 .build());
+        eventModels.add(EventConnectionBuilder.of(network)
+                .staticId("NHV1_NHV2_1")
+                .startTime(3)
+                .build());
         eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("NGEN_NHV1")
                 .startTime(1)
                 .disconnectOnly(TwoSides.ONE)
+                .build());
+        eventModels.add(EventConnectionBuilder.of(network)
+                .staticId("NGEN_NHV1")
+                .startTime(3)
+                .connectOnly(TwoSides.ONE)
                 .build());
     }
 

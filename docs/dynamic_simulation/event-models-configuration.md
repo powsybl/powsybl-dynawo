@@ -64,6 +64,50 @@ Disconnect {
 }
 ```
 
+### Connect
+Connects:
+- bus
+- branch
+- injection
+- HVDC line
+
+With specific attributes:
+- `connectOnly`: optional attribute that specifies the side to connect for Branch or HVDC (by default both sides are connected)
+
+**Groovy script:**
+```groovy
+import com.powsybl.iidm.network.TwoSides
+
+Connect {
+    staticId "LINE"
+    startTime 1
+    connectOnly TwoSides.ONE
+}
+```
+**Json configuration:**
+```json
+{
+  "model":"Connect",
+  "properties":[
+    {
+      "name":"staticId",
+      "value":"GEN",
+      "type":"STRING"
+    },
+    {
+      "name":"startTime",
+      "value":"1",
+      "type":"DOUBLE"
+    },
+    {
+      "name": "connectOnly",
+      "value": "ONE",
+      "type": "TWO_SIDES"
+    }
+  ]
+}
+```
+
 ### Open Switch
 Open:
 - breaker

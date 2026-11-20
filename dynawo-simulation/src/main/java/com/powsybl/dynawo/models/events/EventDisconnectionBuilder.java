@@ -16,21 +16,9 @@ import com.powsybl.iidm.network.*;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identifiable<?>, EventDisconnectionBuilder> {
+public class EventDisconnectionBuilder extends AbstractEventConnectionDisconnectionBuilder<EventDisconnectionBuilder> {
 
     private static final EventModelInfo MODEL_INFO = new EventModelInfo("Disconnect", "Disconnects a bus, a branch, an injection or an HVDC line.");
-    private static final String STATIC_ID_FIELD_NAME = "staticId";
-
-    private enum DisconnectionType {
-        BUS,
-        INJECTION,
-        BRANCH,
-        HVDC,
-        NONE
-    }
-
-    private DisconnectionType disconnectionType = DisconnectionType.NONE;
-    protected TwoSides disconnectSide = null;
 
     public static EventDisconnectionBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
@@ -56,43 +44,37 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     }
 
     public EventDisconnectionBuilder disconnectOnly(TwoSides side) {
-        this.disconnectSide = side;
-        return self();
-    }
-
-    private void setDisconnectionType(IdentifiableType type) {
-        disconnectionType = switch (type) {
-            case BUS -> DisconnectionType.BUS;
-            case HVDC_LINE -> DisconnectionType.HVDC;
-            case GENERATOR, LOAD, STATIC_VAR_COMPENSATOR, SHUNT_COMPENSATOR -> DisconnectionType.INJECTION;
-            case LINE, TWO_WINDINGS_TRANSFORMER -> DisconnectionType.BRANCH;
-            default -> DisconnectionType.NONE;
-        };
+        return sideOnly(side);
     }
 
     @Override
-    protected Identifiable<?> findEquipment(String staticId) {
-        return network.getIdentifiable(staticId);
+    protected EventModelInfo getEventModelInfo() {
+        return MODEL_INFO;
     }
 
     @Override
-    protected String getModelName() {
-        return MODEL_INFO.name();
+    protected String getSideFieldName() {
+        return "disconnectOnly";
+    }
+
+    @Override
+    protected boolean isDisconnect() {
+        return true;
     }
 
     @Override
     protected void checkData() {
         super.checkData();
         if (builderEquipment.hasEquipment()) {
-            setDisconnectionType(builderEquipment.getEquipment().getType());
-            switch (disconnectionType) {
+            setType(builderEquipment.getEquipment().getType());
+            switch (type) {
                 case BUS -> {
                     Bus bus = (Bus) builderEquipment.getEquipment();
                     if (!EnergizedUtils.isEnergizedAndInMainConnectedComponent(bus)) {
                         BuilderReports.reportNotEnergized(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId());
                         isInstantiable = false;
                     }
-                    if (disconnectSide != null) {
+                    if (side != null) {
                         BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "disconnectOnly", bus.getType(), bus.getId());
                         isInstantiable = false;
                     }
@@ -103,23 +85,23 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
                         BuilderReports.reportNotEnergized(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId());
                         isInstantiable = false;
                     }
-                    if (disconnectSide != null) {
+                    if (side != null) {
                         BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "disconnectOnly", injection.getType(), injection.getId());
                         isInstantiable = false;
                     }
                 }
                 case BRANCH -> {
                     Branch<?> branch = (Branch<?>) builderEquipment.getEquipment();
-                    if (disconnectSide != null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(branch, disconnectSide)
-                            || disconnectSide == null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(branch)) {
+                    if (side != null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(branch, side)
+                            || side == null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(branch)) {
                         BuilderReports.reportNotEnergized(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId());
                         isInstantiable = false;
                     }
                 }
                 case HVDC -> {
                     HvdcLine hvdcLine = (HvdcLine) builderEquipment.getEquipment();
-                    if (disconnectSide != null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(hvdcLine, disconnectSide)
-                            || disconnectSide == null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(hvdcLine)) {
+                    if (side != null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(hvdcLine, side)
+                            || side == null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(hvdcLine)) {
                         BuilderReports.reportNotEnergized(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId());
                         isInstantiable = false;
                     }
@@ -130,23 +112,6 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
                 }
             }
         }
-    }
-
-    @Override
-    public AbstractEvent build() {
-        if (isInstantiable()) {
-            return switch (disconnectionType) {
-                case INJECTION -> new EventInjectionDisconnection(eventId, (Injection<?>) builderEquipment.getEquipment(), MODEL_INFO, startTime, true);
-                case BRANCH ->
-                    new EventBranchDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), MODEL_INFO, startTime, disconnectSide);
-                case HVDC ->
-                    new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), MODEL_INFO, startTime, disconnectSide);
-                case BUS ->
-                    new EventBusDisconnection(eventId, (Bus) builderEquipment.getEquipment(), MODEL_INFO, startTime, true);
-                default -> null;
-            };
-        }
-        return null;
     }
 
     @Override

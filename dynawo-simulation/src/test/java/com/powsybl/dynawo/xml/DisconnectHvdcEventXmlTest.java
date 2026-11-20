@@ -11,6 +11,7 @@ import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.LfResultsUtils;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.events.EventConnectionBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
@@ -124,6 +125,17 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .staticId(HVDC_NAME)
                                 .startTime(1)
                                 .disconnectOnly(TwoSides.ONE)
+                                .build()),
+                Arguments.of("connect_hvdc_dyd.xml",
+                        "connect_hvdc_par.xml",
+                        (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPV")
+                                .staticId(HVDC_NAME)
+                                .parameterSetId("hvdc")
+                                .build(),
+                        (Function<Network, BlackBoxModel>) n -> EventConnectionBuilder.of(n)
+                                .staticId(HVDC_NAME)
+                                .startTime(3)
+                                .connectOnly(TwoSides.ONE)
                                 .build())
         );
     }

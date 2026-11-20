@@ -9,6 +9,7 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.LfResultsUtils;
+import com.powsybl.dynawo.models.events.EventConnectionBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -30,6 +31,10 @@ class DisconnectBusEventXmlTest extends AbstractDynamicModelXmlTest {
         eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("B1")
                 .startTime(1)
+                .build());
+        eventModels.add(EventConnectionBuilder.of(network)
+                .staticId("B1")
+                .startTime(3)
                 .build());
     }
 
