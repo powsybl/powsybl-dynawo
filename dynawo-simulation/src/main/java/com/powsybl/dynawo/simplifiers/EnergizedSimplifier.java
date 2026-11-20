@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 /**
  * Filter energized equipment models, namely :
  * <ul>
- *     <li>Injection and hvdc terminals are all connected (except dangling sides)</li>
+ *     <li>Injection and hvdc terminals are all connected (except dangling side)</li>
  *     <li>Each terminal buses have a voltage level on</li>
  * </ul>
  * Filter overload management systems :
@@ -36,7 +36,7 @@ import java.util.function.Predicate;
 public final class EnergizedSimplifier implements ModelsRemovalSimplifier {
 
     private static final ModelSimplifierInfo MODEL_INFO = new ModelSimplifierInfo("energizedEquipment",
-            "Filter injection and hvdc with all terminals connected (except dangling sides)" +
+            "Filter injection and hvdc with all terminals connected (except dangling side)" +
                     "and terminal buses with a voltage level on and overload management systems with monitored branch and measuring point energized",
             SIMPLIFIER_TYPE);
 

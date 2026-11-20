@@ -12,7 +12,6 @@ import com.powsybl.dynawo.models.automationsystems.BranchModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Branch;
-import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 
@@ -25,11 +24,11 @@ import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
  */
 public class EventBranchDisconnection extends AbstractEvent {
 
-    private final TwoSides disconnectSide;
+    private final DisconnectionSide side;
 
-    protected EventBranchDisconnection(String eventId, Branch<?> equipment, EventModelInfo eventModelInfo, double startTime, TwoSides disconnectSide) {
+    protected EventBranchDisconnection(String eventId, Branch<?> equipment, EventModelInfo eventModelInfo, double startTime, DisconnectionSide side) {
         super(eventId, equipment, eventModelInfo, startTime);
-        this.disconnectSide = disconnectSide;
+        this.side = side;
     }
 
     private List<VarConnection> getVarConnectionsWith(BranchModel connected) {
@@ -44,8 +43,8 @@ public class EventBranchDisconnection extends AbstractEvent {
     @Override
     protected void createEventSpecificParameters(ParametersSet paramSet) {
         paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
-        paramSet.addParameter("event_disconnectOrigin", BOOL, Boolean.toString(disconnectSide == null || TwoSides.ONE == disconnectSide));
-        paramSet.addParameter("event_disconnectExtremity", BOOL, Boolean.toString(disconnectSide == null || TwoSides.TWO == disconnectSide));
+        paramSet.addParameter("event_disconnectOrigin", BOOL, Boolean.toString(side.disconnectSideOne()));
+        paramSet.addParameter("event_disconnectExtremity", BOOL, Boolean.toString(side.disconnectSideTwo()));
     }
 
     @Override
