@@ -44,7 +44,8 @@ public class EventDisconnectionBuilder extends AbstractEventConnectionDisconnect
     }
 
     public EventDisconnectionBuilder disconnectOnly(TwoSides side) {
-        return sideOnly(side);
+        this.side = side;
+        return self();
     }
 
     @Override

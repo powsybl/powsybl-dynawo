@@ -14,7 +14,7 @@ import com.powsybl.iidm.network.*;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractEventConnectionDisconnectionBuilder<S extends AbstractEventConnectionDisconnectionBuilder<S>> extends AbstractEventModelBuilder<Identifiable<?>, S> {
+public abstract class AbstractEventConnectionDisconnectionBuilder<R extends AbstractEventModelBuilder<Identifiable<?>, R>> extends AbstractEventModelBuilder<Identifiable<?>, R> {
 
     protected static final String STATIC_ID_FIELD_NAME = "staticId";
 
@@ -36,11 +36,6 @@ public abstract class AbstractEventConnectionDisconnectionBuilder<S extends Abst
     protected abstract EventModelInfo getEventModelInfo();
 
     protected abstract String getSideFieldName();
-
-    protected S sideOnly(TwoSides side) {
-        this.side = side;
-        return self();
-    }
 
     protected void setType(IdentifiableType type) {
         this.type = switch (type) {

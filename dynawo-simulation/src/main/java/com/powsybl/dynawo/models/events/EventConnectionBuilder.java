@@ -43,7 +43,8 @@ public class EventConnectionBuilder extends AbstractEventConnectionDisconnection
     }
 
     public EventConnectionBuilder connectOnly(TwoSides side) {
-        return sideOnly(side);
+        this.side = side;
+        return self();
     }
 
     @Override
