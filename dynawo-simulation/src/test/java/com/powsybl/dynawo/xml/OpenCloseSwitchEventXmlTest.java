@@ -54,11 +54,11 @@ class OpenCloseSwitchEventXmlTest extends AbstractDynamicModelXmlTest {
         validate("parameters.xsd", "open_close_switch_par.xml", tmpDir.resolve(context.getSimulationParFile()));
         checkReport("""
                 + Test DYD
-                   Model OpenSwitch OpenSwitch_S1VL1_LD1_BREAKER instantiation OK
-                   + Model OpenSwitch OpenSwitch_S1VL1_BBS_LD1_DISCONNECTOR instantiation KO
+                   Model OpenSwitch OpenSwitch_S1VL1_LD1_BREAKER_5.0 instantiation OK
+                   + Model OpenSwitch OpenSwitch_S1VL1_BBS_LD1_DISCONNECTOR_5.0 instantiation KO
                       Equipment 'S1VL1_BBS_LD1_DISCONNECTOR' in 'staticId' field should be a breaker or a load breaker switch
-                   Model CloseSwitch CloseSwitch_S1VL1_LD1_BREAKER instantiation OK
-                   + Model CloseSwitch CloseSwitch_S1VL1_BBS_LD1_DISCONNECTOR instantiation KO
+                   Model CloseSwitch CloseSwitch_S1VL1_LD1_BREAKER_7.0 instantiation OK
+                   + Model CloseSwitch CloseSwitch_S1VL1_BBS_LD1_DISCONNECTOR_7.0 instantiation KO
                       Equipment 'S1VL1_BBS_LD1_DISCONNECTOR' in 'staticId' field should be a breaker or a load breaker switch
                    Dynawo models processing
                 """);

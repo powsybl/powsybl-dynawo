@@ -4,7 +4,7 @@
         <dyn:macroStaticRef id="MSR_BaseGenerator2"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="UVA" lib="UnderVoltageAutomaton" parFile="models.par" parId="UVA"/>
-    <dyn:blackBoxModel id="Disconnect_GEN" lib="EventSetPointBoolean" parFile="sim1.par" parId="Disconnect_GEN"/>
+    <dyn:blackBoxModel id="Disconnect_GEN_1.0" lib="EventSetPointBoolean" parFile="sim1.par" parId="Disconnect_GEN_1.0"/>
     <dyn:macroConnector id="MC_BaseGenerator2-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="generatorAlt_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="generatorAlt_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
@@ -23,5 +23,5 @@
     </dyn:macroStaticReference>
     <dyn:macroConnect connector="MC_BaseGenerator2-DefaultEquipmentConnectionPoint" id1="GEN" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_UnderVoltageAutomaton-BaseGenerator2" id1="UVA" id2="GEN"/>
-    <dyn:macroConnect connector="MC_EventInjectionDisconnection-BaseGenerator2" id1="Disconnect_GEN" id2="GEN"/>
+    <dyn:macroConnect connector="MC_EventInjectionDisconnection-BaseGenerator2" id1="Disconnect_GEN_1.0" id2="GEN"/>
 </dyn:dynamicModelsArchitecture>

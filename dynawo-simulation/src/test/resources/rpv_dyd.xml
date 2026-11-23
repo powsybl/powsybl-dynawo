@@ -3,9 +3,9 @@
     <dyn:blackBoxModel id="LOAD2" lib="LoadAlphaBeta" parFile="models.par" parId="load" staticId="LOAD2">
         <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="ReactivePowerVariation_GEN" lib="EventSetPointReal" parFile="sim1.par" parId="ReactivePowerVariation_GEN"/>
-    <dyn:blackBoxModel id="ReactivePowerVariation_LOAD" lib="Step" parFile="sim1.par" parId="ReactivePowerVariation_LOAD"/>
-    <dyn:blackBoxModel id="ReactivePowerVariation_LOAD2" lib="Step" parFile="sim1.par" parId="ReactivePowerVariation_LOAD2"/>
+    <dyn:blackBoxModel id="ReactivePowerVariation_GEN_1.0" lib="EventSetPointReal" parFile="sim1.par" parId="ReactivePowerVariation_GEN_1.0"/>
+    <dyn:blackBoxModel id="ReactivePowerVariation_LOAD_10.0" lib="Step" parFile="sim1.par" parId="ReactivePowerVariation_LOAD_10.0"/>
+    <dyn:blackBoxModel id="ReactivePowerVariation_LOAD2_10.0" lib="Step" parFile="sim1.par" parId="ReactivePowerVariation_LOAD2_10.0"/>
     <dyn:macroConnector id="MC_LoadAlphaBeta-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="load_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
@@ -25,7 +25,7 @@
         <dyn:staticRef var="load_state" staticVar="state"/>
     </dyn:macroStaticReference>
     <dyn:macroConnect connector="MC_LoadAlphaBeta-DefaultEquipmentConnectionPoint" id1="LOAD2" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_EventReactivePowerVariation-DefaultGenerator" id1="ReactivePowerVariation_GEN" id2="NETWORK" name2="GEN"/>
-    <dyn:macroConnect connector="MC_EventReactivePowerVariation-DefaultLoad" id1="ReactivePowerVariation_LOAD" id2="NETWORK" name2="LOAD"/>
-    <dyn:macroConnect connector="MC_EventReactivePowerVariation-LoadAlphaBeta" id1="ReactivePowerVariation_LOAD2" id2="LOAD2"/>
+    <dyn:macroConnect connector="MC_EventReactivePowerVariation-DefaultGenerator" id1="ReactivePowerVariation_GEN_1.0" id2="NETWORK" name2="GEN"/>
+    <dyn:macroConnect connector="MC_EventReactivePowerVariation-DefaultLoad" id1="ReactivePowerVariation_LOAD_10.0" id2="NETWORK" name2="LOAD"/>
+    <dyn:macroConnect connector="MC_EventReactivePowerVariation-LoadAlphaBeta" id1="ReactivePowerVariation_LOAD2_10.0" id2="LOAD2"/>
 </dyn:dynamicModelsArchitecture>

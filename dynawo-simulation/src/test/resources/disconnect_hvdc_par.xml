@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:parametersSet xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:set id="Disconnect_L">
+    <dyn:set id="Disconnect_L_1.0">
         <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
         <dyn:par type="BOOL" name="event_stateEvent1" value="true"/>
     </dyn:set>

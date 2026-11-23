@@ -4,23 +4,23 @@
         <dyn:par type="DOUBLE" name="weight_gen_0" value="10.3"/>
         <dyn:par type="INT" name="nbGen" value="1"/>
     </dyn:set>
-    <dyn:set id="Disconnect_GEN">
+    <dyn:set id="Disconnect_GEN_1.0">
         <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
         <dyn:par type="BOOL" name="event_stateEvent1" value="true"/>
     </dyn:set>
-    <dyn:set id="Disconnect_GEN2">
+    <dyn:set id="Disconnect_GEN2_1.0">
         <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
         <dyn:par type="BOOL" name="event_stateEvent1" value="true"/>
     </dyn:set>
-    <dyn:set id="Disconnect_LOAD">
+    <dyn:set id="Disconnect_LOAD_1.0">
         <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
         <dyn:par type="BOOL" name="event_stateEvent1" value="true"/>
     </dyn:set>
-    <dyn:set id="Disconnect_GEN3">
+    <dyn:set id="Disconnect_GEN3_1.0">
         <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
         <dyn:par type="BOOL" name="event_stateEvent1" value="true"/>
     </dyn:set>
-    <dyn:set id="Disconnect_GEN4">
+    <dyn:set id="Disconnect_GEN4_1.0">
         <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
         <dyn:par type="BOOL" name="event_stateEvent1" value="true"/>
     </dyn:set>

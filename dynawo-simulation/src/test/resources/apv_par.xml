@@ -5,31 +5,31 @@
         <dyn:par type="DOUBLE" name="weight_gen_1" value="6539.400000000001"/>
         <dyn:par type="INT" name="nbGen" value="2"/>
     </dyn:set>
-    <dyn:set id="ActivePowerVariation_GEN">
+    <dyn:set id="ActivePowerVariation_GEN_1.0">
         <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
         <dyn:par type="DOUBLE" name="event_stateEvent1" value="1.1"/>
     </dyn:set>
-    <dyn:set id="ActivePowerVariation_GEN2">
+    <dyn:set id="ActivePowerVariation_GEN2_1.0">
         <dyn:par type="DOUBLE" name="step_Value0" value="0.0"/>
         <dyn:par type="DOUBLE" name="step_tStep" value="1.0"/>
         <dyn:par type="DOUBLE" name="step_Height" value="1.2"/>
     </dyn:set>
-    <dyn:set id="ActivePowerVariation_GEN3">
+    <dyn:set id="ActivePowerVariation_GEN3_1.0">
         <dyn:par type="DOUBLE" name="step_Value0" value="0.0"/>
         <dyn:par type="DOUBLE" name="step_tStep" value="1.0"/>
         <dyn:par type="DOUBLE" name="step_Height" value="1.3"/>
     </dyn:set>
-    <dyn:set id="ActivePowerVariation_GEN4">
+    <dyn:set id="ActivePowerVariation_GEN4_1.0">
         <dyn:par type="DOUBLE" name="step_Value0" value="0.0"/>
         <dyn:par type="DOUBLE" name="step_tStep" value="1.0"/>
         <dyn:par type="DOUBLE" name="step_Height" value="1.4"/>
     </dyn:set>
-    <dyn:set id="ActivePowerVariation_LOAD">
+    <dyn:set id="ActivePowerVariation_LOAD_10.0">
         <dyn:par type="DOUBLE" name="step_Value0" value="0.0"/>
         <dyn:par type="DOUBLE" name="step_tStep" value="10.0"/>
         <dyn:par type="DOUBLE" name="step_Height" value="1.2"/>
     </dyn:set>
-    <dyn:set id="ActivePowerVariation_LOAD2">
+    <dyn:set id="ActivePowerVariation_LOAD2_10.0">
         <dyn:par type="DOUBLE" name="step_Value0" value="0.0"/>
         <dyn:par type="DOUBLE" name="step_tStep" value="10.0"/>
         <dyn:par type="DOUBLE" name="step_Height" value="1.3"/>

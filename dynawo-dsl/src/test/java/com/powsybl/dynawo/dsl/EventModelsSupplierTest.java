@@ -78,24 +78,24 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
     private static Stream<Arguments> provideEventModelData() {
         return Stream.of(
                 Arguments.of("/eventModels/branchDisconnection.groovy", EventBranchDisconnection.class,
-                        EurostagTutorialExample1Factory.createWithLFResults(), "NHV1_NHV2_1", "Disconnect_NHV1_NHV2_1",
+                        EurostagTutorialExample1Factory.createWithLFResults(), "NHV1_NHV2_1", "Disconnect_NHV1_NHV2_1_4.0",
                         "EventQuadripoleDisconnection", 4),
                 Arguments.of("/eventModels/equipmentDisconnection.groovy", EventInjectionDisconnection.class,
-                        EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "Disconnect_GEN", null, 1),
+                        EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "Disconnect_GEN_1.0", null, 1),
                 Arguments.of("/eventModels/hvdcDisconnection.groovy", EventHvdcDisconnection.class,
-                        LfResultsUtils.createHvdcTestNetworkVscWithLFResults(), "L", "Disconnect_L", null, 2),
+                        LfResultsUtils.createHvdcTestNetworkVscWithLFResults(), "L", "Disconnect_L_2.0", null, 2),
                 Arguments.of("/eventModels/nodeFault.groovy", NodeFaultEvent.class,
-                        EurostagTutorialExample1Factory.createWithLFResults(), "NGEN", "NodeFault_NGEN", "NodeFault", 1),
+                        EurostagTutorialExample1Factory.createWithLFResults(), "NGEN", "NodeFault_NGEN_1.0", "NodeFault", 1),
                 Arguments.of("/eventModels/activePowerVariation.groovy", EventActivePowerVariation.class,
-                        EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ActivePowerVariation_LOAD", null, 2),
+                        EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ActivePowerVariation_LOAD_2.0", null, 2),
                 Arguments.of("/eventModels/reactivePowerVariation.groovy", EventReactivePowerVariation.class,
-                        EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ReactivePowerVariation_LOAD", null, 2),
+                        EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "ReactivePowerVariation_LOAD_2.0", null, 2),
                 Arguments.of("/eventModels/referenceVoltageVariation.groovy", EventReferenceVoltageVariation.class,
-                        EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "ReferenceVoltageVariation_GEN", "Step", 2),
+                        EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "ReferenceVoltageVariation_GEN_2.0", "Step", 2),
                 Arguments.of("/eventModels/openSwitch.groovy", EventSwitchOpen.class,
-                        FourSubstationsNodeBreakerFactory.create(), "S1VL1_LD1_BREAKER", "OpenSwitch_S1VL1_LD1_BREAKER", "EventConnectedStatus", 2),
+                        FourSubstationsNodeBreakerFactory.create(), "S1VL1_LD1_BREAKER", "OpenSwitch_S1VL1_LD1_BREAKER_2.0", "EventConnectedStatus", 2),
                 Arguments.of("/eventModels/closeSwitch.groovy", EventSwitchOpen.class,
-                        FourSubstationsNodeBreakerFactory.create(), "S1VL1_LD1_BREAKER", "CloseSwitch_S1VL1_LD1_BREAKER", "EventConnectedStatus", 2)
+                        FourSubstationsNodeBreakerFactory.create(), "S1VL1_LD1_BREAKER", "CloseSwitch_S1VL1_LD1_BREAKER_2.0", "EventConnectedStatus", 2)
         );
     }
 
@@ -105,21 +105,21 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model NodeFault NodeFault_GEN instantiation KO
+                              + Model NodeFault NodeFault_GEN_1.0 instantiation KO
                                  'staticId' field value 'GEN' not found for equipment type(s) BUS
                         """),
                 Arguments.of("/eventWarnings/missingStartTime.groovy", EurostagTutorialExample1Factory.createWithLFResults(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model NodeFault NodeFault_NGEN instantiation KO
+                              + Model NodeFault NodeFault_NGEN_unknownStartTime instantiation KO
                                  'startTime' field is not set
                         """),
                 Arguments.of("/eventWarnings/missingNodeFaultParameters.groovy", EurostagTutorialExample1Factory.createWithLFResults(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model NodeFault NodeFault_NGEN instantiation KO
+                              + Model NodeFault NodeFault_NGEN_1.0 instantiation KO
                                  'faultTime' field threshold t > 0 has been crossed (current value 0.0)
                         """),
                 Arguments.of("/eventWarnings/missingAPVParameters.groovy",
@@ -127,7 +127,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model ActivePowerVariation ActivePowerVariation_SVC2 instantiation KO
+                              + Model ActivePowerVariation ActivePowerVariation_SVC2_2.0 instantiation KO
                                  'staticId' field value 'SVC2' not found for equipment type(s) GENERATOR/LOAD
                                  'deltaP' field is not set
                         """),
@@ -136,7 +136,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model ReactivePowerVariation ReactivePowerVariation_SVC2 instantiation KO
+                              + Model ReactivePowerVariation ReactivePowerVariation_SVC2_2.0 instantiation KO
                                  'staticId' field value 'SVC2' not found for equipment type(s) GENERATOR/LOAD
                                  'deltaQ' field is not set
                         """),
@@ -145,7 +145,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model ReferenceVoltageVariation ReferenceVoltageVariation_SVC2 instantiation KO
+                              + Model ReferenceVoltageVariation ReferenceVoltageVariation_SVC2_2.0 instantiation KO
                                  'staticId' field value 'SVC2' not found for equipment type(s) GENERATOR
                                  'deltaU' field is not set
                         """),
@@ -153,14 +153,14 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model Disconnect Disconnect_WRONG_ID instantiation KO
+                              + Model Disconnect Disconnect_WRONG_ID_1.0 instantiation KO
                                  'staticId' field value 'WRONG_ID' not found for equipment type(s) Disconnectable equipment
                         """),
                 Arguments.of("/eventWarnings/missingDisconnectionSide.groovy", EurostagTutorialExample1Factory.createWithLFResults(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model Disconnect Disconnect_GEN instantiation KO
+                              + Model Disconnect Disconnect_GEN_1.0 instantiation KO
                                  'disconnectOnly' field is set but GENERATOR GEN does not possess this option
                         """)
         );

@@ -15,6 +15,8 @@ import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 
+import static java.util.Objects.requireNonNullElse;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -22,18 +24,16 @@ abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends Ab
 
     protected final BuilderEquipment<T> builderEquipment;
     protected String eventId;
-    protected String staticId;
     protected Double startTime;
 
     protected AbstractEventModelBuilder(Network network, String fieldName, ReportNode parentReportNode) {
         super(network, parentReportNode);
         this.builderEquipment = new BuilderEquipment<>(fieldName, reportNode);
-        this.eventId = generateDefaultEventId();
+        this.eventId = getModelName() + "_unknownId_unknownStartTime";
     }
 
     public R staticId(String staticId) {
         builderEquipment.addEquipment(staticId, this::findEquipment);
-        eventId = generateEventId(staticId);
         return self();
     }
 
@@ -49,16 +49,15 @@ abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends Ab
             BuilderReports.reportFieldNotSet(reportNode, "startTime");
             isInstantiable = false;
         }
+        eventId = generateEventId();
     }
 
     protected abstract T findEquipment(String staticId);
 
-    protected String generateEventId(String staticId) {
-        return getModelName() + "_" + staticId;
-    }
-
-    protected String generateDefaultEventId() {
-        return generateEventId("unknownId");
+    protected String generateEventId() {
+        return "%s_%s_%s".formatted(getModelName(),
+                requireNonNullElse(builderEquipment.getStaticId(), "unknownId"),
+                startTime != null ? startTime : "unknownStartTime");
     }
 
     @Override

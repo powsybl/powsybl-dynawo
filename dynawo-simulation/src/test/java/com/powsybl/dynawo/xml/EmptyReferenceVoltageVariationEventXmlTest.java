@@ -48,8 +48,8 @@ class EmptyReferenceVoltageVariationEventXmlTest extends AbstractDynamicModelXml
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      EventReferenceVoltageVariation ReferenceVoltageVariation_GEN requires a connection with a UControllableEquipmentModel but dynamic model GeneratorPVFixed GEN does not implement it
-                      EventReferenceVoltageVariation ReferenceVoltageVariation_GEN connections cannot be created, the model will be skipped
+                      EventReferenceVoltageVariation ReferenceVoltageVariation_GEN_1.0 requires a connection with a UControllableEquipmentModel but dynamic model GeneratorPVFixed GEN does not implement it
+                      EventReferenceVoltageVariation ReferenceVoltageVariation_GEN_1.0 connections cannot be created, the model will be skipped
                 """);
     }
 }

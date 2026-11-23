@@ -46,8 +46,8 @@ class EmptyReactivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTes
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      ReactivePowerVariation ReactivePowerVariation_GEN requires a connection with a QControllableEquipmentModel but dynamic model GeneratorPVFixed GEN does not implement it
-                      ReactivePowerVariation ReactivePowerVariation_GEN connections cannot be created, the model will be skipped
+                      ReactivePowerVariation ReactivePowerVariation_GEN_1.0 requires a connection with a QControllableEquipmentModel but dynamic model GeneratorPVFixed GEN does not implement it
+                      ReactivePowerVariation ReactivePowerVariation_GEN_1.0 connections cannot be created, the model will be skipped
                 """);
     }
 }

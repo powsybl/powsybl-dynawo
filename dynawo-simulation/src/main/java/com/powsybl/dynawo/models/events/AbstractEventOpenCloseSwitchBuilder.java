@@ -31,7 +31,6 @@ abstract class AbstractEventOpenCloseSwitchBuilder<R extends AbstractEventModelB
     @Override
     public R staticId(String staticId) {
         builderEquipment.addEquipment(staticId, this::findEquipment, IS_BREAKER);
-        eventId = generateEventId(staticId);
         return self();
     }
 
