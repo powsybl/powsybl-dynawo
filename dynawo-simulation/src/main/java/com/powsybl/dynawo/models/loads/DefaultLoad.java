@@ -8,6 +8,9 @@
 package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.dynawo.models.defaultmodels.AbstractInjectionDefaultModel;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
+
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -25,11 +28,11 @@ public class DefaultLoad extends AbstractInjectionDefaultModel implements Defaul
 
     @Override
     public String getDeltaPVarName() {
-        return "@NAME@_DeltaPc_value";
+        return VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "@NAME@_DeltaPc");
     }
 
     @Override
     public String getDeltaQVarName() {
-        return "@NAME@_DeltaQc_value";
+        return VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "@NAME@_DeltaQc");
     }
 }

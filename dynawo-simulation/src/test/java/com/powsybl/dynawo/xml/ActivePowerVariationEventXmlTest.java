@@ -8,8 +8,6 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawo.models.generators.InertialGridBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
@@ -42,11 +40,6 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
                 .setTargetP(607.0)
                 .setLocalTargetQ(301.0)
                 .add();
-    }
-
-    @Override
-    protected DynawoSimulationContext.Builder setupDynawoContextBuilder() {
-        return super.setupDynawoContextBuilder().currentVersion(DynawoVersion.createFromString("1.7.0"));
     }
 
     @Override

@@ -37,8 +37,11 @@ class BuilderConfigTest {
             String modelName = builderConfig.getModelInfos().iterator().next().name();
             ModelBuilder<DynamicModel> handlerBuilder = modelConfigsHandler.getModelBuilder(network, modelName, ReportNode.NO_OP);
             ModelBuilder<DynamicModel> configBuilder = builderConfig.getBuilderConstructor().createBuilder(network, modelName, ReportNode.NO_OP);
-            assertNotNull(handlerBuilder);
-            assertEquals(handlerBuilder.getClass(), configBuilder.getClass());
+            if (handlerBuilder != null) {
+                assertEquals(handlerBuilder.getClass(), configBuilder.getClass());
+            } else {
+                assertNull(configBuilder);
+            }
         }
     }
 

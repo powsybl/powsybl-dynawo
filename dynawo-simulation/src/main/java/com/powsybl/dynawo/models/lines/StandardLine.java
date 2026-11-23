@@ -13,23 +13,36 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
+import com.powsybl.dynawo.models.versionablevariable.Versionable;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
+import com.powsybl.dynawo.models.versionablevariable.VersionableVarsMapping;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.TwoSides;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
+import static com.powsybl.dynawo.models.versionablevariable.VersionableHandler.DYNAWO_VERSION_1_8_0;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel {
 
-    private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
-            new VarMapping("line_P1Pu", "p1"),
-            new VarMapping("line_Q1Pu", "q1"),
-            new VarMapping("line_P2Pu", "p2"),
-            new VarMapping("line_Q2Pu", "q2"),
-            new VarMapping("line_state", "state"));
+    private static final VarMapping P1 = new VarMapping("line_P1Pu", "p1");
+    private static final VarMapping Q1 = new VarMapping("line_Q1Pu", "q1");
+    private static final VarMapping P2 = new VarMapping("line_P2Pu", "p2");
+    private static final VarMapping Q2 = new VarMapping("line_Q2Pu", "q2");
+    private static final VarMapping STATE = new VarMapping("line_state", "state");
+
+    private static final VersionableVarsMapping VERSIONABLE_VAR_MAPPING = new VersionableVarsMapping(
+            "LINE",
+            new Versionable.Step<>(List.of(P1, Q1, P2, Q2, STATE)),
+            new Versionable.Step<>(DYNAWO_VERSION_1_8_0, List.of(
+                    P1, Q1, P2, Q2, STATE,
+                    new VarMapping("line_ISide1", "i1"),
+                    new VarMapping("line_ISide2", "i2")))
+    );
 
     protected StandardLine(Line line, String parameterSetId, ModelConfig modelConfig) {
         super(line, parameterSetId, modelConfig);
@@ -45,7 +58,7 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
 
     @Override
     public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
+        return VersionableHandler.getInstance().getCurrentVarMapping(VERSIONABLE_VAR_MAPPING);
     }
 
     @Override
@@ -60,7 +73,7 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
 
     @Override
     public String getStateValueVarName() {
-        return "line_state_value";
+        return VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, getStateVarName());
     }
 
     @Override
