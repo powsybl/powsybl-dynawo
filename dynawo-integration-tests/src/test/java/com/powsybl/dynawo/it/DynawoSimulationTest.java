@@ -607,29 +607,57 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         .staticId("GH1")
                         .startTime(10)
                         .build(),
+                EventConnectionBuilder.of(network, reportNode)
+                        .staticId("GH1")
+                        .startTime(15)
+                        .build(),
                 EventDisconnectionBuilder.of(network, reportNode)
                         .staticId("HVDC1")
                         .startTime(20)
+                        .build(),
+                EventConnectionBuilder.of(network, reportNode)
+                        .staticId("HVDC1")
+                        .startTime(25)
                         .build(),
                 EventDisconnectionBuilder.of(network, reportNode)
                         .staticId("LD5")
                         .startTime(30)
                         .build(),
+                EventConnectionBuilder.of(network, reportNode)
+                        .staticId("LD5")
+                        .startTime(35)
+                        .build(),
                 EventDisconnectionBuilder.of(network, reportNode)
                         .staticId("SHUNT")
                         .startTime(40)
+                        .build(),
+                EventConnectionBuilder.of(network, reportNode)
+                        .staticId("SHUNT")
+                        .startTime(45)
                         .build(),
                 EventDisconnectionBuilder.of(network, reportNode)
                         .staticId("SVC")
                         .startTime(50)
                         .build(),
+                EventConnectionBuilder.of(network, reportNode)
+                        .staticId("SVC")
+                        .startTime(55)
+                        .build(),
                 EventDisconnectionBuilder.of(network, reportNode)
                         .staticId("TWT")
                         .startTime(60)
                         .build(),
+                EventConnectionBuilder.of(network, reportNode)
+                        .staticId("TWT")
+                        .startTime(65)
+                        .build(),
                 EventDisconnectionBuilder.of(network, reportNode)
                         .staticId("LINE_S2S3")
                         .startTime(70)
+                        .build(),
+                EventConnectionBuilder.of(network, reportNode)
+                        .staticId("LINE_S2S3")
+                        .startTime(75)
                         .build(),
                 EventActivePowerVariationBuilder.of(network, reportNode)
                         .staticId("GH2")

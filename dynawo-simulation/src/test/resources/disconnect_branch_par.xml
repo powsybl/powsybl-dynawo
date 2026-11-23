@@ -5,9 +5,19 @@
         <dyn:par type="BOOL" name="event_disconnectOrigin" value="true"/>
         <dyn:par type="BOOL" name="event_disconnectExtremity" value="true"/>
     </dyn:set>
+    <dyn:set id="Connect_NHV1_NHV2_1">
+        <dyn:par type="DOUBLE" name="event_tEvent" value="3.0"/>
+        <dyn:par type="BOOL" name="event_connectOrigin" value="true"/>
+        <dyn:par type="BOOL" name="event_connectExtremity" value="true"/>
+    </dyn:set>
     <dyn:set id="Disconnect_NGEN_NHV1">
         <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
         <dyn:par type="BOOL" name="event_disconnectOrigin" value="true"/>
         <dyn:par type="BOOL" name="event_disconnectExtremity" value="false"/>
+    </dyn:set>
+    <dyn:set id="Connect_NGEN_NHV1">
+        <dyn:par type="DOUBLE" name="event_tEvent" value="3.0"/>
+        <dyn:par type="BOOL" name="event_connectOrigin" value="true"/>
+        <dyn:par type="BOOL" name="event_connectExtremity" value="false"/>
     </dyn:set>
 </dyn:parametersSet>

@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.models.events.EventConnectionBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.shunts.BaseShuntBuilder;
@@ -56,6 +57,10 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
         eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("G1")
                 .startTime(1)
+                .build());
+        eventModels.add(EventConnectionBuilder.of(network)
+                .staticId("G1")
+                .startTime(3)
                 .build());
         eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("L2")
