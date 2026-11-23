@@ -1,0 +1,30 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:PssWECC .
+  OPTIONAL { ?id cim:PowerSystemStabilizerDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:PssWECC.inputSignal1Type ?inputSignal1Type . }
+  OPTIONAL { ?id cim:PssWECC.inputSignal2Type ?inputSignal2Type . }
+  OPTIONAL { ?id cim:PssWECC.k1 ?k1 . }
+  OPTIONAL { ?id cim:PssWECC.k2 ?k2 . }
+  OPTIONAL { ?id cim:PssWECC.t1 ?t1 . }
+  OPTIONAL { ?id cim:PssWECC.t2 ?t2 . }
+  OPTIONAL { ?id cim:PssWECC.t3 ?t3 . }
+  OPTIONAL { ?id cim:PssWECC.t4 ?t4 . }
+  OPTIONAL { ?id cim:PssWECC.t5 ?t5 . }
+  OPTIONAL { ?id cim:PssWECC.t6 ?t6 . }
+  OPTIONAL { ?id cim:PssWECC.t7 ?t7 . }
+  OPTIONAL { ?id cim:PssWECC.t8 ?t8 . }
+  OPTIONAL { ?id cim:PssWECC.t9 ?t9 . }
+  OPTIONAL { ?id cim:PssWECC.t10 ?t10 . }
+  OPTIONAL { ?id cim:PssWECC.vsmax ?vsmax . }
+  OPTIONAL { ?id cim:PssWECC.vsmin ?vsmin . }
+}

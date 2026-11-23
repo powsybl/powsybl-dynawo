@@ -1,0 +1,38 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:ExcREXS .
+  OPTIONAL { ?id cim:ExcitationSystemDynamics.SynchronousMachineDynamics ?synchronousMachineId . }
+  OPTIONAL { ?id cim:ExcREXS.tr ?tr . }
+  OPTIONAL { ?id cim:ExcREXS.ta ?ta . }
+  OPTIONAL { ?id cim:ExcREXS.tb1 ?tb1 . }
+  OPTIONAL { ?id cim:ExcREXS.tb2 ?tb2 . }
+  OPTIONAL { ?id cim:ExcREXS.tc1 ?tc1 . }
+  OPTIONAL { ?id cim:ExcREXS.tc2 ?tc2 . }
+  OPTIONAL { ?id cim:ExcREXS.ka ?ka . }
+  OPTIONAL { ?id cim:ExcREXS.vamax ?vamax . }
+  OPTIONAL { ?id cim:ExcREXS.vamin ?vamin . }
+  OPTIONAL { ?id cim:ExcREXS.vrmax ?vrmax . }
+  OPTIONAL { ?id cim:ExcREXS.vrmin ?vrmin . }
+  OPTIONAL { ?id cim:ExcREXS.te ?te . }
+  OPTIONAL { ?id cim:ExcREXS.ke ?ke . }
+  OPTIONAL { ?id cim:ExcREXS.kf ?kf . }
+  OPTIONAL { ?id cim:ExcREXS.tf ?tf . }
+  OPTIONAL { ?id cim:ExcREXS.kc ?kc . }
+  OPTIONAL { ?id cim:ExcREXS.kd ?kd . }
+  OPTIONAL { ?id cim:ExcREXS.ki ?ki . }
+  OPTIONAL { ?id cim:ExcREXS.e1 ?e1 . }
+  OPTIONAL { ?id cim:ExcREXS.se1 ?se1 . }
+  OPTIONAL { ?id cim:ExcREXS.e2 ?e2 . }
+  OPTIONAL { ?id cim:ExcREXS.se2 ?se2 . }
+  OPTIONAL { ?id cim:ExcREXS.feedbackSignal ?feedbackSignal . }
+  OPTIONAL { ?id cim:ExcREXS.exclfb ?exclfb . }
+}

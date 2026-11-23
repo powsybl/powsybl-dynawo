@@ -1,0 +1,35 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:SynchronousMachineTimeConstantReactance .
+  OPTIONAL { ?id cim:SynchronousMachineDynamics.SynchronousMachine ?synchronousMachineId  . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.mBase ?mBase . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.damping ?damping . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.inertia ?inertia . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.statorLeakageReactance ?statorLeakageReactance . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.statorResistance ?statorResistance . }
+  OPTIONAL { ?id cim:SynchronousMachineDetailed.ifdBaseType ?ifdBaseType . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.saturationFactor ?saturationFactor . }
+  OPTIONAL { ?id cim:RotatingMachineDynamics.saturationFactor120 ?saturationFactor120 . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.modelType ?modelType . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.ks ?ks . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.xDirectSync ?xDirectSync . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.xDirectTrans ?xDirectTrans . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.xDirectSubtrans ?xDirectSubtrans . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.xQuadSync ?xQuadSync . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.xQuadTrans ?xQuadTrans . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.xQuadSubtrans ?xQuadSubtrans . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.tpdo ?tpdo . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.tppdo ?tppdo . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.tpqo ?tpqo . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.tppqo ?tppqo . }
+  OPTIONAL { ?id cim:SynchronousMachineTimeConstantReactance.xl ?xl . }
+}

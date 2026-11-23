@@ -1,0 +1,24 @@
+#
+# Copyright (c) 2026, RTE (http://www.rte-france.com)
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+PREFIX cim:  <%%CIM_NS%%>
+
+PREFIX md:   <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT * WHERE {
+  ?id rdf:type cim:PssRQB .
+  OPTIONAL { ?id cim:PowerSystemStabilizerDynamics.ExcitationSystemDynamics ?excitationSystemId . }
+  OPTIONAL { ?id cim:PssRQB.kdpm ?kdpm . }
+  OPTIONAL { ?id cim:PssRQB.ki2 ?ki2 . }
+  OPTIONAL { ?id cim:PssRQB.ki3 ?ki3 . }
+  OPTIONAL { ?id cim:PssRQB.ki4 ?ki4 . }
+  OPTIONAL { ?id cim:PssRQB.sibv ?sibv . }
+  OPTIONAL { ?id cim:PssRQB.t4f ?t4f . }
+  OPTIONAL { ?id cim:PssRQB.t4m ?t4m . }
+  OPTIONAL { ?id cim:PssRQB.t4mom ?t4mom . }
+  OPTIONAL { ?id cim:PssRQB.tomd ?tomd . }
+  OPTIONAL { ?id cim:PssRQB.tomsl ?tomsl . }
+}
