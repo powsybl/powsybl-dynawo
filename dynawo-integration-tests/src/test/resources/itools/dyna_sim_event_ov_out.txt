@@ -19,8 +19,8 @@ Loading network 'IEEE14.iidm'
          Model GeneratorSynchronousThreeWindingsProportionalRegulations _GEN____6_SM instantiation OK
          Model GeneratorSynchronousThreeWindingsProportionalRegulations _GEN____8_SM instantiation OK
       + Groovy Event Models Supplier
-         Model Disconnect Disconnect__BUS____1-BUS____5-1_AC instantiation OK
-         Model Disconnect Disconnect__BUS____2-BUS____3-1_AC instantiation OK
+         Model Disconnect Disconnect__BUS____1-BUS____5-1_AC_1.0 instantiation OK
+         Model Disconnect Disconnect__BUS____2-BUS____3-1_AC_1.0 instantiation OK
    Dynawo models processing
    + Dynawo Log
       DYNAWO VERSION  :     1.7.0

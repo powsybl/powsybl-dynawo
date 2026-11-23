@@ -3,7 +3,7 @@
     <dyn:blackBoxModel id="L" lib="HvdcVscDanglingUDc" parFile="models.par" parId="hvdc" staticId="L">
         <dyn:macroStaticRef id="MSR_HvdcVscDanglingUDc"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="Disconnect_L" lib="EventSetPointBoolean" parFile="hvdctest.par" parId="Disconnect_L"/>
+    <dyn:blackBoxModel id="Disconnect_L_1.0" lib="EventSetPointBoolean" parFile="hvdctest.par" parId="Disconnect_L_1.0"/>
     <dyn:macroConnector id="MC_HvdcVscDanglingUDcSide2-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="hvdc_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
     </dyn:macroConnector>
@@ -24,5 +24,5 @@
     </dyn:macroStaticReference>
     <dyn:macroConnect connector="MC_HvdcVscDanglingUDcSide2-DefaultEquipmentConnectionPoint" id1="L" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_HvdcVscDanglingUDcSide1-DefaultEquipmentConnectionPoint" id1="L" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_EventHvdcDisconnectionSide1-HvdcVscDanglingUDc" id1="Disconnect_L" id2="L"/>
+    <dyn:macroConnect connector="MC_EventHvdcDisconnectionSide1-HvdcVscDanglingUDc" id1="Disconnect_L_1.0" id2="L"/>
 </dyn:dynamicModelsArchitecture>

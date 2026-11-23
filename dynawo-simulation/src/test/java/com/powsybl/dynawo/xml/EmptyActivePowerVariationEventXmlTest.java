@@ -47,8 +47,8 @@ class EmptyActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest 
         checkReport("""
                 + Test DYD
                    + Dynawo models processing
-                      ActivePowerVariation ActivePowerVariation_GEN requires a connection with a PControllableEquipmentModel but dynamic model GeneratorSynchronousThreeWindingsPmConstVRNordic GEN does not implement it
-                      ActivePowerVariation ActivePowerVariation_GEN connections cannot be created, the model will be skipped
+                      ActivePowerVariation ActivePowerVariation_GEN_1.0 requires a connection with a PControllableEquipmentModel but dynamic model GeneratorSynchronousThreeWindingsPmConstVRNordic GEN does not implement it
+                      ActivePowerVariation ActivePowerVariation_GEN_1.0 connections cannot be created, the model will be skipped
                 """);
     }
 }
