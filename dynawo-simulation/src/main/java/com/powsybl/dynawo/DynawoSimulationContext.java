@@ -10,16 +10,15 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.events.AbstractEvent;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
 import com.powsybl.dynawo.outputvariables.DynawoOutputVariable;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DynawoData;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -85,6 +84,7 @@ public class DynawoSimulationContext {
 
         @Override
         protected void setupData() {
+            createSkipSimplifier();
             super.setupData();
             eventModels = Objects.requireNonNull(eventModels).stream()
                     .filter(distinctByDynamicId(reportNode))
@@ -94,6 +94,13 @@ public class DynawoSimulationContext {
                     .filter(ContextDependentEvent.class::isInstance)
                     .map(ContextDependentEvent.class::cast)
                     .forEach(e -> e.setEquipmentModelType(blackBoxModelSupplier.hasDynamicModel(e.getEquipment())));
+        }
+
+        protected void createSkipSimplifier() {
+            Set<Identifiable<?>> eventEquipments = eventModels.stream()
+                    .map(ev -> ((AbstractEvent) ev).getEquipment())
+                    .collect(Collectors.toSet());
+            skipSimplifier = bbm -> bbm.hasReferencedEquipments(eventEquipments);
         }
 
         @Override

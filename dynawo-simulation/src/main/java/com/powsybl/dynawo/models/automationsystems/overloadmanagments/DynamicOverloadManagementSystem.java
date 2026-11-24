@@ -13,12 +13,14 @@ import com.powsybl.dynawo.models.automationsystems.BranchModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.Branch;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Terminal;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -52,6 +54,11 @@ public class DynamicOverloadManagementSystem extends AbstractPureDynamicBlackBox
 
     public Terminal getMeasuredTerminal() {
         return measuredBranch.getTerminal(measuredSide);
+    }
+
+    @Override
+    public boolean hasReferencedEquipments(Set<Identifiable<?>> equipments) {
+        return equipments.contains(measuredBranch) && equipments.contains(controlledBranch);
     }
 
     private List<VarConnection> getVarConnectionsWithMeasuredBranch(BranchModel connected) {

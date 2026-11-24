@@ -10,10 +10,12 @@ import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.parameters.ParametersSet;
+import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -55,4 +57,8 @@ public interface BlackBoxModel extends Model {
     void createDynamicModelInfoExtension();
 
     boolean isConnected();
+
+    default boolean hasReferencedEquipments(Set<Identifiable<?>> equipments) {
+        return false;
+    }
 }

@@ -16,12 +16,14 @@ import com.powsybl.dynawo.models.loads.LoadWithTransformerModel;
 import com.powsybl.dynawo.models.loads.LoadWithTransformersModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.transformers.TapChangerModel;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.powsybl.dynawo.models.TransformerSide.HIGH_VOLTAGE;
 import static com.powsybl.dynawo.models.TransformerSide.NONE;
@@ -102,5 +104,10 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
     @Override
     public boolean isConnected() {
         return ConnectionState.CONNECTED == getConnectionState();
+    }
+
+    @Override
+    public boolean hasReferencedEquipments(Set<Identifiable<?>> equipments) {
+        return equipments.contains(load);
     }
 }

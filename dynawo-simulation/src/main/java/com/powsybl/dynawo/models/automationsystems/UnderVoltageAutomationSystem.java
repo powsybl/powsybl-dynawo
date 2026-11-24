@@ -14,12 +14,14 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.generators.SpecifiedGeneratorModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Generator;
+import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -59,5 +61,10 @@ public class UnderVoltageAutomationSystem extends AbstractPureDynamicBlackBoxMod
     @Override
     public boolean isConnected() {
         return isConnected;
+    }
+
+    @Override
+    public boolean hasReferencedEquipments(Set<Identifiable<?>> equipments) {
+        return equipments.contains(generator);
     }
 }

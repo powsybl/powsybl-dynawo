@@ -14,11 +14,13 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.transformers.TransformerModel;
 import com.powsybl.dynawo.models.utils.ImmutableLateInit;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -58,6 +60,11 @@ public class PhaseShifterBlockingIAutomationSystem extends AbstractPureDynamicBl
         if (isConnected) {
             super.write(writer, parFileName);
         }
+    }
+
+    @Override
+    public boolean hasReferencedEquipments(Set<Identifiable<?>> equipments) {
+        return equipments.contains(transformer.getValue());
     }
 
     @Override

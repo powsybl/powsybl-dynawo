@@ -12,6 +12,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawo.models.generators.BaseGenerator;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
@@ -82,6 +83,27 @@ class ModelsSimplifierTest {
         assertEquals(2, context.getBlackBoxDynamicModels().size());
         assertFalse(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("L2")));
         assertTrue(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("G1") && bbm.getLib().equalsIgnoreCase("GeneratorFictitious")));
+    }
+
+    @Test
+    void skipSimplifierTest() {
+        Network network = SvcTestCaseFactory.create();
+        List<BlackBoxModel> dynamicModels = List.of(BaseLoadBuilder.of(network, "LoadAlphaBeta")
+                .staticId("L2")
+                .parameterSetId("LOAD")
+                .build());
+        List<BlackBoxModel> eventModels = List.of(EventActivePowerVariationBuilder.of(network)
+                .staticId("L2")
+                .startTime(1)
+                .deltaP(20)
+                .build());
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .dynawoParameters(DynawoSimulationParameters.load().addModelSimplifier("Filter"))
+                .build();
+
+        assertTrue(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("L2")));
     }
 
     @AutoService(ModelsRemovalSimplifier.class)

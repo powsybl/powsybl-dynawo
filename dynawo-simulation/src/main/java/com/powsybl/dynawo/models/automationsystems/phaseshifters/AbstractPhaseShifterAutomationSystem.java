@@ -14,10 +14,12 @@ import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.transformers.TransformerModel;
 import com.powsybl.dynawo.parameters.ParameterType;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -49,5 +51,10 @@ public abstract class AbstractPhaseShifterAutomationSystem extends AbstractPureD
         updater.addReference(psId, "phaseShifter_tap0", ParameterType.INT, "tapPosition", tfoId);
         updater.addReference(psId, "phaseShifter_tapMax", ParameterType.INT, "highTapPosition", tfoId);
         updater.addReference(psId, "phaseShifter_tapMin", ParameterType.INT, "lowTapPosition", tfoId);
+    }
+
+    @Override
+    public boolean hasReferencedEquipments(Set<Identifiable<?>> equipments) {
+        return equipments.contains(transformer);
     }
 }
