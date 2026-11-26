@@ -18,8 +18,7 @@ import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationS
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.suppliers.dynamicmodels.*;
-import com.powsybl.iidm.network.IdentifiableType;
-import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 
@@ -210,10 +209,21 @@ class DynawoModelsSupplierTest {
     @Test
     void testMultipleModels() {
         Network network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
+        DynamicModelConfig modelConfig = new DynamicModelConfig("GeneratorPQ", "GPQ", List.of(
+                new PropertyBuilder()
+                        .name("staticId")
+                        .value("GEN3")
+                        .type(PropertyType.STRING)
+                        .build()
+        ));
         DynamicMultipleModel mm = new DynamicMultipleModel("TestGeographicalTags", IdentifiableType.GENERATOR);
-        DynamicModelConfigs configs = new DynamicModelConfigs(Collections.emptyList(), Collections.emptyList(), List.of(mm));
+        DynamicModelConfigs configs = new DynamicModelConfigs(List.of(modelConfig), Collections.emptyList(), List.of(mm));
         List<DynamicModel> models = new DynawoModelsSupplier(configs).get(network);
 
+        DynamicModel specifiedGen = SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
+                .staticId("GEN3")
+                .parameterSetId("GPQ")
+                .build();
         DynamicModel gen1 = SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindings")
                 .staticId("GEN")
                 .parameterSetId("GFW")
@@ -222,14 +232,10 @@ class DynawoModelsSupplierTest {
                 .staticId("GEN2")
                 .parameterSetId("GPV")
                 .build();
-        DynamicModel gen3 = SynchronizedGeneratorBuilder.of(network, "GeneratorPV")
-                .staticId("GEN3")
-                .parameterSetId("GPV")
-                .build();
         assertThat(models).hasSize(3).satisfiesExactly(
-                g -> assertThat(g).usingRecursiveComparison().isEqualTo(gen1),
-                g2 -> assertThat(g2).usingRecursiveComparison().isEqualTo(gen2),
-                g3 -> assertThat(g3).usingRecursiveComparison().isEqualTo(gen3));
+                g -> assertThat(g).usingRecursiveComparison().isEqualTo(specifiedGen),
+                g1 -> assertThat(g1).usingRecursiveComparison().isEqualTo(gen1),
+                g2 -> assertThat(g2).usingRecursiveComparison().isEqualTo(gen2));
     }
 
     @Test
@@ -382,24 +388,25 @@ class DynawoModelsSupplierTest {
         }
 
         @Override
-        public List<DynamicModelConfig> resolveMultipleModels(Network network, ReportNode reportNode) {
-            return network.getGeneratorStream().map(g -> {
-                if (g.getTerminal().getVoltageLevel().getNullableSubstation().getGeographicalTags().isEmpty()) {
+        public DynamicModelConfig resolveMultipleModels(Identifiable<?> identifiable, ReportNode reportNode) {
+            if (identifiable instanceof Injection<?> inj) {
+                if (inj.getTerminal().getVoltageLevel().getNullableSubstation().getGeographicalTags().isEmpty()) {
                     return new DynamicModelConfig("GeneratorPV", "GPV",
                             List.of(new PropertyBuilder()
                                     .name("staticId")
-                                    .value(g.getId())
+                                    .value(inj.getId())
                                     .type(PropertyType.STRING)
                                     .build()));
                 } else {
                     return new DynamicModelConfig("GeneratorSynchronousFourWindings", "GFW",
                             List.of(new PropertyBuilder()
                                     .name("staticId")
-                                    .value(g.getId())
+                                    .value(inj.getId())
                                     .type(PropertyType.STRING)
                                     .build()));
                 }
-            }).toList();
+            }
+            return null;
         }
     }
 }

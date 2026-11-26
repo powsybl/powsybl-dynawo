@@ -2,7 +2,7 @@
   "multipleModels": [
     {
       "resolverName": "TestGeographicalTags",
-      "identifiableType": "BUS"
+      "identifiableType": "GENERATOR"
     }
   ]
 }

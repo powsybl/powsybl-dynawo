@@ -8,9 +8,7 @@
 package com.powsybl.dynawo.suppliers.dynamicmodels;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.iidm.network.Network;
-
-import java.util.List;
+import com.powsybl.iidm.network.Identifiable;
 
 /**
  * Resolver for multiple models, used to determine which equipment identifiers
@@ -22,9 +20,9 @@ public interface MultipleModelResolver {
 
     String getName();
 
-    List<DynamicModelConfig> resolveMultipleModels(Network network, ReportNode reportNode);
+    DynamicModelConfig resolveMultipleModels(Identifiable<?> identifiable, ReportNode reportNode);
 
-    default List<DynamicModelConfig> resolveMultipleModels(Network network) {
-        return resolveMultipleModels(network, ReportNode.NO_OP);
+    default DynamicModelConfig resolveMultipleModels(Identifiable<?> identifiable) {
+        return resolveMultipleModels(identifiable, ReportNode.NO_OP);
     }
 }
