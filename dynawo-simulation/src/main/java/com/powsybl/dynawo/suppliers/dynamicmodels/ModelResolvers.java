@@ -15,6 +15,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
+ * Registry for {@link ModelResolver} and {@link MultipleModelResolver} instances, loaded via ServiceLoader.
+ *
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class ModelResolvers {
@@ -24,13 +26,24 @@ public class ModelResolvers {
                     .map(ServiceLoader.Provider::get)
                     .collect(Collectors.toMap(ModelResolver::getName, modelResolver -> modelResolver)));
 
+    private static final Supplier<Map<String, MultipleModelResolver>> MULTIPLE_MODEL_RESOLVER_SUPPLIER =
+            Suppliers.memoize(() -> ServiceLoader.load(MultipleModelResolver.class).stream()
+                    .map(ServiceLoader.Provider::get)
+                    .collect(Collectors.toMap(MultipleModelResolver::getName, resolver -> resolver)));
+
     private final Map<String, ModelResolver> modelResolverMap;
+    private final Map<String, MultipleModelResolver> multipleModelResolverMap;
 
     public ModelResolvers() {
         this.modelResolverMap = MODEL_RESOLVER_SUPPLIER.get();
+        this.multipleModelResolverMap = MULTIPLE_MODEL_RESOLVER_SUPPLIER.get();
     }
 
     public ModelResolver getModelResolver(String name) {
         return modelResolverMap.get(name);
+    }
+
+    public MultipleModelResolver getMultipleModelResolver(String name) {
+        return multipleModelResolverMap.get(name);
     }
 }

@@ -15,11 +15,9 @@ import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
-import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.suppliers.dynamicmodels.*;
-import com.powsybl.iidm.network.Country;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -114,8 +112,6 @@ class DynawoModelsSupplierTest {
                 {
                   "multipleModels": [
                     {
-                      "model": "GeneratorPQ",
-                      "group": "GPQ",
                       "resolverName": "TestGeographicalTags",
                       "identifiableType": "GENERATOR"
                     }
@@ -129,8 +125,6 @@ class DynawoModelsSupplierTest {
             assertTrue(configs.dynamicAlternativeModelsConfiglist().isEmpty());
             assertThat(configs.dynamicMultipleModelList()).hasSize(1).satisfiesExactly(
                     m -> {
-                        assertEquals("GeneratorPQ", m.model());
-                        assertEquals("GPQ", m.group());
                         assertEquals("TestGeographicalTags", m.modelResolverName());
                         assertEquals(IdentifiableType.GENERATOR, m.identifiableType());
                     }
@@ -216,7 +210,7 @@ class DynawoModelsSupplierTest {
     @Test
     void testMultipleModels() {
         Network network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
-        DynamicMultipleModel mm = new DynamicMultipleModel("GeneratorPV", "GPV", "TestGeographicalTags", IdentifiableType.GENERATOR);
+        DynamicMultipleModel mm = new DynamicMultipleModel("TestGeographicalTags", IdentifiableType.GENERATOR);
         DynamicModelConfigs configs = new DynamicModelConfigs(Collections.emptyList(), Collections.emptyList(), List.of(mm));
         List<DynamicModel> models = new DynawoModelsSupplier(configs).get(network);
 
@@ -247,10 +241,6 @@ class DynawoModelsSupplierTest {
             DynamicModel gen1 = SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindings")
                     .staticId("GEN")
                     .parameterSetId("GFW")
-                    .build();
-            DynamicModel expectedBus2 = InfiniteBusBuilder.of(network, "InfiniteBus")
-                    .staticId("NHV1")
-                    .parameterSetId("Bus")
                     .build();
             assertThat(models).hasSize(1).satisfiesExactlyInAnyOrder(
                     dm -> assertThat(dm).usingRecursiveComparison().isEqualTo(gen1));

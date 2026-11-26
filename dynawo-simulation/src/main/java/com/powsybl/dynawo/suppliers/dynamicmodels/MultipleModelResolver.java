@@ -11,7 +11,6 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.Network;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Resolver for multiple models, used to determine which equipment identifiers

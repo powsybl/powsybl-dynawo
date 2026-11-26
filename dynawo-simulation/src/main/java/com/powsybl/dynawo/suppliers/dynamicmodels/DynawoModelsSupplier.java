@@ -17,9 +17,6 @@ import com.powsybl.dynawo.builders.ModelBuilder;
 import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.suppliers.DynawoSupplierJsonDeserializer;
 import com.powsybl.dynawo.suppliers.Property;
-import com.powsybl.dynawo.suppliers.PropertyBuilder;
-import com.powsybl.dynawo.suppliers.PropertyType;
-import com.powsybl.dynawo.suppliers.SetGroupType;
 import com.powsybl.iidm.network.Network;
 
 import java.io.InputStream;
@@ -78,7 +75,7 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
     private Stream<DynamicModelConfig> getMultipleModelsStream(Network network, ReportNode reportNode) {
         if (dynamicModelConfigs.hasMultipleModels()) {
             Set<String> missingResolvers = new HashSet<>();
-            MultipleModelResolvers resolvers = new MultipleModelResolvers();
+            ModelResolvers resolvers = new ModelResolvers();
             return dynamicModelConfigs.dynamicMultipleModelList().stream()
                     .flatMap(mm -> {
                         MultipleModelResolver resolver = resolvers.getMultipleModelResolver(mm.modelResolverName());

@@ -113,22 +113,18 @@ public class DynamicModelConfigsJsonDeserializer extends StdDeserializer<Dynamic
 
     public static DynamicMultipleModel parseMultipleModel(JsonParser parser) {
         var parsingContext = new Object() {
-            String model = null;
-            String group = null;
             String resolverName = null;
             IdentifiableType identifiableType = null;
         };
         JsonUtil.parseObject(parser, name -> {
             boolean handled = true;
             switch (name) {
-                case "model" -> parsingContext.model = parser.nextTextValue();
-                case "group" -> parsingContext.group = parser.nextTextValue();
                 case "resolverName" -> parsingContext.resolverName = parser.nextTextValue();
                 case "identifiableType" -> parsingContext.identifiableType = IdentifiableType.valueOf(parser.nextTextValue());
                 default -> handled = false;
             }
             return handled;
         });
-        return new DynamicMultipleModel(parsingContext.model, parsingContext.group, parsingContext.resolverName, parsingContext.identifiableType);
+        return new DynamicMultipleModel(parsingContext.resolverName, parsingContext.identifiableType);
     }
 }

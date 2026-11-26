@@ -14,17 +14,13 @@ import java.util.Objects;
 /**
  * Dynamic multiple models configuration deserialized by {@link DynamicModelConfigsJsonDeserializer}
  * used to configure dynamic model builder in {@link DynawoModelsSupplier}
- * @param model dynamic model name
- * @param group parameter set id prefix/suffix
  * @param modelResolverName name of the {@link MultipleModelResolver} used to resolve equipment identifiers
  * @param identifiableType type of the equipment for which the dynamic model is configured
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record DynamicMultipleModel(String model, String group, String modelResolverName, IdentifiableType identifiableType) {
+public record DynamicMultipleModel(String modelResolverName, IdentifiableType identifiableType) {
 
-    public DynamicMultipleModel(String model, String group, String modelResolverName, IdentifiableType identifiableType) {
-        this.model = Objects.requireNonNull(model);
-        this.group = Objects.requireNonNull(group);
+    public DynamicMultipleModel(String modelResolverName, IdentifiableType identifiableType) {
         this.modelResolverName = Objects.requireNonNull(modelResolverName);
         this.identifiableType = Objects.requireNonNull(identifiableType);
     }
