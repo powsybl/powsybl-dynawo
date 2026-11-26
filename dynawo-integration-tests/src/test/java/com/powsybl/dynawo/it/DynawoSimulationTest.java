@@ -78,7 +78,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
     void setUp() throws Exception {
         super.setUp();
         provider = new DynawoSimulationProvider(new DynawoSimulationConfig(Path.of("/dynaflow-launcher"), true));
-        parameters = DynamicSimulationParameters.load();
+        parameters = new DynamicSimulationParameters()
+                .setStartTime(0)
+                .setStopTime(100);
         dynawoSimulationParameters = DynawoSimulationParameters.load();
         parameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
     }
