@@ -16,7 +16,6 @@ import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Terminal;
 import com.powsybl.iidm.network.TwoSides;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -58,10 +57,7 @@ public class DynamicTwoLevelOverloadManagementSystem extends DynamicOverloadMana
     }
 
     private List<VarConnection> getVarConnectionsWithFirstMeasuredBranch(BranchModel connected) {
-        return Arrays.asList(
-                new VarConnection("currentLimitAutomaton_IMonitored1", connected.getIVarName(measuredSide)),
-                new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDeactivateCurrentLimitsVarName())
-        );
+        return List.of(new VarConnection("currentLimitAutomaton_IMonitored1", connected.getIVarName(measuredSide)));
     }
 
     private List<VarConnection> getVarConnectionsWithSecondMeasuredBranch(BranchModel connected) {
