@@ -20,7 +20,6 @@ import com.powsybl.dynawo.models.frequencysynchronizers.*;
 import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.simplifiers.ModelSimplifiers;
-import com.powsybl.dynawo.simplifiers.ModelsRemovalSimplifier;
 import com.powsybl.dynawo.simplifiers.ModelsSubstitutionSimplifier;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
@@ -52,6 +51,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     protected SimulationTime finalStepTime = null;
     protected DynawoVersion dynawoVersion = DynawoConstants.CURRENT_VERSION;
     protected ReportNode reportNode = ReportNode.NO_OP;
+    protected Predicate<BlackBoxModel> skipSimplifier = null;
 
     protected AbstractContextBuilder(Network network, List<BlackBoxModel> dynamicModels) {
         this.network = network;
@@ -155,11 +155,18 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, Set<String> modelSimplifierNames) {
         ModelSimplifiers modelSimplifiers = new ModelSimplifiers();
         Stream<BlackBoxModel> outputBbm = inputBbm;
-        for (ModelsRemovalSimplifier modelsSimplifier : modelSimplifiers.getModelsRemovalSimplifiers()) {
-            if (modelSimplifierNames.contains(modelsSimplifier.getSimplifierInfo().name())) {
-                outputBbm = outputBbm.filter(modelsSimplifier.getModelRemovalPredicate(reportNode));
-            }
+
+        Predicate<BlackBoxModel> removalPredicate = modelSimplifiers.getModelsRemovalSimplifiers().stream()
+                .filter(s -> modelSimplifierNames.contains(s.getSimplifierInfo().name()))
+                .map(s -> s.getModelRemovalPredicate(reportNode))
+                .reduce(p -> true, Predicate::and);
+
+        if (skipSimplifier != null) {
+            outputBbm = outputBbm.filter(skipSimplifier.or(removalPredicate));
+        } else {
+            outputBbm = outputBbm.filter(removalPredicate);
         }
+
         for (ModelsSubstitutionSimplifier modelsSimplifier : modelSimplifiers.getModelsSubstitutionSimplifiers()) {
             if (modelSimplifierNames.contains(modelsSimplifier.getSimplifierInfo().name())) {
                 outputBbm = outputBbm.map(modelsSimplifier.getModelSubstitutionFunction(network, dynawoParameters, reportNode))

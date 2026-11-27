@@ -20,6 +20,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
@@ -92,6 +93,11 @@ public abstract class AbstractEvent extends AbstractBlackBoxModel implements Eve
     @Override
     public String getDefaultParFile() {
         return DynawoSimulationConstants.getSimulationParFile(getEquipment().getNetwork());
+    }
+
+    @Override
+    public boolean hasReferencedEquipments(Set<Identifiable<?>> equipments) {
+        return equipments.contains(equipment);
     }
 
     protected abstract void createEventSpecificParameters(ParametersSet paramSet);

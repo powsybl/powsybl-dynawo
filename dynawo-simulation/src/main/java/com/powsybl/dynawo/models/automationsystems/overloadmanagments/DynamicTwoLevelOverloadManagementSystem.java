@@ -13,12 +13,14 @@ import com.powsybl.dynawo.models.automationsystems.BranchModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.Branch;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Terminal;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -55,6 +57,11 @@ public class DynamicTwoLevelOverloadManagementSystem extends DynamicOverloadMana
 
     public Terminal getSecondMeasuredTerminal() {
         return secondMeasuredBranch.getTerminal(secondMeasuredSide);
+    }
+
+    @Override
+    public boolean hasReferencedEquipments(Set<Identifiable<?>> equipments) {
+        return super.hasReferencedEquipments(equipments) && equipments.contains(secondMeasuredBranch);
     }
 
     private List<VarConnection> getVarConnectionsWithFirstMeasuredBranch(BranchModel connected) {

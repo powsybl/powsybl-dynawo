@@ -23,6 +23,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -110,5 +111,20 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
     @Override
     public boolean isConnected() {
         return isConnected;
+    }
+
+    @Override
+    public boolean hasReferencedEquipments(Set<Identifiable<?>> equipments) {
+        for (Identifiable<?> eq : tapChangerEquipments) {
+            if (equipments.contains(eq)) {
+                return true;
+            }
+        }
+        for (Identifiable<?> mea : uMeasurements) {
+            if (equipments.contains(mea)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

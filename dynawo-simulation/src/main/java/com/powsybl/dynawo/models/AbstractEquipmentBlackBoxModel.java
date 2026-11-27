@@ -17,6 +17,7 @@ import com.powsybl.iidm.network.extensions.DynamicModelInfoAdder;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 
@@ -79,5 +80,10 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<T>> 
         } else {
             extension.setModelName(modelConfig.name());
         }
+    }
+
+    @Override
+    public boolean hasReferencedEquipments(Set<Identifiable<?>> equipments) {
+        return equipments.contains(equipment);
     }
 }
