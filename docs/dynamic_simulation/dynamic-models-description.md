@@ -242,6 +242,33 @@ Simplified generator PV based on SignalN for the frequency handling, with a simp
 - `InertialGrid`:
 Generation system with average frequency response.
 
+#### IEC
+- `IECWT4ACurrentSource2015`:
+  Wind Turbine Type 4A model from IEC 61400-27-1:2015 standard : measurement, PLL, protection, PControl, QControl, limiters, electrical and generator modules.
+
+- `IECWT4ACurrentSource2020`:
+  Wind Turbine Type 4A model from IEC 61400-27-1:2020 standard : measurement, PLL, protection, PControl, QControl, limiters, electrical and generator modules.
+
+- `IECWT4BCurrentSource2015`:
+  Wind Turbine Type 4B model from IEC 61400-27-1:2015 standard : measurement, PLL, protection, PControl, QControl, limiters, electrical and generator modules.
+
+- `IECWT4BCurrentSource2020`:
+  Wind Turbine Type 4B model from IEC 61400-27-1:2020 standard : measurement, PLL, protection, PControl, QControl, limiters, electrical, generator and mechanical modules.
+
+- `IECWPP4ACurrentSource2015`:
+  Wind Power Plant Type 4A model from IEC 61400-27-1:2015 standard : WT4A, communication modules.
+
+- `IECWPP4ACurrentSource2020`:
+  Wind Power Plant Type 4A model from IEC 61400-27-1:2020 standard : WT4A, communication modules.
+
+- `IECWPP4BCurrentSource2015`:
+  Wind Power Plant Type 4A model from IEC 61400-27-1:2015 standard : WT4B, communication modules.
+
+- `IECWPP4BCurrentSource2020`:
+  Wind Power Plant Type 4B model from IEC 61400-27-1:2020 standard : WT4B, communication modules.
+
+
+
 #### Wecc
 - `PhotovoltaicsWeccCurrentSourceB`:
 WECC Photovoltaics grid following model with plant control REPCA, current control REECB, generator/converter REGCB with a current source as interface with the grid.
