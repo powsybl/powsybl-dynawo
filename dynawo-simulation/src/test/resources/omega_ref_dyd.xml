@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="GEN" lib="GeneratorSynchronousFourWindingsPmConstVRNordic" parFile="models.par" parId="GSFW" staticId="GEN">
+    <dyn:blackBoxModel id="GEN" lib="GeneratorSynchronousFourWindingsPmConstVRNordic" parFile="models.par" parId="GSFW2" staticId="GEN">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsPmConstVRNordic"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="GEN2" lib="GeneratorPQ" parFile="models.par" parId="GPQ" staticId="GEN2">
