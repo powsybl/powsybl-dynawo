@@ -34,6 +34,12 @@ public final class DynawoSimulationReports {
                 .add();
     }
 
+    public static ReportNode createAlternativeModelsReportNode(ReportNode reportNode) {
+        return reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.alternativeModelsResolving")
+                .add();
+    }
+
     public static ReportNode createDynawoEventModelSupplierReportNode(ReportNode reportNode) {
         return reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.jsonEventModels")
