@@ -26,7 +26,7 @@ import static com.powsybl.dynawo.margincalculation.xml.MarginCalculationConstant
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class MarginCalculationDynawo18VersionXmlTest extends AbstractDynamicModelXmlTest {
+class MarginCalculationDynawo17VersionXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -41,7 +41,7 @@ class MarginCalculationDynawo18VersionXmlTest extends AbstractDynamicModelXmlTes
                 new LoadsVariation(List.of(network.getLoad("LOAD2"), network.getLoad("LOAD3")), 30));
         context = new MarginCalculationContext.Builder(network, dynamicModels, Collections.emptyList(), loadsVariationList)
                 .marginCalculationParameters(parameters)
-                .currentVersion(DynawoVersion.createFromString("1.8.0"))
+                .currentVersion(DynawoVersion.createFromString("1.7.0"))
                 .build();
     }
 
@@ -53,6 +53,6 @@ class MarginCalculationDynawo18VersionXmlTest extends AbstractDynamicModelXmlTes
     @Test
     void writeModel() throws SAXException, IOException {
         DydXml.write(tmpDir, LOAD_VARIATION_AREA_FILENAME, ((MarginCalculationContext) context).getLoadVariationAreaDydData());
-        validate("dyd.xsd", "load_variation_area_dynawo_1_8_dyd.xml", tmpDir.resolve(LOAD_VARIATION_AREA_FILENAME));
+        validate("dyd.xsd", "load_variation_area_dynawo_1_7_dyd.xml", tmpDir.resolve(LOAD_VARIATION_AREA_FILENAME));
     }
 }

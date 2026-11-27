@@ -81,7 +81,7 @@ class ModelsSimplifierTest {
                 .build();
         assertEquals(2, context.getBlackBoxDynamicModels().size());
         assertFalse(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("L2")));
-        assertTrue(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("G1") && bbm.getLib().equalsIgnoreCase("GeneratorFictitious")));
+        assertTrue(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("G1") && bbm.getLib().equalsIgnoreCase("GeneratorAlphaBeta")));
     }
 
     @AutoService(ModelsRemovalSimplifier.class)
@@ -105,7 +105,7 @@ class ModelsSimplifierTest {
         public Function<BlackBoxModel, BlackBoxModel> getModelSubstitutionFunction(Network network, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode) {
             return m -> {
                 if ("G1".equalsIgnoreCase(m.getDynamicModelId()) && m instanceof BaseGenerator gen) {
-                    return BaseGeneratorBuilder.of(network, "GeneratorFictitious")
+                    return BaseGeneratorBuilder.of(network, "GeneratorAlphaBeta")
                             .staticId(gen.getDynamicModelId())
                             .parameterSetId("G")
                             .build();

@@ -73,7 +73,7 @@ class BuilderEquipmentSetterTest {
                 .withMessageTemplate("testBuilder")
                 .build();
 
-        BlackBoxModel gen = BaseGeneratorBuilder.of(network, "GeneratorFictitious", reportNode)
+        BlackBoxModel gen = BaseGeneratorBuilder.of(network, "GeneratorAlphaBeta", reportNode)
                 .staticId("G1")
                 .build();
         BlackBoxModel ps = PhaseShifterIAutomationSystemBuilder.of(network, "PhaseShifterI", reportNode)
@@ -86,7 +86,7 @@ class BuilderEquipmentSetterTest {
         reportNode.print(sw);
         assertEquals("""
                         + Builder tests
-                           + Model GeneratorFictitious G1 instantiation OK
+                           + Model GeneratorAlphaBeta G1 instantiation OK
                               'parameterSetId' field is not set, dynamicModelId G1 will be used instead
                            + Model PhaseShifterI PS instantiation OK
                               'parameterSetId' field is not set, dynamicModelId PS will be used instead

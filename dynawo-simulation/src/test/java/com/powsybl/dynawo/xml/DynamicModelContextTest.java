@@ -115,7 +115,7 @@ class DynamicModelContextTest {
         assertTrue(adder.createMacroConnectionsOrSkip(bbm, line, InjectionModel.class, l -> List.of()));
         // implementation exception
         e = assertThrows(PowsyblException.class, () -> adder.createMacroConnections(bbm, gen, LineModel.class, l -> List.of()));
-        assertEquals("LoadAlphaBeta LOAD requires a connection with a LineModel but dynamic model GeneratorFictitious GEN does not implement it", e.getMessage());
+        assertEquals("LoadAlphaBeta LOAD requires a connection with a LineModel but dynamic model GeneratorAlphaBeta GEN does not implement it", e.getMessage());
         // implementation log
         assertTrue(adder.createMacroConnectionsOrSkip(bbm, gen, LineModel.class, l -> List.of()));
         // pure dynamic implementation log

@@ -11,25 +11,22 @@
         <dyn:connect var1="transformer_terminal1" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="transformer_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
         <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
-        <dyn:connect var1="tapChanger_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_LoadTwoTransformersTapChangers-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="transformerT_terminal1" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="transformerT_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
         <dyn:connect var1="transformerD_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
         <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
-        <dyn:connect var1="tapChangerT_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
-        <dyn:connect var1="tapChangerD_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TapChangerBlockingAutomaton-DefaultTransformer">
-        <dyn:connect var1="tapChangerBlocking_blockedT" var2="@NAME@_TAP_CHANGER_locked_value"/>
+        <dyn:connect var1="tapChangerBlocking_blockedT" var2="@NAME@_TAP_CHANGER_locked"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TapChangerBlockingAutomaton-LoadOneTransformerTapChanger">
-        <dyn:connect var1="tapChangerBlocking_blockedT" var2="tapChanger_locked"/>
+        <dyn:connect var1="tapChangerBlocking_blockedT" var2="transformer_locked"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TapChangerBlockingAutomaton-LoadTwoTransformersTapChangers">
-        <dyn:connect var1="tapChangerBlocking_blockedD" var2="tapChangerD_locked"/>
-        <dyn:connect var1="tapChangerBlocking_blockedT" var2="tapChangerT_locked"/>
+        <dyn:connect var1="tapChangerBlocking_blockedD" var2="transformerD_locked"/>
+        <dyn:connect var1="tapChangerBlocking_blockedT" var2="transformerT_locked"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TapChangerBlockingAutomatonMeasure1-DefaultActionConnectionPoint">
         <dyn:connect var1="tapChangerBlocking_UMonitored1" var2="@NAME@_U"/>
@@ -38,13 +35,13 @@
         <dyn:connect var1="tapChangerBlocking_UMonitored2" var2="@NAME@_U"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_LoadOneTransformerTapChanger">
-        <dyn:staticRef var="transformer_P1Pu_value" staticVar="p"/>
-        <dyn:staticRef var="transformer_Q1Pu_value" staticVar="q"/>
+        <dyn:staticRef var="transformer_P1Pu" staticVar="p"/>
+        <dyn:staticRef var="transformer_Q1Pu" staticVar="q"/>
         <dyn:staticRef var="transformer_state" staticVar="state"/>
     </dyn:macroStaticReference>
     <dyn:macroStaticReference id="MSR_LoadTwoTransformersTapChangers">
-        <dyn:staticRef var="transformerT_P1Pu_value" staticVar="p"/>
-        <dyn:staticRef var="transformerT_Q1Pu_value" staticVar="q"/>
+        <dyn:staticRef var="transformerT_P1Pu" staticVar="p"/>
+        <dyn:staticRef var="transformerT_Q1Pu" staticVar="q"/>
         <dyn:staticRef var="transformerT_state" staticVar="state"/>
     </dyn:macroStaticReference>
     <dyn:macroConnect connector="MC_LoadOneTransformerTapChanger-DefaultEquipmentConnectionPoint" id1="LOAD" id2="NETWORK"/>
