@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="G1" lib="GeneratorFictitious" parFile="models.par" parId="gen" staticId="G1">
-        <dyn:macroStaticRef id="MSR_GeneratorFictitious"/>
+    <dyn:blackBoxModel id="G1" lib="GeneratorAlphaBeta" parFile="models.par" parId="gen" staticId="G1">
+        <dyn:macroStaticRef id="MSR_GeneratorAlphaBeta"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="B1" lib="Bus" staticId="B1">
         <dyn:macroStaticRef id="MSR_Bus"/>
@@ -12,7 +12,7 @@
     <dyn:blackBoxModel id="L1" lib="Line" parFile="models.par" parId="line" staticId="L1">
         <dyn:macroStaticRef id="MSR_Line"/>
     </dyn:blackBoxModel>
-    <dyn:macroConnector id="MC_GeneratorFictitious-Bus">
+    <dyn:macroConnector id="MC_GeneratorAlphaBeta-Bus">
         <dyn:connect var1="generator_terminal" var2="bus_terminal"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_LineSide1-Bus">
@@ -21,7 +21,7 @@
     <dyn:macroConnector id="MC_LineSide2-Bus">
         <dyn:connect var1="line_terminal2" var2="bus_terminal"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_GeneratorFictitious">
+    <dyn:macroStaticReference id="MSR_GeneratorAlphaBeta">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
@@ -36,8 +36,10 @@
         <dyn:staticRef var="line_P2Pu" staticVar="p2"/>
         <dyn:staticRef var="line_Q2Pu" staticVar="q2"/>
         <dyn:staticRef var="line_state" staticVar="state"/>
+        <dyn:staticRef var="line_ISide1" staticVar="i1"/>
+        <dyn:staticRef var="line_ISide2" staticVar="i2"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_GeneratorFictitious-Bus" id1="G1" id2="B1" name2="B1"/>
+    <dyn:macroConnect connector="MC_GeneratorAlphaBeta-Bus" id1="G1" id2="B1" name2="B1"/>
     <dyn:macroConnect connector="MC_LineSide1-Bus" id1="L1" id2="B1" name2="B1"/>
     <dyn:macroConnect connector="MC_LineSide2-Bus" id1="L1" id2="B2" name2="B2"/>
 </dyn:dynamicModelsArchitecture>

@@ -8,7 +8,10 @@ package com.powsybl.dynawo.models.lines;
 
 import com.powsybl.dynawo.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawo.models.utils.SideUtils;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.iidm.network.TwoSides;
+
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
@@ -36,7 +39,7 @@ public class DefaultLine extends AbstractDefaultModel implements LineModel {
 
     @Override
     public String getStateValueVarName() {
-        return "@NAME@_state_value";
+        return VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "@NAME@_state");
     }
 
     @Override

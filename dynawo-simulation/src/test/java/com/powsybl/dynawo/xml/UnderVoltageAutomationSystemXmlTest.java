@@ -97,7 +97,7 @@ class UnderVoltageAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
         checkConnected("BBM_skipped_under_voltage", false);
         checkReport("""
                 + Test DYD
-                   Model GeneratorFictitious GEN instantiation OK
+                   Model GeneratorAlphaBeta GEN instantiation OK
                    Model UnderVoltage BBM_under_voltage instantiation OK
                    Model UnderVoltage BBM_skipped_under_voltage instantiation OK
                    Model UnderVoltage BBM_UVA_WECC instantiation OK

@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public abstract class AbstractDynawoTest {
 
-    private static final String DOCKER_IMAGE_ID = "powsybl/java-dynawo:3.1.0";
+    private static final String DOCKER_IMAGE_ID = "powsybl/java-dynawo:4.1.0";
 
     @TempDir
     Path localDir;

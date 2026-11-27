@@ -11,7 +11,6 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.BlackBoxModelSupplier;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.InjectionModel;
 import com.powsybl.dynawo.models.TransformerSide;
@@ -89,19 +88,6 @@ class DynamicModelContextTest {
     }
 
     @Test
-    void wrongDynawoVersionModel() {
-        dynamicModels.add(BaseLoadBuilder.of(network, "ElectronicLoad")
-                .staticId("LOAD")
-                .parameterSetId("lab")
-                .build());
-        DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder(network, dynamicModels)
-                .currentVersion(new DynawoVersion(1, 2, 0))
-                .build();
-        Assertions.assertThat(context.getBlackBoxDynamicModels()).isEmpty();
-    }
-
-    @Test
     void testIncorrectModelRequests() {
         Line line = network.getLine("NHV1_NHV2_1");
         BlackBoxModel bbm = BaseLoadBuilder.of(network, "LoadAlphaBeta")
@@ -129,7 +115,7 @@ class DynamicModelContextTest {
         assertTrue(adder.createMacroConnectionsOrSkip(bbm, line, InjectionModel.class, l -> List.of()));
         // implementation exception
         e = assertThrows(PowsyblException.class, () -> adder.createMacroConnections(bbm, gen, LineModel.class, l -> List.of()));
-        assertEquals("LoadAlphaBeta LOAD requires a connection with a LineModel but dynamic model GeneratorFictitious GEN does not implement it", e.getMessage());
+        assertEquals("LoadAlphaBeta LOAD requires a connection with a LineModel but dynamic model GeneratorAlphaBeta GEN does not implement it", e.getMessage());
         // implementation log
         assertTrue(adder.createMacroConnectionsOrSkip(bbm, gen, LineModel.class, l -> List.of()));
         // pure dynamic implementation log

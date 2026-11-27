@@ -10,12 +10,14 @@ import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
 import static com.powsybl.dynawo.parameters.ParameterType.BOOL;
 import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 
@@ -33,7 +35,7 @@ public class EventBranchDisconnection extends AbstractEvent {
     }
 
     private List<VarConnection> getVarConnectionsWith(BranchModel connected) {
-        return List.of(new VarConnection("event_state1_value", connected.getStateValueVarName()));
+        return List.of(new VarConnection(VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, "event_state1"), connected.getStateValueVarName()));
     }
 
     @Override

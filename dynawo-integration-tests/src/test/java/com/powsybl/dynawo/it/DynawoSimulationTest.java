@@ -95,9 +95,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(27, result.getCurves().size());
         DoubleTimeSeries ts1 = result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
-        assertEquals(585, ts1.getMetadata().getIndex().getPointCount());
+        assertEquals(521, ts1.getMetadata().getIndex().getPointCount());
         assertEquals(14, result.getFinalStateValues().size());
-        assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu_value"));
+        assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu"));
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(23, timeLine.size());
         checkTimeLineEvent(timeLine.getFirst(), 0, "_GEN____8_SM", "PMIN : activation");
@@ -213,8 +213,11 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideGenerators")
-    void testSmib(Function<Network, BlackBoxModel> genSupplier) {
+    void testSmib(Function<Network, BlackBoxModel> genSupplier, String combiTableName) throws IOException {
         Network network = Network.read(new ResourceDataSource("SMIB", new ResourceSet("/smib", "SMIB.iidm")));
+        if (combiTableName != null) {
+            Files.copy(getResourceAsStream("/smib/" + combiTableName), localDir.resolve(combiTableName));
+        }
 
         DynamicModelsSupplier dynamicModelsSupplier = (n, r) -> List.of(
                 genSupplier.apply(n),
@@ -260,22 +263,26 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         n -> SynchronizedGeneratorBuilder.of(n, "GeneratorPQ")
                             .staticId(genId)
                             .parameterSetId("GPQ")
-                            .build()),
+                            .build(),
+                        null),
                 Arguments.of((Function<Network, BlackBoxModel>)
                         n -> SynchronousGeneratorBuilder.of(n, "GeneratorSynchronousFourWindingsProportionalRegulations")
                                 .staticId(genId)
                                 .parameterSetId("GFW")
-                                .build()),
+                                .build(),
+                        null),
                 Arguments.of((Function<Network, BlackBoxModel>)
                         n -> WeccBuilder.of(n, "WTG4AWeccCurrentSource")
                                 .staticId(genId)
                                 .parameterSetId("Wind")
-                                .build()),
+                                .build(),
+                        "LHVRT.txt"),
                 Arguments.of((Function<Network, BlackBoxModel>)
                         n -> GridFormingConverterBuilder.of(n, "GridFormingConverterDroopControl")
                                 .staticId(genId)
                                 .parameterSetId("GFM")
-                                .build()));
+                                .build(),
+                        null));
     }
 
     @Test

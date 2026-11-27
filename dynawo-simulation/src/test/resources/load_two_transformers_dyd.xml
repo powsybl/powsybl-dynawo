@@ -10,8 +10,8 @@
         <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_LoadTwoTransformers">
-        <dyn:staticRef var="transformerT_P1Pu_value" staticVar="p"/>
-        <dyn:staticRef var="transformerT_Q1Pu_value" staticVar="q"/>
+        <dyn:staticRef var="transformerT_P1Pu" staticVar="p"/>
+        <dyn:staticRef var="transformerT_Q1Pu" staticVar="q"/>
         <dyn:staticRef var="transformerT_state" staticVar="state"/>
     </dyn:macroStaticReference>
     <dyn:macroConnect connector="MC_LoadTwoTransformers-DefaultEquipmentConnectionPoint" id1="LOAD" id2="NETWORK"/>

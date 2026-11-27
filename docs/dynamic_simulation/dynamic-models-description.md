@@ -7,8 +7,9 @@ See how to use model in a simulation [here](dynamic-models-configuration.md).
 ### Generator
 
 #### Base generator
-- `GeneratorFictitious`:
+- `GeneratorAlphaBeta`:
 Simplified generator model with voltage-dependent active and reactive power.
+(⚠️ Named `GeneratorFictitious` in Dynawo 1.7.0 and below)
 
 - `GeneratorPVFixed`:
 Simplified generator model with fixed active and reactive power.

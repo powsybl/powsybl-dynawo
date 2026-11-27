@@ -12,12 +12,14 @@ import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawo.models.versionablevariable.VersionableHandler;
 import com.powsybl.iidm.network.Load;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.powsybl.dynawo.models.TransformerSide.*;
+import static com.powsybl.dynawo.models.versionablevariable.GlobalVersionableVariables.VARIABLE_VALUE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -25,10 +27,6 @@ import static com.powsybl.dynawo.models.TransformerSide.*;
 public abstract class AbstractLoadTwoTransformers extends AbstractLoad {
 
     protected static final String SWITCH_OFF_SIGNAL_NAME = "switchOffSignal1";
-    protected static final List<VarMapping> VAR_MAPPING = List.of(
-            new VarMapping(getTransformerVar(HIGH_VOLTAGE, "P1Pu_value"), "p"),
-            new VarMapping(getTransformerVar(HIGH_VOLTAGE, "Q1Pu_value"), "q"),
-            new VarMapping(getTransformerVar(HIGH_VOLTAGE, "state"), "state"));
 
     protected AbstractLoadTwoTransformers(Load load, String parameterSetId, ModelConfig modelConfig) {
         super(load, parameterSetId, modelConfig, getTransformerVar(HIGH_VOLTAGE, "terminal1"));
@@ -36,7 +34,10 @@ public abstract class AbstractLoadTwoTransformers extends AbstractLoad {
 
     @Override
     public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
+        return List.of(
+                new VarMapping(VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, getTransformerVar(HIGH_VOLTAGE, "P1Pu")), "p"),
+                new VarMapping(VersionableHandler.getInstance().getCurrentVariable(VARIABLE_VALUE, getTransformerVar(HIGH_VOLTAGE, "Q1Pu")), "q"),
+                new VarMapping(getTransformerVar(HIGH_VOLTAGE, "state"), "state"));
     }
 
     @Override

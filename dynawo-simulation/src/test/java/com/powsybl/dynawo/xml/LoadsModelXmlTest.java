@@ -75,7 +75,7 @@ class LoadsModelXmlTest extends AbstractParametrizedDynamicModelXmlTest {
                         .staticId(LOAD_NAME)
                         .parameterSetId("LTTTC")
                         .build()),
-                Arguments.of("load_synchronized.xml", (Function<Network, BlackBoxModel>) n -> BaseLoadBuilder.of(n, "LoadAlphaBetaMotor")
+                Arguments.of("load_synchronized.xml", (Function<Network, BlackBoxModel>) n -> BaseLoadBuilder.of(n, "LoadAlphaBetaMotorSimplified")
                         .staticId(LOAD_NAME)
                         .parameterSetId("LAB")
                         .build())

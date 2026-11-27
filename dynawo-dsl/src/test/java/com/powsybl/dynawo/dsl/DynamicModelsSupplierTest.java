@@ -97,6 +97,18 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         checkReportNode(report);
     }
 
+    @Test
+    void testNullBuilder() throws IOException {
+        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream("/dynamicModels/lowVersionGenerator.groovy"), EXTENSIONS);
+        List<DynamicModel> dynamicModels = supplier.get(EurostagTutorialExample1Factory.create(), reportNode);
+        assertTrue(dynamicModels.isEmpty());
+        checkReportNode("""
+                + DSL tests
+                   + Groovy Dynamic Models Supplier
+                      Model GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a version 1.6.0 is too low for the current Dynawo version 1.8.0 (Renamed GeneratorSynchronousThreeWindingsPmConstExAc1)
+                """);
+    }
+
     void assertEquipmentBlackBoxModel(EquipmentBlackBoxModel bbm, String id, String parameterId, String lib) {
         assertEquals(id, bbm.getDynamicModelId());
         assertEquals(parameterId, bbm.getParameterSetId());
@@ -134,8 +146,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/infiniteBus.groovy", InfiniteBus.class, HvdcTestNetwork.createVsc(), "B1", "b", "InfiniteBusWithVariations"),
                 Arguments.of("/dynamicModels/line.groovy", StandardLine.class,
                         EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "LINE", "Line"),
-                Arguments.of("/dynamicModels/genFictitious.groovy", BaseGenerator.class,
-                        EurostagTutorialExample1Factory.create(), "GEN", "GF", "GeneratorFictitious"),
+                Arguments.of("/dynamicModels/genAlphaBeta.groovy", BaseGenerator.class,
+                        EurostagTutorialExample1Factory.create(), "GEN", "GF", "GeneratorAlphaBeta"),
                 Arguments.of("/dynamicModels/gen.groovy", SynchronousGenerator.class,
                         EurostagTutorialExample1Factory.create(), "GEN", "GSFWPR", "GeneratorSynchronousThreeWindings"),
                 Arguments.of("/dynamicModels/genControllable.groovy", SynchronousGeneratorControllable.class,
